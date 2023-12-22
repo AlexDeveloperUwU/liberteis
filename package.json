@@ -5,5 +5,13 @@
     "enmap": "^5.9.8",
     "express": "^4.18.2",
     "express-session": "^1.17.3"
-  }
+  },
+  "name": "liberteis",
+  "version": "0.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
