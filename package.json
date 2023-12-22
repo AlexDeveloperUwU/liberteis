@@ -7,7 +7,7 @@
     "express-session": "^1.17.3"
   },
   "name": "liberteis",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "devDependencies": {},
   "keywords": [],
