@@ -46,6 +46,28 @@ app.post("/api/events/add", (req, res) => {
   }
 });
 
+app.post("/api/events/delete", (req, res) => {
+  const { eventID } = req.body;
+  try {
+    database.deleteEvent(events_short, eventID);
+    res.redirect("/eventlist");
+  } catch (error) {
+    console.error("Error al eliminar el evento:", error);
+    res.status(500).send("Error al eliminar el evento. Por favor, inténtalo de nuevo.");
+  }
+});
+
+app.post("/api/events/check", (req, res) => {
+  const { eventID } = req.body;
+  try {
+    const event = database.checkEvent(events_short, eventID);
+    res.send(event);
+  } catch (error) {
+    console.error("Error al buscar el evento:", error);
+    res.status(500).send("Error al buscar el evento. Por favor, inténtalo de nuevo.");
+  }
+});
+
 app.post("/api/events/list", (req, res) => {
   const eventsList = database.getEvents(events_short);
   res.status(200).json(eventsList);

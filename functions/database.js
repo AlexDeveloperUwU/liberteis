@@ -9,11 +9,29 @@ function saveEvent(db, title, desc, event_date) {
       event_date: event_date,
     };
     db.set(eventID, event);
-    return 200;
-    
   } catch (error) {
     console.error(error);
-    return 500;
+  }
+}
+
+function deleteEvent(db, eventID) {
+  try {
+    const oldID = db.get("savedid");
+    db.set("savedid", oldID - 1);
+    const strID = eventID.toString();
+    db.delete(strID);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function checkEvent(db, eventID) {
+  try {
+    const strID = eventID.toString();
+    const response = db.get(strID);
+    return response;
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -24,6 +42,7 @@ function getEvents(db) {
       return;
     }
     eventsList.push({
+      id: id,
       title: data.title,
       desc: data.desc,
       event_date: data.event_date,
@@ -33,4 +52,4 @@ function getEvents(db) {
   return eventsList;
 }
 
-module.exports = { saveEvent, getEvents };
+module.exports = { saveEvent, deleteEvent, checkEvent, getEvents };

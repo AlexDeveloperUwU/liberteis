@@ -8,17 +8,25 @@
 </head>
 
 <body>
+  
   <form action="/api/events/add" method="POST">
     <label for="title">Título</label>
-    <input type="text" name="title" id="title"><br>
+    <input type="text" name="title" id="title"><br><br>
 
     <label for="desc">Descripción</label>
-    <input type="text" name="desc" id="desc"><br>
+    <input type="text" name="desc" id="desc"><br><br>
 
-    <label for="event_date">Fecha</label><br>
-    <input type="date" name="event_date" id="event_date"><br>
+    <label for="event_date">Fecha</label>
+    <input type="date" name="event_date" id="event_date"><br><br>
 
     <button type="submit">Crear evento</button>
+  </form>
+  <br><br><br><br><br><br>
+  <form action="/api/events/delete" method="POST">
+    <label for="eventID">ID</label>
+    <input type="text" name="eventID" id="eventID"><br><br>
+
+    <button type="submit">Eliminar</button>
   </form>
 </body>
 
