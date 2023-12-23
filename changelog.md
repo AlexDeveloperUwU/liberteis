@@ -14,3 +14,9 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 => Frontend: eliminar y comprobar existencia de eventos
 
 => Backend: eliminar y comprobar eventos
+
+## 0.0.2.1 (no contemplado en el json) - 23/12/2023
+
+=> Añadir archivo de changelog
+
+=> Añadir archivo de tareas relacionado con las distintas futuras versiones
