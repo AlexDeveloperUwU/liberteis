@@ -15,7 +15,7 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 
 => Backend: eliminar y comprobar eventos
 
-## 0.0.2.1 (no contemplado en el json) - 23/12/2023
+## 0.0.2.1 (no contemplado en el package.json) - 23/12/2023
 
 => Añadir archivo de changelog
 
