@@ -11,7 +11,7 @@ Las tareas que tengo pendientes para las distintas versiones
 
 => Frontend: formulario para crear, eliminar y visualizar los eventos disponibles (todo en apartados distintos)
 
-# 0.0.5
+## 0.0.5
 
 => Frontend: mostrar eventos en formato calendario y formulario para editar eventos
 
