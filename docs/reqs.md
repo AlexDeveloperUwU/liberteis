@@ -1,4 +1,4 @@
-# Pantalla Biblioteca Teis (Codename: LiberTeisScreen)
+# Pantalla Biblioteca Teis (Codename: LiberTeis)
 
 #### Programación de la Web:
 
