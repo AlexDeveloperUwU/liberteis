@@ -4,15 +4,19 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const enmap = require("enmap");
 const database = require("./functions/database");
+const fs = require("fs");
+const path = require("path");
 
 // Bases de Datos
-const events_short = new enmap({ name: "events_short" });
-const events_pdf = new enmap({ name: "events_pdf" });
+const events = new enmap({ name: "events" });
 const users = new enmap({ name: "users" });
 
 // Config del webserver
 const app = express();
 const port = 3000;
+
+const viewsFolder = path.join(__dirname, "views");
+const files = fs.readdirSync(viewsFolder);
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
@@ -27,22 +31,26 @@ app.use(
 );
 
 // Rutas get del servidor web
-app.get("/", (req, res) => {
-  res.render("index");
-});
-
-app.get("/eventlist", (req, res) => {
-  res.render("eventslist");
+files.forEach((file) => {
+  if (path.extname(file) === ".ejs") {
+    const name = path.basename(file, ".ejs");
+    app.get(`/${name}`, (req, res) => {
+      res.render(name);
+    });
+    console.log(`Ruta creada: /${name}`);
+  }
 });
 
 app.post("/api/events/add", (req, res) => {
-  const { title, desc, event_date } = req.body;
+  const { title, desc, full_desc, event_date, thumb_url, qr_url, published_by } = req.body;
   try {
-    database.saveEvent(events_short, title, desc, event_date);
+    database.saveEvent(events, title, desc, full_desc, event_date, thumb_url, qr_url, published_by);
     res.redirect("/eventlist");
   } catch (error) {
     console.error("Error al añadir el evento:", error);
-    res.status(500).send("Error al añadir el evento. Por favor, inténtalo de nuevo.");
+    res
+      .status(500)
+      .send("Error al añadir el evento. Por favor, inténtalo de nuevo.");
   }
 });
 
@@ -53,23 +61,27 @@ app.post("/api/events/delete", (req, res) => {
     res.redirect("/eventlist");
   } catch (error) {
     console.error("Error al eliminar el evento:", error);
-    res.status(500).send("Error al eliminar el evento. Por favor, inténtalo de nuevo.");
+    res
+      .status(500)
+      .send("Error al eliminar el evento. Por favor, inténtalo de nuevo.");
   }
 });
 
 app.post("/api/events/check", (req, res) => {
   const { eventID } = req.body;
   try {
-    const event = database.checkEvent(events_short, eventID);
+    const event = database.checkEvent(events, eventID);
     res.send(event);
   } catch (error) {
     console.error("Error al buscar el evento:", error);
-    res.status(500).send("Error al buscar el evento. Por favor, inténtalo de nuevo.");
+    res
+      .status(500)
+      .send("Error al buscar el evento. Por favor, inténtalo de nuevo.");
   }
 });
 
 app.post("/api/events/list", (req, res) => {
-  const eventsList = database.getEvents(events_short);
+  const eventsList = database.getEvents(events);
   res.status(200).json(eventsList);
 });
 

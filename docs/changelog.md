@@ -24,3 +24,9 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 ## 0.0.2.2 - 24/12/2023
 
 => Frontend: añadir formulario para comprobar eventos
+
+## 0.0.3 - 24/12/2023
+
+=> Backend: hacer que las rutas que añadan automáticamente (con propósitos de testing, luego se eliminará ya que cada ruta tiene unos requisitos distintos)
+
+=> DB: eliminar db larga, conservar una sola db y añadir los campos que faltan a la única que existirá sobre las entradas

@@ -1,11 +1,9 @@
 # Tareas LiberTeis
-Las tareas que tengo pendientes para las distintas versiones
+Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 100%, es solo una planificación a futuro, depende de mi disponibilidad temporal)
 
 ## 0.0.3
 
 => Frontend: crear base para los distintos apartados / páginas que tendrá la dash, planeado de la interfaz de la RPi
-
-=> DB: eliminar db larga, conservar una sola db y añadir los campos que faltan a la única que existirá sobre las entradas
 
 ## 0.0.4
 
