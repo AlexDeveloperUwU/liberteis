@@ -20,3 +20,7 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 => Añadir archivo de changelog
 
 => Añadir archivo de tareas relacionado con las distintas futuras versiones
+
+## 0.0.2.2 - 24/12/2023
+
+=> Frontend: añadir formulario para comprobar eventos
