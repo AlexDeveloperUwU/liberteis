@@ -48,9 +48,7 @@ app.post("/api/events/add", (req, res) => {
     res.redirect("/eventlist");
   } catch (error) {
     console.error("Error al añadir el evento:", error);
-    res
-      .status(500)
-      .send("Error al añadir el evento. Por favor, inténtalo de nuevo.");
+    res.status(500).send("Error al añadir el evento. Por favor, inténtalo de nuevo.");
   }
 });
 
@@ -61,9 +59,7 @@ app.post("/api/events/delete", (req, res) => {
     res.redirect("/eventlist");
   } catch (error) {
     console.error("Error al eliminar el evento:", error);
-    res
-      .status(500)
-      .send("Error al eliminar el evento. Por favor, inténtalo de nuevo.");
+    res.status(500).send("Error al eliminar el evento. Por favor, inténtalo de nuevo.");
   }
 });
 
@@ -74,9 +70,7 @@ app.post("/api/events/check", (req, res) => {
     res.send(event);
   } catch (error) {
     console.error("Error al buscar el evento:", error);
-    res
-      .status(500)
-      .send("Error al buscar el evento. Por favor, inténtalo de nuevo.");
+    res.status(500).send("Error al buscar el evento. Por favor, inténtalo de nuevo.");
   }
 });
 

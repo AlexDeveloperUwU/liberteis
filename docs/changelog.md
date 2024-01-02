@@ -1,8 +1,10 @@
 # Historial de versiones
+
 Este es el historial de versiones de este proyecto.
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras
 
 ## 0.0.1 - 22/12/2023
+
 => Commit inicial, añadido backend y un frontend para hacer pruebas
 
 => Frontend: añadir y visualizar eventos

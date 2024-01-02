@@ -4,12 +4,12 @@
     "ejs": "^3.1.9",
     "enmap": "^5.9.8",
     "express": "^4.18.2",
-    "express-session": "^1.17.3"
+    "express-session": "^1.17.3",
+    "multer": "^1.4.5-lts.1"
   },
   "name": "liberteis",
   "version": "0.0.3",
   "main": "index.js",
-  "devDependencies": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
