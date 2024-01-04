@@ -32,3 +32,13 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 => Backend: hacer que las rutas que añadan automáticamente (con propósitos de testing, luego se eliminará ya que cada ruta tiene unos requisitos distintos)
 
 => DB: eliminar db larga, conservar una sola db y añadir los campos que faltan a la única que existirá sobre las entradas
+
+## 0.0.4 - 04/01/2024
+
+=> Backend: añadir rutas a través de un ruter y organización de las rutas por categoría, siendo la primera parte de la url la categoría (api, auth, etc) y la segunda parte la ruta en sí
+
+=> Databases: fixear una ruta que usaba una database que no existía
+
+=> Frontend: fixear errores de rutas luego de el cambio en los distintos formularios
+
+=> Postman: creadas las distintas requests necesarias para poder probar el backend, la api y las distintas rutas

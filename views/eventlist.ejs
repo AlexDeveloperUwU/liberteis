@@ -12,7 +12,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const eventTable = document.getElementById("eventTable");
-      fetch("/api/events/list", {
+      fetch("/api/list", {
           method: "POST",
         })
         .then((response) => response.json())

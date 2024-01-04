@@ -11,6 +11,8 @@ const path = require("path");
 const events = new enmap({ name: "events" });
 const users = new enmap({ name: "users" });
 
+module.exports = { events, users }; // Exportamos las bases de datos para usarlas en otros archivos
+
 // Config del webserver
 const app = express();
 const port = 3000;
@@ -41,43 +43,9 @@ files.forEach((file) => {
   }
 });
 
-app.post("/api/events/add", (req, res) => {
-  const { title, desc, full_desc, event_date, thumb_url, qr_url, published_by } = req.body;
-  try {
-    database.saveEvent(events, title, desc, full_desc, event_date, thumb_url, qr_url, published_by);
-    res.redirect("/eventlist");
-  } catch (error) {
-    console.error("Error al añadir el evento:", error);
-    res.status(500).send("Error al añadir el evento. Por favor, inténtalo de nuevo.");
-  }
-});
-
-app.post("/api/events/delete", (req, res) => {
-  const { eventID } = req.body;
-  try {
-    database.deleteEvent(events_short, eventID);
-    res.redirect("/eventlist");
-  } catch (error) {
-    console.error("Error al eliminar el evento:", error);
-    res.status(500).send("Error al eliminar el evento. Por favor, inténtalo de nuevo.");
-  }
-});
-
-app.post("/api/events/check", (req, res) => {
-  const { eventID } = req.body;
-  try {
-    const event = database.checkEvent(events, eventID);
-    res.send(event);
-  } catch (error) {
-    console.error("Error al buscar el evento:", error);
-    res.status(500).send("Error al buscar el evento. Por favor, inténtalo de nuevo.");
-  }
-});
-
-app.post("/api/events/list", (req, res) => {
-  const eventsList = database.getEvents(events);
-  res.status(200).json(eventsList);
-});
+// Rutas post del servidor web
+const apiRoutes = require("./routes/apiRoutes");
+app.use("/api", apiRoutes);
 
 // Iniciamos el servidor web express
 app.listen(port, () => {
