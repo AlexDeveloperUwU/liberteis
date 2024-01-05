@@ -4,9 +4,9 @@ const database = require("../functions/database"); // Importamos las funciones d
 const { events, users } = require("../index"); // Importamos las bases de datos
 
 router.post("/add", (req, res) => {
-  const { title, desc, full_desc, event_date, thumb_url, qr_url, published_by } = req.body;
+  const { title, desc, event_date, thumb_url, qr_url, published_by } = req.body;
   try {
-    database.saveEvent(events, title, desc, full_desc, event_date, thumb_url, qr_url, published_by);
+    database.saveEvent(events, title, desc, event_date, thumb_url, qr_url, published_by);
     res.redirect("/eventlist");
   } catch (error) {
     console.error("Error al añadir el evento:", error);

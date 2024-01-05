@@ -172,6 +172,25 @@
           </div>
         </div>
       </section>
+      <section>
+        <!-- Modal -->
+        <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Detalles del Evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="eventModalBody">
+                <!-- Contenido del modal -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
     </div>
     <footer class="main-footer">
       <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
@@ -186,16 +205,67 @@
   <%- include('partials/scripts') %>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      $.ajax({
+        url: '/api/list',
+        type: 'POST',
+        success: function(data) {
+          var totalEvents = data.length;
+          $('.bg-info .inner h3').text(totalEvents);
+
+          var currentDate = new Date();
+
+          var pastEvents = data.filter(function(event) {
+            return new Date(event.event_date) < currentDate;
+          });
+          $('.bg-success .inner h3').text(pastEvents.length);
+
+          var futureEvents = data.filter(function(event) {
+            return new Date(event.event_date) > currentDate;
+          });
+          $('.bg-warning .inner h3').text(futureEvents.length);
+
+          // Configuración del calendario con eventos
+          var calendarEl = document.getElementById('calendar');
+          var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            themeSystem: 'bootstrap',
+            events: data.map(function(event) {
+              return {
+                title: event.title,
+                start: event.event_date,
+                description: event.desc,
+                thumb_url: event.thumb_url,
+                qr_url: event.qr_url,
+                published_by: event.published_by
+              };
+            }),
+            eventClick: function(info) {
+              // Formatear la fecha usando moment.js
+              var formattedDate = moment(info.event.start).format('dddd, MM/DD/YYYY, HH:mm');
+
+              // Personalizar el contenido del modal
+              $('#eventModalLabel').text(info.event.title);
+              $('#eventModalBody').html(
+                '<strong>Fecha del evento:</strong><br>' + formattedDate +
+                '<br><br><strong>Descripción del evento:</strong><br>' + info.event.extendedProps.description +
+                '<br><br><strong>Añadido por:</strong><br>' + info.event.extendedProps.published_by
+              );
+
+              // Abrir el modal
+              $('#eventModal').modal('show');
+            }
+          });
+
+          calendar.render();
         },
-        themeSystem: 'bootstrap',
+        error: function() {
+          console.error('Error al obtener la lista de eventos');
+        }
       });
-      calendar.render();
     });
   </script>
 </body>

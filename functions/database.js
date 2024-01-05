@@ -1,4 +1,4 @@
-function saveEvent(db,title,desc,full_desc,event_date,thumb_url = null,qr_url = null,published_by = null) {
+function saveEvent(db,title,desc,event_date,thumb_url = null,qr_url = null,published_by = "Admin") {
   const oldID = db.get("savedid");
   const eventID = (db.get("savedid") + 1).toString();
   try {
@@ -6,7 +6,6 @@ function saveEvent(db,title,desc,full_desc,event_date,thumb_url = null,qr_url = 
     const event = {
       title: title,
       desc: desc,
-      full_desc: full_desc,
       event_date: event_date,
       thumb_url: thumb_url,
       qr_url: qr_url,
@@ -49,7 +48,6 @@ function getEvents(db) {
       id: id,
       title: data.title,
       desc: data.desc,
-      full_desc: data.full_desc,
       event_date: data.event_date,
       thumb_url: data.thumb_url,
       qr_url: data.qr_url,
