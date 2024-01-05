@@ -40,41 +40,6 @@
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
-                  Gestión de eventos
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="./index.html" class="nav-link active">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Añadir evento</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index2.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Editar evento</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index3.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Eliminar evento</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index3.html" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Ver eventos</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item menu-closed">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>
                   Gestión de usuarios
                   <i class="right fas fa-angle-left"></i>
                 </p>
@@ -178,22 +143,20 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="eventModalLabel">Detalles del Evento</h5>
+                <h5 class="modal-title" id="eventModalLabel">Detalles del evento</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body" id="eventModalBody">
-                <!-- Contenido del modal -->
               </div>
             </div>
           </div>
         </div>
-
       </section>
     </div>
     <footer class="main-footer">
-      <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+      <strong>Copyright &copy; 2014-2024 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
       All rights reserved.
       <div class="float-right d-none d-sm-inline-block">
         <b>Version</b> 3.2.0
@@ -224,7 +187,6 @@
           });
           $('.bg-warning .inner h3').text(futureEvents.length);
 
-          // Configuración del calendario con eventos
           var calendarEl = document.getElementById('calendar');
           var calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
@@ -244,10 +206,8 @@
               };
             }),
             eventClick: function(info) {
-              // Formatear la fecha usando moment.js
               var formattedDate = moment(info.event.start).format('dddd, MM/DD/YYYY, HH:mm');
 
-              // Personalizar el contenido del modal
               $('#eventModalLabel').text(info.event.title);
               $('#eventModalBody').html(
                 '<strong>Fecha del evento:</strong><br>' + formattedDate +
@@ -255,9 +215,114 @@
                 '<br><br><strong>Añadido por:</strong><br>' + info.event.extendedProps.published_by
               );
 
-              // Abrir el modal
               $('#eventModal').modal('show');
+            },
+            dateClick: function(info) {
+              var formattedDate = moment(info.date).format('YYYY-MM-DDTHH:mm');
+
+              $('#eventModalLabel').text('Crear Nuevo Evento');
+              $('#eventModalBody').html(
+                '<form id="createEventForm">' +
+                '  <div class="form-group">' +
+                '    <label for="eventTitle">Título del evento:</label>' +
+                '    <input type="text" class="form-control" id="eventTitle" required>' +
+                '  </div>' +
+                '  <div class="form-group">' +
+                '    <label for="eventDescription">Descripción del evento:</label>' +
+                '    <textarea class="form-control" id="eventDescription" rows="3"></textarea>' +
+                '  </div>' +
+                '  <div class="form-group">' +
+                '    <label for="eventDate">Fecha del evento:</label>' +
+                '    <input type="datetime-local" class="form-control" id="eventDate" value="' + formattedDate + '" required>' +
+                '  </div>' +
+                '  <div class="form-group">' +
+                '    <label for="eventThumbUrl">URL de la miniatura:</label>' +
+                '    <input type="text" class="form-control" id="eventThumbUrl">' +
+                '  </div>' +
+                '  <div class="form-group">' +
+                '    <label for="eventQrUrl">URL del código QR:</label>' +
+                '    <input type="text" class="form-control" id="eventQrUrl">' +
+                '  </div>' +
+                '  <div class="form-group">' +
+                '    <label for="eventPublishedBy">Añadido por:</label>' +
+                '    <input type="text" class="form-control" id="eventPublishedBy" required>' +
+                '  </div>' +
+                '  <button type="submit" class="btn btn-primary">Guardar Evento</button>' +
+                '</form>'
+              );
+
+              $('#eventModal').modal('show');
+
+              $('#createEventForm').submit(function(event) {
+                event.preventDefault();
+
+                var title = $('#eventTitle').val();
+                var description = $('#eventDescription').val();
+                var thumbUrl = $('#eventThumbUrl').val();
+                var qrUrl = $('#eventQrUrl').val();
+                var publishedBy = $('#eventPublishedBy').val();
+                var eventDate = $('#eventDate').val();
+
+                $.ajax({
+                  url: '/api/add',
+                  type: 'POST',
+                  data: {
+                    title: title,
+                    desc: description,
+                    event_date: eventDate,
+                    thumb_url: thumbUrl,
+                    qr_url: qrUrl,
+                    published_by: publishedBy
+                  },
+                  success: function(data) {
+                    console.log('Evento añadido con éxito:', data);
+
+                    $.ajax({
+                      url: '/api/list',
+                      type: 'POST',
+                      success: function(data) {
+                        $('.bg-info .inner h3').text(data.length);
+
+                        var currentDate = new Date();
+                        var futureEvents = data.filter(function(event) {
+                          return new Date(event.event_date) > currentDate;
+                        });
+                        $('.bg-warning .inner h3').text(futureEvents.length);
+
+                        var pastEvents = data.filter(function(event) {
+                          return new Date(event.event_date) < currentDate;
+                        });
+                        $('.bg-success .inner h3').text(pastEvents.length);
+
+                        calendar.removeAllEvents();
+                        calendar.addEventSource(data.map(function(event) {
+                          return {
+                            title: event.title,
+                            start: event.event_date,
+                            description: event.desc,
+                            thumb_url: event.thumb_url,
+                            qr_url: event.qr_url,
+                            published_by: event.published_by
+                          };
+                        }));
+                        calendar.render();
+
+                        $('#eventModal').modal('hide');
+                      },
+                      error: function(error) {
+                        console.error('Error al obtener la lista de eventos:', error);
+                        alert('Error al obtener la lista de eventos. Por favor, inténtalo de nuevo.');
+                      }
+                    });
+                  },
+                  error: function(error) {
+                    console.error('Error al añadir el evento:', error);
+                    alert('Error al añadir el evento. Por favor, inténtalo de nuevo.');
+                  }
+                });
+              });
             }
+
           });
 
           calendar.render();

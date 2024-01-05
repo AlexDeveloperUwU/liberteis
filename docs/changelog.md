@@ -3,35 +3,21 @@
 Este es el historial de versiones de este proyecto.
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras
 
-## 0.0.1 - 22/12/2023
+## 0.0.5.2 - 05/01/2024
 
-=> Commit inicial, añadido backend y un frontend para hacer pruebas
+=> Frontend: ahora el calendario además de mostrar el modal con los datos del evento, también muestra un modal con un formulario para añadir un evento cuando pinchas en un día concreto (en el formulario puedes cambiar el día si te has equivocado)
 
-=> Frontend: añadir y visualizar eventos
+=> Estructura de la web: eliminadas todas las webs y formularios creados anteriormente para el testing, poco a poco se está moviendo todo hacia la web final. Además, todo el testing de las apis se está haciendo con POSTMAN, por lo que no es necesario tener una web para ello
 
-=> Backend: añadir, visualizar eventos, gestionar frontend y realizar operaciones en la db
+=> Backend: eliminadas las redirecciones a la página de eventslist, ya que no existe
 
-## 0.0.2 - 22/12/2023
+=> Changelog: reordenar el changelog para siempre dejar por encima la última actualización realizada
 
-=> Frontend: eliminar y comprobar existencia de eventos
+## 0.0.5.1 - 05/01/2024
 
-=> Backend: eliminar y comprobar eventos
+=> Frontend: conteo de eventos funcionando correctamente, calendario muestra ya los eventos correctamente, al clickar en el evento se abre un modal con los datos del evento (añadido también en esta versión)
 
-## 0.0.2.1 - 23/12/2023
-
-=> Añadir archivo de changelog
-
-=> Añadir archivo de tareas relacionado con las distintas futuras versiones
-
-## 0.0.2.2 - 24/12/2023
-
-=> Frontend: añadir formulario para comprobar eventos
-
-## 0.0.3 - 24/12/2023
-
-=> Backend: hacer que las rutas que añadan automáticamente (con propósitos de testing, luego se eliminará ya que cada ruta tiene unos requisitos distintos)
-
-=> DB: eliminar db larga, conservar una sola db y añadir los campos que faltan a la única que existirá sobre las entradas
+=> Backend: eliminado full_desc ya que al final el planteo será distinto acerca de como mirarán los usuarios la info del evento, misma página que ven en la rpi, será a la que acceda el usuario con el qr
 
 ## 0.0.4 - 04/01/2024
 
@@ -43,8 +29,32 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 
 => Postman: creadas las distintas requests necesarias para poder probar el backend, la api y las distintas rutas
 
-## 0.0.5.1 - 05/01/2024
+## 0.0.3 - 24/12/2023
 
-=> Frontend: conteo de eventos funcionando correctamente, calendario muestra ya los eventos correctamente, al clickar en el evento se abre un modal con los datos del evento (añadido también en esta versión)
+=> Backend: hacer que las rutas que añadan automáticamente (con propósitos de testing, luego se eliminará ya que cada ruta tiene unos requisitos distintos)
 
-=> Backend: eliminado full_desc ya que al final el planteo será distinto acerca de como mirarán los usuarios la info del evento, misma página que ven en la rpi, será a la que acceda el usuario con el qr
+=> DB: eliminar db larga, conservar una sola db y añadir los campos que faltan a la única que existirá sobre las entradas
+
+## 0.0.2.2 - 24/12/2023
+
+=> Frontend: añadir formulario para comprobar eventos
+
+## 0.0.2.1 - 23/12/2023
+
+=> Añadir archivo de changelog
+
+=> Añadir archivo de tareas relacionado con las distintas futuras versiones
+
+## 0.0.2 - 22/12/2023
+
+=> Frontend: eliminar y comprobar existencia de eventos
+
+=> Backend: eliminar y comprobar eventos
+
+## 0.0.1 - 22/12/2023
+
+=> Commit inicial, añadido backend y un frontend para hacer pruebas
+
+=> Frontend: añadir y visualizar eventos
+
+=> Backend: añadir, visualizar eventos, gestionar frontend y realizar operaciones en la db

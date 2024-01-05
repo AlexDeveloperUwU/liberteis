@@ -7,7 +7,6 @@ router.post("/add", (req, res) => {
   const { title, desc, event_date, thumb_url, qr_url, published_by } = req.body;
   try {
     database.saveEvent(events, title, desc, event_date, thumb_url, qr_url, published_by);
-    res.redirect("/eventlist");
   } catch (error) {
     console.error("Error al añadir el evento:", error);
     res.status(500).send("Error al añadir el evento. Por favor, inténtalo de nuevo.");
@@ -20,7 +19,6 @@ router.post("/delete", (req, res) => {
     const event = database.checkEvent(events, eventID);
     if (event) {
       database.deleteEvent(events, eventID);
-      res.redirect("/eventlist");
     } else {
       res.status(404).send("El evento no existe.");
     }
