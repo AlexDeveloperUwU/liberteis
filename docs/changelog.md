@@ -42,3 +42,9 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 => Frontend: fixear errores de rutas luego de el cambio en los distintos formularios
 
 => Postman: creadas las distintas requests necesarias para poder probar el backend, la api y las distintas rutas
+
+## 0.0.5.1 - 05/01/2024
+
+=> Frontend: conteo de eventos funcionando correctamente, calendario muestra ya los eventos correctamente, al clickar en el evento se abre un modal con los datos del evento (añadido también en esta versión)
+
+=> Backend: eliminado full_desc ya que al final el planteo será distinto acerca de como mirarán los usuarios la info del evento, misma página que ven en la rpi, será a la que acceda el usuario con el qr
