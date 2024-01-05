@@ -6,6 +6,8 @@ Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 
 
 => Frontend: terminar de generar las plantillas que se utilizarán para toda la dashboard de administración, sobre todo la parte inicial
 
+=> Añadir .env con todas las cosas necesarias
+
 ## 0.0.6
 
 => Frontend: formulario para crear, eliminar y visualizar los eventos disponibles (todo en apartados distintos), planeado de la interfaz de la RPi
