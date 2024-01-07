@@ -3,6 +3,12 @@
 Este es el historial de versiones de este proyecto.
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras
 
+## 0.0.5.3 - 07/01/2024
+
+=> Frontend: ahora, cuando clickas en un evento, tienes la opción de editar el evento
+
+=> Backend: añadida la ruta para editar eventos
+
 ## 0.0.5.2 - 05/01/2024
 
 => Frontend: ahora el calendario además de mostrar el modal con los datos del evento, también muestra un modal con un formulario para añadir un evento cuando pinchas en un día concreto (en el formulario puedes cambiar el día si te has equivocado)
