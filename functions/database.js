@@ -17,6 +17,23 @@ function saveEvent(db,title,desc,event_date,thumb_url = null,qr_url = null,publi
   }
 }
 
+function editEvent(db, eventID, title, desc, event_date, thumb_url = null, qr_url = null, published_by = "Admin") {
+  try {
+    const event = {
+      title: title,
+      desc: desc,
+      event_date: event_date,
+      thumb_url: thumb_url,
+      qr_url: qr_url,
+      published_by: published_by,
+    };
+    const strID = eventID.toString();
+    db.set(strID, event);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function deleteEvent(db, eventID) {
   try {
     const oldID = db.get("savedid");
@@ -58,4 +75,4 @@ function getEvents(db) {
   return eventsList;
 }
 
-module.exports = { saveEvent, deleteEvent, checkEvent, getEvents };
+module.exports = { saveEvent, deleteEvent, checkEvent, getEvents, editEvent };

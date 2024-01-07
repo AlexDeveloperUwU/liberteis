@@ -5,7 +5,7 @@
 <body class="hold-transition sidebar-mini layout-fixed">
   <div class="wrapper">
     <div class="preloader flex-column justify-content-center align-items-center">
-      <img class="animation__shake" src="https://yt3.googleusercontent.com/ytc/AOPolaRdXSg8t_btJJfnf31oLo0__uAAreJdpf2xrM98=s900-c-k-c0x00ffffff-no-rj" height="60" width="60">
+      <img class="animation__shake" src="./assets/img/logoies.jpg" height="60" width="60">
     </div>
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       <ul class="navbar-nav">
@@ -16,7 +16,7 @@
     </nav>
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <a href="index3.html" class="brand-link">
-        <img src="https://yt3.googleusercontent.com/ytc/AOPolaRdXSg8t_btJJfnf31oLo0__uAAreJdpf2xrM98=s900-c-k-c0x00ffffff-no-rj" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="./assets/img/logoies.jpg" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">IES De Teis</span>
       </a>
       <div class="sidebar">
@@ -168,6 +168,85 @@
   <%- include('partials/scripts') %>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+      // Función para abrir el formulario de edición de eventos
+      function openEditEventForm(event) {
+        $('#eventModal').modal('show');
+        $('#eventModalLabel').text('Editar evento');
+        $('#eventModalBody').html(
+          '<form id="editEventForm">' +
+          '  <div class="form-group">' +
+          '    <label for="editEventTitle">Título del evento:</label>' +
+          '    <input type="text" class="form-control" id="editEventTitle" value="' + event.title + '" required>' +
+          '  </div>' +
+          '  <div class="form-group">' +
+          '    <label for="editEventDescription">Descripción del evento:</label>' +
+          '    <textarea class="form-control" id="editEventDescription" rows="3">' + event.extendedProps.description + '</textarea>' +
+          '  </div>' +
+          '  <div class="form-group">' +
+          '    <label for="editEventDate">Fecha del evento:</label>' +
+          '    <input type="datetime-local" class="form-control" id="editEventDate" value="' + moment(event.start).format('YYYY-MM-DDTHH:mm') + '" required>' +
+          '  </div>' +
+          '  <div class="form-group">' +
+          '    <label for="editEventThumbUrl">URL de la miniatura:</label>' +
+          '    <input type="text" class="form-control" id="editEventThumbUrl" value="' + event.extendedProps.thumb_url + '">' +
+          '  </div>' +
+          '  <div class="form-group">' +
+          '    <label for="editEventPublishedBy">Añadido por:</label>' +
+          '    <input type="text" class="form-control" id="editEventPublishedBy" value="' + event.extendedProps.published_by + '" required>' +
+          '  </div>' +
+          '  <button type="submit" class="btn btn-primary">Guardar Cambios</button>' +
+          '</form>'
+        );
+
+        $('#editEventForm').data('eventId', event.id);
+
+        $('#editEventForm').submit(function(event) {
+          console.log($(this).data('eventId'))
+          event.preventDefault();
+          var eventId = $(this).data('eventId');
+          saveEditedEvent(eventId);
+        });
+
+        $('#eventModal').modal('show');
+      }
+
+      // Función para guardar los cambios en un evento editado
+      function saveEditedEvent(eventId) {
+        var title = $('#editEventTitle').val();
+        var description = $('#editEventDescription').val();
+        var thumbUrl = $('#editEventThumbUrl').val();
+        var qrUrl = $('#editEventQrUrl').val();
+        var publishedBy = $('#editEventPublishedBy').val();
+        var eventDate = $('#editEventDate').val();
+
+        $.ajax({
+          url: '/api/edit/',
+          type: 'POST',
+          data: {
+            id: eventId,
+            title: title,
+            desc: description,
+            event_date: eventDate,
+            thumb_url: thumbUrl,
+            qr_url: qrUrl,
+            published_by: publishedBy
+          },
+          success: function(data) {
+            console.log('Evento editado con éxito:', data);
+            $('#eventModal').modal('hide');
+            setTimeout(function() {
+              location.reload(true);
+            }, 1000);
+          },
+          error: function(error) {
+            console.error('Error al editar el evento:', error);
+            alert('Error al editar el evento. Por favor, inténtalo de nuevo.');
+          }
+        });
+      }
+
+      // Función que maneja el calendario y casi todo lo relacionado con él, carga los eventos en el calendario, los añade si haces click y etc
       $.ajax({
         url: '/api/list',
         type: 'POST',
@@ -197,6 +276,7 @@
             themeSystem: 'bootstrap',
             events: data.map(function(event) {
               return {
+                id: event.id,
                 title: event.title,
                 start: event.event_date,
                 description: event.desc,
@@ -208,12 +288,18 @@
             eventClick: function(info) {
               var formattedDate = moment(info.event.start).format('dddd, MM/DD/YYYY, HH:mm');
 
-              $('#eventModalLabel').text(info.event.title);
-              $('#eventModalBody').html(
-                '<strong>Fecha del evento:</strong><br>' + formattedDate +
+              var eventDetails = '<strong>Fecha del evento:</strong><br>' + formattedDate +
                 '<br><br><strong>Descripción del evento:</strong><br>' + info.event.extendedProps.description +
-                '<br><br><strong>Añadido por:</strong><br>' + info.event.extendedProps.published_by
-              );
+                '<br><br><strong>Miniatura del evento:</strong><br><img src="' + info.event.extendedProps.thumb_url + '" alt="Miniatura del evento" style="max-width: 100%;">' +
+                '<br><br><strong>Añadido por:</strong><br>' + info.event.extendedProps.published_by +
+                '<br><br><button type="button" class="btn btn-primary" id="editEventButton">Editar Evento</button>';
+
+              $('#eventModalLabel').text(info.event.title);
+              $('#eventModalBody').html(eventDetails);
+
+              $('#editEventButton').on('click', function() {
+                openEditEventForm(info.event);
+              });
 
               $('#eventModal').modal('show');
             },
@@ -276,44 +362,9 @@
                   },
                   success: function(data) {
                     console.log('Evento añadido con éxito:', data);
-
-                    $.ajax({
-                      url: '/api/list',
-                      type: 'POST',
-                      success: function(data) {
-                        $('.bg-info .inner h3').text(data.length);
-
-                        var currentDate = new Date();
-                        var futureEvents = data.filter(function(event) {
-                          return new Date(event.event_date) > currentDate;
-                        });
-                        $('.bg-warning .inner h3').text(futureEvents.length);
-
-                        var pastEvents = data.filter(function(event) {
-                          return new Date(event.event_date) < currentDate;
-                        });
-                        $('.bg-success .inner h3').text(pastEvents.length);
-
-                        calendar.removeAllEvents();
-                        calendar.addEventSource(data.map(function(event) {
-                          return {
-                            title: event.title,
-                            start: event.event_date,
-                            description: event.desc,
-                            thumb_url: event.thumb_url,
-                            qr_url: event.qr_url,
-                            published_by: event.published_by
-                          };
-                        }));
-                        calendar.render();
-
-                        $('#eventModal').modal('hide');
-                      },
-                      error: function(error) {
-                        console.error('Error al obtener la lista de eventos:', error);
-                        alert('Error al obtener la lista de eventos. Por favor, inténtalo de nuevo.');
-                      }
-                    });
+                    setTimeout(function() {
+                      location.reload(true);
+                    }, 1000);
                   },
                   error: function(error) {
                     console.error('Error al añadir el evento:', error);

@@ -13,6 +13,22 @@ router.post("/add", (req, res) => {
   }
 });
 
+router.post("/edit", (req, res) => {
+  const { id, title, desc, event_date, thumb_url, qr_url, published_by } = req.body;
+  try {
+    const event = database.checkEvent(events, id);
+    if (event) {
+      database.editEvent(events, id, title, desc, event_date, thumb_url, qr_url, published_by);
+      res.status(200).send("Evento editado correctamente.");
+    } else {
+      res.status(404).send("El evento no existe.");
+    }
+  } catch (error) {
+    console.error("Error al editar el evento:", error);
+    res.status(500).send("Error al editar el evento. Por favor, inténtalo de nuevo.");
+  }
+});
+
 router.post("/delete", (req, res) => {
   const { eventID } = req.body;
   try {
