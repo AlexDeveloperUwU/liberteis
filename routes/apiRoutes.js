@@ -35,6 +35,7 @@ router.post("/delete", (req, res) => {
     const event = database.checkEvent(events, eventID);
     if (event) {
       database.deleteEvent(events, eventID);
+      res.status(200).send("Evento eliminado correctamente.");
     } else {
       res.status(404).send("El evento no existe.");
     }

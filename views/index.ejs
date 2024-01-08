@@ -168,6 +168,57 @@
   <%- include('partials/scripts') %>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // FUnción para abrir el formulario de borrar un evento
+      function openRemoveEventForm(event) {
+        $('#eventModal').modal('show');
+        $('#eventModalLabel').text('Eliminar evento');
+        $('#eventModalBody').html(
+          '<form id="removeEventForm">' +
+          '  <p class="text-danger">¿Estás seguro de que quieres eliminar el evento <strong>' + event.title + '</strong>?</p>' +
+          '<br><div class="d-flex justify-content-between">' +
+          '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
+          '<button type="submit" class="btn btn-danger">Eliminar evento</button>' +
+          '</div>' +
+          '</form>'
+        );
+
+        $('#closeModalButton').on('click', function() {
+          $('#eventModal').modal('show');
+        });
+
+        $('#removeEventForm').data('eventId', event.id);
+
+        $('#removeEventForm').submit(function(event) {
+          event.preventDefault();
+          var eventId = $(this).data('eventId');
+          console.log(eventId)
+          removeEvent(eventId);
+        });
+
+        $('#eventModal').modal('show');
+      }
+
+      // Función para eliminar un evento
+      function removeEvent(eventId) {
+        $.ajax({
+          url: '/api/delete',
+          type: 'POST',
+          data: {
+            eventID: eventId
+          },
+          success: function(data) {
+            console.log('Evento eliminado con éxito:', data);
+            $('#eventModal').modal('hide');
+            setTimeout(function() {
+              location.reload(true);
+            }, 1000);
+          },
+          error: function(error) {
+            console.error('Error al eliminar el evento:', error);
+            alert('Error al eliminar el evento. Por favor, inténtalo de nuevo.');
+          }
+        });
+      }
 
       // Función para abrir el formulario de edición de eventos
       function openEditEventForm(event) {
@@ -195,7 +246,7 @@
           '    <label for="editEventPublishedBy">Añadido por:</label>' +
           '    <input type="text" class="form-control" id="editEventPublishedBy" value="' + event.extendedProps.published_by + '" required>' +
           '  </div>' +
-          '  <button type="submit" class="btn btn-primary">Guardar Cambios</button>' +
+          '  <button type="submit" class="btn btn-primary">Guardar cambios</button>' +
           '</form>'
         );
 
@@ -288,17 +339,25 @@
             eventClick: function(info) {
               var formattedDate = moment(info.event.start).format('dddd, MM/DD/YYYY, HH:mm');
 
-              var eventDetails = '<strong>Fecha del evento:</strong><br>' + formattedDate +
+              var eventDetails = '<strong>Título del evento:</strong><br>' + info.event.title +
+                '<br><br><strong>Fecha del evento:</strong><br>' + formattedDate +
                 '<br><br><strong>Descripción del evento:</strong><br>' + info.event.extendedProps.description +
                 '<br><br><strong>Miniatura del evento:</strong><br><img src="' + info.event.extendedProps.thumb_url + '" alt="Miniatura del evento" style="max-width: 100%;">' +
                 '<br><br><strong>Añadido por:</strong><br>' + info.event.extendedProps.published_by +
-                '<br><br><button type="button" class="btn btn-primary" id="editEventButton">Editar Evento</button>';
+                '<br><br><div class="d-flex justify-content-between">' +
+                '<button type="button" class="btn btn-primary" id="editEventButton">Editar evento</button>' +
+                '<button type="button" class="btn btn-danger" id="removeEventButton">Eliminar evento</button>' +
+                '</div>';
 
-              $('#eventModalLabel').text(info.event.title);
+              $('#eventModalLabel').text('Información del evento');
               $('#eventModalBody').html(eventDetails);
 
               $('#editEventButton').on('click', function() {
                 openEditEventForm(info.event);
+              });
+
+              $('#removeEventButton').on('click', function() {
+                openRemoveEventForm(info.event);
               });
 
               $('#eventModal').modal('show');
@@ -306,7 +365,7 @@
             dateClick: function(info) {
               var formattedDate = moment(info.date).format('YYYY-MM-DDTHH:mm');
 
-              $('#eventModalLabel').text('Crear Nuevo Evento');
+              $('#eventModalLabel').text('Crear nuevo evento');
               $('#eventModalBody').html(
                 '<form id="createEventForm">' +
                 '  <div class="form-group">' +
@@ -333,7 +392,7 @@
                 '    <label for="eventPublishedBy">Añadido por:</label>' +
                 '    <input type="text" class="form-control" id="eventPublishedBy" required>' +
                 '  </div>' +
-                '  <button type="submit" class="btn btn-primary">Guardar Evento</button>' +
+                '  <button type="submit" class="btn btn-primary">Guardar evento</button>' +
                 '</form>'
               );
 

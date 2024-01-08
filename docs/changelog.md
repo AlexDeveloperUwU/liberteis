@@ -3,6 +3,14 @@
 Este es el historial de versiones de este proyecto.
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras
 
+## 0.0.5.4 - 08/01/2024
+
+=> Postman: exportada la colección de Postman para incluírla en el repositorio (solo tiene las rutas de la API, no las de auth)
+
+=> Frontend: añadido el botón de eliminar evento en el modal de visualizar evento, además de un paso intermedio para asegurarse del borrado
+
+=> Package.json: añadido el script `npm start` para poder trabajar con auto-reload
+
 ## 0.0.5.3 - 07/01/2024
 
 => Frontend: ahora, cuando clickas en un evento, tienes la opción de editar el evento
