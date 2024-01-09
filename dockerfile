@@ -14,6 +14,7 @@ RUN npm install
 COPY . .
 
 # Expone el puerto especificado en el archivo .env o el predeterminado (3000)
+ARG PORT
 ENV PORT $PORT
 EXPOSE $PORT
 
