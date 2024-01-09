@@ -61,8 +61,22 @@ Estes son los pasos a realizar:
 5- Ejecuta la aplicación
 
 ```bash
-  node index.js
+  npm start
 ```
+
+## Objetivos logrados
+
+A pesar de que este proyecto fue una especie de reto / encargo por parte de un profesor, me he propuesto una serie de objetivos que voy cumpliendo poco a poco.
+
+Estos son los objetivos que he logrado hasta ahora:
+
+- [✅] Crear un dockerfile desde 0
+- [✅] Pasar la aplicación a un container de Docker
+- [✅] Conseguir que la app entera, incluyendo los comandos de Docker, tengan uniformidad en cuanto al puerto usado (usa el mismo puerto el host, que el container, que la app)
+- [✅] Aprender a usar Postman y a crear una API completa
+- [✅] Utilizar GPG para firmar commits y tags y que aparezca en GitHub
+- [✅] Aprender a usar el versionado semántico
+- [✅] Aprender a crear y subir tags a GitHub
 
 ## Autor
 
