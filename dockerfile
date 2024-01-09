@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expone el puerto especificado en el archivo .env o el predeterminado (3000)
-ENV PORT 3000
+ENV PORT $PORT
 EXPOSE $PORT
 
 # Comando para iniciar la aplicación
