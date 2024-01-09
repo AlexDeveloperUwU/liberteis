@@ -16,7 +16,7 @@ module.exports = { events, users }; // Exportamos las bases de datos para usarla
 
 // Config del webserver
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.APP_PORT || 3000;
 
 const viewsFolder = path.join(__dirname, "views");
 const files = fs.readdirSync(viewsFolder);

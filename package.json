@@ -8,7 +8,7 @@
     "minor": "npm version minor && git push && git push --tags",
     "major": "npm version major && git push && git push --tags",
     "docker:build": "docker build -t liberteis-app .",
-    "docker:run": "docker run -p $PORT:3000 -v $(pwd)/.env:/app/.env liberteis-app"
+    "docker:run": "docker run -d -e APP_PORT=$PORT -p $PORT:$PORT liberteis-app"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
