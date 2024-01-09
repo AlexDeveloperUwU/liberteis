@@ -34,7 +34,23 @@ Estes son los pasos a realizar:
   cd liberteis
 ```
 
-3- Asegúrate de tener Node.js V18 instalada en tu equipo
+3- Asegúrate de tener Node.js V18 instalado en tu equipo
+
+### Instalación con Docker (recomendada y más sencilla)
+
+4- Construye la imagen de Docker
+
+```bash
+  npm run docker:build
+```
+
+5- Ejecuta la imagen de Docker (cambia el puerto si es necesario)
+
+```bash
+  PORT=3002 npm run docker:run
+```
+
+### Instalación manual (con Node.js)
 
 4- Instala las dependencias
 
@@ -42,9 +58,7 @@ Estes son los pasos a realizar:
   npm i
 ```
 
-## Despliegue
-
-Para desplegar el proyecto ejecuta el siguiente comando
+5- Ejecuta la aplicación
 
 ```bash
   node index.js

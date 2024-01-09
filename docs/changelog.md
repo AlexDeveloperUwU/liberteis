@@ -12,6 +12,10 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 
 => Package.json: añadido el script `npm run docker:build` para poder generar el container con la aplicación y `docker:run` desplegarlo. Añadido los scripts de versioning.
 
+=> Readme: añadido el apartado de instalación con Docker
+
+=> Backend: fixeada la ruta de creación de un evento, que no retornaba código 200 cuando todo funcionaba bien
+
 ## 0.0.5.4 - 08/01/2024
 
 => Postman: exportada la colección de Postman para incluírla en el repositorio (solo tiene las rutas de la API, no las de auth)

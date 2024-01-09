@@ -7,6 +7,7 @@ router.post("/add", (req, res) => {
   const { title, desc, event_date, thumb_url, qr_url, published_by } = req.body;
   try {
     database.saveEvent(events, title, desc, event_date, thumb_url, qr_url, published_by);
+    res.status(200).send("Evento editado correctamente.");
   } catch (error) {
     console.error("Error al añadir el evento:", error);
     res.status(500).send("Error al añadir el evento. Por favor, inténtalo de nuevo.");
