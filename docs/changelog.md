@@ -1,7 +1,16 @@
 # Historial de versiones
 
-Este es el historial de versiones de este proyecto.
-Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras
+Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
+
+Siempre intento mantener las versiones con el [versionado semántico](https://semver.org/lang/es/), pero cuando son parches tan pequeños, acabo añadiendo una especie de versión nueva, disculpadme por ello.
+
+## 0.0.5.5 - 09/01/2024
+
+=> Docker: añadido un `dockerfile` para poder generar un container con la aplicación (no tengo pensado publicar el container en DockerHub, pero será práctico en el momento en el que se implante en producción)
+
+=> Backend: cambiado el puerto para que ya use el del .env
+
+=> Package.json: añadido el script `npm run docker:build` para poder generar el container con la aplicación y `docker:run` desplegarlo. Añadido los scripts de versioning.
 
 ## 0.0.5.4 - 08/01/2024
 

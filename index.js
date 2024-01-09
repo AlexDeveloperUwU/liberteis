@@ -6,6 +6,7 @@ const enmap = require("enmap");
 const database = require("./functions/database");
 const fs = require("fs");
 const path = require("path");
+require("dotenv").config();
 
 // Bases de Datos
 const events = new enmap({ name: "events" });
@@ -15,7 +16,7 @@ module.exports = { events, users }; // Exportamos las bases de datos para usarla
 
 // Config del webserver
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const viewsFolder = path.join(__dirname, "views");
 const files = fs.readdirSync(viewsFolder);
