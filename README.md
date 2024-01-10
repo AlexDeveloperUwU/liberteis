@@ -66,7 +66,7 @@ Estes son los pasos a realizar:
 
 ## Objetivos logrados
 
-A pesar de que este proyecto fue una especie de reto / encargo por parte de un profesor, me he propuesto una serie de objetivos que voy cumpliendo poco a poco.
+A pesar de que este proyecto fue una especie de reto / encargo por parte de una profesora, me he propuesto una serie de objetivos que voy cumpliendo poco a poco.
 
 Estos son los objetivos que he logrado hasta ahora:
 
