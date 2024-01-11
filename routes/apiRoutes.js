@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const database = require("../functions/database"); // Importamos las funciones de la base de datos
+const database = require("../functions/eventsdb"); // Importamos las funciones de la base de datos
 const { events, users } = require("../index"); // Importamos las bases de datos
 
 router.post("/add", (req, res) => {

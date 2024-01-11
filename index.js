@@ -3,7 +3,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const enmap = require("enmap");
-const database = require("./functions/database");
 const fs = require("fs");
 const path = require("path");
 require("dotenv").config();

@@ -1,8 +1,8 @@
+const idGen = require("./idgen");
+
 function saveEvent(db,title,desc,event_date,thumb_url = null,qr_url = null,published_by = "Admin") {
-  const oldID = db.get("savedid");
-  const eventID = (db.get("savedid") + 1).toString();
+  const eventID = idGen.generateUniqueEventID(db);
   try {
-    db.set("savedid", oldID + 1);
     const event = {
       title: title,
       desc: desc,
@@ -27,8 +27,7 @@ function editEvent(db, eventID, title, desc, event_date, thumb_url = null, qr_ur
       qr_url: qr_url,
       published_by: published_by,
     };
-    const strID = eventID.toString();
-    db.set(strID, event);
+    db.set(eventID, event);
   } catch (error) {
     console.error(error);
   }
@@ -36,10 +35,7 @@ function editEvent(db, eventID, title, desc, event_date, thumb_url = null, qr_ur
 
 function deleteEvent(db, eventID) {
   try {
-    const oldID = db.get("savedid");
-    db.set("savedid", oldID - 1);
-    const strID = eventID.toString();
-    db.delete(strID);
+    db.delete(eventID);
   } catch (error) {
     console.error(error);
   }
@@ -47,8 +43,7 @@ function deleteEvent(db, eventID) {
 
 function checkEvent(db, eventID) {
   try {
-    const strID = eventID.toString();
-    const response = db.get(strID);
+    const response = db.get(eventID);
     return response;
   } catch (error) {
     console.error(error);
