@@ -1,12 +1,12 @@
 {
   "name": "liberteis",
-  "version": "0.0.5",
+  "version": "0.0.4",
   "main": "index.js",
   "scripts": {
     "start": "npx nodemon index.js",
-    "patch": "npm version patch && git push && git push --tags",
-    "minor": "npm version minor && git push && git push --tags",
-    "major": "npm version major && git push && git push --tags",
+    "patch": "git push && npm version patch && git push && git push --tags",
+    "minor": "git push && npm version minor && git push && git push --tags",
+    "major": "git push && npm version major && git push && git push --tags",
     "docker:build": "docker build -t liberteis-app .",
     "docker:run": "docker run -d -e APP_PORT=${PORT:-3000} -p ${PORT:-3000}:${PORT:-3000} liberteis-app"
   },
