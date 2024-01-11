@@ -7,125 +7,125 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 <details>
   <summary><b>0.0.5.6 - 11/01/2024</b></summary>
 
-=> Backend: cambiado el nombre del archivo de funciones de la base de datos de eventos, para tener mayor claridad en el futuro a la hora de crear la autenticación de usuarios, realizar funciones de generar ID de usuario y de eventos para arreglar un error grave que tenía el código que permitía duplicar IDs de eventos
+- Backend: cambiado el nombre del archivo de funciones de la base de datos de eventos, para tener mayor claridad en el futuro a la hora de crear la autenticación de usuarios, realizar funciones de generar ID de usuario y de eventos para arreglar un error grave que tenía el código que permitía duplicar IDs de eventos
 
-=> "Frontend": subidos los archivos necesarios para posteriormente generar la interfaz de la RPi
+- "Frontend": subidos los archivos necesarios para posteriormente generar la interfaz de la RPi
 
-=> Changelog: mejorar formato para reducir el tamaño del archivo (visualmente) y mejorada la categorización de las distintas versiones
+- Changelog: mejorar formato para reducir el tamaño del archivo (visualmente) y mejorada la categorización de las distintas versiones
 
 </details>
 
 <details>
   <summary><b>0.0.5.5 - 09/01/2024</b></summary>
 
-=> Docker: añadido un `dockerfile` para poder generar un container con la aplicación (no tengo pensado publicar el container en DockerHub, pero será práctico en el momento en el que se implante en producción)
+- Docker: añadido un `dockerfile` para poder generar un container con la aplicación (no tengo pensado publicar el container en DockerHub, pero será práctico en el momento en el que se implante en producción)
 
-=> Backend: cambiado el puerto para que ya use el del .env
+- Backend: cambiado el puerto para que ya use el del .env
 
-=> Package.json: añadido el script `npm run docker:build` para poder generar el container con la aplicación y `docker:run` desplegarlo. Añadido los scripts de versioning.
+- Package.json: añadido el script `npm run docker:build` para poder generar el container con la aplicación y `docker:run` desplegarlo. Añadido los scripts de versioning.
 
-=> Readme: añadido el apartado de instalación con Docker
+- Readme: añadido el apartado de instalación con Docker
 
-=> Backend: fixeada la ruta de creación de un evento, que no retornaba código 200 cuando todo funcionaba bien
+- Backend: fixeada la ruta de creación de un evento, que no retornaba código 200 cuando todo funcionaba bien
 
 </details>
 
 <details>
   <summary><b>0.0.5.4 - 08/01/2024</b></summary>
 
-=> Postman: exportada la colección de Postman para incluirla en el repositorio (solo tiene las rutas de la API, no las de auth)
+- Postman: exportada la colección de Postman para incluirla en el repositorio (solo tiene las rutas de la API, no las de auth)
 
-=> Frontend: añadido el botón de eliminar evento en el modal de visualizar evento, además de un paso intermedio para asegurarse del borrado
+- Frontend: añadido el botón de eliminar evento en el modal de visualizar evento, además de un paso intermedio para asegurarse del borrado
 
-=> Package.json: añadido el script `npm start` para poder trabajar con auto-reload
+- Package.json: añadido el script `npm start` para poder trabajar con auto-reload
 
 </details>
 
 <details>
   <summary><b>0.0.5.3 - 07/01/2024</b></summary>
 
-=> Frontend: ahora, cuando clickas en un evento, tienes la opción de editar el evento
+- Frontend: ahora, cuando clickas en un evento, tienes la opción de editar el evento
 
-=> Backend: añadida la ruta para editar eventos
+- Backend: añadida la ruta para editar eventos
 
 </details>
 
 <details>
   <summary><b>0.0.5.2 - 05/01/2024</b></summary>
 
-=> Frontend: ahora el calendario además de mostrar el modal con los datos del evento, también muestra un modal con un formulario para añadir un evento cuando pinchas en un día concreto (en el formulario puedes cambiar el día si te has equivocado)
+- Frontend: ahora el calendario además de mostrar el modal con los datos del evento, también muestra un modal con un formulario para añadir un evento cuando pinchas en un día concreto (en el formulario puedes cambiar el día si te has equivocado)
 
-=> Estructura de la web: eliminadas todas las webs y formularios creados anteriormente para el testing, poco a poco se está moviendo todo hacia la web final. Además, todo el testing de las apis se está haciendo con POSTMAN, por lo que no es necesario tener una web para ello
+- Estructura de la web: eliminadas todas las webs y formularios creados anteriormente para el testing, poco a poco se está moviendo todo hacia la web final. Además, todo el testing de las apis se está haciendo con POSTMAN, por lo que no es necesario tener una web para ello
 
-=> Backend: eliminadas las redirecciones a la página de eventslist, ya que no existe
+- Backend: eliminadas las redirecciones a la página de eventslist, ya que no existe
 
-=> Changelog: reordenar el changelog para siempre dejar por encima la última actualización realizada
+- Changelog: reordenar el changelog para siempre dejar por encima la última actualización realizada
 
 </details>
 
 <details>
   <summary><b>0.0.5.1 - 05/01/2024</b></summary>
 
-=> Frontend: conteo de eventos funcionando correctamente, calendario muestra ya los eventos correctamente, al clickar en el evento se abre un modal con los datos del evento (añadido también en esta versión)
+- Frontend: conteo de eventos funcionando correctamente, calendario muestra ya los eventos correctamente, al clickar en el evento se abre un modal con los datos del evento (añadido también en esta versión)
 
-=> Backend: eliminado full_desc ya que al final el planteo será distinto acerca de cómo mirarán los usuarios la info del evento, misma página que ven en la rpi, será a la que acceda el usuario con el qr
+- Backend: eliminado full_desc ya que al final el planteo será distinto acerca de cómo mirarán los usuarios la info del evento, misma página que ven en la rpi, será a la que acceda el usuario con el qr
 
 </details>
 
 <details>
   <summary><b>0.0.4 - 04/01/2024</b></summary>
 
-=> Backend: añadir rutas a través de un ruter y organización de las rutas por categoría, siendo la primera parte de la url la categoría (api, auth, etc) y la segunda parte la ruta en sí
+- Backend: añadir rutas a través de un ruter y organización de las rutas por categoría, siendo la primera parte de la url la categoría (api, auth, etc) y la segunda parte la ruta en sí
 
-=> Databases: fixear una ruta que usaba una database que no existía
+- Databases: fixear una ruta que usaba una database que no existía
 
-=> Frontend: fixear errores de rutas luego del cambio en los distintos formularios
+- Frontend: fixear errores de rutas luego del cambio en los distintos formularios
 
-=> Postman: creadas las distintas requests necesarias para poder probar el backend, la api y las distintas rutas
+- Postman: creadas las distintas requests necesarias para poder probar el backend, la api y las distintas rutas
 
 </details>
 
 <details>
   <summary><b>0.0.3 - 24/12/2023</b></summary>
 
-=> Backend: hacer que las rutas que añadan automáticamente (con propósitos de testing, luego se eliminará ya que cada ruta tiene unos requisitos distintos)
+- Backend: hacer que las rutas que añadan automáticamente (con propósitos de testing, luego se eliminará ya que cada ruta tiene unos requisitos distintos)
 
-=> DB: eliminar db larga, conservar una sola db y añadir los campos que faltan a la única que existirá sobre las entradas
+- DB: eliminar db larga, conservar una sola db y añadir los campos que faltan a la única que existirá sobre las entradas
 
 </details>
 
 <details>
   <summary><b>0.0.2.2 - 24/12/2023</b></summary>
 
-=> Frontend: añadir formulario para comprobar eventos
+- Frontend: añadir formulario para comprobar eventos
 
 </details>
 
 <details>
   <summary><b>0.0.2.1 - 23/12/2023</b></summary>
 
-=> Añadir archivo de changelog
+- Añadir archivo de changelog
 
-=> Añadir archivo de tareas relacionado con las distintas futuras versiones
+- Añadir archivo de tareas relacionado con las distintas futuras versiones
 
 </details>
 
 <details>
   <summary><b>0.0.2 - 22/12/2023</b></summary>
 
-=> Frontend: eliminar y comprobar existencia de eventos
+- Frontend: eliminar y comprobar existencia de eventos
 
-=> Backend: eliminar y comprobar eventos
+- Backend: eliminar y comprobar eventos
 
 </details>
 
 <details>
   <summary><b>0.0.1 - 22/12/2023</b></summary>
 
-=> Commit inicial, añadido backend y un frontend para hacer pruebas
+- Commit inicial, añadido backend y un frontend para hacer pruebas
 
-=> Frontend: añadir y visualizar eventos
+- Frontend: añadir y visualizar eventos
 
-=> Backend: añadir, visualizar eventos, gestionar frontend y realizar operaciones en la db
+- Backend: añadir, visualizar eventos, gestionar frontend y realizar operaciones en la db
 
 </details>
