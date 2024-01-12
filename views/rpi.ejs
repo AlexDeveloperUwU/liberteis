@@ -1,24 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: http://ogp.me/ns#">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Webslides -->
-    <link rel="stylesheet" href="./assets/css/webslides.css" />
-    <link rel="stylesheet" href="./assets/css/svg-icons.css" />
-  </head>
-  <body>
+<html lang="es">
 
-    <main role="main">
-      <article id="webslides">
-        
-      </article>
-    </main>
-    <!-- Webslides -->
-    <script src="./assets/js/webslides.js"></script>
-    <script src="./assets/js/svg-icons.js"></script>
-    <script>
-      window.ws = new WebSlides();
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./assets/css/eventsweb.css">
+  <title>Evento Especial</title>
+</head>
+
+<body>
+  <div class="header">
+    <div class="date">
+      <b><span id="day">Martes</span>, <span id="date">19/12/2023</span></b>
+    </div>
+    <b>
+      <div class="time" id="current-time"></div>
+    </b>
+  </div>
+
+  <div class="content">
+    <img src="./assets/img/testcartel.png" alt="Póster del evento" class="poster">
+    <div class="event-info">
+      <h1>Nombre del Evento</h1>
+      <p class="subtitle">Fecha y Hora del Evento</p>
+      <div class="description">
+        <!-- En el formulario, limitar el texto a 400 / 450 caractéres-->
+        <p id="description-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. <br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      </div>
+    </div>
+    <div class="qr-code">
+      <img src="./assets/img/qr-code.png" alt="Código QR" width="100" height="100">
+    </div>
+  </div>
+
+  <script src="./assets/js/eventsweb.js"></script>
+</body>
+
 </html>
