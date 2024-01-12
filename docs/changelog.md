@@ -5,6 +5,13 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 Siempre intento mantener las versiones con el [versionado semántico](https://semver.org/lang/es/), pero cuando son parches tan pequeños, acabo añadiendo una especie de versión nueva, disculpadme por ello.
 
 <details>
+  <summary><b>0.0.6.1 - 12/01/2024</b></summary>
+
+- Frontend: Web de la RPi casi finalizada, falta eliminar el uso de elementos placeholder
+
+</details>
+
+<details>
   <summary><b>0.0.6 - 12/01/2024</b></summary>
 
 - Frontend: Web de la RPi casi finalizada, le falta animación y no usar elementos placeholder, pero está prácticamente lista

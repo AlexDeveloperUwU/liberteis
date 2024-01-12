@@ -69,3 +69,12 @@ h1 {
   bottom: 12px;
   right: 12px;
 }
+
+.event-info {
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.event-info.hide {
+  opacity: 0;
+}

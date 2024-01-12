@@ -75,6 +75,7 @@ function mostrarEvento(evento) {
   const headerElement = document.querySelector(".header");
   const ahora = new Date();
   const fechaEvento = new Date(evento.event_date);
+
   if (
     fechaEvento.getDate() === ahora.getDate() &&
     fechaEvento.getMonth() === ahora.getMonth() &&
@@ -84,11 +85,19 @@ function mostrarEvento(evento) {
   } else {
     headerElement.classList.remove("header-onair");
   }
-  document.getElementById("eventday").innerText = obtenerDia(evento.event_date);
-  document.getElementById("eventdate").innerText = formatoFecha(evento.event_date);
-  updateEventTime(evento.event_date);
-  document.getElementById("description-text").innerHTML = dividirTexto(evento.desc);
-  document.getElementById("event-title").innerText = evento.title;
+
+  const eventInfoElement = document.querySelector(".event-info");
+  eventInfoElement.classList.add("hide");
+
+  setTimeout(function () {
+    document.getElementById("eventday").innerText = obtenerDia(evento.event_date);
+    document.getElementById("eventdate").innerText = formatoFecha(evento.event_date);
+    updateEventTime(evento.event_date);
+    document.getElementById("description-text").innerHTML = dividirTexto(evento.desc);
+    document.getElementById("event-title").innerText = evento.title;
+
+    eventInfoElement.classList.remove("hide");
+  }, 500);
 }
 
 function obtenerDia(fecha) {

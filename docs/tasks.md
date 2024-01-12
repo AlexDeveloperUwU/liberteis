@@ -8,6 +8,10 @@ Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 
 
 ## 0.0.7
 
+=> Frontend: códigos QR generados automáticamente con cada uno de los eventos y además, dar la opción para subir las miniaturas
+
+## 0.0.8
+
 => Frontend: tabla con todos los eventos y opciones como bulk delete
 
 => Backend: editar eventos
