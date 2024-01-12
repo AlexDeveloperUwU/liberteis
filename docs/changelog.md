@@ -7,7 +7,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 <details>
   <summary><b>0.0.6.1 - 12/01/2024</b></summary>
 
-- Frontend: Web de la RPi casi finalizada, falta eliminar el uso de elementos placeholder
+- Frontend: Web de la RPi casi finalizada, falta eliminar el uso de elementos placeholder, fixeado el calendario para que empiece en lunes y no en domingo
 
 </details>
 
