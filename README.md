@@ -1,4 +1,4 @@
-# LiberTeis
+# LiberTeis‎ ‎ ‎ ‎ ‎‎‎[![wakatime](https://wakatime.com/badge/github/AlexDeveloperUwU/liberteis.svg)](https://wakatime.com/badge/github/AlexDeveloperUwU/liberteis)
 
 Una pequeña web que permite la gestión de eventos de la biblioteca del IES de Teis.
 
