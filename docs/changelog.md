@@ -5,6 +5,15 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 Siempre intento mantener las versiones con el [versionado semántico](https://semver.org/lang/es/), pero cuando son parches tan pequeños, acabo añadiendo una especie de versión nueva, disculpadme por ello.
 
 <details>
+  <summary><b>0.0.6.2 - 12/01/2024</b></summary>
+
+- Frontend: Formulario para subir miniatura funcionando correctamente, url de la imagen guardada correctamente, eliminada edición de la miniatura
+
+- Backend: ruta para subir miniatura funcionando correctamente
+
+</details>
+
+<details>
   <summary><b>0.0.6.1 - 12/01/2024</b></summary>
 
 - Frontend: Web de la RPi casi finalizada, falta eliminar el uso de elementos placeholder, fixeado el calendario para que empiece en lunes y no en domingo

@@ -2,6 +2,25 @@ const express = require("express");
 const router = express.Router();
 const database = require("../functions/eventsdb"); // Importamos las funciones de la base de datos
 const { events, users } = require("../index"); // Importamos las bases de datos
+const path = require("path");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
+  },
+});
+const upload = multer({ storage });
+
+router.post("/upload", upload.single("thumbnailfile"), (req, res) => {
+  const fileName = req.file.filename;
+  const fileURL = `http://localhost:3000/thumbs/${fileName}`;
+
+  res.status(200).send({ url: fileURL });
+});
 
 router.post("/add", (req, res) => {
   const { title, desc, event_date, thumb_url, qr_url, published_by } = req.body;

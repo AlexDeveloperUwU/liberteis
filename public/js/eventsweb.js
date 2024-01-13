@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 location.reload();
               }
             }
-          }, 60000);
+          }, 5000);
 
           mostrarEvento(eventosDeLaSemana[0]);
         }

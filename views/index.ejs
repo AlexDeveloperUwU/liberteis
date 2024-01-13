@@ -232,13 +232,13 @@
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="editEventDescription">Descripción del evento:</label>' +
-          '    <textarea class="form-control" id="editEventDescription" rows="3">' + event.extendedProps.description + '</textarea>' +
+          '    <textarea class="form-control" id="editEventDescription" rows="3" maxlength=400 minlength=200 required>' + event.extendedProps.description + '</textarea>' +
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="editEventDate">Fecha del evento:</label>' +
           '    <input type="datetime-local" class="form-control" id="editEventDate" value="' + moment(event.start).format('YYYY-MM-DDTHH:mm') + '" required>' +
           '  </div>' +
-          '  <div class="form-group">' +
+          '  <div class="form-group" style="display: none;">' +
           '    <label for="editEventThumbUrl">URL de la miniatura:</label>' +
           '    <input type="text" class="form-control" id="editEventThumbUrl" value="' + event.extendedProps.thumb_url + '">' +
           '  </div>' +
@@ -375,15 +375,11 @@
                 '  </div>' +
                 '  <div class="form-group">' +
                 '    <label for="eventDescription">Descripción del evento:</label>' +
-                '    <textarea class="form-control" id="eventDescription" rows="3"></textarea>' +
+                '    <textarea class="form-control" id="eventDescription" rows="3" maxlength=400 minlength=200 required></textarea>' +
                 '  </div>' +
                 '  <div class="form-group">' +
                 '    <label for="eventDate">Fecha del evento:</label>' +
                 '    <input type="datetime-local" class="form-control" id="eventDate" value="' + formattedDate + '" required>' +
-                '  </div>' +
-                '  <div class="form-group">' +
-                '    <label for="eventThumbUrl">URL de la miniatura:</label>' +
-                '    <input type="text" class="form-control" id="eventThumbUrl">' +
                 '  </div>' +
                 '  <div class="form-group">' +
                 '    <label for="eventQrUrl">URL del código QR:</label>' +
@@ -393,42 +389,65 @@
                 '    <label for="eventPublishedBy">Añadido por:</label>' +
                 '    <input type="text" class="form-control" id="eventPublishedBy" required>' +
                 '  </div>' +
-                '  <button type="submit" class="btn btn-primary">Guardar evento</button>' +
+                '</form>' +
+
+                '<form id="uploadThumbnailForm" enctype="multipart/form-data">' +
+                '  <div class="form-group">' +
+                '     <label for="eventThumb">Miniatura del evento:</label>' +
+                '     <input type="file" class="form-control-file" id="eventThumb" name="thumbnailfile" accept="image/*">' +
+                '  </div>' +
+                '  <button type="submit" class="btn btn-primary">Subir miniatura</button>' +
                 '</form>'
               );
 
               $('#eventModal').modal('show');
 
-              $('#createEventForm').submit(function(event) {
+              $('#uploadThumbnailForm').submit(function(event) {
                 event.preventDefault();
 
-                var title = $('#eventTitle').val();
-                var description = $('#eventDescription').val();
-                var thumbUrl = $('#eventThumbUrl').val();
-                var qrUrl = $('#eventQrUrl').val();
-                var publishedBy = $('#eventPublishedBy').val();
-                var eventDate = $('#eventDate').val();
+                var formData = new FormData();
+                formData.append('thumbnailfile', $('#eventThumb')[0].files[0]);
 
                 $.ajax({
-                  url: '/api/add',
+                  url: '/api/upload',
                   type: 'POST',
-                  data: {
-                    title: title,
-                    desc: description,
-                    event_date: eventDate,
-                    thumb_url: thumbUrl,
-                    qr_url: qrUrl,
-                    published_by: publishedBy
-                  },
+                  data: formData,
+                  processData: false,
+                  contentType: false,
                   success: function(data) {
-                    console.log('Evento añadido con éxito:', data);
-                    setTimeout(function() {
-                      location.reload(true);
-                    }, 1000);
+                    var thumbUrl = data.url;
+                    var title = $('#eventTitle').val();
+                    var description = $('#eventDescription').val();
+                    var qrUrl = $('#eventQrUrl').val();
+                    var publishedBy = $('#eventPublishedBy').val();
+                    var eventDate = $('#eventDate').val();
+
+                    $.ajax({
+                      url: '/api/add',
+                      type: 'POST',
+                      data: {
+                        title: title,
+                        desc: description,
+                        event_date: eventDate,
+                        qr_url: qrUrl,
+                        published_by: publishedBy,
+                        thumb_url: thumbUrl
+                      },
+                      success: function(data) {
+                        console.log('Evento añadido con éxito:', data);
+                        setTimeout(function() {
+                          location.reload(true);
+                        }, 1000);
+                      },
+                      error: function(error) {
+                        console.error('Error al añadir el evento:', error);
+                        alert('Error al añadir el evento. Por favor, inténtalo de nuevo.');
+                      }
+                    });
                   },
                   error: function(error) {
-                    console.error('Error al añadir el evento:', error);
-                    alert('Error al añadir el evento. Por favor, inténtalo de nuevo.');
+                    console.error('Error al subir la miniatura:', error);
+                    alert('Error al subir la miniatura. Por favor, inténtalo de nuevo.');
                   }
                 });
               });

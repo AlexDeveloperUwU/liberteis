@@ -22,6 +22,7 @@ const files = fs.readdirSync(viewsFolder);
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
+app.use("/thumbs", express.static(__dirname + "/uploads"));
 app.use("/assets", express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
