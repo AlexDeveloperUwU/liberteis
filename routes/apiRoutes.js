@@ -4,6 +4,7 @@ const database = require("../functions/eventsdb"); // Importamos las funciones d
 const { events, users } = require("../index"); // Importamos las bases de datos
 const path = require("path");
 const multer = require("multer");
+const fs = require('fs');
 
 const storage = multer.diskStorage({
   destination: "uploads/",
@@ -54,6 +55,16 @@ router.post("/delete", (req, res) => {
   try {
     const event = database.checkEvent(events, eventID);
     if (event) {
+      function extractFileNameFromURL(url) {
+        const matches = url.match(/\/([^\/?#]+)[^\/]*$/);
+        return matches && matches[1];
+      }
+
+      const eventinfo = events.get(eventID, "thumb_url");
+      const thumbnailURL = eventinfo;
+      const thumbnailFileName = extractFileNameFromURL(thumbnailURL);
+      const thumbnailPath = path.join(__dirname, '..', 'uploads', thumbnailFileName);
+      fs.unlinkSync(thumbnailPath);
       database.deleteEvent(events, eventID);
       res.status(200).send("Evento eliminado correctamente.");
     } else {
