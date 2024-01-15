@@ -3,6 +3,7 @@
 Una pequeña web que permite la gestión de eventos de la biblioteca del IES de Teis.
 
 [Puedes consultar el historial de cambios aquí](./docs/changelog.md)
+
 [Puedes consultar las tareas a futuro aquí](./docs/tasks.md)
 
 ## Características
