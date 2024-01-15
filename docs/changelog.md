@@ -6,7 +6,7 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 ¡Importante! A partir de la versión 0.0.6.4 se realizará una especie de "reestructuramiento" del versionado, debido a que el actual no cumplía con el SemVer, con lo que las versiones de las tag no son correctas.
 </blockquote>
 <blockquote>
-Formato de las versiones para el changelog:<br>
+Formato de las versiones para el changelog (solo aplica en las versiones que estaban mal):<br>
   <code>Versión corregida (Versión vieja) - Fecha</code>
 </blockquote>
 
