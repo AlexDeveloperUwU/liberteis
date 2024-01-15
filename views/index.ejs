@@ -242,6 +242,10 @@
           '    <label for="editEventThumbUrl">URL de la miniatura:</label>' +
           '    <input type="text" class="form-control" id="editEventThumbUrl" value="' + event.extendedProps.thumb_url + '">' +
           '  </div>' +
+          '  <div class="form-group" style="display: none;">' +
+          '    <label for="editEventQrUrl">URL del QR:</label>' +
+          '    <input type="text" class="form-control" id="editEventQrUrl" value="' + event.extendedProps.qr_url + '">' +
+          '  </div>' +
           '  <div class="form-group">' +
           '    <label for="editEventPublishedBy">Añadido por:</label>' +
           '    <input type="text" class="form-control" id="editEventPublishedBy" value="' + event.extendedProps.published_by + '" required>' +
@@ -346,6 +350,7 @@
                 '<br><br><strong>Fecha del evento:</strong><br>' + formattedDate +
                 '<br><br><strong>Descripción del evento:</strong><br>' + info.event.extendedProps.description +
                 '<br><br><strong>Miniatura del evento:</strong><br><img src="' + info.event.extendedProps.thumb_url + '" alt="Miniatura del evento" style="max-width: 100%;">' +
+                '<br><br><strong>QR del evento:</strong><br><div id="qrcode"></div>' +
                 '<br><br><strong>Añadido por:</strong><br>' + info.event.extendedProps.published_by +
                 '<br><br><div class="d-flex justify-content-between">' +
                 '<button type="button" class="btn btn-primary" id="editEventButton">Editar evento</button>' +
@@ -354,6 +359,15 @@
 
               $('#eventModalLabel').text('Información del evento');
               $('#eventModalBody').html(eventDetails);
+
+              var qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: info.event.extendedProps.qr_url,
+                width: 150,
+                height: 150,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+              });
 
               $('#editEventButton').on('click', function() {
                 openEditEventForm(info.event);
@@ -384,10 +398,6 @@
                 '    <input type="datetime-local" class="form-control" id="eventDate" value="' + formattedDate + '" required>' +
                 '  </div>' +
                 '  <div class="form-group">' +
-                '    <label for="eventQrUrl">URL del código QR:</label>' +
-                '    <input type="text" class="form-control" id="eventQrUrl">' +
-                '  </div>' +
-                '  <div class="form-group">' +
                 '    <label for="eventPublishedBy">Añadido por:</label>' +
                 '    <input type="text" class="form-control" id="eventPublishedBy" required>' +
                 '  </div>' +
@@ -398,7 +408,7 @@
                 '     <label for="eventThumb">Miniatura del evento:</label>' +
                 '     <input type="file" class="form-control-file" id="eventThumb" name="thumbnailfile" accept="image/*">' +
                 '  </div>' +
-                '  <button type="submit" class="btn btn-primary">Subir miniatura</button>' +
+                '  <button type="submit" class="btn btn-primary">Guardar evento</button>' +
                 '</form>'
               );
 
@@ -420,7 +430,6 @@
                     var thumbUrl = data.url;
                     var title = $('#eventTitle').val();
                     var description = $('#eventDescription').val();
-                    var qrUrl = $('#eventQrUrl').val();
                     var publishedBy = $('#eventPublishedBy').val();
                     var eventDate = $('#eventDate').val();
 
@@ -431,7 +440,6 @@
                         title: title,
                         desc: description,
                         event_date: eventDate,
-                        qr_url: qrUrl,
                         published_by: publishedBy,
                         thumb_url: thumbUrl
                       },

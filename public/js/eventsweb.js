@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .then((data) => {
       if (data.length > 0) {
         const eventosDeLaSemana = filtrarEventosDeLaSemana(data);
+        console.log(eventosDeLaSemana);
 
         if (eventosDeLaSemana.length > 0) {
           let currentIndex = 0;
@@ -65,10 +66,16 @@ function filtrarEventosDeLaSemana(eventos) {
   const inicioSemana = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
   const finSemana = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate() + 7);
 
-  return eventos.filter((evento) => {
-    const fechaEvento = new Date(evento.event_date);
-    return fechaEvento >= inicioSemana && fechaEvento < finSemana;
-  });
+  return eventos
+    .filter((evento) => {
+      const fechaEvento = new Date(evento.event_date);
+      return fechaEvento >= inicioSemana && fechaEvento < finSemana;
+    })
+    .sort((a, b) => {
+      const fechaA = new Date(a.event_date);
+      const fechaB = new Date(b.event_date);
+      return fechaA - fechaB;
+    });
 }
 
 function mostrarEvento(evento) {
@@ -88,15 +95,28 @@ function mostrarEvento(evento) {
 
   const eventInfoElement = document.querySelector(".event-info");
   eventInfoElement.classList.add("hide");
+  document.getElementById("qrcode").classList.add("hide");
+  document.querySelector(".poster").classList.add("hide");
 
   setTimeout(function () {
+    document.getElementById("qrcode").innerHTML = "";
+    document.getElementById("qrcode").classList.add("hide");
     document.getElementById("eventday").innerText = obtenerDia(evento.event_date);
     document.getElementById("eventdate").innerText = formatoFecha(evento.event_date);
     updateEventTime(evento.event_date);
     document.getElementById("description-text").innerHTML = dividirTexto(evento.desc);
     document.getElementById("event-title").innerText = evento.title;
-
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+      text: evento.qr_url,
+      width: 150,
+      height: 150,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H,
+    });
+    document.getElementById("qrcode").classList.remove("hide");
     eventInfoElement.classList.remove("hide");
+    document.querySelector(".poster").classList.remove("hide");
   }, 500);
 }
 

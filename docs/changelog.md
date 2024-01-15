@@ -5,6 +5,17 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 Siempre intento mantener las versiones con el [versionado semántico](https://semver.org/lang/es/), pero cuando son parches tan pequeños, acabo añadiendo una especie de versión nueva, disculpadme por ello.
 
 <details>
+  <summary><b>0.0.6.5 - 15/01/2024</b></summary>
+
+- Frontend: Añadidos más efectos en la web de la RPi, añadido el fade in y fade out al qr y a la portadilla y un cambio de color smooth del header si es necesario. Añadido el QR del evento en el panel de control. QR generados automáticamente con QRCode.js, editado el texto del formulario de crear evento, que estaba como "Subir miniatura"
+
+- Ficheros: añadido el js de QRCode.js para poder generar los QRs de los eventos
+
+- Backend: además del filtrado de eventos, ahora también hay una organización de eventos por fecha, ya que antes se hacía automáticamente por nombre y por fecha de inserción el la DB, eliminado el qr_url en la función de guardar evento
+
+</details>
+
+<details>
   <summary><b>0.0.6.4 - 15/01/2024</b></summary>
 
 - Gitignore + Dockerignore: eliminada la carpeta de data, y la carpeta de uploads para evitar problemas al futuro
