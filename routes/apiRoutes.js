@@ -4,7 +4,7 @@ const database = require("../functions/eventsdb"); // Importamos las funciones d
 const { events, users } = require("../index"); // Importamos las bases de datos
 const path = require("path");
 const multer = require("multer");
-const fs = require('fs');
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: "uploads/",
@@ -18,7 +18,7 @@ const upload = multer({ storage });
 
 router.post("/upload", upload.single("thumbnailfile"), (req, res) => {
   const fileName = req.file.filename;
-  const fileURL = `http://localhost:3000/thumbs/${fileName}`;
+  const fileURL = `${process.env.APP_URL}/thumbs/${fileName}`;
 
   res.status(200).send({ url: fileURL });
 });
@@ -63,7 +63,7 @@ router.post("/delete", (req, res) => {
       const eventinfo = events.get(eventID, "thumb_url");
       const thumbnailURL = eventinfo;
       const thumbnailFileName = extractFileNameFromURL(thumbnailURL);
-      const thumbnailPath = path.join(__dirname, '..', 'uploads', thumbnailFileName);
+      const thumbnailPath = path.join(__dirname, "..", "uploads", thumbnailFileName);
       fs.unlinkSync(thumbnailPath);
       database.deleteEvent(events, eventID);
       res.status(200).send("Evento eliminado correctamente.");

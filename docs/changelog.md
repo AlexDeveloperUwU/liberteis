@@ -5,6 +5,23 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 Siempre intento mantener las versiones con el [versionado semántico](https://semver.org/lang/es/), pero cuando son parches tan pequeños, acabo añadiendo una especie de versión nueva, disculpadme por ello.
 
 <details>
+  <summary><b>0.0.6.4 - 15/01/2024</b></summary>
+
+- Gitignore + Dockerignore: eliminada la carpeta de data, y la carpeta de uploads para evitar problemas al futuro
+
+- Env: añadida la variable de entorno `APP_URL` para poder utilizarla en la ruta de la miniatura
+
+- Env Example: creado el archivo `.env.example` para que se pueda ver qué variables de entorno son necesarias para que la aplicación funcione correctamente
+
+- Readme: añadida la nueva variable de entorno
+
+- Index: editado el secret para que use la variable de entorno
+
+- Postman: eliminada la colección de Postman ya que la API ha sido modificada y necesita alguna actualización. No sé si volveré a subir la colección de Postman, ya que al final la API está pensada para usar con formularios y los datos introducidos de otras formas no se subirán correctamente a la base de datos.
+
+</details>
+
+<details>
   <summary><b>0.0.6.3 - 14/01/2024</b></summary>
 
 - Frontend: aviso sobre no poder editar miniaturas

@@ -27,7 +27,7 @@ app.use("/assets", express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   session({
-    secret: "Ee/KSrxWuh[iJ2*CgDiU{[RkWFW2xAn48)6Kit!2fbo7&O",
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
   })

@@ -18,6 +18,8 @@ Asegúrate de tener las siguientes variables de entorno en tu archivo .env
 
 `DB_SECRET` Una string aleatoria con letras, números y símbolos que se utilizará para encriptar y desencriptar los datos de la base de datos
 
+`APP_URL` La URL de la aplicación, por ejemplo, `http://localhost:3002` (utiliza la URL de la app pública para que funcione correctamente)
+
 ## Instalación
 
 Estes son los pasos a realizar:
