@@ -2,10 +2,20 @@
 
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
+<blockquote>
+  <p style="font-size: 14px; color: #ff4500; font-weight: bold;">¡Importante! A partir de la versión 0.0.6.4 se realizará una especie de "reestructuramiento" del versionado, debido a que el actual no cumplía con el SemVer, con lo que las versiones de las tag no son correctas.
+  </p>
+</blockquote>
+<blockquote>
+  <p style="font-size: 14px; color: #ff4500; font-weight: bold;">Formato de las versiones para el changelog:<br>
+  <code>Versión corregida (Versión vieja) - Fecha</code>
+</blockquote>
+
+
 Siempre intento mantener las versiones con el [versionado semántico](https://semver.org/lang/es/), pero cuando son parches tan pequeños, acabo añadiendo una especie de versión nueva, disculpadme por ello.
 
 <details>
-  <summary><b>0.0.6.5 - 15/01/2024</b></summary>
+  <summary><b>0.7.0 - 15/01/2024 - Version Correction</b></summary>
 
 - Frontend: Añadidos más efectos en la web de la RPi, añadido el fade in y fade out al qr y a la portadilla y un cambio de color smooth del header si es necesario. Añadido el QR del evento en el panel de control. QR generados automáticamente con QRCode.js, editado el texto del formulario de crear evento, que estaba como "Subir miniatura"
 
@@ -13,10 +23,12 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 
 - Backend: además del filtrado de eventos, ahora también hay una organización de eventos por fecha, ya que antes se hacía automáticamente por nombre y por fecha de inserción el la DB, eliminado el qr_url en la función de guardar evento
 
+- Changelog: cambiado al versionado semántico, ya que el anterior no cumplía con el SemVer, cambiadas todas las versiones anteriores para coincidir con el nuevo formato
+
 </details>
 
 <details>
-  <summary><b>0.0.6.4 - 15/01/2024</b></summary>
+  <summary><b>0.6.4 (0.0.6.4) - 15/01/2024</b></summary>
 
 - Gitignore + Dockerignore: eliminada la carpeta de data, y la carpeta de uploads para evitar problemas al futuro
 
@@ -33,7 +45,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.6.3 - 14/01/2024</b></summary>
+  <summary><b>0.6.3 (0.0.6.3) - 14/01/2024</b></summary>
 
 - Frontend: aviso sobre no poder editar miniaturas
 
@@ -42,7 +54,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.6.2 - 13/01/2024</b></summary>
+  <summary><b>0.6.2 (0.0.6.2) - 13/01/2024</b></summary>
 
 - Frontend: Formulario para subir miniatura funcionando correctamente, url de la imagen guardada correctamente, eliminada edición de la miniatura
 
@@ -51,21 +63,21 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.6.1 - 12/01/2024</b></summary>
+  <summary><b>0.6.1 (0.0.6.1) - 12/01/2024</b></summary>
 
 - Frontend: Web de la RPi casi finalizada, falta eliminar el uso de elementos placeholder, fixeado el calendario para que empiece en lunes y no en domingo
 
 </details>
 
 <details>
-  <summary><b>0.0.6 - 12/01/2024</b></summary>
+  <summary><b>0.6.0 (0.0.6) - 12/01/2024</b></summary>
 
 - Frontend: Web de la RPi casi finalizada, le falta animación y no usar elementos placeholder, pero está prácticamente lista
 
 </details>
 
 <details>
-  <summary><b>0.0.5.6 - 11/01/2024</b></summary>
+  <summary><b>0.5.6 (0.0.5.6) - 11/01/2024</b></summary>
 
 - Backend: cambiado el nombre del archivo de funciones de la base de datos de eventos, para tener mayor claridad en el futuro a la hora de crear la autenticación de usuarios, realizar funciones de generar ID de usuario y de eventos para arreglar un error grave que tenía el código que permitía duplicar IDs de eventos
 
@@ -76,7 +88,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.5.5 - 09/01/2024</b></summary>
+  <summary><b>0.5.5 (0.0.5.5) - 09/01/2024</b></summary>
 
 - Docker: añadido un `dockerfile` para poder generar un container con la aplicación (no tengo pensado publicar el container en DockerHub, pero será práctico en el momento en el que se implante en producción)
 
@@ -91,7 +103,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.5.4 - 08/01/2024</b></summary>
+  <summary><b>0.5.4 (0.0.5.4) - 08/01/2024</b></summary>
 
 - Postman: exportada la colección de Postman para incluirla en el repositorio (solo tiene las rutas de la API, no las de auth)
 
@@ -102,7 +114,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.5.3 - 07/01/2024</b></summary>
+  <summary><b>0.5.3 (0.0.5.3) - 07/01/2024</b></summary>
 
 - Frontend: ahora, cuando clickas en un evento, tienes la opción de editar el evento
 
@@ -111,7 +123,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.5.2 - 05/01/2024</b></summary>
+  <summary><b>0.5.2 (0.0.5.2) - 05/01/2024</b></summary>
 
 - Frontend: ahora el calendario además de mostrar el modal con los datos del evento, también muestra un modal con un formulario para añadir un evento cuando pinchas en un día concreto (en el formulario puedes cambiar el día si te has equivocado)
 
@@ -124,7 +136,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.5.1 - 05/01/2024</b></summary>
+  <summary><b>0.5.1 (0.0.5.1) - 05/01/2024</b></summary>
 
 - Frontend: conteo de eventos funcionando correctamente, calendario muestra ya los eventos correctamente, al clickar en el evento se abre un modal con los datos del evento (añadido también en esta versión)
 
@@ -133,7 +145,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.4 - 04/01/2024</b></summary>
+  <summary><b>0.4.0 (0.0.4) - 04/01/2024</b></summary>
 
 - Backend: añadir rutas a través de un ruter y organización de las rutas por categoría, siendo la primera parte de la url la categoría (api, auth, etc) y la segunda parte la ruta en sí
 
@@ -146,7 +158,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.3 - 24/12/2023</b></summary>
+  <summary><b>0.3.0 (0.0.3) - 24/12/2023</b></summary>
 
 - Backend: hacer que las rutas que añadan automáticamente (con propósitos de testing, luego se eliminará ya que cada ruta tiene unos requisitos distintos)
 
@@ -155,14 +167,14 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.2.2 - 24/12/2023</b></summary>
+  <summary><b>0.2.2 (0.0.2.2 )- 24/12/2023</b></summary>
 
 - Frontend: añadir formulario para comprobar eventos
 
 </details>
 
 <details>
-  <summary><b>0.0.2.1 - 23/12/2023</b></summary>
+  <summary><b>0.2.1 (0.0.2.1) - 23/12/2023</b></summary>
 
 - Añadir archivo de changelog
 
@@ -171,7 +183,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.2 - 22/12/2023</b></summary>
+  <summary><b>0.2.0 (0.0.2) - 22/12/2023</b></summary>
 
 - Frontend: eliminar y comprobar existencia de eventos
 
@@ -180,7 +192,7 @@ Siempre intento mantener las versiones con el [versionado semántico](https://se
 </details>
 
 <details>
-  <summary><b>0.0.1 - 22/12/2023</b></summary>
+  <summary><b>0.1.0 (0.0.1) - 22/12/2023 - Initial Release</b></summary>
 
 - Commit inicial, añadido backend y un frontend para hacer pruebas
 
