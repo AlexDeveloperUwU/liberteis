@@ -11,6 +11,15 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
+  <summary><b>0.7.1 - 15/01/2024 - Version Correction</b></summary>
+
+- Frontend: Añadidos ficheros para generar la interfaz de la web del evento que se muestra en el QR (sin finalizar)
+
+- Backend: añadido un log de los requests que se le hace al servidor web
+
+</details>
+
+<details>
   <summary><b>0.7.0 - 15/01/2024 - Version Correction</b></summary>
 
 - Frontend: Añadidos más efectos en la web de la RPi, añadido el fade in y fade out al qr y a la portadilla y un cambio de color smooth del header si es necesario. Añadido el QR del evento en el panel de control. QR generados automáticamente con QRCode.js, editado el texto del formulario de crear evento, que estaba como "Subir miniatura"

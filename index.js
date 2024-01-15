@@ -33,6 +33,12 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  const ip = req.ip.replace(/^::ffff:/, '');
+  console.log(`Solicitud recibida de ${ip}: ${req.method} ${req.url}`);
+  next();
+});
+
 // Rutas get del servidor web
 files.forEach((file) => {
   if (path.extname(file) === ".ejs") {
