@@ -3,16 +3,12 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <blockquote>
-  <p style="font-size: 14px; color: #ff4500; font-weight: bold;">¡Importante! A partir de la versión 0.0.6.4 se realizará una especie de "reestructuramiento" del versionado, debido a que el actual no cumplía con el SemVer, con lo que las versiones de las tag no son correctas.
-  </p>
+¡Importante! A partir de la versión 0.0.6.4 se realizará una especie de "reestructuramiento" del versionado, debido a que el actual no cumplía con el SemVer, con lo que las versiones de las tag no son correctas.
 </blockquote>
 <blockquote>
-  <p style="font-size: 14px; color: #ff4500; font-weight: bold;">Formato de las versiones para el changelog:<br>
+Formato de las versiones para el changelog:<br>
   <code>Versión corregida (Versión vieja) - Fecha</code>
 </blockquote>
-
-
-Siempre intento mantener las versiones con el [versionado semántico](https://semver.org/lang/es/), pero cuando son parches tan pequeños, acabo añadiendo una especie de versión nueva, disculpadme por ello.
 
 <details>
   <summary><b>0.7.0 - 15/01/2024 - Version Correction</b></summary>
