@@ -163,7 +163,7 @@ Formato de las versiones para el changelog:<br>
 </details>
 
 <details>
-  <summary><b>0.2.2 (0.0.2.2 )- 24/12/2023</b></summary>
+  <summary><b>0.2.2 (0.0.2.2)- 24/12/2023</b></summary>
 
 - Frontend: añadir formulario para comprobar eventos
 
