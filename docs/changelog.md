@@ -11,6 +11,17 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
+  <summary><b>0.7.3 - 16/01/2024</b></summary>
+
+- Frontend: web genérica funcionando finalmente
+
+- Backend: web de la RPi limitada únicamente a Linux aarch64 (está comentado por motivos de testing, pero próximamente se descomentará) y página web de móvil limitada únicamente a Android y iPhone
+
+- Assets: eliminados todos los assets inutilizados
+
+</details>
+
+<details>
   <summary><b>0.7.2 - 16/01/2024</b></summary>
 
 - Frontend: finalización del apartado de la web genérica para visualizar los eventos desde el código qr, pequeñas mejoras en el frontend de la RPi
