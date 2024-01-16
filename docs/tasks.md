@@ -6,6 +6,8 @@ Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 
 
 => Frontend: tabla con todos los eventos y opciones como bulk delete
 
+=> Backend: reestructuración de la carpeta de views en Las distintas categorías para una mejora organización
+
 ## 0.9.x
 
 => Frontend: página genérica que será la que tenga la info de un evento y será la que se ponga con el QR
