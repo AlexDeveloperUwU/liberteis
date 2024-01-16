@@ -33,26 +33,38 @@ app.use(
   })
 );
 
+// Mantener un registro de las solicitudes del servidor
+const getTimeDate = () => {
+  const ahora = new Date();
+  const fecha = ahora.toISOString().split("T")[0];
+  const hora = ahora.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, ""); // Eliminar puntos (:) de la hora
+  return `${fecha}-${hora}`;
+};
+
+const logsDirectorio = path.join(__dirname, "logs");
+const nombreArchivo = `log-${getTimeDate()}.log`;
+const rutaArchivo = path.join(logsDirectorio, nombreArchivo);
+
 app.use((req, res, next) => {
-  const ip = req.ip.replace(/^::ffff:/, '');
-  console.log(`Solicitud recibida de ${ip}: ${req.method} ${req.url}`);
+  const ip = req.ip.replace(/^::ffff:/, "");
+  const metodo = req.method;
+  const url = req.url;
+
+  const registro = `${ip} [${getTimeDate()}] ${metodo} ${url}\n`;
+  fs.writeFileSync(rutaArchivo, registro, { flag: "a" });
+
   next();
 });
 
-// Rutas get del servidor web
-files.forEach((file) => {
-  if (path.extname(file) === ".ejs") {
-    const name = path.basename(file, ".ejs");
-    app.get(`/${name}`, (req, res) => {
-      res.render(name);
-    });
-    console.log(`Ruta creada: /${name}`);
-  }
-});
-
-// Rutas post del servidor web
+// Rutas del servidor web
 const apiRoutes = require("./routes/apiRoutes");
 app.use("/api", apiRoutes);
+
+const dashRoutes = require("./routes/dashRoutes");
+app.use("/dash", dashRoutes);
+
+const webRoutes = require("./routes/webRoutes");
+app.use("/", webRoutes)
 
 // Iniciamos el servidor web express
 app.listen(port, () => {

@@ -87,6 +87,17 @@ router.post("/check", (req, res) => {
   }
 });
 
+router.post("/eventdata", (req, res) => {
+  const { id } = req.body;
+  try {
+    const event = events.get(id);
+    res.send(event);
+  } catch (error) {
+    console.error("Error al buscar el evento:", error);
+    res.status(500).send("Error al buscar el evento. Por favor, inténtalo de nuevo.");
+  }
+});
+
 router.post("/list", (req, res) => {
   const eventsList = database.getEvents(events);
   res.status(200).json(eventsList);

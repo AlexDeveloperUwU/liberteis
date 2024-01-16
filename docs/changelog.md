@@ -11,7 +11,20 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
-  <summary><b>0.7.1 - 15/01/2024 - Version Correction</b></summary>
+  <summary><b>0.7.2 - 16/01/2024</b></summary>
+
+- Frontend: finalización del apartado de la web genérica para visualizar los eventos desde el código qr, pequeñas mejoras en el frontend de la RPi
+
+- Backend: los logs ahora se redirigen a un archivo .log que se crea con cada inicio del servidor, contiene todas las requests que se le hacen al servidor y se mantiene la IP, el método, la fecha y hora y la ruta a la que se le hace la request
+
+- Backend 2: añadidas nuevas rutas, he eliminado las rutas automáticas ya que necesito personalizar lo que hacen algunas rutas, con lo que he creado dashRoutes (ya que todo lo que tiene que ver con la dash debe de estar en /dash) y webRoutes (que son todas las rutas que se exponen a los usuarios normales, la de la RPi y la genérica de los eventos), nueva ruta en la API para poder gestionar bien el obtener los datos de un evento
+
+- Assets: dejar de utilizar una ruta relativa, uso de rutas absolutas
+
+</details>
+
+<details>
+  <summary><b>0.7.1 - 15/01/2024</b></summary>
 
 - Frontend: Añadidos ficheros para generar la interfaz de la web del evento que se muestra en el QR (sin finalizar)
 

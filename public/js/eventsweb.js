@@ -29,6 +29,18 @@ function dividirTexto(parrafo) {
   return lineas.join("<br>");
 }
 
+function dividirTextoTitulo(titulo) {
+  var texto = titulo;
+  var palabras = texto.split(" ");
+  var lineas = [];
+
+  for (var i = 0; i < palabras.length; i += 4) {
+    var linea = palabras.slice(i, i + 4).join(" ");
+    lineas.push(linea);
+  }
+  return lineas.join("<br>");
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   fetch("/api/list", { method: "POST" })
     .then((response) => response.json())
@@ -105,7 +117,7 @@ function mostrarEvento(evento) {
     document.getElementById("eventdate").innerText = formatoFecha(evento.event_date);
     updateEventTime(evento.event_date);
     document.getElementById("description-text").innerHTML = dividirTexto(evento.desc);
-    document.getElementById("event-title").innerText = evento.title;
+    document.getElementById("event-title").innerHTML = dividirTextoTitulo(evento.title);
     var qrcode = new QRCode(document.getElementById("qrcode"), {
       text: evento.qr_url,
       width: 150,
