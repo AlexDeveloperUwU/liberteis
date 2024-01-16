@@ -4,19 +4,19 @@ Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 
 
 ## 0.8.x
 
-=> Frontend: tabla con todos los eventos y opciones como bulk delete
+=> Frontend: tabla con todos los eventos y opciones como bulk delete, poner la fecha con el día en Español
 
 => Backend: reestructuración de la carpeta de views en Las distintas categorías para una mejora organización
 
 ## 0.9.x
 
-=> Frontend: página genérica que será la que tenga la info de un evento y será la que se ponga con el QR
+=> Frontend: página genérica que será la que tenga la info de un evento y será la que se ponga con el QR, que al deslizar hacia un lado que se vea la info y si no que se vea el cartel por defecto
 
 => Backend: ruta dinámica para la página genérica con la info del evento
 
 ## 0.10.x
 
-=> Frontend: poder seleccionar que categoría tiene el evento, si es de la biblioteca o es del espacio maker, asimismo, en la página de la rpi, que en la url le pases un parámetro diciendo que cateogoría es para que sepa que eventos mostrar
+=> Frontend: poder seleccionar que categoría tiene el evento, si es de la biblioteca o es del espacio maker, asimismo, en la página de la rpi, que en la url le pases un parámetro diciendo que cateogoría es para que sepa que eventos mostrar con filtrado server-side
 
 => Backend: nueva opción en la estructura de un evento, la categoría, que será un string con el nombre de la categoría
 

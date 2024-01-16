@@ -6,27 +6,27 @@ router.get("/rpi", (req, res) => {
   //if (!userAgent || !userAgent.includes("Linux aarch64")) {
   //  return res.render("403");
   //}
-  res.render("rpi");
+  res.render("others/rpi");
 });
 
 router.get("/event/:eventID", (req, res) => {
   const userAgent = req.get("User-Agent");
 
   if (!userAgent || (!userAgent.includes("Android") && !userAgent.includes("iPhone"))) {
-    return res.render("noDevice", {
+    return res.render("errors/noDevice", {
       device: "dispositivo Android o iPhone",
     });
   }
 
-  res.render("event");
+  res.render("others/event");
 });
 
 router.get("/500", (req, res) => {
-  res.render("500");
+  res.render("errors/500");
 });
 
 router.get("/403", (req, res) => {
-  res.render("403");
+  res.render("errors/403");
 });
 
 module.exports = router;

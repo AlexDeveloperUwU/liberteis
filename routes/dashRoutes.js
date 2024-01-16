@@ -6,7 +6,13 @@ const packageJson = JSON.parse(packageJsonContent);
 const version = packageJson.version;
 
 router.get("/", (req, res) => {
-  res.render("dashevents", {
+  res.render("dash/events", {
+    version: version,
+  });
+});
+
+router.get("/eventlist", (req, res) => {
+  res.render("dash/eventslist", {
     version: version,
   });
 });
