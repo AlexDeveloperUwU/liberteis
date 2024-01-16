@@ -156,10 +156,9 @@
       </section>
     </div>
     <footer class="main-footer">
-      <strong>Copyright &copy; 2014-2024 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-      All rights reserved.
+      <strong>IES De Teis</strong>
       <div class="float-right d-none d-sm-inline-block">
-        <b>Version</b> 3.2.0
+        <b>Versión</b> <%= version %>
       </div>
     </footer>
     <aside class="control-sidebar control-sidebar-dark">
@@ -168,7 +167,7 @@
   <%- include('partials/scripts') %>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // FUnción para abrir el formulario de borrar un evento
+      // Función para abrir el formulario de borrar un evento
       function openRemoveEventForm(event) {
         $('#eventModal').modal('show');
         $('#eventModalLabel').text('Eliminar evento');
@@ -228,7 +227,7 @@
           '<form id="editEventForm">' +
           '  <div class="form-group">' +
           '    <label for="editEventTitle">Título del evento:</label>' +
-          '    <input type="text" class="form-control" id="editEventTitle" value="' + event.title + '" required>' +
+          '    <input type="text" class="form-control" id="editEventTitle" value="' + event.title + '" required maxlength=60>' +
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="editEventDescription">Descripción del evento:</label>' +
@@ -387,7 +386,7 @@
                 '<form id="createEventForm">' +
                 '  <div class="form-group">' +
                 '    <label for="eventTitle">Título del evento:</label>' +
-                '    <input type="text" class="form-control" id="eventTitle" required>' +
+                '    <input type="text" class="form-control" id="eventTitle" required maxlength=60>' +
                 '  </div>' +
                 '  <div class="form-group">' +
                 '    <label for="eventDescription">Descripción del evento:</label>' +

@@ -47,12 +47,12 @@ document.addEventListener("DOMContentLoaded", function () {
     .then((data) => {
       if (data.length > 0) {
         const eventosDeLaSemana = filtrarEventosDeLaSemana(data);
-        console.log(eventosDeLaSemana);
 
         if (eventosDeLaSemana.length > 0) {
-          let currentIndex = 0;
+          let currentIndex = 1;
           let loopCount = 0;
           const maxLoops = 5;
+          console.log(eventosDeLaSemana);
 
           const intervalId = setInterval(() => {
             mostrarEvento(eventosDeLaSemana[currentIndex]);
@@ -64,8 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 location.reload();
               }
             }
-          }, 5000);
-
+          }, 30000);
           mostrarEvento(eventosDeLaSemana[0]);
         }
       }
@@ -113,6 +112,7 @@ function mostrarEvento(evento) {
   setTimeout(function () {
     document.getElementById("qrcode").innerHTML = "";
     document.getElementById("qrcode").classList.add("hide");
+    document.getElementById("poster").src = evento.thumb_url;
     document.getElementById("eventday").innerText = obtenerDia(evento.event_date);
     document.getElementById("eventdate").innerText = formatoFecha(evento.event_date);
     updateEventTime(evento.event_date);

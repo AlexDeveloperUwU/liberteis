@@ -11,6 +11,17 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
+  <summary><b>0.7.4 - 16/01/2024</b></summary>
+
+- Frontend: establecido un límite en el título del evento, además de que ahora en la interfaz de la RPi muestra el thumbnail del evento correctamente, añadida una nueva vista para cuando no estás usando el dispositivo adecuado, fixeada la página del visor de la RPI
+
+- Backend: limitado el uso el acceso a ciertas páginas si no estás usando el dispositivo adecuado
+
+- Repo en general: code refactor
+
+</details>
+
+<details>
   <summary><b>0.7.3 - 16/01/2024</b></summary>
 
 - Frontend: web genérica funcionando finalmente

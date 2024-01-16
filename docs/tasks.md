@@ -2,7 +2,6 @@
 
 Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 100%, es solo una planificación a futuro, depende de mi disponibilidad temporal)
 
-
 ## 0.8.x
 
 => Frontend: tabla con todos los eventos y opciones como bulk delete

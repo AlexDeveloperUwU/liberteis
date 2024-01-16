@@ -11,10 +11,11 @@ router.get("/rpi", (req, res) => {
 
 router.get("/event/:eventID", (req, res) => {
   const userAgent = req.get("User-Agent");
-  console.log(userAgent);
 
   if (!userAgent || (!userAgent.includes("Android") && !userAgent.includes("iPhone"))) {
-    return res.render("403");
+    return res.render("noDevice", {
+      device: "dispositivo Android o iPhone",
+    });
   }
 
   res.render("event");

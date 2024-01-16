@@ -64,7 +64,7 @@ const dashRoutes = require("./routes/dashRoutes");
 app.use("/dash", dashRoutes);
 
 const webRoutes = require("./routes/webRoutes");
-app.use("/", webRoutes)
+app.use("/", webRoutes);
 
 // Iniciamos el servidor web express
 app.listen(port, () => {
