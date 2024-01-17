@@ -343,7 +343,13 @@
               };
             }),
             eventClick: function(info) {
-              var formattedDate = moment(info.event.start).format('dddd, MM/DD/YYYY, HH:mm');
+              function obtenerDia(fecha) {
+                const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+                const fechaObj = new Date(fecha);
+                const diaSemana = fechaObj.getDay();
+                return diasSemana[diaSemana];
+              }
+              var formattedDate = obtenerDia(info.event.start) + ', ' + moment(info.event.start).format('MM/DD/YYYY, HH:mm');
 
               var eventDetails = '<strong>Título del evento:</strong><br>' + info.event.title +
                 '<br><br><strong>Fecha del evento:</strong><br>' + formattedDate +
@@ -379,7 +385,13 @@
               $('#eventModal').modal('show');
             },
             dateClick: function(info) {
-              var formattedDate = moment(info.date).format('YYYY-MM-DDTHH:mm');
+              function obtenerDia(fecha) {
+                const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+                const fechaObj = new Date(fecha);
+                const diaSemana = fechaObj.getDay();
+                return diasSemana[diaSemana];
+              }
+              var formattedDate = obtenerDia(info.event.start) + ', ' + moment(info.event.start).format('MM/DD/YYYY, HH:mm');
 
               $('#eventModalLabel').text('Crear nuevo evento');
               $('#eventModalBody').html(

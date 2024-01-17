@@ -22,6 +22,15 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </details>
 
 <details>
+  <summary><b>0.8.0 - 17/01/2024</b></summary>
+
+- Frontend: creada lista de eventos con opción de imprimir la tabla, generar excel y generar pdf, además de incluír una especie de búsqueda en la tabla
+
+- Backend: nueva ruta para la lista de eventos
+
+</details>
+
+<details>
   <summary><b>0.7.3 - 16/01/2024</b></summary>
 
 - Frontend: web genérica funcionando finalmente
