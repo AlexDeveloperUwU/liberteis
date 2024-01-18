@@ -66,6 +66,10 @@ app.use("/dash", dashRoutes);
 const webRoutes = require("./routes/webRoutes");
 app.use("/", webRoutes);
 
+app.get("*", (req, res) => {
+  res.render("errors/404");
+});
+
 // Iniciamos el servidor web express
 app.listen(port, () => {
   console.log(`El servidor está escuchando en el puerto ${port}`);
