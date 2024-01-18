@@ -2,35 +2,33 @@
 
 Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 100%, es solo una planificación a futuro, depende de mi disponibilidad temporal)
 
-## 0.8.x
-
-=> Frontend: tabla con todos los eventos y opciones como bulk delete, poner la fecha con el día en Español
-
-=> Backend: reestructuración de la carpeta de views en Las distintas categorías para una mejora organización
-
 ## 0.9.x
 
-=> Frontend: página genérica que será la que tenga la info de un evento y será la que se ponga con el QR, que al deslizar hacia un lado que se vea la info y si no que se vea el cartel por defecto
+=> Docker: investigar como hacer que data sea un volumen para que no se pierda la información al recrear el contenedor
 
-=> Backend: ruta dinámica para la página genérica con la info del evento
+=> Auto-Updater (MUY IMPORTANTE)
 
 ## 0.10.x
+
+=> Frontend: darle funcionalidad a los botones individuales de editar y eliminar evento de la lista de eventos
+
+## 0.11.x
 
 => Frontend: poder seleccionar que categoría tiene el evento, si es de la biblioteca o es del espacio maker, asimismo, en la página de la rpi, que en la url le pases un parámetro diciendo que cateogoría es para que sepa que eventos mostrar con filtrado server-side
 
 => Backend: nueva opción en la estructura de un evento, la categoría, que será un string con el nombre de la categoría
 
-## 0.11.x
+## 0.12.x
 
 => Frontend: páginas de login, registro y tabla de usuarios básicas, solo para testing
 
 => Backend: rutas de autenticación de usuarios (name, email, username, password) [add, edit, delete, list]
 
-## 0.12.x
+## 0.13.x
 
 => Frontend: página de login y registro (la de registro solo funcionará si no hay ningún usuario en la base de datos para no tener que crear uno genérico, que normalmente sería admin)
 
-## 0.13.x
+## 0.14.x
 
 => Frontend: solo admitir que los admins creen nuevos usuarios y que busquen la lista de usuarios completa
 
