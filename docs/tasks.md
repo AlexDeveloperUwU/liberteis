@@ -4,9 +4,7 @@ Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 
 
 ## 0.9.x
 
-=> Docker: investigar como hacer que data sea un volumen para que no se pierda la información al recrear el contenedor
-
-=> Auto-Updater (MUY IMPORTANTE)
+=> Alerta cuando haya actualizaciones disponibles en GitHub y link a instrucciones
 
 ## 0.10.x
 
