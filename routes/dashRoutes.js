@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require("fs");
 const packageJsonContent = fs.readFileSync("package.json", "utf8");
 const packageJson = JSON.parse(packageJsonContent);
-const version = packageJson.version;
+const version = `v${packageJson.version}`;
 const axios = require("axios");
 
 // Función para comparar versiones semánticas
@@ -16,7 +16,6 @@ function semverCompare(a, b) {
       return pa[i] - pb[i];
     }
   }
-
   return 0;
 }
 
