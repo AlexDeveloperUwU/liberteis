@@ -11,6 +11,15 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
+  <summary><b>0.8.1 - 18/01/2024</b></summary>
+
+- Frontend: añadida la vista de 404 por si el usuario intenta acceder a una ruta no permitida
+
+- Backend: nueva ruta para el 404
+
+</details>
+
+<details>
   <summary><b>0.8.0 - 17/01/2024</b></summary>
 
 - Frontend: creada lista de eventos con opción de imprimir la tabla, generar excel y generar pdf, además de incluír una especie de búsqueda en la tabla, ya está en Español la fecha del evento que aparece en el calendario
