@@ -182,7 +182,7 @@
         );
 
         $('#closeModalButton').on('click', function() {
-          $('#eventModal').modal('show');
+          $('#eventModal').modal('hide');
         });
 
         $('#removeEventForm').data('eventId', event.id);
@@ -385,14 +385,7 @@
               $('#eventModal').modal('show');
             },
             dateClick: function(info) {
-              function obtenerDia(fecha) {
-                const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-                const fechaObj = new Date(fecha);
-                const diaSemana = fechaObj.getDay();
-                return diasSemana[diaSemana];
-              }
-              var formattedDate = obtenerDia(info.event.start) + ', ' + moment(info.event.start).format('MM/DD/YYYY, HH:mm');
-
+              var formattedDate = moment(info.date).format('YYYY-MM-DDTHH:mm');
               $('#eventModalLabel').text('Crear nuevo evento');
               $('#eventModalBody').html(
                 '<form id="createEventForm">' +
@@ -473,7 +466,6 @@
                 });
               });
             }
-
           });
 
           calendar.render();

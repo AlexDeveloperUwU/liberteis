@@ -100,6 +100,7 @@
                   <table id="listadoeventos" class="table table-bordered table-striped">
                     <thead>
                       <tr>
+                        <th></th>
                         <th>ID</th>
                         <th>Fecha y hora</th>
                         <th>Título</th>
@@ -107,12 +108,14 @@
                         <th>Miniatura</th>
                         <th>QR</th>
                         <th>Publicado por</th>
+                        <th>Acción</th>
                       </tr>
                     </thead>
                     <tbody>
                     </tbody>
                     <tfoot>
                       <tr>
+                        <th></th>
                         <th>ID</th>
                         <th>Fecha y hora</th>
                         <th>Título</th>
@@ -120,6 +123,7 @@
                         <th>Miniatura</th>
                         <th>QR</th>
                         <th>Publicado por</th>
+                        <th>Acción</th>
                       </tr>
                     </tfoot>
                   </table>
@@ -144,6 +148,22 @@
           </div>
         </div>
       </section>
+      <section>
+        <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Detalles del evento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="eventModalBody">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
   <footer class="main-footer">
@@ -159,6 +179,12 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      var pushMenuButton = document.querySelector('.nav-link[data-widget="pushmenu"]');
+      if (pushMenuButton) {
+        pushMenuButton.click();
+      }
+
+
       $.ajax({
         url: '/api/list',
         type: 'POST',
@@ -169,6 +195,7 @@
 
             $('#listadoeventos tbody').append(`
         <tr>
+          <td><input type="checkbox" class="event-checkbox"></td> <!-- Columna de selección múltiple -->
           <td>${evento.id}</td>
           <td>${formattedDate}</td>
           <td>${evento.title}</td>
@@ -176,6 +203,10 @@
           <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.thumb_url}" data-type="imagen" data-title="Miniatura">Pincha aquí</a></td>
           <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.qr_url}" data-type="qr" data-title="QR Code">Pincha aquí</a></td>
           <td>${evento.published_by}</td>
+          <td>
+            <a href="#" class="edit-event" data-id="${evento.id}" title="Editar"><i class="fas fa-edit"></i></a>
+            <a href="#" class="delete-event" data-id="${evento.id}" title="Eliminar"><i class="fas fa-trash"></i></a>
+          </td>
         </tr>
       `);
           });
@@ -212,21 +243,84 @@
                 extend: 'pdf',
                 text: 'Exportar a PDF',
                 exportOptions: {
-                  columns: [0, 1, 2, 3, 6]
+                  columns: [1, 2, 3, 4, 7]
                 }
               },
               {
                 extend: 'excel',
                 text: 'Exportar a Excel',
                 exportOptions: {
-                  columns: [0, 1, 2, 3, 6]
+                  columns: [1, 2, 3, 4, 7]
                 }
               },
               {
                 extend: 'print',
                 text: 'Imprimir',
                 exportOptions: {
-                  columns: [0, 1, 2, 3, 6]
+                  columns: [1, 2, 3, 4, 7]
+                }
+              },
+              {
+                text: 'Borrar selección',
+                className: 'btn-danger buttons-html5',
+                action: function() {
+                  var selectedEvents = [];
+
+                  // Obtener eventos seleccionados
+                  $('.event-checkbox:checked').each(function() {
+                    selectedEvents.push($(this).closest('tr').find('.delete-event').data('id'));
+                  });
+
+                  if (selectedEvents.length > 0) {
+                    openRemoveEventForm();
+                  } else {
+                    alert('No has seleccionado ningún evento.');
+                  }
+
+                  function openRemoveEventForm() {
+                    $('#eventModal').modal('show');
+                    $('#eventModalLabel').text('Eliminar eventos');
+                    $('#eventModalBody').html(
+                      '<form id="removeEventForm">' +
+                      '  <p class="text-danger">¿Estás seguro de que quieres eliminar los eventos seleccionados?</p>' +
+                      '<br><div class="d-flex justify-content-between">' +
+                      '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
+                      '<button type="submit" class="btn btn-danger">Eliminar evento</button>' +
+                      '</div>' +
+                      '</form>'
+                    );
+
+                    $('#closeModalButton').on('click', function() {
+                      $('#eventModal').modal('hide');
+                    });
+
+                    $('#removeEventForm').submit(function() {
+                      event.preventDefault();
+                      console.log(selectedEvents)
+                      selectedEvents.forEach(function(eventId) {
+                        $.ajax({
+                          url: '/api/delete',
+                          type: 'POST',
+                          data: {
+                            eventID: eventId
+                          },
+                          success: function(data) {
+                            console.log('Evento eliminado con éxito:', data);
+                            $('#eventModal').modal('hide');
+                            setTimeout(function() {
+                              location.reload(true);
+                            }, 1000);
+                          },
+                          error: function(error) {
+                            console.error('Error al eliminar el evento:', error);
+                            alert('Error al eliminar el evento. Por favor, inténtalo de nuevo.');
+                          }
+                        });
+                      });
+                    });
+
+                    $('#eventModal').modal('show');
+                  }
                 }
               }
             ],
