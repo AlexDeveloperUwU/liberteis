@@ -120,19 +120,6 @@
                     </thead>
                     <tbody>
                     </tbody>
-                    <tfoot>
-                      <tr>
-                        <th></th>
-                        <th>ID</th>
-                        <th>Fecha y hora</th>
-                        <th>Título</th>
-                        <th>Descripción</th>
-                        <th>Miniatura</th>
-                        <th>QR</th>
-                        <th>Publicado por</th>
-                        <th>Acción</th>
-                      </tr>
-                    </tfoot>
                   </table>
                 </div>
               </div>
@@ -176,7 +163,7 @@
   <footer class="main-footer">
     <strong>IES De Teis</strong>
     <div class="float-right d-none d-sm-inline-block">
-      <b>Versión</b> <%= version %>
+      <b>Versión <%= version %></b> 
     </div>
   </footer>
   <aside class="control-sidebar control-sidebar-dark">
@@ -190,7 +177,6 @@
       if (pushMenuButton) {
         pushMenuButton.click();
       }
-
 
       $.ajax({
         url: '/api/list',
@@ -211,7 +197,6 @@
           <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.qr_url}" data-type="qr" data-title="QR Code">Pincha aquí</a></td>
           <td>${evento.published_by}</td>
           <td>
-            <a href="#" class="edit-event" data-id="${evento.id}" title="Editar"><i class="fas fa-edit"></i></a>
             <a href="#" class="delete-event" data-id="${evento.id}" title="Eliminar"><i class="fas fa-trash"></i></a>
           </td>
         </tr>
@@ -331,6 +316,8 @@
                 }
               }
             ],
+            order: [[2, 'asc']],
+
             language: {
               url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
             },
@@ -347,6 +334,52 @@
           console.error('Error al obtener la lista de eventos:', error);
         }
       });
+
+      $('#listadoeventos').on('click', '.delete-event', function() {
+        var eventId = $(this).data('id');
+
+        $('#eventModal').modal('show');
+        $('#eventModalLabel').text('Eliminar evento');
+        $('#eventModalBody').html(
+          '<form id="removeEventForm">' +
+          '  <p class="text-danger">¿Estás seguro de que quieres eliminar el evento con ID '+ eventId + '?</p>' +
+          '<br><div class="d-flex justify-content-between">' +
+          '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
+          '<button type="submit" class="btn btn-danger">Eliminar evento</button>' +
+          '</div>' +
+          '</form>'
+        );
+
+        $('#closeModalButton').on('click', function() {
+          $('#eventModal').modal('hide');
+        });
+
+        $('#removeEventForm').submit(function() {
+          event.preventDefault();
+
+          $.ajax({
+            url: '/api/delete',
+            type: 'POST',
+            data: {
+              eventID: eventId
+            },
+            success: function(data) {
+              console.log('Evento eliminado con éxito:', data);
+              $('#eventModal').modal('hide');
+              setTimeout(function() {
+                location.reload(true);
+              }, 1000);
+            },
+            error: function(error) {
+              console.error('Error al eliminar el evento:', error);
+              alert('Error al eliminar el evento. Por favor, inténtalo de nuevo.');
+            }
+          });
+        });
+
+        $('#eventModal').modal('show');
+      });
+
     });
   </script>
 </body>

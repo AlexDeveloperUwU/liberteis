@@ -11,13 +11,21 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
+  <summary><b>0.10.0 - 18/01/2024</b></summary>
+
+- Frontend: Añadida la funcionalidad al botón de eliminar evento, ahora se puede eliminar un evento desde la lista de eventos de forma individual y ahora el número de la versión está en negrita
+
+
+</details>
+
+<details>
   <summary><b>0.9.1 - 18/01/2024</b></summary>
 
 - Frontend: corregido el error que había en la función de comprobar si existe una nueva versión del software, ahora funciona correctamente
 
 - Backend: fixeado el bug que hacía que las versiones no correspondieran a pesar de ser la misma
 
--(Le dedico una version minor por que es una funcionalidad muy importante hacia el futuro, sobre todo para pre-prod)
+- (Le dedico una version minor por que es una funcionalidad muy importante hacia el futuro, sobre todo para pre-prod)
 
 </details>
 

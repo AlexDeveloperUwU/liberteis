@@ -2,10 +2,6 @@
 
 Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 100%, es solo una planificación a futuro, depende de mi disponibilidad temporal)
 
-## 0.9.x
-
-=> Alerta cuando haya actualizaciones disponibles en GitHub y link a instrucciones
-
 ## 0.10.x
 
 => Frontend: darle funcionalidad a los botones individuales de editar y eliminar evento de la lista de eventos
