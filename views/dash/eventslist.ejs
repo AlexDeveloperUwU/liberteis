@@ -2,7 +2,7 @@
 <html lang="en">
 <%- include('../partials/head') %>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed layout-footer-fixed">
   <div class="wrapper">
     <div class="preloader flex-column justify-content-center align-items-center">
       <img class="animation__shake" src="/assets/img/logoies.jpg" height="60" width="60">
@@ -163,7 +163,7 @@
   <footer class="main-footer">
     <strong>IES De Teis</strong>
     <div class="float-right d-none d-sm-inline-block">
-      <b>Versión <%= version %></b> 
+      <b>Versión <%= version %></b>
     </div>
   </footer>
   <aside class="control-sidebar control-sidebar-dark">
@@ -173,6 +173,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+
       var pushMenuButton = document.querySelector('.nav-link[data-widget="pushmenu"]');
       if (pushMenuButton) {
         pushMenuButton.click();
@@ -266,7 +267,13 @@
                   if (selectedEvents.length > 0) {
                     openRemoveEventForm();
                   } else {
-                    alert('No has seleccionado ningún evento.');
+                    $(document).Toasts('create', {
+                      class: 'bg-danger',
+                      title: 'Ha ocurrido un error',
+                      autohide: true,
+                      delay: 5000,
+                      body: 'No has seleccionado ningún evento para eliminar'
+                    })
                   }
 
                   function openRemoveEventForm() {
@@ -316,7 +323,9 @@
                 }
               }
             ],
-            order: [[2, 'asc']],
+            order: [
+              [2, 'asc']
+            ],
 
             language: {
               url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
@@ -342,7 +351,7 @@
         $('#eventModalLabel').text('Eliminar evento');
         $('#eventModalBody').html(
           '<form id="removeEventForm">' +
-          '  <p class="text-danger">¿Estás seguro de que quieres eliminar el evento con ID '+ eventId + '?</p>' +
+          '  <p class="text-danger">¿Estás seguro de que quieres eliminar el evento con ID ' + eventId + '?</p>' +
           '<br><div class="d-flex justify-content-between">' +
           '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
           '<button type="submit" class="btn btn-danger">Eliminar evento</button>' +
