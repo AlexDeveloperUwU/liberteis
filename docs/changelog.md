@@ -11,6 +11,17 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
+  <summary><b>0.9.0 - 18/01/2024</b></summary>
+
+- Frontend: añadido un nuevo aviso por si existe una nueva versión del software
+
+- Backend: cuando se carga cualquer página de la dashboard, se comprueba si existe una nueva versión del software, si es así, se muestra un aviso en la parte superior de la página
+
+-(Le dedico una version minor por que es una funcionalidad muy importante hacia el futuro, sobre todo para pre-prod)
+
+</details>
+
+<details>
   <summary><b>0.8.1 - 18/01/2024</b></summary>
 
 - Frontend: añadida la vista de 404 por si el usuario intenta acceder a una ruta no permitida
