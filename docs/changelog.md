@@ -11,6 +11,19 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
+  <summary><b>0.11.0 - 19/01/2024</b></summary>
+
+- Docker: añadidos los binds necesarios para que el container funcione correctamente y si se actualiza el código, se actualice en el container sin perder ninguno de los datos necesarios, como la base de datos, las miniaturas o el .env
+
+- Dockerfile: cambiada la imagen base a node:18-alpine para reducir el tamaño del container (pasamos de 1.2GB a 300MB)
+
+- Package.json: añadido el script `npm run docker:remove` para poder parar el container, eliminarlo y luego eliminar la imagen
+
+- Index.js: cambiada la config del dotenv y comprobación de si existe la carpeta logs
+
+</details>
+
+<details>
   <summary><b>0.10.1 - 18/01/2024</b></summary>
 
 - Frontend: Si no seleccionas eventos y le das a Borrar selección, ahora te aparecerá un aviso en la derecha arriba avisándote de que no has seleccionado ningún evento que desaparece a los 5 segundos
