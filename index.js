@@ -5,7 +5,9 @@ const session = require("express-session");
 const enmap = require("enmap");
 const fs = require("fs");
 const path = require("path");
-require("dotenv").config();
+const envFilePath = path.join(__dirname, "env", ".env");
+require("dotenv").config({ path: envFilePath });
+
 
 // Bases de Datos
 const events = new enmap({ name: "events" });
@@ -44,6 +46,10 @@ const getTimeDate = () => {
 const logsDirectorio = path.join(__dirname, "logs");
 const nombreArchivo = `log-${getTimeDate()}.log`;
 const rutaArchivo = path.join(logsDirectorio, nombreArchivo);
+
+if (!fs.existsSync(logsDirectorio)) {
+  fs.mkdirSync(logsDirectorio);
+}
 
 app.use((req, res, next) => {
   const ip = req.ip.replace(/^::ffff:/, "");
