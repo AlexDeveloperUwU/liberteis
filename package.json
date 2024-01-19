@@ -8,7 +8,7 @@
     "minor": "git push && npm version minor && git push && git push --tags",
     "major": "git push && npm version major && git push && git push --tags",
     "docker:build": "docker build -t liberteis-app .",
-    "docker:run": "docker run -d --name liberteis -e APP_PORT=${PORT:-3000} -p ${PORT:-3000}:${PORT:-3000} -v /liberteis/data:/data -v /liberteis/env:/env liberteis-app"
+    "docker:run": "docker run -d --name liberteis -e APP_PORT=${PORT:-3000} -p ${PORT:-3000}:${PORT:-3000} -v /liberteis/data:/data:rw -v /liberteis/env:/env:rw liberteis-app"
   },
   "dependencies": {
     "axios": "^1.6.5",
