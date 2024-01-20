@@ -83,6 +83,8 @@ Estos son los objetivos que he logrado hasta ahora:
 - [✅] Utilizar GPG para firmar commits y tags y que aparezca en GitHub
 - [✅] Aprender a usar el versionado semántico
 - [✅] Aprender a crear y subir tags a GitHub
+- [✅] Aprender a usar la API de GitHub para saber cuando hay nuevas actualizaciones
+- [✅] Aprender a gestionar contraseñas con encriptado HASH
 - [✅] Aprender a limitar el acceso de los distintos dispositivos utilizando los User-Agents
 
 ## Autor
