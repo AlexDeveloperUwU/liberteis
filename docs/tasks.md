@@ -12,7 +12,9 @@ Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 
 
 => Frontend: páginas de login, registro y tabla de usuarios básicas, solo para testing
 
-=> Backend: rutas de autenticación de usuarios (name, email, username, password) [add, edit, delete, list]
+=> Backend: rutas de autenticación de usuarios (name, email, username, password) [add, edit, delete, list] 
+
+NOTA: POSIBILIDAD DE INTEGRACIÓN DE PASSPORT EN VEZ DE SER CUSTOM.
 
 ## 0.14.x
 
