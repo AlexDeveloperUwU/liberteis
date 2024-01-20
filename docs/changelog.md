@@ -11,6 +11,22 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
+  <summary><b>0.12.0 - 20/01/2024</b></summary>
+
+- Frontend: Seleccionar el tipo de evento que es a la hora de crearlo y de editarlo (solo en la página de calendario)
+
+- Backend: nueva propiedad añadida (categoría)
+
+</details>
+
+<details>
+  <summary><b>0.11.2 - 20/01/2024</b></summary>
+
+- Frontend: Cambiar el sidebar para que corresponda con los planes a futuros y que existan todos los apartados que deben existir en este momento
+
+</details>
+
+<details>
   <summary><b>0.11.1 - 20/01/2024</b></summary>
 
 - CodeQL: añadido el workflow de CodeQL para poder analizar el código y encontrar posibles vulnerabilidades (solo de mi código, no de las dependencias)

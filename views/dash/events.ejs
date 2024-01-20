@@ -36,40 +36,17 @@
                 <p>Inicio</p>
               </a>
             </li>
-            <li class="nav-item menu-closed">
+            <li class="nav-item">
               <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>
-                  Gestión de usuarios
-                  <i class="right fas fa-angle-left"></i>
-                </p>
+                <i class="nav-icon fas fa-home"></i>
+                <p>Listado de eventos</p>
               </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link active">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Añadir usuario</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Editar usuario</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Eliminar usuario</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Ver usuario</p>
-                  </a>
-                </li>
-              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-home"></i>
+                <p>Gestión de usuarios</p>
+              </a>
             </li>
           </ul>
         </nav>
@@ -244,6 +221,13 @@
           '    <label for="editEventDate">Fecha del evento:</label>' +
           '    <input type="datetime-local" class="form-control" id="editEventDate" value="' + moment(event.start).format('YYYY-MM-DDTHH:mm') + '" required>' +
           '  </div>' +
+          '  <div class="form-group">' +
+          '    <label for="editEventCategory">Categoría:</label>' +
+          '    <select class="form-control" id="editEventCategory" required>' +
+          '       <option value="General">General</option>' +
+          '       <option value="Espacio Maker">Espacio Maker</option>' +
+          '    </select>' +
+          '  </div>' +
           '  <div class="form-group" style="display: none;">' +
           '    <label for="editEventThumbUrl">URL de la miniatura:</label>' +
           '    <input type="text" class="form-control" id="editEventThumbUrl" value="' + event.extendedProps.thumb_url + '">' +
@@ -278,6 +262,7 @@
       function saveEditedEvent(eventId) {
         var title = $('#editEventTitle').val();
         var description = $('#editEventDescription').val();
+        var category = $('#editEventCategory').val();
         var thumbUrl = $('#editEventThumbUrl').val();
         var qrUrl = $('#editEventQrUrl').val();
         var publishedBy = $('#editEventPublishedBy').val();
@@ -291,6 +276,7 @@
             title: title,
             desc: description,
             event_date: eventDate,
+            type: category,
             thumb_url: thumbUrl,
             qr_url: qrUrl,
             published_by: publishedBy
@@ -344,6 +330,7 @@
                 title: event.title,
                 start: event.event_date,
                 description: event.desc,
+                type: event.type,
                 thumb_url: event.thumb_url,
                 qr_url: event.qr_url,
                 published_by: event.published_by
@@ -361,6 +348,7 @@
               var eventDetails = '<strong>Título del evento:</strong><br>' + info.event.title +
                 '<br><br><strong>Fecha del evento:</strong><br>' + formattedDate +
                 '<br><br><strong>Descripción del evento:</strong><br>' + info.event.extendedProps.description +
+                '<br><br><strong>Categoría:</strong><br>' + info.event.extendedProps.type +
                 '<br><br><strong>Miniatura del evento:</strong><br><img src="' + info.event.extendedProps.thumb_url + '" alt="Miniatura del evento" style="max-width: 100%;">' +
                 '<br><br><strong>QR del evento:</strong><br><div id="qrcode"></div>' +
                 '<br><br><strong>Añadido por:</strong><br>' + info.event.extendedProps.published_by +
@@ -409,6 +397,13 @@
                 '    <input type="datetime-local" class="form-control" id="eventDate" value="' + formattedDate + '" required>' +
                 '  </div>' +
                 '  <div class="form-group">' +
+                '    <label for="eventCategory">Categoría:</label>' +
+                '    <select class="form-control" id="eventCategory" required>' +
+                '       <option value="General">General</option>' +
+                '       <option value="Espacio Maker">Espacio Maker</option>' +
+                '    </select>' +
+                '  </div>' +
+                '  <div class="form-group">' +
                 '    <label for="eventPublishedBy">Añadido por:</label>' +
                 '    <input type="text" class="form-control" id="eventPublishedBy" required>' +
                 '  </div>' +
@@ -443,6 +438,7 @@
                     var description = $('#eventDescription').val();
                     var publishedBy = $('#eventPublishedBy').val();
                     var eventDate = $('#eventDate').val();
+                    var category = $('#eventCategory').val();
 
                     $.ajax({
                       url: '/api/add',
@@ -451,6 +447,7 @@
                         title: title,
                         desc: description,
                         event_date: eventDate,
+                        type: category,
                         published_by: publishedBy,
                         thumb_url: thumbUrl
                       },

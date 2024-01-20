@@ -24,9 +24,9 @@ router.post("/upload", upload.single("thumbnailfile"), (req, res) => {
 });
 
 router.post("/add", (req, res) => {
-  const { title, desc, event_date, thumb_url, qr_url, published_by } = req.body;
+  const { title, desc, event_date, type, thumb_url, qr_url, published_by } = req.body;
   try {
-    database.saveEvent(events, title, desc, event_date, thumb_url, qr_url, published_by);
+    database.saveEvent(events, title, desc, event_date, type, thumb_url, qr_url, published_by);
     res.status(200).send("Evento editado correctamente.");
   } catch (error) {
     console.error("Error al añadir el evento:", error);
@@ -35,11 +35,11 @@ router.post("/add", (req, res) => {
 });
 
 router.post("/edit", (req, res) => {
-  const { id, title, desc, event_date, thumb_url, qr_url, published_by } = req.body;
+  const { id, title, desc, event_date, type, thumb_url, qr_url, published_by } = req.body;
   try {
     const event = database.checkEvent(events, id);
     if (event) {
-      database.editEvent(events, id, title, desc, event_date, thumb_url, qr_url, published_by);
+      database.editEvent(events, id, title, desc, event_date, type, thumb_url, qr_url, published_by);
       res.status(200).send("Evento editado correctamente.");
     } else {
       res.status(404).send("El evento no existe.");
