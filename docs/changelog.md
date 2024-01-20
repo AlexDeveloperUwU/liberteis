@@ -11,6 +11,17 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
+  <summary><b>0.11.1 - 20/01/2024</b></summary>
+
+- CodeQL: añadido el workflow de CodeQL para poder analizar el código y encontrar posibles vulnerabilidades (solo de mi código, no de las dependencias)
+
+- Wiki: añadida la documentación de la instalación y actualización del software en la wiki tanto para Node.js como para Docker
+
+- Frontend: actualizado el link del aviso de nueva versión para que lleve a la wiki correctamente
+
+</details>
+
+<details>
   <summary><b>0.11.0 - 19/01/2024</b></summary>
 
 - Docker: añadidos los binds necesarios para que el container funcione correctamente y si se actualiza el código, se actualice en el container sin perder ninguno de los datos necesarios, como la base de datos, las miniaturas o el .env
