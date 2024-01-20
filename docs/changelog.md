@@ -20,11 +20,6 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </details>
 
 <details>
-  <summary><b>0.11.2 - 20/01/2024</b></summary>
-
-</details>
-
-<details>
   <summary><b>0.11.1 - 20/01/2024</b></summary>
 
 - CodeQL: añadido el workflow de CodeQL para poder analizar el código y encontrar posibles vulnerabilidades (solo de mi código, no de las dependencias)
