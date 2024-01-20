@@ -22,8 +22,6 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 <details>
   <summary><b>0.11.2 - 20/01/2024</b></summary>
 
-- Frontend: Cambiar el sidebar para que corresponda con los planes a futuros y que existan todos los apartados que deben existir en este momento
-
 </details>
 
 <details>
@@ -33,7 +31,7 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 
 - Wiki: añadida la documentación de la instalación y actualización del software en la wiki tanto para Node.js como para Docker
 
-- Frontend: actualizado el link del aviso de nueva versión para que lleve a la wiki correctamente
+- Frontend: actualizado el link del aviso de nueva versión para que lleve a la wiki correctamente, cambiar el sidebar para que corresponda con los planes a futuros y que existan todos los apartados que deben existir en este momento
 
 </details>
 
