@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
       updateEventTime(data.event_date);
       document.getElementById("description-text").innerHTML = data.desc;
       document.getElementById("event-title").innerText = data.title;
+      document.getElementById("eventCategory").innerText = data.type;
       eventInfoElement.classList.remove("hide");
     },
     error: function (error) {

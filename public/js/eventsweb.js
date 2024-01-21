@@ -118,6 +118,7 @@ function mostrarEvento(evento) {
     updateEventTime(evento.event_date);
     document.getElementById("description-text").innerHTML = dividirTexto(evento.desc);
     document.getElementById("event-title").innerHTML = dividirTextoTitulo(evento.title);
+    document.getElementById("eventCategory").innerText = evento.type;
     var qrcode = new QRCode(document.getElementById("qrcode"), {
       text: evento.qr_url,
       width: 150,
