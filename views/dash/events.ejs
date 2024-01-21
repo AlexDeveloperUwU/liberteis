@@ -206,6 +206,17 @@
       function openEditEventForm(event) {
         $('#eventModal').modal('show');
         $('#eventModalLabel').text('Editar evento');
+
+        var currentCategory = event.extendedProps.type;
+        var categoryOptions = '';
+        ['General', 'Espacio Maker'].forEach(function(category) {
+          // Agregar 'selected' si la categoría coincide con la categoría actual del evento
+          var selectedAttribute = category === currentCategory ? 'selected' : '';
+
+          categoryOptions += '<option value="' + category + '" ' + selectedAttribute + '>' + category + '</option>';
+        });
+
+
         $('#eventModalBody').html(
           '<form id="editEventForm">' +
           '  <div class="form-group">' +
@@ -223,8 +234,7 @@
           '  <div class="form-group">' +
           '    <label for="editEventCategory">Categoría:</label>' +
           '    <select class="form-control" id="editEventCategory" required>' +
-          '       <option value="General">General</option>' +
-          '       <option value="Espacio Maker">Espacio Maker</option>' +
+          '       ' + categoryOptions +
           '    </select>' +
           '  </div>' +
           '  <div class="form-group" style="display: none;">' +

@@ -2,6 +2,10 @@
 
 Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 100%, es solo una planificación a futuro, depende de mi disponibilidad temporal)
 
+## 0.12.1
+
+- Alinear el texto con css y no con js
+
 ## 0.12.x
 
 => Frontend: poder seleccionar que categoría tiene el evento, si es de la biblioteca o es del espacio maker, asimismo, en la página de la rpi, que en la url le pases un parámetro diciendo que cateogoría es para que sepa que eventos mostrar con filtrado server-side
