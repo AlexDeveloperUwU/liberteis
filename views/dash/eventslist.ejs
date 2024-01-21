@@ -89,6 +89,7 @@
                         <th>Fecha y hora</th>
                         <th>Título</th>
                         <th>Descripción</th>
+                        <th>Categoría</th>
                         <th>Miniatura</th>
                         <th>QR</th>
                         <th>Publicado por</th>
@@ -171,6 +172,7 @@
           <td>${formattedDate}</td>
           <td>${evento.title}</td>
           <td>${evento.desc}</td>
+          <td>${evento.type}</td>
           <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.thumb_url}" data-type="imagen" data-title="Miniatura">Pincha aquí</a></td>
           <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.qr_url}" data-type="qr" data-title="QR Code">Pincha aquí</a></td>
           <td>${evento.published_by}</td>
@@ -213,21 +215,21 @@
                 extend: 'pdf',
                 text: 'Exportar PDF',
                 exportOptions: {
-                  columns: [1, 2, 3, 4, 7]
+                  columns: [1, 2, 3, 4, 5, 8]
                 }
               },
               {
                 extend: 'excel',
                 text: 'Exportar Excel',
                 exportOptions: {
-                  columns: [1, 2, 3, 4, 7]
+                  columns: [1, 2, 3, 4, 5, 8]
                 }
               },
               {
                 extend: 'print',
                 text: 'Imprimir',
                 exportOptions: {
-                  columns: [1, 2, 3, 4, 7]
+                  columns: [1, 2, 3, 4, 5, 8]
                 }
               },
               {

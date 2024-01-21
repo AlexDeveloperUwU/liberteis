@@ -17,30 +17,6 @@ function updateEventTime(eventTime) {
   eventTimeElement.textContent = `${hours}:${minutes}`;
 }
 
-function dividirTexto(parrafo) {
-  var texto = parrafo;
-  var palabras = texto.split(" ");
-  var lineas = [];
-
-  for (var i = 0; i < palabras.length; i += 5) {
-    var linea = palabras.slice(i, i + 5).join(" ");
-    lineas.push(linea);
-  }
-  return lineas.join("<br>");
-}
-
-function dividirTextoTitulo(titulo) {
-  var texto = titulo;
-  var palabras = texto.split(" ");
-  var lineas = [];
-
-  for (var i = 0; i < palabras.length; i += 4) {
-    var linea = palabras.slice(i, i + 4).join(" ");
-    lineas.push(linea);
-  }
-  return lineas.join("<br>");
-}
-
 document.addEventListener("DOMContentLoaded", function () {
   fetch("/api/list", { method: "POST" })
     .then((response) => response.json())
@@ -116,8 +92,8 @@ function mostrarEvento(evento) {
     document.getElementById("eventday").innerText = obtenerDia(evento.event_date);
     document.getElementById("eventdate").innerText = formatoFecha(evento.event_date);
     updateEventTime(evento.event_date);
-    document.getElementById("description-text").innerHTML = dividirTexto(evento.desc);
-    document.getElementById("event-title").innerHTML = dividirTextoTitulo(evento.title);
+    document.getElementById("description-text").innerHTML = evento.desc;
+    document.getElementById("event-title").innerHTML = evento.title;
     document.getElementById("eventCategory").innerText = evento.type;
     var qrcode = new QRCode(document.getElementById("qrcode"), {
       text: evento.qr_url,

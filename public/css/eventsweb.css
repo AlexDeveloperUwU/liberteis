@@ -55,6 +55,8 @@ body {
 h1 {
   font-size: 1.4em;
   margin-bottom: 5px;
+  max-width: 480px; 
+  white-space: normal;
 }
 
 .subtitle {
@@ -64,6 +66,8 @@ h1 {
 
 .description {
   margin-top: 20px;
+  max-width: 480px;
+  white-space: normal;
 }
 
 .qr-code {

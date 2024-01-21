@@ -11,6 +11,20 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 </blockquote>
 
 <details>
+  <summary><b>0.12.2 - 21/01/2024</b></summary>
+
+- Frontend: se ve la columna de tipo de evento en la lista de eventos, limitado el ancho de la descripción para que no se salga de la pantalla de la rpi
+
+</details>
+
+<details>
+  <summary><b>0.12.1 - 21/01/2024</b></summary>
+
+- Frontend: Tipo de evento ya se ve en todas las partes
+
+</details>
+
+<details>
   <summary><b>0.12.0 - 20/01/2024</b></summary>
 
 - Frontend: Seleccionar el tipo de evento que es a la hora de crearlo y de editarlo (solo en la página de calendario)
