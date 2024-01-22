@@ -7,6 +7,15 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 </blockquote>
 
 <details>
+  <summary><b>0.13.0 - 22/01/2024</b></summary>
+
+- Frontend: añadir botón de clonar evento, que carga los datos del evento seleccionado para clonar, y los pone en el formulario de creación de evento y luego te permite editar todo menos la miniatura
+
+- Backend: rework del sistema de eliminar los ficheros de póster, evitando que borre la miniatura si hay otra entrada usándola para que sea más sencillo, más seguro y para ahorrar espacio en el servidor (evitando tener que subir la misma cada vez que se crea un evento igual a otro)
+
+</details>
+
+<details>
   <summary><b>0.12.3 - 22/01/2024</b></summary>
 
 - Frontend: añadir clase hide a subtitle para que no se vea nada cuando aún está obteniendo la información de los eventos, fixeados los links del sidebar para que lleven a las páginas correctas, añadir mensaje por si no hay eventos en el servidor

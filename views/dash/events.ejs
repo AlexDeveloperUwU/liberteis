@@ -304,6 +304,89 @@
         });
       }
 
+      function openCloneEventForm(event) {
+        $('#eventModal').modal('show');
+        $('#eventModalLabel').text('Clonar evento');
+
+        var currentCategory = event.extendedProps.type;
+        var categoryOptions = '';
+        ['General', 'Espacio Maker'].forEach(function(category) {
+          var selectedAttribute = category === currentCategory ? 'selected' : '';
+          categoryOptions += '<option value="' + category + '" ' + selectedAttribute + '>' + category + '</option>';
+        });
+
+        $('#eventModalBody').html(
+          '<form id="cloneEventForm">' +
+          '  <div class="form-group">' +
+          '    <label for="cloneEventTitle">Título del evento:</label>' +
+          '    <input type="text" class="form-control" id="cloneEventTitle" value="' + event.title + '" required maxlength=60>' +
+          '  </div>' +
+          '  <div class="form-group">' +
+          '    <label for="cloneEventDescription">Descripción del evento:</label>' +
+          '    <textarea class="form-control" id="cloneEventDescription" rows="3" maxlength=400 required>' + event.extendedProps.description + '</textarea>' +
+          '  </div>' +
+          '  <div class="form-group">' +
+          '    <label for="cloneEventDate">Fecha del evento:</label>' +
+          '    <input type="datetime-local" class="form-control" id="cloneEventDate" value="' + moment(event.start).format('YYYY-MM-DDTHH:mm') + '" required>' +
+          '  </div>' +
+          '  <div class="form-group">' +
+          '    <label for="cloneEventCategory">Categoría:</label>' +
+          '    <select class="form-control" id="cloneEventCategory" required>' +
+          '       ' + categoryOptions +
+          '    </select>' +
+          '  </div>' +
+          '  <div class="form-group" style="display: none;">' +
+          '    <label for="cloneEventThumbUrl">URL de la miniatura:</label>' +
+          '    <input type="text" class="form-control" id="cloneEventThumbUrl" value="' + event.extendedProps.thumb_url + '">' +
+          '  </div>' +
+          '  <div class="form-group">' +
+          '    <label for="cloneEventPublishedBy">Añadido por:</label>' +
+          '    <input type="text" class="form-control" id="cloneEventPublishedBy" value="' + event.extendedProps.published_by + '" required>' +
+          '  </div>' +
+          '   <label for="cloneEventAlert">Miniatura:</label>' +
+          '   <p class="text-warning">No se puede editar la miniatura al clonar un evento, con lo que deberás crear un evento nuevo para poder subir la nueva miniatura</p>' +
+          '  <button type="submit" class="btn btn-warning">Clonar evento</button>' +
+          '</form>'
+        );
+
+        $('#cloneEventForm').data('eventId', event.id);
+
+        $('#cloneEventForm').submit(function(event) {
+          event.preventDefault();
+          var title = $('#cloneEventTitle').val();
+          var description = $('#cloneEventDescription').val();
+          var category = $('#cloneEventCategory').val();
+          var thumbUrl = $('#cloneEventThumbUrl').val();
+          var publishedBy = $('#cloneEventPublishedBy').val();
+          var eventDate = $('#cloneEventDate').val();
+
+          $.ajax({
+            url: '/api/add',
+            type: 'POST',
+            data: {
+              title: title,
+              desc: description,
+              event_date: eventDate,
+              type: category,
+              thumb_url: thumbUrl,
+              published_by: publishedBy,
+            },
+            success: function(data) {
+              console.log('Evento añadido con éxito:', data);
+              setTimeout(function() {
+                location.reload(true);
+              }, 1000);
+            },
+            error: function(error) {
+              console.error('Error al añadir el evento:', error);
+              alert('Error al añadir el evento. Por favor, inténtalo de nuevo.');
+            }
+          });
+        });
+
+        $('#eventModal').modal('show');
+      }
+
       // Función que maneja el calendario y casi todo lo relacionado con él, carga los eventos en el calendario, los añade si haces click y etc
       $.ajax({
         url: '/api/list',
@@ -358,11 +441,12 @@
                 '<br><br><strong>Fecha del evento:</strong><br>' + formattedDate +
                 '<br><br><strong>Descripción del evento:</strong><br>' + info.event.extendedProps.description +
                 '<br><br><strong>Categoría:</strong><br>' + info.event.extendedProps.type +
-                '<br><br><strong>Miniatura del evento:</strong><br><img src="' + info.event.extendedProps.thumb_url + '" alt="Miniatura del evento" style="max-width: 100%;">' +
+                '<br><br><strong>Miniatura del evento:</strong><br><img src="' + info.event.extendedProps.thumb_url + '" alt="Miniatura del evento" style="max-width: 75%;">' +
                 '<br><br><strong>QR del evento:</strong><br><div id="qrcode"></div>' +
                 '<br><br><strong>Añadido por:</strong><br>' + info.event.extendedProps.published_by +
                 '<br><br><div class="d-flex justify-content-between">' +
                 '<button type="button" class="btn btn-primary" id="editEventButton">Editar evento</button>' +
+                '<button type="button" class="btn btn-warning" id="cloneEventButton">Clonar evento</button>' +
                 '<button type="button" class="btn btn-danger" id="removeEventButton">Eliminar evento</button>' +
                 '</div>';
 
@@ -384,6 +468,10 @@
 
               $('#removeEventButton').on('click', function() {
                 openRemoveEventForm(info.event);
+              });
+
+              $('#cloneEventButton').on('click', function() {
+                openCloneEventForm(info.event);
               });
 
               $('#eventModal').modal('show');

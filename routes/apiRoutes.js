@@ -39,7 +39,7 @@ router.post("/edit", (req, res) => {
   try {
     const event = database.checkEvent(events, id);
     if (event) {
-      database.editEvent(events, id, title, desc, event_date, type, thumb_url, qr_url, published_by);
+      database.editEvent(events,id,title,desc,event_date,type,thumb_url,qr_url,published_by);
       res.status(200).send("Evento editado correctamente.");
     } else {
       res.status(404).send("El evento no existe.");
@@ -54,6 +54,7 @@ router.post("/delete", (req, res) => {
   const { eventID } = req.body;
   try {
     const event = database.checkEvent(events, eventID);
+
     if (event) {
       function extractFileNameFromURL(url) {
         const matches = url.match(/\/([^\/?#]+)[^\/]*$/);
@@ -64,7 +65,26 @@ router.post("/delete", (req, res) => {
       const thumbnailURL = eventinfo;
       const thumbnailFileName = extractFileNameFromURL(thumbnailURL);
       const thumbnailPath = path.join(__dirname, "..", "uploads", thumbnailFileName);
-      fs.unlinkSync(thumbnailPath);
+
+      const eventsList = [];
+      events.forEach((data, id) => {
+        if (id !== "savedid") {
+          eventsList.push({
+            id: id,
+            thumb_url: data.thumb_url
+          });
+        }
+      });
+
+      // Filtrar eventos con la misma miniatura
+      const entriesWithSameThumbnail = eventsList.filter(
+        (entry) => entry.thumb_url === thumbnailURL
+      );
+
+      if (entriesWithSameThumbnail.length === 1) {
+        fs.unlinkSync(thumbnailPath);
+      }
+
       database.deleteEvent(events, eventID);
       res.status(200).send("Evento eliminado correctamente.");
     } else {

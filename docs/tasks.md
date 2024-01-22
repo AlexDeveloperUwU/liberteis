@@ -2,30 +2,28 @@
 
 Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 100%, es solo una planificación a futuro, depende de mi disponibilidad temporal)
 
-## 0.12.1
-
-- Alinear el texto con css y no con js
-
-## 0.12.x
-
-=> Frontend: poder seleccionar que categoría tiene el evento, si es de la biblioteca o es del espacio maker, asimismo, en la página de la rpi, que en la url le pases un parámetro diciendo que cateogoría es para que sepa que eventos mostrar con filtrado server-side
-
-=> Backend: nueva opción en la estructura de un evento, la categoría, que será un string con el nombre de la categoría
-
 ## 0.13.x
 
-=> Frontend: páginas de login, registro y tabla de usuarios básicas, solo para testing
+=> Botón de clonar evento (carga los datos del evento seleccionado para clonar, y los pone en el formulario de creación de evento y luego te permite editar la fecha para que lo puedas crear en otra fecha)
+
+## 0.14.x
+
+=> Frontend: páginas de login, registro y tabla de usuarios básicas, solo para testing, filtrado server side para la categoría de los eventos si es necesario
 
 => Backend: rutas de autenticación de usuarios (name, email, username, password) [add, edit, delete, list] 
 
 NOTA: POSIBILIDAD DE INTEGRACIÓN DE PASSPORT EN VEZ DE SER CUSTOM.
 
-## 0.14.x
+## 0.15.x
 
 => Frontend: página de login y registro (la de registro solo funcionará si no hay ningún usuario en la base de datos para no tener que crear uno genérico, que normalmente sería admin)
 
-## 0.15.x
+## 0.16.x
 
 => Frontend: solo admitir que los admins creen nuevos usuarios y que busquen la lista de usuarios completa
 
 => Backend: ruta para poder ver la lista de usuarios completa y que pueda gestionarlos el admin
+
+## 0.17.x
+
+=> Frontend: mejoras visuales en los modales como una especie de carga mientras se están realizando las peticiones
