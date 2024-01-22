@@ -21,27 +21,44 @@ document.addEventListener("DOMContentLoaded", function () {
   fetch("/api/list", { method: "POST" })
     .then((response) => response.json())
     .then((data) => {
-      if (data.length > 0) {
+      console.log(data);
+      if (data.length === 0) {
+        $("#noMoreEvents").removeClass("hide");
+        $("#content").html(
+          '<div id="noMoreEvents" class="noMoreEvents">' +
+            "   <p><b>No hay eventos cargados en el servidor, vuelve más tarde para ver si ya hay alguna actividad que te divierta, que te llame la atención o que sirva para desarrollar tus cualidades!</b></p>" +
+            "</div>"
+        );
+        setTimeout(() => {
+          location.reload();
+        }, 5 * 60 * 1000);
+      } else {
         const eventosDeLaSemana = filtrarEventosDeLaSemana(data);
-
         if (eventosDeLaSemana.length > 0) {
-          let currentIndex = 1;
-          let loopCount = 0;
-          const maxLoops = 5;
-          console.log(eventosDeLaSemana);
+          if (eventosDeLaSemana.length === 1) {
+            mostrarEvento(eventosDeLaSemana[0]);
+            setTimeout(() => {
+              location.reload();
+            }, 5 * 60 * 1000);
+          } else {
+            let currentIndex = 1;
+            let loopCount = 0;
+            const maxLoops = 5;
+            console.log(eventosDeLaSemana);
 
-          const intervalId = setInterval(() => {
-            mostrarEvento(eventosDeLaSemana[currentIndex]);
-            currentIndex = (currentIndex + 1) % eventosDeLaSemana.length;
-            if (currentIndex === 0) {
-              loopCount++;
-              if (loopCount >= maxLoops) {
-                clearInterval(intervalId);
-                location.reload();
+            const intervalId = setInterval(() => {
+              mostrarEvento(eventosDeLaSemana[currentIndex]);
+              currentIndex = (currentIndex + 1) % eventosDeLaSemana.length;
+              if (currentIndex === 0) {
+                loopCount++;
+                if (loopCount >= maxLoops) {
+                  clearInterval(intervalId);
+                  location.reload();
+                }
               }
-            }
-          }, 30000);
-          mostrarEvento(eventosDeLaSemana[0]);
+            }, 5000);
+            mostrarEvento(eventosDeLaSemana[0]);
+          }
         }
       }
     })
@@ -50,19 +67,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function filtrarEventosDeLaSemana(eventos) {
   const ahora = new Date();
-  const inicioSemana = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
-  const finSemana = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate() + 7);
+  const diaSemana = ahora.getDay();
 
-  return eventos
+  const diasHastaLunes = diaSemana === 0 ? 6 : diaSemana - 1;
+  const inicioSemana = new Date(
+    ahora.getFullYear(),
+    ahora.getMonth(),
+    ahora.getDate() - diasHastaLunes
+  );
+
+  const finSemana = new Date(ahora.getFullYear(), ahora.getMonth(), inicioSemana.getDate() + 6);
+
+  const eventosSemanaActual = eventos
     .filter((evento) => {
       const fechaEvento = new Date(evento.event_date);
-      return fechaEvento >= inicioSemana && fechaEvento < finSemana;
+      return fechaEvento >= ahora && fechaEvento >= inicioSemana && fechaEvento <= finSemana;
     })
     .sort((a, b) => {
       const fechaA = new Date(a.event_date);
       const fechaB = new Date(b.event_date);
       return fechaA - fechaB;
     });
+
+  if (eventosSemanaActual.length === 0) {
+    const inicioProximaSemana = new Date(
+      ahora.getFullYear(),
+      ahora.getMonth(),
+      ahora.getDate() + (8 - diaSemana)
+    );
+
+    const finProximaSemana = new Date(
+      inicioProximaSemana.getFullYear(),
+      inicioProximaSemana.getMonth(),
+      inicioProximaSemana.getDate() + 6
+    );
+
+    const eventosProximaSemana = eventos
+      .filter((evento) => {
+        const fechaEvento = new Date(evento.event_date);
+        return fechaEvento >= inicioProximaSemana && fechaEvento <= finProximaSemana;
+      })
+      .sort((a, b) => {
+        const fechaA = new Date(a.event_date);
+        const fechaB = new Date(b.event_date);
+        return fechaA - fechaB;
+      });
+
+    return eventosProximaSemana;
+  }
+
+  return eventosSemanaActual;
 }
 
 function mostrarEvento(evento) {
@@ -105,6 +159,7 @@ function mostrarEvento(evento) {
     });
     document.getElementById("qrcode").classList.remove("hide");
     eventInfoElement.classList.remove("hide");
+    document.querySelector(".subtitle").classList.remove("hide");
     document.querySelector(".poster").classList.remove("hide");
   }, 500);
 }

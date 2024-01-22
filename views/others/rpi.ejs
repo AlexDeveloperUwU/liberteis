@@ -17,12 +17,11 @@
       <div class="time" id="current-time"></div>
     </b>
   </div>
-
-  <div class="content">
+  <div id="content" class="content">
     <img id="poster" src="" alt="Póster del evento" class="poster hide">
     <div class="event-info">
       <h1 id="event-title"></h1>
-      <p class="subtitle"><span id="eventday"></span> <span id="eventdate"></span> <span id="event-time"></span><br>Categoría: <span id="eventCategory"></span></p>
+      <p class="subtitle hide"><span id="eventday"></span> <span id="eventdate"></span> <span id="event-time"></span><br>Categoría: <span id="eventCategory"></span></p>
       <div class="description">
         <p id="parrafop"><span id="description-text"></span></p>
       </div>
@@ -31,7 +30,10 @@
       <div id="qrcode"></div>
     </div>
   </div>
-
+  <!-- jQuery -->
+  <script src="/assets/js/plugins/jquery/jquery.min.js"></script>
+  <!-- jQuery UI 1.11.4 -->
+  <script src="/assets/js/plugins/jquery-ui/jquery-ui.min.js"></script>
   <script src="/assets/js/eventsweb.js"></script>
   <script src="/assets/js/plugins/qrcodejs/qrcode.js"></script>
 </body>

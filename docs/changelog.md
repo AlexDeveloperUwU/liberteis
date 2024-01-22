@@ -5,10 +5,15 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 <blockquote>
 ¡Importante! A partir de la versión 0.0.6.4 se realizará una especie de "reestructuramiento" del versionado, debido a que el actual no cumplía con el SemVer, con lo que las versiones de las tag no son correctas.
 </blockquote>
-<blockquote>
-Formato de las versiones para el changelog (solo aplica en las versiones que estaban mal):<br>
-  <code>Versión corregida (Versión vieja) - Fecha</code>
-</blockquote>
+
+<details>
+  <summary><b>0.12.3 - 22/01/2024</b></summary>
+
+- Frontend: añadir clase hide a subtitle para que no se vea nada cuando aún está obteniendo la información de los eventos, fixeados los links del sidebar para que lleven a las páginas correctas, añadir mensaje por si no hay eventos en el servidor
+
+- Backend: rework completo del js que muestra la pantalla de la rpi, para mostrar los eventos de la semana siguiente si no quedan más esta semana, si no hay eventos entonces muestra un mensaje diciendo que no tiene mensajes
+
+</details>
 
 <details>
   <summary><b>0.12.2 - 21/01/2024</b></summary>
@@ -20,14 +25,14 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 <details>
   <summary><b>0.12.1 - 21/01/2024</b></summary>
 
-- Frontend: Tipo de evento ya se ve en todas las partes
+- Frontend: tipo de evento ya se ve en todas las partes
 
 </details>
 
 <details>
   <summary><b>0.12.0 - 20/01/2024</b></summary>
 
-- Frontend: Seleccionar el tipo de evento que es a la hora de crearlo y de editarlo (solo en la página de calendario)
+- Frontend: seleccionar el tipo de evento que es a la hora de crearlo y de editarlo (solo en la página de calendario)
 
 - Backend: nueva propiedad añadida (categoría)
 
@@ -60,14 +65,14 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 <details>
   <summary><b>0.10.1 - 18/01/2024</b></summary>
 
-- Frontend: Si no seleccionas eventos y le das a Borrar selección, ahora te aparecerá un aviso en la derecha arriba avisándote de que no has seleccionado ningún evento que desaparece a los 5 segundos
+- Frontend: si no seleccionas eventos y le das a Borrar selección, ahora te aparecerá un aviso en la derecha arriba avisándote de que no has seleccionado ningún evento que desaparece a los 5 segundos
 
 </details>
 
 <details>
   <summary><b>0.10.0 - 18/01/2024</b></summary>
 
-- Frontend: Añadida la funcionalidad al botón de eliminar evento, ahora se puede eliminar un evento desde la lista de eventos de forma individual y ahora el número de la versión está en negrita
+- Frontend: añadida la funcionalidad al botón de eliminar evento, ahora se puede eliminar un evento desde la lista de eventos de forma individual y ahora el número de la versión está en negrita
 
 </details>
 
@@ -149,7 +154,7 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 <details>
   <summary><b>0.7.1 - 15/01/2024</b></summary>
 
-- Frontend: Añadidos ficheros para generar la interfaz de la web del evento que se muestra en el QR (sin finalizar)
+- Frontend: añadidos ficheros para generar la interfaz de la web del evento que se muestra en el QR (sin finalizar)
 
 - Backend: añadido un log de los requests que se le hace al servidor web
 
@@ -158,7 +163,7 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 <details>
   <summary><b>0.7.0 - 15/01/2024 - Version Correction</b></summary>
 
-- Frontend: Añadidos más efectos en la web de la RPi, añadido el fade in y fade out al qr y a la portadilla y un cambio de color smooth del header si es necesario. Añadido el QR del evento en el panel de control. QR generados automáticamente con QRCode.js, editado el texto del formulario de crear evento, que estaba como "Subir miniatura"
+- Frontend: añadidos más efectos en la web de la RPi, añadido el fade in y fade out al qr y a la portadilla y un cambio de color smooth del header si es necesario. Añadido el QR del evento en el panel de control. QR generados automáticamente con QRCode.js, editado el texto del formulario de crear evento, que estaba como "Subir miniatura"
 
 - Ficheros: añadido el js de QRCode.js para poder generar los QRs de los eventos
 
@@ -197,7 +202,7 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 <details>
   <summary><b>0.6.2 (0.0.6.2) - 13/01/2024</b></summary>
 
-- Frontend: Formulario para subir miniatura funcionando correctamente, url de la imagen guardada correctamente, eliminada edición de la miniatura
+- Frontend: formulario para subir miniatura funcionando correctamente, url de la imagen guardada correctamente, eliminada edición de la miniatura
 
 - Backend: ruta para subir miniatura funcionando correctamente
 
@@ -206,14 +211,14 @@ Formato de las versiones para el changelog (solo aplica en las versiones que est
 <details>
   <summary><b>0.6.1 (0.0.6.1) - 12/01/2024</b></summary>
 
-- Frontend: Web de la RPi casi finalizada, falta eliminar el uso de elementos placeholder, fixeado el calendario para que empiece en lunes y no en domingo
+- Frontend: web de la RPi casi finalizada, falta eliminar el uso de elementos placeholder, fixeado el calendario para que empiece en lunes y no en domingo
 
 </details>
 
 <details>
   <summary><b>0.6.0 (0.0.6) - 12/01/2024</b></summary>
 
-- Frontend: Web de la RPi casi finalizada, le falta animación y no usar elementos placeholder, pero está prácticamente lista
+- Frontend: web de la RPi casi finalizada, le falta animación y no usar elementos placeholder, pero está prácticamente lista
 
 </details>
 
