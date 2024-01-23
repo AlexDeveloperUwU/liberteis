@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('../partials/head') %>
+
+<body class="hold-transition register-page">
+  <div class="register-box">
+    <div class="card card-outline card-primary">
+      <div class="card-header text-center">
+        <a class="h1" style="font-size: xx-large;"><b>Gestión de eventos</b></a>
+      </div>
+      <div class="card-body">
+        <p class="login-box-msg">Registra a un nuevo usuario</p>
+        <form action="/auth/register" method="post" onsubmit="return validateForm()">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Nombre de usuario" name="username" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-user"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" class="form-control" placeholder="Contraseña" name="password" id="password" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" class="form-control" placeholder="Vuelve a escribir tu contraseña" name="confirmPassword" id="confirmPassword" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <%- include('../partials/scripts') %>
+    <script>
+      function validateForm() {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+        if (password !== confirmPassword) {
+          alert("Las contraseñas no coinciden");
+          return false;
+        }
+        return true;
+      }
+    </script>
+</body>
+
+</html>
