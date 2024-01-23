@@ -8,7 +8,6 @@ const path = require("path");
 const envFilePath = path.join(__dirname, "env", ".env");
 require("dotenv").config({ path: envFilePath });
 
-
 // Bases de Datos
 const events = new enmap({ name: "events" });
 const users = new enmap({ name: "users" });
@@ -18,9 +17,9 @@ module.exports = { events, users }; // Exportamos las bases de datos para usarla
 // Config del webserver
 const app = express();
 const port = process.env.APP_PORT || 3000;
-
 const viewsFolder = path.join(__dirname, "views");
 const files = fs.readdirSync(viewsFolder);
+const passport = require("./functions/auth");
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
@@ -34,6 +33,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Mantener un registro de las solicitudes del servidor
 const getTimeDate = () => {
@@ -67,7 +68,10 @@ const apiRoutes = require("./routes/apiRoutes");
 app.use("/api", apiRoutes);
 
 const dashRoutes = require("./routes/dashRoutes");
-app.use("/dash", dashRoutes);
+app.use("/gestion", dashRoutes);
+
+const authRoutes = require("./routes/authRoutes");
+app.use("/auth", authRoutes);
 
 const webRoutes = require("./routes/webRoutes");
 app.use("/", webRoutes);

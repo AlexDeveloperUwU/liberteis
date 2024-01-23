@@ -22,7 +22,7 @@ Estos son los objetivos que he logrado hasta ahora:
 
 - [✅] Crear un dockerfile desde 0
 - [✅] Pasar la aplicación a un container de Docker
-- [✅] Conseguir que la app entera, incluyendo los comandos de Docker, tengan uniformidad en cuanto al puerto usado (usa el mismo puerto el host, el container y la app)
+- [✅] Conseguir que la app entera tenga uniformidad en cuanto al puerto usado con Docker
 - [✅] Aprender a usar Postman y a crear una API completa
 - [✅] Utilizar GPG para firmar commits y tags y que aparezca en GitHub
 - [✅] Aprender a usar el versionado semántico
@@ -30,6 +30,8 @@ Estos son los objetivos que he logrado hasta ahora:
 - [✅] Aprender a usar la API de GitHub para saber cuando hay nuevas actualizaciones
 - [✅] Aprender a gestionar contraseñas con encriptado HASH
 - [✅] Aprender a limitar el acceso de los distintos dispositivos utilizando los User-Agents
+- [✅] Aprender a crear un servidor PXE para cargar SO en las distintas pantallas
+- [✅] Uso y análisis de código con CodeQL
 
 ## Autor
 

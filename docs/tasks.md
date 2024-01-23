@@ -2,10 +2,6 @@
 
 Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 100%, es solo una planificación a futuro, depende de mi disponibilidad temporal)
 
-## 0.13.x
-
-=> Botón de clonar evento (carga los datos del evento seleccionado para clonar, y los pone en el formulario de creación de evento y luego te permite editar la fecha para que lo puedas crear en otra fecha)
-
 ## 0.14.x
 
 => Frontend: páginas de login, registro y tabla de usuarios básicas, solo para testing, filtrado server side para la categoría de los eventos si es necesario
