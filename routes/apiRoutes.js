@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const database = require("../functions/eventsdb"); 
-const { events } = require("../index");
+const database = require("../functions/eventsdb"); // Importamos las funciones de la base de datos
+const { events, users } = require("../index"); // Importamos las bases de datos
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
