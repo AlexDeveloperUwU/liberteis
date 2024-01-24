@@ -13,6 +13,13 @@
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
       </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link" data-toggle="modal" data-target="#changelogModal" href="#">
+            <i class="far fa-bell"></i>
+          </a>
+        </li>
+      </ul>
     </nav>
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <a href="/dash" class="brand-link">
@@ -136,6 +143,23 @@
           </div>
         </div>
       </section>
+      <section>
+        <div class="modal fade" id="changelogModal" tabindex="-1" role="dialog" aria-labelledby="changelogModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="changelogModalLabel">Changelog</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="log-wrapper"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
   <footer class="main-footer">
@@ -151,6 +175,88 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+      // Función para abrir el changelog
+      var logArr;
+
+      fetch('/assets/docs/changelog.json')
+        .then(response => response.json())
+        .then(data => {
+          logArr = data;
+          renderChangelog();
+        })
+        .catch(error => console.error('Error al cargar el archivo JSON:', error));
+
+      function renderChangelog() {
+        var buildLogSection = function(log) {
+          var $section = document.createElement("section");
+          $section.classList.add("log");
+          var $title = buildLogTitle(log);
+          var $list = buildLogList(log);
+          $section.appendChild($title);
+          $section.appendChild($list);
+          return $section;
+        };
+
+        var buildLogTitle = function(log) {
+          var $title = document.createElement("h5");
+          var versionDate = log.version + " - " + log.date;
+          $title.innerText = versionDate;
+          return $title;
+        };
+
+        var buildLogList = function(log) {
+          var $ul = document.createElement("ul");
+          var list = log.list || [];
+          var startIndex = Math.max(0, list.length - 2);
+          for (var i = startIndex; i < list.length; i++) {
+            var item = list[i];
+            var $li = buildLogItem(item);
+            $ul.appendChild($li);
+          }
+          return $ul;
+        };
+
+        var buildLogItem = function(item) {
+          var $li = document.createElement("li");
+          var $labels = document.createElement("div");
+          $labels.classList.add("label-wrapper");
+          var $detail = document.createElement("div");
+          $detail.classList.add("detail-wrapper");
+
+          const labelColorMap = {
+            'añadido': 'green',
+            'eliminado': 'red',
+            'arreglado': 'yellow'
+          };
+
+          const labelColor = labelColorMap[item.label[0].toLowerCase()] || 'black';
+
+          item.label.forEach(function(label) {
+            var $label = document.createElement("span");
+            $label.classList.add("label", "label-" + label.toLowerCase());
+            $label.style.color = labelColor;
+            $label.innerText = label;
+            $labels.appendChild($label);
+          });
+
+          $detail.innerHTML = item.detail;
+
+          $li.appendChild($labels);
+          $li.appendChild($detail);
+
+          return $li;
+        };
+
+        var sectionArr = [];
+
+        for (var i = Math.max(0, logArr.length - 2); i < logArr.length; i++) {
+          var $section = buildLogSection(logArr[i]);
+          sectionArr.push($section.outerHTML);
+        }
+
+        document.querySelector(".log-wrapper").innerHTML = sectionArr.join("");
+      }
 
       var pushMenuButton = document.querySelector('.nav-link[data-widget="pushmenu"]');
       if (pushMenuButton) {

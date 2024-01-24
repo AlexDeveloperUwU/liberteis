@@ -5,6 +5,7 @@ const session = require("express-session");
 const enmap = require("enmap");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 const envFilePath = path.join(__dirname, "env", ".env");
 require("dotenv").config({ path: envFilePath });
 
@@ -20,6 +21,10 @@ const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRou
 const viewsFolder = path.join(__dirname, "views");
 const files = fs.readdirSync(viewsFolder);
 
+// Comprueba si el host es Windows (mi entorno de desarrollo)
+const isWindows = os.platform() === 'win32';
+const secureCookie = !isWindows;
+
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use("/thumbs", express.static(__dirname + "/uploads"));
@@ -31,13 +36,12 @@ app.use(
     resave: true,
     saveUninitialized: true,
     cookie: {
-      secure: true, 
+      secure: secureCookie,
       httpOnly: true,
     },
   })
 );
 app.use(checkAuth);
-
 
 // Mantener un registro de las solicitudes del servidor
 const getTimeDate = () => {
@@ -76,7 +80,7 @@ app.use("/dash", requireAuth, dashRoutes);
 const webRoutes = require("./routes/webRoutes");
 app.use("/", webRoutes);
 
-app.use('/auth', authRouter);
+app.use("/auth", authRouter);
 
 app.get("*", (req, res) => {
   res.render("errors/404");
