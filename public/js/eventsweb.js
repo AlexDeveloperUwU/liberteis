@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
         setTimeout(() => {
           location.reload();
-        }, 5 * 60 * 1000);
+        }, 15 * 60 * 1000);
       } else {
         const eventosDeLaSemana = filtrarEventosDeLaSemana(data);
         if (eventosDeLaSemana.length > 0) {
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
             mostrarEvento(eventosDeLaSemana[0]);
             setTimeout(() => {
               location.reload();
-            }, 5 * 60 * 1000);
+            }, 15 * 60 * 1000);
           } else {
             let currentIndex = 1;
             let loopCount = 0;
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   location.reload();
                 }
               }
-            }, 5000);
+            }, 15000);
             mostrarEvento(eventosDeLaSemana[0]);
           }
         }
@@ -78,10 +78,13 @@ function filtrarEventosDeLaSemana(eventos) {
 
   const finSemana = new Date(ahora.getFullYear(), ahora.getMonth(), inicioSemana.getDate() + 6);
 
+  const retrasoEliminarEventos = 60 * 60 * 1000; // 1 hora en milisegundos
+
   const eventosSemanaActual = eventos
     .filter((evento) => {
       const fechaEvento = new Date(evento.event_date);
-      return fechaEvento >= ahora && fechaEvento >= inicioSemana && fechaEvento <= finSemana;
+      const tiempoActualConRetraso = ahora.getTime() - retrasoEliminarEventos;
+      return fechaEvento >= inicioSemana && fechaEvento <= finSemana && fechaEvento > tiempoActualConRetraso;
     })
     .sort((a, b) => {
       const fechaA = new Date(a.event_date);
@@ -118,6 +121,7 @@ function filtrarEventosDeLaSemana(eventos) {
 
   return eventosSemanaActual;
 }
+
 
 function mostrarEvento(evento) {
   const headerElement = document.querySelector(".header");

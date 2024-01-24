@@ -72,7 +72,7 @@ app.use((req, res, next) => {
 
 // Rutas del servidor web
 const apiRoutes = require("./routes/apiRoutes");
-app.use("/api", requireAuth, apiRoutes);
+app.use("/api", apiRoutes);
 
 const dashRoutes = require("./routes/dashRoutes");
 app.use("/dash", requireAuth, dashRoutes);
