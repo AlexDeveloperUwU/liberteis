@@ -7,7 +7,7 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 </blockquote>
 
 <details>
-  <summary><b>0.14.1 - 23/01/2024</b></summary>
+  <summary><b>0.14.1 - 24/01/2024</b></summary>
 
 - Frontend: mejoras estéticas en la página de inicio de sesión y de registro
 
