@@ -18,7 +18,6 @@ router.get("/register", (req, res) => {
 
 router.post("/register", async (req, res) => {
   const { fullname, email, password } = req.body;
-  console.log(password)
 
   if (users.get(email)) {
     return res.status(400).json({ message: "Usuario ya existe" });

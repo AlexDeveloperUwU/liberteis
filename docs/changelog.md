@@ -13,6 +13,8 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 
 - changelogGen.js: script para generar el changelog automáticamente a partir de un JSON que se usará en la siguiente versión para el frontend (así los usuarios que usan la app están pendientes de los cambios que se realizan)
 
+- Auth: fix un console.log que estaba marcado como fallo de seguridad por exponer la contraseña del usuario en consola
+
 </details>
 
 
