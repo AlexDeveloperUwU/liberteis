@@ -1,0 +1,16 @@
+[
+  {
+    "version": "0.8.1",
+    "date": "2024-01-11",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Customizable some commonly used shortcuts, effortlessly boosting work efficiency."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Added \"Do Not Disturb\" switch for subscribed calendars, accessible in \"Settings - Subscribed Calendars.\""
+      }
+    ]
+  }
+]

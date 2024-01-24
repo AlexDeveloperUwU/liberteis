@@ -7,6 +7,16 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 </blockquote>
 
 <details>
+  <summary><b>0.14.2 - 24/01/2024</b></summary>
+
+- Changelog: añadido un changelog generado automáticamente para que sea más consistente y fácil de mantener, además de que sea más sencillo de entender para el usuario
+
+- changelogGen.js: script para generar el changelog automáticamente a partir de un JSON que se usará en la siguiente versión para el frontend (así los usuarios que usan la app están pendientes de los cambios que se realizan)
+
+</details>
+
+
+<details>
   <summary><b>0.14.1 - 24/01/2024</b></summary>
 
 - Frontend: mejoras estéticas en la página de inicio de sesión y de registro
