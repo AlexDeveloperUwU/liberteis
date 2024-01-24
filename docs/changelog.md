@@ -7,6 +7,24 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 </blockquote>
 
 <details>
+  <summary><b>0.14.1 - 23/01/2024</b></summary>
+
+- Frontend: mejoras estéticas en la página de inicio de sesión y de registro
+
+- Backend: cambios en las API de autenticación de usuarios
+
+</details>
+
+<details>
+  <summary><b>0.14.0 - 23/01/2024</b></summary>
+
+- Frontend: formulario de inicio de sesión y de registro
+
+- Backend: autenticación básica de usuarios
+
+</details>
+
+<details>
   <summary><b>0.13.0 - 22/01/2024</b></summary>
 
 - Frontend: añadir botón de clonar evento, que carga los datos del evento seleccionado para clonar, y los pone en el formulario de creación de evento y luego te permite editar todo menos la miniatura

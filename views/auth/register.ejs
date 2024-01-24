@@ -11,12 +11,20 @@
       </div>
       <div class="card-body">
         <p class="login-box-msg">Registra a un nuevo usuario</p>
-        <form action="/auth/register" method="post" onsubmit="return validateForm()">
+        <form id="registerForm">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Nombre de usuario" name="username" required>
+            <input type="text" class="form-control" placeholder="Nombre y apellidos" name="fullname" id="fullname" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="email" class="form-control" placeholder="Correo electrónico" name="email" id="email" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
               </div>
             </div>
           </div>
@@ -38,7 +46,7 @@
           </div>
           <div class="row">
             <div class="col-4">
-              <button type="submit" class="btn btn-primary btn-block">Register</button>
+              <button type="button" class="btn btn-primary btn-block" onclick="registerUser()">Register</button>
             </div>
           </div>
         </form>
@@ -55,6 +63,47 @@
           return false;
         }
         return true;
+      }
+
+      function registerUser() {
+        if (!validateForm()) {
+          return;
+        }
+
+        var fullname = $('#fullname').val();
+        var email = $('#email').val();
+        var password = $('#password').val();
+        console.log(fullname, email, password);
+
+        $.ajax({
+          type: "POST",
+          url: "/auth/register",
+          data: {
+            fullname: fullname,
+            email: email,
+            password: password
+          },
+          success: function(response) {
+            console.log(response);
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Usuario creado correctamente',
+              autohide: true,
+              delay: 5000,
+              body: 'El usuario ha sido registrado correctmente en el sistema.'
+            })
+          },
+          error: function(error) {
+            console.error(error);
+            $(document).Toasts('create', {
+              class: 'bg-danger',
+              title: 'Ha ocurrido un error',
+              autohide: true,
+              delay: 5000,
+              body: 'El usuario no ha podido ser registrado correctamente en el sistema.'
+            })
+          }
+        });
       }
     </script>
 </body>
