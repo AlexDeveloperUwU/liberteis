@@ -1,8 +1,7 @@
 const express = require("express");
-const enmap = require("enmap");
 const bcrypt = require("bcrypt");
 const router = express.Router();
-const users = new enmap({ name: "users" });
+const db = require("../functions/usersdb");
 
 const requireAuth = (req, res, next) => {
   if (req.session && req.session.userId) {
@@ -12,23 +11,36 @@ const requireAuth = (req, res, next) => {
   }
 };
 
+// Rutas de registro de usuarios
 router.get("/register", (req, res) => {
-  res.render("auth/register");
+  const usersNum = db.getUserCount();
+
+  // Como queremos limitar a que solo se pueda registrar un usuario por cuenta propia, hacemos comprobaciones para saber si ya hay usuarios en la db
+  if (!req.session || usersNum === 0) {
+    res.render("auth/register");
+  } else {
+    res.redirect("/auth/login");
+  }
 });
 
 router.post("/register", async (req, res) => {
-  const { fullname, email, password } = req.body;
+  const { fullname, email, password, type } = req.body;
 
-  if (users.get(email)) {
-    return res.status(400).json({ message: "Usuario ya existe" });
+  // Comprobamos si el usuario ya existe en la base de datos antes de registrarlo para evitar duplicados
+  if (db.userExists(email)) {
+    return res.status(400).json({ message: "El usuario ya existe en la base de datos" });
+  } else {
+    const result = await db.saveUser(fullname, email, password, type);
+
+    if (!result) {
+      return res.status(500).json({ message: "Error al registrar el usuario" });
+    } else {
+      res.status(201).json({ message: "Usuario registrado exitosamente" });
+    }
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  users.set(email, { email, fullname, hashedPassword });
-
-  res.status(201).json({ message: "Usuario registrado exitosamente" });
 });
 
+// Rutas de inicio de sesión
 router.get("/login", (req, res) => {
   res.render("auth/login");
 });
@@ -46,6 +58,7 @@ router.post("/login", async (req, res) => {
   res.redirect("/dash");
 });
 
+// Ruta de cierre de sesión
 router.get("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -55,6 +68,7 @@ router.get("/logout", (req, res) => {
   });
 });
 
+// Middleware para verificar la autenticación
 const checkAuth = (req, res, next) => {
   if (req.session && req.session.userId) {
     res.locals.user = req.session.userId;

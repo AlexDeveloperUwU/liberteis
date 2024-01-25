@@ -206,9 +206,7 @@
         var buildLogList = function(log) {
           var $ul = document.createElement("ul");
           var list = log.list || [];
-          // Solo mostrar las últimas dos entradas
-          var startIndex = Math.max(0, list.length - 2);
-          for (var i = startIndex; i < list.length; i++) {
+          for (var i = 0; i < list.length; i++) {
             var item = list[i];
             var $li = buildLogItem(item);
             $ul.appendChild($li);
@@ -249,8 +247,8 @@
 
         var sectionArr = [];
 
-        // Solo mostrar las últimas dos entradas del changelog
-        for (var i = Math.max(0, logArr.length - 2); i < logArr.length; i++) {
+        // Mostrar las dos primeras entradas del changelog
+        for (var i = 0; i < Math.min(2, logArr.length); i++) {
           var $section = buildLogSection(logArr[i]);
           sectionArr.push($section.outerHTML);
         }

@@ -1,15 +1,363 @@
 [
   {
-    "version": "0.8.1",
-    "date": "2024-01-11",
+    "version": "0.11.0",
+    "date": "18/01/2024",
     "list": [
       {
         "label": ["Añadido"],
-        "detail": "Customizable some commonly used shortcuts, effortlessly boosting work efficiency."
+        "detail": "Si no seleccionas eventos múltiples y le das a borrar selección, aparece mensaje de error."
+      }
+    ]
+  },
+  {
+    "version": "0.10.1",
+    "date": "18/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Si no seleccionas eventos múltiples y le das a borrar selección, aparece mensaje de error."
+      }
+    ]
+  },
+  {
+    "version": "0.10.0",
+    "date": "18/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Funcionalidad de eliminar eventos desde la tabla de eventos, de forma individual o masiva."
+      }
+    ]
+  },
+  {
+    "version": "0.9.1",
+    "date": "18/01/2024",
+    "list": [
+      {
+        "label": ["Arreglado"],
+        "detail": "Funcionalidad de comprobar si existe una nueva versión, antes no comparaba correctamente."
+      }
+    ]
+  },
+  {
+    "version": "0.9.0",
+    "date": "18/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Alerta por si hay una nueva versión del software."
+      }
+    ]
+  },
+  {
+    "version": "0.8.1",
+    "date": "18/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Vista para error 404."
+      }
+    ]
+  },
+  {
+    "version": "0.8.0",
+    "date": "17/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Listado de eventos en una tabla con opciones de imprimirla o generar excel / pdf."
+      }
+    ]
+  },
+  {
+    "version": "0.7.4",
+    "date": "16/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Limitaciones en la cantidad de caracteres del título."
       },
       {
         "label": ["Añadido"],
-        "detail": "Added \"Do Not Disturb\" switch for subscribed calendars, accessible in \"Settings - Subscribed Calendars.\""
+        "detail": "Vistas para los distintos errores del servidor."
+      }
+    ]
+  },
+  {
+    "version": "0.7.3",
+    "date": "16/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Limitaciones de acceso a las páginas web públicas."
+      },
+      {
+        "label": ["Eliminado"],
+        "detail": "Archivos de assets que no se usan."
+      }
+    ]
+  },
+  {
+    "version": "0.7.2",
+    "date": "15/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Archivos de rutas separadas para cada tipo de rutas."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Archivos de log para las peticiones del servidor."
+      }
+    ]
+  },
+  {
+    "version": "0.7.1",
+    "date": "15/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Registro de las peticiones que se le hacen al servidor."
+      }
+    ]
+  },
+  {
+    "version": "0.7.0",
+    "date": "15/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Efectos visuales en la vista de la RPi."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "El changelog ahora tiene un nuevo formato y una nueva versión."
+      },
+      {
+        "label": ["Eliminado"],
+        "detail": "Carpetas de data y de uploads para evitar problemas en el repositorio."
+      }
+    ]
+  },
+  {
+    "version": "0.6.4",
+    "date": "15/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Ejemplo de .env para configurar la app correctamente."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Variable de entorno `APP_URL`."
+      },
+      {
+        "label": ["Eliminado"],
+        "detail": "Carpetas de data y de uploads para evitar problemas en el repositorio."
+      }
+    ]
+  },
+  {
+    "version": "0.6.3",
+    "date": "14/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Cuando eliminas un evento, ahora también se elimina la miniatura."
+      }
+    ]
+  },
+  {
+    "version": "0.6.2",
+    "date": "13/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Formulario para subir miniaturas en los eventos."
+      }
+    ]
+  },
+  {
+    "version": "0.6.1",
+    "date": "12/01/2024",
+    "list": [
+      {
+        "label": ["Arreglado"],
+        "detail": "Calendario ahora empieza en Lunes."
+      }
+    ]
+  },
+  {
+    "version": "0.6.0",
+    "date": "12/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Frontend para las pantallas de la biblioteca."
+      }
+    ]
+  },
+  {
+    "version": "0.5.6",
+    "date": "11/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Fichero con las funciones de la base de datos de eventos."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Los eventos ya no se pueden duplicar por su ID."
+      }
+    ]
+  },
+  {
+    "version": "0.5.5",
+    "date": "09/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Fichero de Docker para generar containers de la app."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Script `npm run docker:build` para poder generar el container con la aplicación y `docker:run` desplegarlo. Añadido los scripts de versioning."
+      }
+    ]
+  },
+  {
+    "version": "0.5.4",
+    "date": "08/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Botón de eliminar evento con modal de confirmación."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Script de inicio en package.json."
+      }
+    ]
+  },
+  {
+    "version": "0.5.3",
+    "date": "07/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Formulario para editar evento cuando pulsas en él."
+      }
+    ]
+  },
+  {
+    "version": "0.5.2",
+    "date": "05/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Formulario para añadir evento cuando pulsas una fecha en el calendario."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Changelog ordenado para siempre tener la última actualización por encima."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Links rotos en la barra de navegación."
+      }
+    ]
+  },
+  {
+    "version": "0.5.0 + 0.5.1",
+    "date": "05/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Calendario funcionando y con información del evento si le pulsas click en él."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Conteo de eventos."
+      },
+      {
+        "label": ["Eliminado"],
+        "detail": "Campo full_desc de la base de datos."
+      }
+    ]
+  },
+  {
+    "version": "0.4.0",
+    "date": "04/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Rutas a través del ruter de express."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Una ruta usaba una DB no existente."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Formulario apuntando a las nuevas rutas."
+      }
+    ]
+  },
+  {
+    "version": "0.3.0",
+    "date": "24/12/2023",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Rutas automatizadas para testing."
+      },
+      {
+        "label": ["Eliminado"],
+        "detail": "Varias bases de datos para tener una única."
+      }
+    ]
+  },
+  {
+    "version": "0.2.2",
+    "date": "24/12/2023",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Formulario para comprobar la existencia de un evento."
+      }
+    ]
+  },
+  {
+    "version": "0.2.1",
+    "date": "23/12/2023",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Archivo de changelog."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Archivo con tareas futuras."
+      }
+    ]
+  },
+  {
+    "version": "0.2.0",
+    "date": "22/12/2023",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Eliminar y comprobar eventos."
+      }
+    ]
+  },
+  {
+    "version": "0.1.0",
+    "date": "22/12/2023",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Código base."
       }
     ]
   }
