@@ -48,14 +48,13 @@ router.get("/login", (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  const user = users.get(email);
-
-  if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
-    return res.status(401).json({ message: "Credenciales inválidas" });
+  const response = await db.loginUser(email, password);
+  if (response === false) {
+    return res.status(400).json({ message: "Credenciales incorrectas" });
+  } else {
+    req.session.userId = response;
+    res.status(200).json({ message: "Inicio de sesión exitoso" });
   }
-
-  req.session.userId = user.fullname;
-  res.redirect("/dash");
 });
 
 // Ruta de cierre de sesión

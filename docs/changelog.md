@@ -1,4 +1,13 @@
 <details>
+  <summary><b>0.14.3 - (24/01/2024 - 29/01/2024)</b></summary>
+
+- Auth: migración del sistema de autenticación a un archivo (un módulo externo) para mejor mantenimiento y migradas las rutas para el uso de este nuevo módulo
+
+- Changelog: migración muy lenta y readaptación del changelog para un nuevo sistema que genera automáticamente el changelog de GitHub y el que está integrado en la web (muestra las 2 últimas entradas del changelog de GitHub)
+
+</details>
+
+<details>
   <summary><b>0.14.2 - 24/01/2024</b></summary>
 
 - Changelog: añadido un changelog generado automáticamente para que sea más consistente y fácil de mantener, además de que sea más sencillo de entender para el usuario
