@@ -46,6 +46,7 @@ async function loginUser(email, password) {
   if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
     return false;
   } else {
+    users.set(email, formattedDate, "lastLogin")
     return [user.fullname, user.email];
   }
 }
