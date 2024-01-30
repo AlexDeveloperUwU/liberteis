@@ -44,13 +44,13 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="/dash/eventlist" class="nav-link active">
+              <a href="/dash/eventlist" class="nav-link">
                 <i class="nav-icon fas fa-home"></i>
                 <p>Listado de eventos</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="/dash/userlist" class="nav-link">
+              <a href="/dash/userlist" class="nav-link active">
                 <i class="nav-icon fas fa-home"></i>
                 <p>Gestión de usuarios</p>
               </a>
@@ -88,19 +88,17 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-body">
-                  <table id="listadoeventos" class="table table-bordered table-striped">
+                  <table id="listadousuarios" class="table table-bordered table-striped">
                     <thead>
                       <tr>
                         <th></th>
-                        <th>ID</th>
-                        <th>Fecha y hora</th>
-                        <th>Título</th>
-                        <th>Descripción</th>
-                        <th>Categoría</th>
-                        <th>Miniatura</th>
-                        <th>QR</th>
-                        <th>Publicado por</th>
-                        <th>Acción</th>
+                        <th>Nombre</th>
+                        <th>E-Mail</th>
+                        <th>Tipo de user</th>
+                        <th>Última sesión</th>
+                        <th>Creado por</th>
+                        <th>Fecha de registro</th>
+                        <th>Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -108,36 +106,21 @@
                   </table>
                 </div>
               </div>
-              <div class="modal fade" id="imagenModal" tabindex="-1" role="dialog" aria-labelledby="imagenModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="imagenModalLabel"></h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <img src="" alt="" style="max-width: 100%;">
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </section>
       <section>
-        <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="eventModalLabel">Detalles del evento</h5>
+                <h5 class="modal-title" id="userModalLabel">Detalles del evento</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body" id="eventModalBody">
+              <div class="modal-body" id="userModalBody">
               </div>
             </div>
           </div>
@@ -176,152 +159,204 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       $.ajax({
-        url: '/api/list',
+        url: '/auth/list',
         type: 'POST',
         success: function(data) {
-          data.forEach(function(evento) {
-            var eventDate = new Date(evento.event_date);
-            var formattedDate = eventDate.toLocaleString();
+          data.forEach(function(user) {
+            if (user.type === 'adminUser') {
+              user.type = 'Administrador';
+            } else if (user.type === 'normalUser') {
+              user.type = 'Usuario';
+            }
 
-            $('#listadoeventos tbody').append(`
+            var createdDate = new Date(user.createdDate);
+            var formattedDate = createdDate.toLocaleString();
+
+            if (user.lastLogin === null) {
+              lastLoginFormattedDate = 'Nunca';
+            } else {
+              var createdDate2 = new Date(user.lastLogin);
+              var lastLoginFormattedDate = createdDate2.toLocaleString();
+            }
+
+            $('#listadousuarios tbody').append(`
         <tr>
-          <td><input type="checkbox" class="event-checkbox"></td> <!-- Columna de selección múltiple -->
-          <td>${evento.id}</td>
+          <td><input type="checkbox" class="user-checkbox"></td>
+          <td>${user.fullname}</td>
+          <td>${user.email}</td>
+          <td>${user.type}</td>
+          <td>${lastLoginFormattedDate}</td>
+          <td>${user.createdBy}</td>
           <td>${formattedDate}</td>
-          <td>${evento.title}</td>
-          <td>${evento.desc}</td>
-          <td>${evento.type}</td>
-          <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.thumb_url}" data-type="imagen" data-title="Miniatura">Pincha aquí</a></td>
-          <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.qr_url}" data-type="qr" data-title="QR Code">Pincha aquí</a></td>
-          <td>${evento.published_by}</td>
           <td>
-            <a href="#" class="delete-event" data-id="${evento.id}" title="Eliminar"><i class="fas fa-trash"></i></a>
+            <a href="#" class="delete-user" data-id="${user.email}" title="Eliminar"><i class="fas fa-trash"></i></a>
           </td>
         </tr>
       `);
           });
 
-          $('.modal-link').click(function() {
-            var src = $(this).data('src');
-            var type = $(this).data('type');
-            var title = $(this).data('title');
-
-            $('#imagenModalLabel').text(title);
-
-            if (type === 'imagen') {
-              $('#imagenModal .modal-body').html(`<img src="${src}" alt="" style="max-width: 100%;">`);
-            } else if (type === 'qr') {
-              $('#imagenModal .modal-body').html(`<div id="qrcode"></div>`);
-
-              var qrcode = new QRCode(document.getElementById("qrcode"), {
-                text: src,
-                width: 150,
-                height: 150,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-              });
-            }
-          });
-
-          var table = $('#listadoeventos').DataTable({
+          var table = $('#listadousuarios').DataTable({
             "responsive": true,
             "lengthChange": false,
             "pageLength": 20,
             "autoWidth": false,
             "buttons": [{
-                extend: 'pdf',
-                text: 'Exportar PDF',
-                exportOptions: {
-                  columns: [1, 2, 3, 4, 5, 8]
-                }
-              },
-              {
                 extend: 'excel',
                 text: 'Exportar Excel',
                 exportOptions: {
-                  columns: [1, 2, 3, 4, 5, 8]
+                  columns: [1, 2, 3, 4, 5]
                 }
               },
               {
                 extend: 'print',
                 text: 'Imprimir',
                 exportOptions: {
-                  columns: [1, 2, 3, 4, 5, 8]
+                  columns: [1, 2, 3, 4, 5]
+                }
+              },
+              {
+                text: 'Crear usuario',
+                className: 'btn-primary buttons-html5',
+                action: function() {
+                  openCreateUserForm();
+
+                  function openCreateUserForm() {
+                    $('#userModal').modal('show');
+                    $('#userModalLabel').text('Crear usuario');
+                    $('#userModalBody').html(
+                      '<form id="createUserForm">' +
+                      '  <div class="form-group">' +
+                      '    <label for="userEmail">E-Mail</label>' +
+                      '    <input type="email" class="form-control" id="userEmail" placeholder="E-Mail" required>' +
+                      '  </div>' +
+                      '  <div class="form-group">' +
+                      '    <label for="userFullname">Nombre</label>' +
+                      '    <input type="text" class="form-control" id="userFullname" placeholder="Nombre" required>' +
+                      '  </div>' +
+                      '  <div class="form-group">' +
+                      '    <label for="userType">Tipo de usuario</label>' +
+                      '    <select class="form-control" id="userType" required>' +
+                      '      <option value="normalUser">Usuario</option>' +
+                      '      <option value="adminUser">Administrador</option>' +
+                      '    </select>' +
+                      '  </div>' +
+                      '<br><div class="d-flex justify-content-between">' +
+                      '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
+                      '<button type="submit" class="btn btn-success">Crear usuario</button>' +
+                      '</div>' +
+                      '</form>'
+                    );
+
+                    $('#closeModalButton').on('click', function() {
+                      $('#userModal').modal('hide');
+                    });
+
+                    $('#createUserForm').submit(function() {
+                      event.preventDefault();
+
+                      var userEmail = $('#userEmail').val();
+                      var userFullname = $('#userFullname').val();
+                      var userType = $('#userType').val();
+                      var userCreatedBy = "<%= loggedInUsername %>"
+
+                      $.ajax({
+                        url: '/auth/register',
+                        type: 'POST',
+                        data: {
+                          fullname: userFullname,
+                          email: userEmail,
+                          password: "Cambiame123",
+                          type: userType,
+                          createdBy: userCreatedBy
+                        },
+                        success: function(data) {
+                          console.log('Usuario creado con éxito:', data);
+                          $('#userModal').modal('hide');
+                          setTimeout(function() {
+                            location.reload(true);
+                          }, 1000);
+                        },
+                        error: function(error) {
+                          console.error('Error al crear el usuario:', error);
+                          alert('Error al crear el usuario. Por favor, inténtalo de nuevo.');
+                        }
+                      });
+                    });
+
+                    $('#userModal').modal('show');
+                  }
                 }
               },
               {
                 text: 'Borrar selección',
                 className: 'btn-danger buttons-html5',
                 action: function() {
-                  var selectedEvents = [];
+                  var selectedUsers = [];
 
-                  // Obtener eventos seleccionados
-                  $('.event-checkbox:checked').each(function() {
-                    selectedEvents.push($(this).closest('tr').find('.delete-event').data('id'));
+                  $('.user-checkbox:checked').each(function() {
+                    selectedUsers.push($(this).closest('tr').find('.delete-user').data('id'));
                   });
 
-                  if (selectedEvents.length > 0) {
-                    openRemoveEventForm();
+                  if (selectedUsers.length > 0) {
+                    openRemoveUserForm();
                   } else {
                     $(document).Toasts('create', {
                       class: 'bg-danger',
                       title: 'Ha ocurrido un error',
                       autohide: true,
                       delay: 5000,
-                      body: 'No has seleccionado ningún evento para eliminar'
+                      body: 'No has seleccionado ningún usuario para eliminar'
                     })
                   }
 
-                  function openRemoveEventForm() {
-                    $('#eventModal').modal('show');
-                    $('#eventModalLabel').text('Eliminar eventos');
-                    $('#eventModalBody').html(
-                      '<form id="removeEventForm">' +
-                      '  <p class="text-danger">¿Estás seguro de que quieres eliminar los eventos seleccionados?</p>' +
+                  function openRemoveUserForm() {
+                    $('#userModal').modal('show');
+                    $('#userModalLabel').text('Eliminar usuarios');
+                    $('#userModalBody').html(
+                      '<form id="removeUserForm">' +
+                      '  <p class="text-danger">¿Estás seguro de que quieres eliminar los usuarios seleccionados?</p>' +
                       '<br><div class="d-flex justify-content-between">' +
                       '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
-                      '<button type="submit" class="btn btn-danger">Eliminar evento</button>' +
+                      '<button type="submit" class="btn btn-danger">Eliminar usuarios</button>' +
                       '</div>' +
                       '</form>'
                     );
 
                     $('#closeModalButton').on('click', function() {
-                      $('#eventModal').modal('hide');
+                      $('#userModal').modal('hide');
                     });
 
-                    $('#removeEventForm').submit(function() {
+                    $('#removeUserForm').submit(function() {
                       event.preventDefault();
-                      console.log(selectedEvents)
-                      selectedEvents.forEach(function(eventId) {
+                      selectedUsers.forEach(function(userEmail) {
                         $.ajax({
-                          url: '/api/delete',
+                          url: '/auth/unregister',
                           type: 'POST',
                           data: {
-                            eventID: eventId
+                            email: userEmail
                           },
                           success: function(data) {
-                            console.log('Evento eliminado con éxito:', data);
-                            $('#eventModal').modal('hide');
+                            console.log('Usuario eliminado con éxito:', data);
+                            $('#userModal').modal('hide');
                             setTimeout(function() {
                               location.reload(true);
                             }, 1000);
                           },
                           error: function(error) {
-                            console.error('Error al eliminar el evento:', error);
-                            alert('Error al eliminar el evento. Por favor, inténtalo de nuevo.');
+                            console.error('Error al eliminar el usuario:', error);
+                            alert('Error al eliminar el usuario. Por favor, inténtalo de nuevo.');
                           }
                         });
                       });
                     });
 
-                    $('#eventModal').modal('show');
+                    $('#userModal').modal('show');
                   }
                 }
               }
             ],
             order: [
-              [2, 'asc']
+              [1, 'asc']
             ],
 
             language: {
@@ -329,63 +364,17 @@
             },
             initComplete: function() {
               setTimeout(function() {
-                table.buttons().container().appendTo('#listadoeventos_wrapper .col-md-6');
-                $('#listadoeventos_filter').next().remove();
+                table.buttons().container().appendTo('#listadousuarios_wrapper .col-md-6');
+                $('#listadousuarios_filter').next().remove();
               }, 10);
             }
           })
 
         },
         error: function(error) {
-          console.error('Error al obtener la lista de eventos:', error);
+          console.error('Error al obtener la lista de usuarios:', error);
         }
       });
-
-      $('#listadoeventos').on('click', '.delete-event', function() {
-        var eventId = $(this).data('id');
-
-        $('#eventModal').modal('show');
-        $('#eventModalLabel').text('Eliminar evento');
-        $('#eventModalBody').html(
-          '<form id="removeEventForm">' +
-          '  <p class="text-danger">¿Estás seguro de que quieres eliminar el evento con ID ' + eventId + '?</p>' +
-          '<br><div class="d-flex justify-content-between">' +
-          '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
-          '<button type="submit" class="btn btn-danger">Eliminar evento</button>' +
-          '</div>' +
-          '</form>'
-        );
-
-        $('#closeModalButton').on('click', function() {
-          $('#eventModal').modal('hide');
-        });
-
-        $('#removeEventForm').submit(function() {
-          event.preventDefault();
-
-          $.ajax({
-            url: '/api/delete',
-            type: 'POST',
-            data: {
-              eventID: eventId
-            },
-            success: function(data) {
-              console.log('Evento eliminado con éxito:', data);
-              $('#eventModal').modal('hide');
-              setTimeout(function() {
-                location.reload(true);
-              }, 1000);
-            },
-            error: function(error) {
-              console.error('Error al eliminar el evento:', error);
-              alert('Error al eliminar el evento. Por favor, inténtalo de nuevo.');
-            }
-          });
-        });
-
-        $('#eventModal').modal('show');
-      });
-
     });
   </script>
 </body>

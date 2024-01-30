@@ -24,19 +24,33 @@ router.get("/register", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { fullname, email, password, type } = req.body;
+  const { fullname, email, password, type, createdBy } = req.body;
 
   // Comprobamos si el usuario ya existe en la base de datos antes de registrarlo para evitar duplicados
   if (db.userExists(email)) {
     return res.status(400).json({ message: "El usuario ya existe en la base de datos" });
   } else {
-    const result = await db.saveUser(fullname, email, password, type);
+    const result = await db.saveUser(fullname, email, password, type, createdBy);
 
     if (!result) {
       return res.status(500).json({ message: "Error al registrar el usuario" });
     } else {
       res.status(201).json({ message: "Usuario registrado exitosamente" });
     }
+  }
+});
+
+router.post("/unregister", (req, res) => {
+  const { email } = req.body;
+  if (db.userExists(email)) {
+    const result = db.unregisterUser(email);
+    if (result) {
+      res.status(200).json({ message: "Usuario eliminado exitosamente" });
+    } else {
+      res.status(500).json({ message: "Error al eliminar el usuario" });
+    }
+  } else {
+    res.status(400).json({ message: "El usuario no existe en la base de datos" });
   }
 });
 
@@ -65,6 +79,11 @@ router.get("/logout", (req, res) => {
     }
     res.json({ message: "Sesión cerrada exitosamente" });
   });
+});
+
+// Ruta para obtener la lista de usuarios
+router.post("/list", (req, res) => {
+  res.status(200).json(db.listUsers());
 });
 
 // Middleware para verificar la autenticación

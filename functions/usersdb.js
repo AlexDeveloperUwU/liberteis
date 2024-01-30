@@ -7,7 +7,13 @@ async function saveUser(fullname, email, password, type = "normalUser", createdB
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().split("T")[0] + "T00:00";
+    const formattedDate =
+      currentDate.toISOString().split("T")[0] +
+      "T" +
+      ("0" + currentDate.getHours()).slice(-2) +
+      ":" +
+      ("0" + currentDate.getMinutes()).slice(-2);
+
     users.set(email, {
       email,
       fullname,
@@ -15,6 +21,7 @@ async function saveUser(fullname, email, password, type = "normalUser", createdB
       type,
       createdBy,
       createdDate: formattedDate,
+      lastLogin: null,
     });
     return true;
   } catch (error) {
@@ -23,8 +30,18 @@ async function saveUser(fullname, email, password, type = "normalUser", createdB
   }
 }
 
+// Función para iniciar sesión
 async function loginUser(email, password) {
   const user = users.get(email);
+
+  // Guardamos la fecha del último inicio de sesión
+  const currentDate = new Date();
+  const formattedDate =
+    currentDate.toISOString().split("T")[0] +
+    "T" +
+    ("0" + currentDate.getHours()).slice(-2) +
+    ":" +
+    ("0" + currentDate.getMinutes()).slice(-2);
 
   if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
     return false;
@@ -48,19 +65,31 @@ function getUserCount() {
   return users.count;
 }
 
+// Función para listar los usuarios de la base de datos
 function listUsers() {
   const usersList = [];
-  db.forEach((data, key) => {
+  users.forEach((data, key) => {
     usersList.push({
       email: data.email,
       fullname: data.fullname,
       type: data.type,
       createdDate: data.createdDate,
       createdBy: data.createdBy,
+      lastLogin: data.lastLogin,
     });
   });
 
   return usersList;
 }
 
-module.exports = { saveUser, getUserCount, userExists, loginUser, listUsers };
+function unregisterUser(email) {
+  const user = users.get(email);
+  if (user) {
+    users.delete(email);
+    return true;
+  } else {
+    return false;
+  }
+}
+
+module.exports = { saveUser, getUserCount, userExists, loginUser, listUsers, unregisterUser };

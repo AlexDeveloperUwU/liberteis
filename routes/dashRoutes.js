@@ -73,4 +73,19 @@ router.get("/eventlist", async (req, res) => {
   }
 });
 
+router.get("/userlist", async (req, res) => {
+  try {
+    const latestVersion = await getLatestVersion();
+    const latest = await isLatestVersion(version, latestVersion);
+    res.render("dash/userslist", {
+      version,
+      latestVersion: latest,
+      loggedInUsername: res.locals.user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error interno del servidor");
+  }
+});
+
 module.exports = router;
