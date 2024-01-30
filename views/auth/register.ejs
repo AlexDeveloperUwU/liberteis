@@ -13,7 +13,7 @@
         <p class="login-box-msg">Registra a un nuevo usuario</p>
         <form id="registerForm">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Nombre y apellidos" name="fullname" id="fullname" required>
+            <input type="text" class="form-control" placeholder="Nombre" name="fullname" id="fullname" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>
@@ -81,7 +81,8 @@
           data: {
             fullname: fullname,
             email: email,
-            password: password
+            password: password,
+            type: "adminUser"
           },
           success: function(response) {
             console.log(response);
@@ -92,6 +93,9 @@
               delay: 5000,
               body: 'El usuario ha sido registrado correctmente en el sistema.'
             })
+            setTimeout(function() {
+              window.location.href = "/auth/login";
+            }, 1000);
           },
           error: function(error) {
             console.error(error);

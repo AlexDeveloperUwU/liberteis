@@ -81,6 +81,7 @@ router.get("/userlist", async (req, res) => {
       version,
       latestVersion: latest,
       loggedInUsername: res.locals.user,
+      loggedInEmail: res.locals.email,
     });
   } catch (error) {
     console.error(error);

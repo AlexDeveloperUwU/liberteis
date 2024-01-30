@@ -46,7 +46,7 @@ async function loginUser(email, password) {
   if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
     return false;
   } else {
-    return user.fullname;
+    return [user.fullname, user.email];
   }
 }
 

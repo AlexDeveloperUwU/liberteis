@@ -16,7 +16,7 @@ router.get("/register", (req, res) => {
   const usersNum = db.getUserCount();
 
   // Como queremos limitar a que solo se pueda registrar un usuario por cuenta propia, hacemos comprobaciones para saber si ya hay usuarios en la db
-  if (!req.session || usersNum === 0) {
+  if (usersNum === 0) {
     res.render("auth/register");
   } else {
     res.redirect("/auth/login");
@@ -56,7 +56,12 @@ router.post("/unregister", (req, res) => {
 
 // Rutas de inicio de sesión
 router.get("/login", (req, res) => {
-  res.render("auth/login");
+  const usersNum = db.getUserCount();
+  if (usersNum !== 0) {
+    res.render("auth/login");
+  } else {
+    res.redirect("/auth/register");
+  }
 });
 
 router.post("/login", async (req, res) => {
@@ -66,7 +71,8 @@ router.post("/login", async (req, res) => {
   if (response === false) {
     return res.status(400).json({ message: "Credenciales incorrectas" });
   } else {
-    req.session.userId = response;
+    req.session.userId = response[0];
+    req.session.userEmail = response[1];
     res.status(200).json({ message: "Inicio de sesión exitoso" });
   }
 });
@@ -90,6 +96,7 @@ router.post("/list", (req, res) => {
 const checkAuth = (req, res, next) => {
   if (req.session && req.session.userId) {
     res.locals.user = req.session.userId;
+    res.locals.email = req.session.userEmail;
   }
   next();
 };

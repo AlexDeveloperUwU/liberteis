@@ -169,6 +169,8 @@
               user.type = 'Usuario';
             }
 
+            var loggedInUserEmail = "<%= loggedInEmail %>";
+
             var createdDate = new Date(user.createdDate);
             var formattedDate = createdDate.toLocaleString();
 
@@ -189,11 +191,16 @@
           <td>${user.createdBy}</td>
           <td>${formattedDate}</td>
           <td>
-            <a href="#" class="delete-user" data-id="${user.email}" title="Eliminar"><i class="fas fa-trash"></i></a>
-          </td>
+            <a href="#" class="delete-user" data-id="${user.email}" title="Eliminar" id="deletebutton"><i class="fas fa-trash"></i></a>          </td>
         </tr>
       `);
+
+            if (loggedInUserEmail === user.email) {
+              $('.delete-user').last().remove();
+            }
           });
+
+
 
           var table = $('#listadousuarios').DataTable({
             "responsive": true,
