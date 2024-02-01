@@ -73,6 +73,7 @@ router.post("/login", async (req, res) => {
   } else {
     req.session.userId = response[0];
     req.session.userEmail = response[1];
+    req.session.userType = response[2];
     res.status(200).json({ message: "Inicio de sesión exitoso" });
   }
 });
@@ -83,7 +84,7 @@ router.get("/logout", (req, res) => {
     if (err) {
       return res.status(500).json({ message: "Error al cerrar sesión" });
     }
-    res.json({ message: "Sesión cerrada exitosamente" });
+    res.redirect("/dash");
   });
 });
 
@@ -92,11 +93,22 @@ router.post("/list", (req, res) => {
   res.status(200).json(db.listUsers());
 });
 
+// Ruta para restablecer la contraseña
+
+router.get("/resetpass", (req, res) => {
+  res.render("auth/reset");
+});
+
+router.post("/resetpass", async (req, res) => {
+  
+});
+
 // Middleware para verificar la autenticación
 const checkAuth = (req, res, next) => {
   if (req.session && req.session.userId) {
     res.locals.user = req.session.userId;
     res.locals.email = req.session.userEmail;
+    res.locals.type = req.session.userType;
   }
   next();
 };

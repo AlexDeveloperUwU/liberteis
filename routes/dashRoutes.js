@@ -55,7 +55,7 @@ router.get("/", async (req, res) => {
   try {
     const latestVersion = await getLatestVersion();
     const latest = await isLatestVersion(version, latestVersion);
-    res.render("dash/events", { version, latestVersion: latest });
+    res.render("dash/events", { version, latestVersion: latest, loggedInUsername: res.locals.user, loggedInType: res.locals.type });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error interno del servidor");
@@ -66,7 +66,7 @@ router.get("/eventlist", async (req, res) => {
   try {
     const latestVersion = await getLatestVersion();
     const latest = await isLatestVersion(version, latestVersion);
-    res.render("dash/eventslist", { version, latestVersion: latest });
+    res.render("dash/eventslist", { version, latestVersion: latest, loggedInUsername: res.locals.user, loggedInType: res.locals.type });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error interno del servidor");
@@ -82,6 +82,7 @@ router.get("/userlist", async (req, res) => {
       latestVersion: latest,
       loggedInUsername: res.locals.user,
       loggedInEmail: res.locals.email,
+      loggedInType: res.locals.type,
     });
   } catch (error) {
     console.error(error);

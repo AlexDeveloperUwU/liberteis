@@ -46,8 +46,8 @@ async function loginUser(email, password) {
   if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
     return false;
   } else {
-    users.set(email, formattedDate, "lastLogin")
-    return [user.fullname, user.email];
+    users.set(email, formattedDate, "lastLogin");
+    return [user.fullname, user.email, user.type];
   }
 }
 
@@ -93,4 +93,28 @@ function unregisterUser(email) {
   }
 }
 
-module.exports = { saveUser, getUserCount, userExists, loginUser, listUsers, unregisterUser };
+async function resetPassword(email, password) {
+  const user = users.get(email);
+  if (user) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    users.set(email, hashedPassword, "hashedPassword");
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function forcePasswordReset(email) {
+  const user = users.get(email);
+  if (user) {
+    const isnull = users.get(lastLogin)
+
+    if (isnull) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+module.exports = { saveUser, getUserCount, userExists, loginUser, listUsers, unregisterUser, resetPassword, forcePasswordReset };
