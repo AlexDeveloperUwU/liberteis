@@ -10,16 +10,8 @@
         <a class="h1" style="font-size: xx-large;"><b>Gestión de eventos</b></a>
       </div>
       <div class="card-body">
-        <p class="login-box-msg" id="login-box-msg">Registra a un nuevo usuario</p>
-        <form id="registerForm">
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Nombre" name="fullname" id="fullname" required>
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-user"></span>
-              </div>
-            </div>
-          </div>
+        <p class="login-box-msg"></p>
+        <form id="changePassForm">
           <div class="input-group mb-3">
             <input type="email" class="form-control" placeholder="Correo electrónico" name="email" id="email" required>
             <div class="input-group-append">
@@ -45,8 +37,8 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-4">
-              <button type="button" class="btn btn-primary btn-block" onclick="registerUser()">Register</button>
+            <div class="col-7">
+              <button type="button" class="btn btn-primary btn-block" onclick="changePassUser()">Cambiar contraseña</button>
             </div>
           </div>
         </form>
@@ -55,7 +47,12 @@
 
     <%- include('../partials/scripts') %>
     <script>
-      
+      const url = new URL(window.location.href);
+      const params = new URLSearchParams(url.search);
+      const mensajeCodificado = params.get('msg');
+      const mensajeDecodificado = mensajeCodificado ? decodeURIComponent(mensajeCodificado) : 'Cambia tu contraseña';
+      $('.login-box-msg').text(mensajeDecodificado);
+
       function validateForm() {
         var password = document.getElementById("password").value;
         var confirmPassword = document.getElementById("confirmPassword").value;
@@ -66,33 +63,22 @@
         return true;
       }
 
-      function registerUser() {
+      function changePassUser() {
         if (!validateForm()) {
           return;
         }
 
-        var fullname = $('#fullname').val();
         var email = $('#email').val();
         var password = $('#password').val();
 
         $.ajax({
           type: "POST",
-          url: "/auth/register",
+          url: "/auth/resetpass",
           data: {
-            fullname: fullname,
             email: email,
             password: password,
-            type: "adminUser"
           },
           success: function(response) {
-            console.log(response);
-            $(document).Toasts('create', {
-              class: 'bg-success',
-              title: 'Usuario creado correctamente',
-              autohide: true,
-              delay: 5000,
-              body: 'El usuario ha sido registrado correctmente en el sistema.'
-            })
             setTimeout(function() {
               window.location.href = "/auth/login";
             }, 1000);
@@ -104,7 +90,7 @@
               title: 'Ha ocurrido un error',
               autohide: true,
               delay: 5000,
-              body: 'El usuario no ha podido ser registrado correctamente en el sistema.'
+              body: 'La contraseña no ha podido ser guardada correctamente en el sistema.'
             })
           }
         });

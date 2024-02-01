@@ -96,6 +96,16 @@ function unregisterUser(email) {
 async function resetPassword(email, password) {
   const user = users.get(email);
   if (user) {
+    const currentDate = new Date();
+    const formattedDate =
+      currentDate.toISOString().split("T")[0] +
+      "T" +
+      ("0" + currentDate.getHours()).slice(-2) +
+      ":" +
+      ("0" + currentDate.getMinutes()).slice(-2);
+
+    users.set(email, formattedDate, "lastLogin");
+
     const hashedPassword = await bcrypt.hash(password, 10);
     users.set(email, hashedPassword, "hashedPassword");
     return true;
@@ -107,9 +117,8 @@ async function resetPassword(email, password) {
 function forcePasswordReset(email) {
   const user = users.get(email);
   if (user) {
-    const isnull = users.get(lastLogin)
-
-    if (isnull) {
+    const isnull = user.lastLogin;
+    if (isnull === null) {
       return true;
     } else {
       return false;
@@ -117,4 +126,13 @@ function forcePasswordReset(email) {
   }
 }
 
-module.exports = { saveUser, getUserCount, userExists, loginUser, listUsers, unregisterUser, resetPassword, forcePasswordReset };
+module.exports = {
+  saveUser,
+  getUserCount,
+  userExists,
+  loginUser,
+  listUsers,
+  unregisterUser,
+  resetPassword,
+  forcePasswordReset,
+};

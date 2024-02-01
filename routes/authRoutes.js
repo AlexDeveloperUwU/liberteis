@@ -66,15 +66,20 @@ router.get("/login", (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
+  const needsReset = db.forcePasswordReset(email);
 
-  const response = await db.loginUser(email, password);
-  if (response === false) {
-    return res.status(400).json({ message: "Credenciales incorrectas" });
+  if (needsReset) {
+    return res.status(400).json({ message: "Se requiere restablecer la contraseña" });
   } else {
-    req.session.userId = response[0];
-    req.session.userEmail = response[1];
-    req.session.userType = response[2];
-    res.status(200).json({ message: "Inicio de sesión exitoso" });
+    const response = await db.loginUser(email, password);
+    if (response === false) {
+      return res.status(400).json({ message: "Credenciales incorrectas" });
+    } else {
+      req.session.userId = response[0];
+      req.session.userEmail = response[1];
+      req.session.userType = response[2];
+      res.status(200).json({ message: "Inicio de sesión exitoso" });
+    }
   }
 });
 
@@ -100,7 +105,14 @@ router.get("/resetpass", (req, res) => {
 });
 
 router.post("/resetpass", async (req, res) => {
-  
+  const { email, password } = req.body;
+
+  const result = await db.resetPassword(email, password);
+  if (result) {
+    res.status(200).json({ message: "Contraseña restablecida exitosamente" });
+  } else {
+    res.status(500).json({ message: "Error al restablecer la contraseña" });
+  }
 });
 
 // Middleware para verificar la autenticación

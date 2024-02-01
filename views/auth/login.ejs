@@ -65,14 +65,19 @@
               }, 1000);
             },
             error: function(error) {
-              console.error(error);
-              $(document).Toasts('create', {
-                class: 'bg-danger',
-                title: 'Ha ocurrido un error',
-                autohide: true,
-                delay: 5000,
-                body: 'El servidor ha retornado un error. Intenta reescribir tus credenciales.'
-              })
+              if (error.status === 400) {
+                location.href = "/auth/resetpass?msg=Debes%20cambiar%20tu%20contraseña%20para%20continuar";
+              } else {
+                console.error(error);
+                $(document).Toasts('create', {
+                  class: 'bg-danger',
+                  title: 'Ha ocurrido un error',
+                  autohide: true,
+                  delay: 5000,
+                  body: 'El servidor ha retornado un error. Intenta reescribir tus credenciales.'
+                })
+
+              }
             }
           });
         });
