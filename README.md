@@ -30,6 +30,8 @@ Estos son los objetivos que he logrado hasta ahora:
 - [✅] Aprender a usar la API de GitHub para saber cuando hay nuevas actualizaciones
 - [✅] Aprender a gestionar contraseñas con encriptado HASH
 - [✅] Aprender a limitar el acceso de los distintos dispositivos utilizando los User-Agents
+- [✅] Envío de correos electrónicos con Nodemailer
+- [✅] Correos electrónicos con plantillas HTML
 
 ## Autor
 
