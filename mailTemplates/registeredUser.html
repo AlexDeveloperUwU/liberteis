@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="gl">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bienvenido a LiberTeis</title>
+  <title>Benvido a LiberTeis</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -26,11 +26,22 @@
     h1 {
       color: #007BFF;
       text-align: center;
+      margin-bottom: 20px;
+      font-size: 3em;
+    }
+
+    h2 {
+      color: #000000;
+      text-align: left;
+      margin-bottom: 15px;
     }
 
     p {
       color: #555;
-      line-height: 1.6;
+      line-height: 1.4;
+      /* Ajuste para reducir espacio entre los párrafos */
+      margin-bottom: 8px;
+      /* Ajuste para reducir espacio entre los párrafos */
     }
 
     a {
@@ -40,7 +51,8 @@
 
     .button {
       display: block;
-      margin: 20px auto;
+      margin: 15px auto;
+      /* Ajuste para reducir espacio entre el botón y los párrafos */
       padding: 10px 20px;
       background-color: #007BFF;
       color: #ffffff;
@@ -55,9 +67,11 @@
     }
 
     code {
+      display: block;
       background-color: #f8f9fa;
-      padding: 2px 5px;
-      border-radius: 3px;
+      padding: 8px;
+      margin: 10px 0;
+      border-radius: 5px;
       font-family: 'Courier New', Courier, monospace;
     }
   </style>
@@ -65,30 +79,27 @@
 
 <body>
   <div class="container">
-    <h1 id="titulo">Bienvenido a LiberTeis</h1>
-    <p>Te informamos que has sido dado de alta en la plataforma de gestión de eventos de la biblioteca del IES De Teis.</p>
-
-    <h2 id="categoria">¿Qué es LiberTeis?</h2>
-    <p>Una pequeña web que permite la gestión de eventos de la biblioteca del IES de Teis.</p>
-    <p>En la plataforma, podrás cargar los eventos que se lleven a cabo en la biblioteca, que posteriormente serán mostrados en las distintas pantallas localizadas en el recinto de la biblioteca.</p>
-
-    <h2 id="categoria">Primeros pasos</h2>
-    <p>Para comenzar a usar la plataforma, debes iniciar sesión con los siguientes datos:</p>
-    <code id="destacado">Usuario: {{email}}</code>
+    <h1>LiberTeis</h1>
+    <p>Dámosche a benvida á plataforma de xestión de eventos da biblioteca do IES De Teis!</p>
     <br>
-    <code id="destacado">Contraseña: Cambiame123</code>
-    <p>Una vez inicies sesión, automáticamente te redirigirá a la página de restablecer contraseña, donde podrás poner la contraseña que desees para proteger tu cuenta.</p>
-    <p>Cuando el proceso finalice, volverás a la página de login, donde deberás introducir tu correo y la nueva contraseña.</p>
-    <p>Una vez inicies sesión correctamente, podrás usar la plataforma!</p>
-
-    <h2 id="categoria">¿Problemas?</h2>
-    <p>Por favor, si tienes algún problema, <a href="mailto:alex@alexdevuwu.com">envíame un correo electrónico</a> informándome de ello o solicitándome ayuda y estaré encantado de ayudarte.</p>
-    <p>De lo contrario, como alternativa siempre puedes avisar a Marta Rey, quién me comunicará el problema que tengas.</p>
+    <h2>Que é LiberTeis?</h2>
+    <p>LiberTeis é unha pequena web que facilita a xestión de eventos na biblioteca do IES de Teis.</p>
+    <p>Na plataforma poderás cargar eventos, que terán visibilidade nas distintas pantallas situadas no recinto da biblioteca.</p>
     <br>
-    <p>Espero que la plataforma sea de tu agrado.</p>
-    <p>Un saludo,<br>Alejandro Verde Fernández - Desarrollador de LiberTeis</p>
-
+    <h2>Primeiros pasos</h2>
+    <p>Para comezar, inicia sesión cos seguintes datos:</p>
+    <code>Usuario: {{email}}<br>Contrasinal: Cambiame123</code>
+    <p>Despois de iniciar sesión, serás redirixido á páxina de restablecer contrasinal para protexer a túa conta. Unha vez completado o proceso, volve a iniciar sesión co teu correo e nova contrasinal.</p>
+    <p>Listo! Agora podes gozar da plataforma.</p>
+    <br>
+    <h2>Problemas?</h2>
+    <p>Se atopas algún problema ou necesitas axuda, <a href="mailto:alex@alexdevuwu.com">envíame un correo electrónico</a> e axudaeite sen problema. Tamén podes contactar con Marta Rey, profesora do departamento de informática.</p>
+    <p>Espero que che guste a plataforma. </p>
+    <p>Un saúdo, <br><b>Alejandro Verde Fernández - Desenvolvedor de LiberTeis</b></p>
     <p><a href="https://actividades.biblio.iesteis.gal/dash" class="button">Ir a LiberTeis</a></p>
+    <p style="text-align: center; font-size: small; margin-top: 30px;">
+      Lembra que este correo é automatizado, polo que non é necesario que respondas.
+    </p>
   </div>
 </body>
 

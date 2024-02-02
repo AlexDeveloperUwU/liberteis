@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const db = require("../functions/usersdb");
+const mail = require("../functions/mail");
 
 const requireAuth = (req, res, next) => {
   if (req.session && req.session.userId) {
@@ -36,6 +37,7 @@ router.post("/register", async (req, res) => {
       return res.status(500).json({ message: "Error al registrar el usuario" });
     } else {
       res.status(201).json({ message: "Usuario registrado exitosamente" });
+      await mail(email, "Registro exitoso", "mailTemplates/registeredUser.html");
     }
   }
 });

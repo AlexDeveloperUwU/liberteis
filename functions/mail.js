@@ -1,10 +1,10 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const envFilePath = path.join(__dirname, "../env", ".env");
-require("dotenv").config({ path: envFilePath });
+const path = require("path");
+require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
-  host: proccess.env.MAIL_HOST,
+  host: process.env.MAIL_HOST,
   port: process.env.MAIL_PORT,
   secure: true,
   auth: {
@@ -13,22 +13,22 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const enviarCorreoHTML = async (destinatario, asunto, rutaHTML) => {
+const enviarCorreo = async (destinatario, asunto, rutaHTML) => {
   try {
     const cuerpoHTML = fs.readFileSync(rutaHTML, "utf-8");
+    const cuerpoHTMLModificado = cuerpoHTML.replace("{{email}}", destinatario);
 
     const mensaje = {
       from: process.env.MAIL_USER,
       to: destinatario,
       subject: asunto,
-      html: cuerpoHTML,
+      html: cuerpoHTMLModificado,
     };
 
-    const info = await transporter.sendMail(mensaje);
-    console.log("Correo enviado:", info.messageId);
+    await transporter.sendMail(mensaje);
   } catch (error) {
     console.error("Error al enviar el correo:", error);
   }
 };
 
-module.exports = enviarCorreoHTML;
+module.exports = enviarCorreo;
