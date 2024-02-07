@@ -13,19 +13,34 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const enviarCorreo = async (destinatario, asunto, rutaHTML) => {
+const enviarCorreo = async (destinatario, asunto, rutaHTML, params) => {
   try {
     const cuerpoHTML = fs.readFileSync(rutaHTML, "utf-8");
-    const cuerpoHTMLModificado = cuerpoHTML.replace("{{email}}", destinatario);
+    if (rutaHTML === "mailTemplates/forgottenPassword.html") {
+      const cuerpoHTMLModificado = cuerpoHTML
+        .replace("{{email}}", destinatario)
+        .replace("{{newPassword}}", params);
 
-    const mensaje = {
-      from: process.env.MAIL_USER,
-      to: destinatario,
-      subject: asunto,
-      html: cuerpoHTMLModificado,
-    };
+      const mensaje = {
+        from: process.env.MAIL_USER,
+        to: destinatario,
+        subject: asunto,
+        html: cuerpoHTMLModificado,
+      };
 
-    await transporter.sendMail(mensaje);
+      await transporter.sendMail(mensaje);
+    } else {
+      const cuerpoHTMLModificado = cuerpoHTML.replace("{{email}}", destinatario);
+
+      const mensaje = {
+        from: process.env.MAIL_USER,
+        to: destinatario,
+        subject: asunto,
+        html: cuerpoHTMLModificado,
+      };
+
+      await transporter.sendMail(mensaje);
+    }
   } catch (error) {
     console.error("Error al enviar el correo:", error);
   }

@@ -18,9 +18,6 @@ const app = express();
 const port = process.env.APP_PORT || 3000;
 const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRoutes");
 
-const viewsFolder = path.join(__dirname, "views");
-const files = fs.readdirSync(viewsFolder);
-
 // Comprueba si el host es Windows (mi entorno de desarrollo)
 const isWindows = os.platform() === 'win32';
 const secureCookie = !isWindows;
