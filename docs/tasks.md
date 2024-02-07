@@ -8,3 +8,7 @@ Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 
 => Mejoras visuales en los modals para cuando estás esperando a que la solicitud se procese
 => Texto encima del código QR que ponga "Escanéame"
 => Límite mínimo de caracteres en el campo de texto
+=> Mail de cuenta eliminada
+
+## Anotaciones extra
+- Si reseteas sin saber la vieja, te fuerza a cambiarla cuando vuelvas a entrar (establece last login como null)
