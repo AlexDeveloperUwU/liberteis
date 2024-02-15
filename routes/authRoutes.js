@@ -101,7 +101,6 @@ router.post("/list", (req, res) => {
 });
 
 // Ruta para restablecer la contraseña
-
 router.get("/resetpass", (req, res) => {
   res.render("auth/reset");
 });
