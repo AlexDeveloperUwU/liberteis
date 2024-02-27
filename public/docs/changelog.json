@@ -1,11 +1,57 @@
 [
   {
-    "version": "0.11.0",
-    "date": "18/01/2024",
+    "version": "0.12.1",
+    "date": "21/01/2024",
     "list": [
       {
         "label": ["Añadido"],
-        "detail": "Si no seleccionas eventos múltiples y le das a borrar selección, aparece mensaje de error."
+        "detail": "Selección del tipo de evento que es al crearlo y editarlo en todas las páginas."
+      }
+    ]
+  },
+  {
+    "version": "0.12.0",
+    "date": "20/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Selección del tipo de evento que es al crearlo y editarlo en la página del calendario."
+      }
+    ]
+  },
+  {
+    "version": "0.11.1",
+    "date": "20/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Análisis automático del código para escanear vulnerabilidades."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Documentación para instalar y actualizar el software."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Link de aviso de nueva versión, arreglada la documentación del repositorio."
+      }
+    ]
+  },
+  {
+    "version": "0.11.0",
+    "date": "19/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Persistencia de los datos cuando se actualiza la aplicación."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Script `npm run docker:remove` para parar la aplicación y eliminar la imagen."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Ahora la aplicación pesa 3 veces menos."
       }
     ]
   },

@@ -1,5 +1,7 @@
 # LiberTeis‎ ‎ ‎ ‎ ‎‎‎[![wakatime](https://wakatime.com/badge/github/AlexDeveloperUwU/liberteis.svg)](https://wakatime.com/badge/github/AlexDeveloperUwU/liberteis)
 
+> 📣​ <a style="color:#FF6961;">Aviso importante: desarrollo del proyecto ralentizado por distintos motivos personales, se irán haciendo updates al código de forma menos frecuente y con muchos menos cambios en cada update que se realice.</a>
+
 Una pequeña web que permite la gestión de eventos de la biblioteca del IES de Teis.
 
 [Puedes consultar el historial de cambios aquí](./docs/changelog.md)

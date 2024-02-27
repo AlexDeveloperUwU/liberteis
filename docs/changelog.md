@@ -1,5 +1,5 @@
 <details>
-  <summary><b>0.14.3 - (24/01/2024 - 07/02/2024)</b></summary>
+  <summary><b>0.14.3 - (24/01/2024 - 27/02/2024)</b></summary>
 
 - Auth: migración del sistema de autenticación a un archivo (un módulo externo) para mejor mantenimiento y migradas las rutas para el uso de este nuevo módulo
 
@@ -9,7 +9,7 @@
 
 - Backend: limpieza de código innecesario
 
-- Sistema de e-mails: implementado un nuevo sistema de correo electrónico para notificar sobre distintos eventos sobre las cuentas
+- Sistema de e-mails: implementado un nuevo sistema de correo electrónico para notificar sobre distintos eventos sobre las cuentas y creación de las plantillas HTML que se utilizarán en este nuevo sistema de correos electrónicos
 
 </details>
 
@@ -67,44 +67,3 @@
 - Frontend: se ve la columna de tipo de evento en la lista de eventos, limitado el ancho de la descripción para que no se salga de la pantalla de la rpi
 
 </details>
-
-<details>
-  <summary><b>0.12.1 - 21/01/2024</b></summary>
-
-- Frontend: tipo de evento ya se ve en todas las partes
-
-</details>
-
-<details>
-  <summary><b>0.12.0 - 20/01/2024</b></summary>
-
-- Frontend: seleccionar el tipo de evento que es a la hora de crearlo y de editarlo (solo en la página de calendario)
-
-- Backend: nueva propiedad añadida (categoría)
-
-</details>
-
-<details>
-  <summary><b>0.11.1 - 20/01/2024</b></summary>
-
-- CodeQL: añadido el workflow de CodeQL para poder analizar el código y encontrar posibles vulnerabilidades (solo de mi código, no de las dependencias)
-
-- Wiki: añadida la documentación de la instalación y actualización del software en la wiki tanto para Node.js como para Docker
-
-- Frontend: actualizado el link del aviso de nueva versión para que lleve a la wiki correctamente, cambiar el sidebar para que corresponda con los planes a futuros y que existan todos los apartados que deben existir en este momento
-
-</details>
-
-<details>
-  <summary><b>0.11.0 - 19/01/2024</b></summary>
-
-- Docker: añadidos los binds necesarios para que el container funcione correctamente y si se actualiza el código, se actualice en el container sin perder ninguno de los datos necesarios, como la base de datos, las miniaturas o el .env
-
-- Dockerfile: cambiada la imagen base a node:18-alpine para reducir el tamaño del container (pasamos de 1.2GB a 300MB)
-
-- Package.json: añadido el script `npm run docker:remove` para poder parar el container, eliminarlo y luego eliminar la imagen
-
-- Index.js: cambiada la config del dotenv y comprobación de si existe la carpeta logs
-
-</details>
-
