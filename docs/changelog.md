@@ -2,6 +2,8 @@
 
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
+> Nota: las versiones marcadas como UNRELEASED son versiones que saldrán a producción como una sola, con lo que no se crearán tags para ellas, solo para la final.
+
 <details>
   <summary><b>0.14.3 - UNRELEASED - 27/02/2024</b></summary>
 
@@ -16,7 +18,7 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 </details>
 
 <details>
-  <summary><b>0.14.2 - 24/01/2024</b></summary>
+  <summary><b>0.14.2 - UNRELEASED - 24/01/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Changelog que se genera automáticamente a partir del json.
 
@@ -27,14 +29,14 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 </details>
 
 <details>
-  <summary><b>0.14.1 - 23/01/2024</b></summary>
+  <summary><b>0.14.1 - UNRELEASED - 23/01/2024</b></summary>
 
 - <span style="color: yellow;">Arreglado:</span> Mejoras estéticas en los formularios de inicio de sesión y de registro.
 
 </details>
 
 <details>
-  <summary><b>0.14.0 - 23/01/2024</b></summary>
+  <summary><b>0.14.0 - UNRELEASED - 23/01/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Formulario de inicio de sesión y de registro.
 

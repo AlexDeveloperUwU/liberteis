@@ -4,7 +4,7 @@ const fs = require('fs');
 const changelogData = require('./public/docs/changelog.json');
 
 // Inicializar la variable como un array de strings
-let changelogContent = ["# Historial de versiones", "", "Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.", ""];
+let changelogContent = ["# Historial de versiones", "", "Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.", "", "> Nota: las versiones marcadas como UNRELEASED son versiones que saldrán a producción como una sola, con lo que no se crearán tags para ellas, solo para la final.", ""];
 
 changelogData.forEach(log => {
   changelogContent.push(`<details>\n  <summary><b>${log.version} - ${log.date}</b></summary>`);
