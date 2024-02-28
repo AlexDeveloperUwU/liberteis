@@ -1,6 +1,17 @@
 const bcrypt = require("bcrypt");
 const enmap = require("enmap");
+const passgen = require("generate-password")
 const users = new enmap({ name: "users" });
+
+function generatePassword() {
+  return passgen.generate({
+    length: 24,
+    numbers: true,
+    symbols: false,
+    lowercase: true,
+    uppercase: true
+  });
+}
 
 // Función para guardar un usuario, por defecto se crea como usuario normal
 async function saveUser(fullname, email, password, type = "normalUser", createdBy = "SYSTEM") {
@@ -93,7 +104,7 @@ function unregisterUser(email) {
   }
 }
 
-async function resetPassword(email, password) {
+async function changePassword(email, password) {
   const user = users.get(email);
   if (user) {
     const currentDate = new Date();
@@ -109,6 +120,19 @@ async function resetPassword(email, password) {
     const hashedPassword = await bcrypt.hash(password, 10);
     users.set(email, hashedPassword, "hashedPassword");
     return true;
+  } else {
+    return false;
+  }
+}
+
+async function resetPassword(email) {
+  const user = users.get(email);
+  if (user) {
+    users.set(email, null, "lastLogin");
+    const password = generatePassword();
+    const hashedPassword = await bcrypt.hash(password, 10);
+    users.set(email, hashedPassword, "hashedPassword");
+    return password;
   } else {
     return false;
   }
@@ -133,6 +157,7 @@ module.exports = {
   loginUser,
   listUsers,
   unregisterUser,
+  changePassword,
   resetPassword,
   forcePasswordReset,
 };

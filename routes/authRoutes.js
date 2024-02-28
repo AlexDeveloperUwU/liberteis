@@ -37,17 +37,18 @@ router.post("/register", async (req, res) => {
       return res.status(500).json({ message: "Error al registrar el usuario" });
     } else {
       res.status(201).json({ message: "Usuario registrado exitosamente" });
-      await mail(email, "Registro exitoso", "mailTemplates/registeredUser.html");
+      await mail(email, "Rexistro exitoso", "mailTemplates/registeredUser.html");
     }
   }
 });
 
-router.post("/unregister", (req, res) => {
+router.post("/unregister", async (req, res) => {
   const { email } = req.body;
   if (db.userExists(email)) {
     const result = db.unregisterUser(email);
     if (result) {
       res.status(200).json({ message: "Usuario eliminado exitosamente" });
+      await mail(email, "Conta eliminada", "mailTemplates/unregisteredUser.html");
     } else {
       res.status(500).json({ message: "Error al eliminar el usuario" });
     }
@@ -86,7 +87,7 @@ router.post("/login", async (req, res) => {
 });
 
 // Ruta de cierre de sesión
-router.get("/logout", (req, res) => {
+router.get("/logout", requireAuth, (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       return res.status(500).json({ message: "Error al cerrar sesión" });
@@ -101,6 +102,23 @@ router.post("/list", (req, res) => {
 });
 
 // Ruta para restablecer la contraseña
+router.get("/changepass", requireAuth, (req, res) => {
+  res.render("auth/change");
+});
+
+router.post("/changepass", requireAuth, async (req, res) => {
+  const { email, password } = req.body;
+
+  const result = await db.changePassword(email, password);
+  if (result) {
+    res.status(200).json({ message: "Contraseña restablecida exitosamente" });
+    await mail(email, "Contrasinal da conta modificada", "mailTemplates/passwordChanged.html");
+  } else {
+    res.status(500).json({ message: "Error al restablecer la contraseña" });
+  }
+});
+
+// Ruta para restablecer la contraseña olvidada
 router.get("/resetpass", (req, res) => {
   res.render("auth/reset");
 });
@@ -109,9 +127,9 @@ router.post("/resetpass", async (req, res) => {
   const { email, password } = req.body;
 
   const result = await db.resetPassword(email, password);
-  if (result) {
+  if (result !== false) {
     res.status(200).json({ message: "Contraseña restablecida exitosamente" });
-    await mail(email, "Registro exitoso", "mailTemplates/passwordChanged.html");
+    await mail(email, "Tua nova contrasinal dun único uso", "mailTemplates/forgottenPassword.html", result);
   } else {
     res.status(500).json({ message: "Error al restablecer la contraseña" });
   }

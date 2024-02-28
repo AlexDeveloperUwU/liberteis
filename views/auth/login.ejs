@@ -7,7 +7,7 @@
   <div class="register-box">
     <div class="card card-outline card-primary">
       <div class="card-header text-center">
-        <p class="h1" style="font-size: xx-large;"><b>Gestión de eventos</b></p>
+        <p class="h1" style="font-size: xx-large;"><b>LiberTeis</b></p>
       </div>
       <div class="card-body">
         <p class="login-box-msg">Inicia sesión en la plataforma</p>
@@ -66,7 +66,7 @@
             },
             error: function(error) {
               if (error.status === 400) {
-                location.href = "/auth/resetpass?msg=Debes%20cambiar%20tu%20contraseña%20para%20continuar";
+                location.href = "/auth/changepass";
               } else {
                 console.error(error);
                 $(document).Toasts('create', {
