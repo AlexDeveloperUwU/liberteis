@@ -1,5 +1,129 @@
 [
   {
+    "version": "0.14.3 - UNRELEASED",
+    "date": "27/02/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Apartado de gestión de usuarios y ruta de eliminación de usuarios."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Sistema de correos electrónicos para distintos aspectos."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Limpieza de código innecesario."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Migración del changelog al json"
+      }
+    ]
+  },
+  {
+    "version": "0.14.2",
+    "date": "24/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Changelog que se genera automáticamente a partir del json."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Script generador del changelog automatizado."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Vulnerabilidad generada por un console.log."
+      }
+    ]
+  },
+  {
+    "version": "0.14.1",
+    "date": "23/01/2024",
+    "list": [
+      {
+        "label": ["Arreglado"],
+        "detail": "Mejoras estéticas en los formularios de inicio de sesión y de registro."
+      }
+    ]
+  },
+  {
+    "version": "0.14.0",
+    "date": "23/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Formulario de inicio de sesión y de registro."
+      }
+    ]
+  },
+  {
+    "version": "0.13.0",
+    "date": "22/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Botón de clonar evento para aquellos que se repiten, permite editar ciertos datos."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Que no se borren las imágenes si las usan más de un evento."
+      }
+    ]
+  },
+  {
+    "version": "0.12.3",
+    "date": "22/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Mensaje de que no hay eventos por si no hay eventos en la db."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Links de la barra lateral, ahora llevan a los apartados correspondientes."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Solo se muestran los eventos de la semana y si ya no quedan muestra que ya no quedan."
+      }
+    ]
+  },
+  {
+    "version": "0.12.3",
+    "date": "22/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Mensaje de que no hay eventos por si no hay eventos en la db."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Links de la barra lateral, ahora llevan a los apartados correspondientes."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Solo se muestran los eventos de la semana y si ya no quedan muestra que ya no quedan."
+      }
+    ]
+  },
+  {
+    "version": "0.12.2",
+    "date": "21/01/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Columna tipo de evento en la lista de eventos."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Limitado el ancho de la descripción en la pantalla de la RPi."
+      }
+    ]
+  },
+  {
     "version": "0.12.1",
     "date": "21/01/2024",
     "list": [
