@@ -176,6 +176,16 @@
   <%- include('../partials/scripts') %>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+      // Función para comprobar la longitud de un campo de texto, para que se cumplan los mínimos
+      function comprobarCaracteres(id) {
+        var texto = document.getElementById(id).value;
+
+        if (texto.length < 100) {
+            alert("La descripción tiene menos de 100 caracteres. Cámbiela para cumplir con este minimo.");
+        } 
+    }
+
       // Función para abrir el formulario de borrar un evento
       function openRemoveEventForm(event) {
         $('#eventModal').modal('show');
@@ -251,7 +261,7 @@
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="editEventDescription">Descripción del evento:</label>' +
-          '    <textarea class="form-control" id="editEventDescription" rows="3" maxlength=400 required>' + event.extendedProps.description + '</textarea>' +
+          '    <textarea class="form-control" id="editEventDescription" rows="3" minlength=100 maxlength=400 required onblur="comprobarCaracteres("editEventDescription")">' + event.extendedProps.description + '</textarea>' +
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="editEventDate">Fecha del evento:</label>' +
@@ -349,7 +359,7 @@
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="cloneEventDescription">Descripción del evento:</label>' +
-          '    <textarea class="form-control" id="cloneEventDescription" rows="3" maxlength=400 required>' + event.extendedProps.description + '</textarea>' +
+          '    <textarea class="form-control" id="cloneEventDescription" rows="3" minlength=100 maxlength=400 required onblur="comprobarCaracteres("editEventDescription")">' + event.extendedProps.description + '</textarea>' +
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="cloneEventDate">Fecha del evento:</label>' +
