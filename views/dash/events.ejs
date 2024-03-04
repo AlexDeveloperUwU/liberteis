@@ -177,15 +177,6 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-      // Función para comprobar la longitud de un campo de texto, para que se cumplan los mínimos
-      function comprobarCaracteres(id) {
-        var texto = document.getElementById(id).value;
-
-        if (texto.length < 100) {
-            alert("La descripción tiene menos de 100 caracteres. Cámbiela para cumplir con este minimo.");
-        } 
-    }
-
       // Función para abrir el formulario de borrar un evento
       function openRemoveEventForm(event) {
         $('#eventModal').modal('show');
@@ -260,8 +251,8 @@
           '    <input type="text" class="form-control" id="editEventTitle" value="' + event.title + '" required maxlength=60>' +
           '  </div>' +
           '  <div class="form-group">' +
-          '    <label for="editEventDescription">Descripción del evento:</label>' +
-          '    <textarea class="form-control" id="editEventDescription" rows="3" minlength=100 maxlength=400 required onblur="comprobarCaracteres("editEventDescription")">' + event.extendedProps.description + '</textarea>' +
+          '    <label for="editEventDescription">Descripción del evento (min. 100 char.):</label>' +
+          '    <textarea class="form-control" id="editEventDescription" rows="3" minlength=100 maxlength=400 required>' + event.extendedProps.description + '</textarea>' +
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="editEventDate">Fecha del evento:</label>' +
@@ -287,9 +278,18 @@
           '  </div>' +
           '   <label for="editEventPublishedBy">Miniatura:</label>' +
           '   <p class="text-warning">No se puede editar la miniatura, con lo que deberás crear un evento nuevo para poder subir la nueva miniatura</p>' +
-          '  <button type="submit" class="btn btn-primary">Guardar cambios</button>' +
+          '  <button type="submit" id="editEventButton" class="btn btn-primary" disabled>Guardar cambios</button>' +
           '</form>'
         );
+
+        $('#editEventDescription').on('blur', function() {
+          var descriptionLength = $(this).val().length;
+          if (descriptionLength < 100 || descriptionLength > 400) {
+            $('#editEventButton').prop('disabled', true);
+          } else {
+            $('#editEventButton').prop('disabled', false);
+          }
+        });
 
         $('#editEventForm').data('eventId', event.id);
 
@@ -358,8 +358,8 @@
           '    <input type="text" class="form-control" id="cloneEventTitle" value="' + event.title + '" required maxlength=60>' +
           '  </div>' +
           '  <div class="form-group">' +
-          '    <label for="cloneEventDescription">Descripción del evento:</label>' +
-          '    <textarea class="form-control" id="cloneEventDescription" rows="3" minlength=100 maxlength=400 required onblur="comprobarCaracteres("editEventDescription")">' + event.extendedProps.description + '</textarea>' +
+          '    <label for="cloneEventDescription">Descripción del evento (min. 100 char.):</label>' +
+          '     <textarea class="form-control" id="cloneEventDescription" rows="3" minlength=100 maxlength=400 required>' + event.extendedProps.description + '</textarea>' +
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="cloneEventDate">Fecha del evento:</label>' +
@@ -381,9 +381,18 @@
           '  </div>' +
           '   <label for="cloneEventAlert">Miniatura:</label>' +
           '   <p class="text-warning">No se puede editar la miniatura al clonar un evento, con lo que deberás crear un evento nuevo para poder subir la nueva miniatura</p>' +
-          '  <button type="submit" class="btn btn-warning">Clonar evento</button>' +
+          '  <button type="submit" id="cloneEventButton" class="btn btn-warning" disabled>Clonar evento</button>' +
           '</form>'
         );
+
+        $('#cloneEventDescription').on('blur', function() {
+          var descriptionLength = $(this).val().length;
+          if (descriptionLength < 100 || descriptionLength > 400) {
+            $('#cloneEventButton').prop('disabled', true);
+          } else {
+            $('#cloneEventButton').prop('disabled', false);
+          }
+        });
 
         $('#cloneEventForm').data('eventId', event.id);
 
@@ -522,8 +531,8 @@
                 '    <input type="text" class="form-control" id="eventTitle" required maxlength=60>' +
                 '  </div>' +
                 '  <div class="form-group">' +
-                '    <label for="eventDescription">Descripción del evento:</label>' +
-                '    <textarea class="form-control" id="eventDescription" rows="3" maxlength=400 required></textarea>' +
+                '    <label for="eventDescription">Descripción del evento (min. 100 char.):</label>' +
+                '    <textarea class="form-control" id="eventDescription" rows="3" minlength=100 maxlength=400 required></textarea>' +
                 '  </div>' +
                 '  <div class="form-group">' +
                 '    <label for="eventDate">Fecha del evento:</label>' +
@@ -547,9 +556,19 @@
                 '     <label for="eventThumb">Miniatura del evento:</label>' +
                 '     <input type="file" class="form-control-file" id="eventThumb" name="thumbnailfile" accept="image/*">' +
                 '  </div>' +
-                '  <button type="submit" class="btn btn-primary">Guardar evento</button>' +
+                '  <button type="submit" id="saveEventButton" class="btn btn-primary" disabled>Guardar evento</button>' +
                 '</form>'
               );
+
+              $('#eventDescription').on('blur', function() {
+                var descriptionLength = $(this).val().length;
+                if (descriptionLength < 100 || descriptionLength > 400) {
+                  $('#saveEventButton').prop('disabled', true);
+                } else {
+                  $('#saveEventButton').prop('disabled', false);
+                }
+              });
+
 
               $('#eventModal').modal('show');
 

@@ -52,6 +52,14 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
 
+    function comprobarCaracteres(id) {
+      var texto = document.getElementById(id).value;
+
+      if (texto.length < 100) {
+        alert("La descripción tiene menos de 100 caracteres. Cámbiela para cumplir con este minimo.");
+      }
+    }
+
     var logArr;
 
     fetch('/assets/docs/changelog.json')
@@ -101,7 +109,7 @@
         const labelColorMap = {
           'añadido': 'green',
           'eliminado': 'red',
-          'arreglado': 'yellow'
+          'arreglado': '#ffc400',
         };
 
         const labelColor = labelColorMap[item.label[0].toLowerCase()] || 'black';

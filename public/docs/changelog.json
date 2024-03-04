@@ -1,5 +1,15 @@
 [
   {
+    "version": "0.14.4 - UNRELEASED",
+    "date": "04/03/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Check mínimo de descripción 100 caracteres."
+      }
+    ]
+  },
+  {
     "version": "0.14.3 - UNRELEASED",
     "date": "27/02/2024",
     "list": [
