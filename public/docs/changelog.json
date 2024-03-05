@@ -1,7 +1,7 @@
 [
   {
-    "version": "0.14.4 - UNRELEASED",
-    "date": "04/03/2024",
+    "version": "0.13.0",
+    "date": "23/01/24 - 04/03/2024",
     "list": [
       {
         "label": ["Añadido"],
@@ -10,13 +10,15 @@
       {
         "label": ["Añadido"],
         "detail": "Generación automática del Docker Container."
-      }
-    ]
-  },
-  {
-    "version": "0.14.3 - UNRELEASED",
-    "date": "27/02/2024",
-    "list": [
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Check mínimo de descripción 100 caracteres."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Generación automática del Docker Container."
+      },
       {
         "label": ["Añadido"],
         "detail": "Apartado de gestión de usuarios y ruta de eliminación de usuarios."
@@ -26,20 +28,6 @@
         "detail": "Sistema de correos electrónicos para distintos aspectos."
       },
       {
-        "label": ["Arreglado"],
-        "detail": "Limpieza de código innecesario."
-      },
-      {
-        "label": ["Arreglado"],
-        "detail": "Migración del changelog al json"
-      }
-    ]
-  },
-  {
-    "version": "0.14.2 - UNRELEASED",
-    "date": "24/01/2024",
-    "list": [
-      {
         "label": ["Añadido"],
         "detail": "Changelog que se genera automáticamente a partir del json."
       },
@@ -48,28 +36,24 @@
         "detail": "Script generador del changelog automatizado."
       },
       {
+        "label": ["Añadido"],
+        "detail": "Formulario de inicio de sesión y de registro."
+      },
+      {
         "label": ["Arreglado"],
         "detail": "Vulnerabilidad generada por un console.log."
-      }
-    ]
-  },
-  {
-    "version": "0.14.1 - UNRELEASED",
-    "date": "23/01/2024",
-    "list": [
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Limpieza de código innecesario."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Migración del changelog al json"
+      },
       {
         "label": ["Arreglado"],
         "detail": "Mejoras estéticas en los formularios de inicio de sesión y de registro."
-      }
-    ]
-  },
-  {
-    "version": "0.14.0 - UNRELEASED",
-    "date": "23/01/2024",
-    "list": [
-      {
-        "label": ["Añadido"],
-        "detail": "Formulario de inicio de sesión y de registro."
       }
     ]
   },
@@ -78,12 +62,8 @@
     "date": "22/01/2024",
     "list": [
       {
-        "label": ["Añadido"],
-        "detail": "Botón de clonar evento para aquellos que se repiten, permite editar ciertos datos."
-      },
-      {
         "label": ["Arreglado"],
-        "detail": "Que no se borren las imágenes si las usan más de un evento."
+        "detail": "Limpieza de código innecesario."
       }
     ]
   },

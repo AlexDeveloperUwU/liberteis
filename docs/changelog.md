@@ -5,49 +5,40 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 > Nota: las versiones marcadas como UNRELEASED son versiones que saldrán a producción como una sola, con lo que no se crearán tags para ellas, solo para la final.
 
 <details>
-  <summary><b>0.14.3 - UNRELEASED - 27/02/2024</b></summary>
+  <summary><b>0.13.0 - 23/01/24 - 04/03/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Check mínimo de descripción 100 caracteres.
+
+- <span style="color: green;">Añadido:</span> Generación automática del Docker Container.
+
+- <span style="color: green;">Añadido:</span> Check mínimo de descripción 100 caracteres.
+
+- <span style="color: green;">Añadido:</span> Generación automática del Docker Container.
 
 - <span style="color: green;">Añadido:</span> Apartado de gestión de usuarios y ruta de eliminación de usuarios.
 
 - <span style="color: green;">Añadido:</span> Sistema de correos electrónicos para distintos aspectos.
 
-- <span style="color: yellow;">Arreglado:</span> Limpieza de código innecesario.
-
-- <span style="color: yellow;">Arreglado:</span> Migración del changelog al json
-
-</details>
-
-<details>
-  <summary><b>0.14.2 - UNRELEASED - 24/01/2024</b></summary>
-
 - <span style="color: green;">Añadido:</span> Changelog que se genera automáticamente a partir del json.
 
 - <span style="color: green;">Añadido:</span> Script generador del changelog automatizado.
 
+- <span style="color: green;">Añadido:</span> Formulario de inicio de sesión y de registro.
+
 - <span style="color: yellow;">Arreglado:</span> Vulnerabilidad generada por un console.log.
 
-</details>
+- <span style="color: yellow;">Arreglado:</span> Limpieza de código innecesario.
 
-<details>
-  <summary><b>0.14.1 - UNRELEASED - 23/01/2024</b></summary>
+- <span style="color: yellow;">Arreglado:</span> Migración del changelog al json
 
 - <span style="color: yellow;">Arreglado:</span> Mejoras estéticas en los formularios de inicio de sesión y de registro.
 
 </details>
 
 <details>
-  <summary><b>0.14.0 - UNRELEASED - 23/01/2024</b></summary>
-
-- <span style="color: green;">Añadido:</span> Formulario de inicio de sesión y de registro.
-
-</details>
-
-<details>
   <summary><b>0.13.0 - 22/01/2024</b></summary>
 
-- <span style="color: green;">Añadido:</span> Botón de clonar evento para aquellos que se repiten, permite editar ciertos datos.
-
-- <span style="color: yellow;">Arreglado:</span> Que no se borren las imágenes si las usan más de un evento.
+- <span style="color: yellow;">Arreglado:</span> Limpieza de código innecesario.
 
 </details>
 
