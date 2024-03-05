@@ -1,0 +1,29 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  publish-liberteis-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version from tag
+        id: extract_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
+      - name: Build and push Docker image
+        run: |
+          docker build . --tag ghcr.io/alexdeveloperuwu/liberteis:${{ steps.extract_version.outputs.VERSION }}
+          docker push ghcr.io/alexdeveloperuwu/liberteis:${{ steps.extract_version.outputs.VERSION }}

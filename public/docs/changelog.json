@@ -6,6 +6,10 @@
       {
         "label": ["Añadido"],
         "detail": "Check mínimo de descripción 100 caracteres."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Generación automática del Docker Container."
       }
     ]
   },
