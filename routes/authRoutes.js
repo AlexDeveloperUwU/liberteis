@@ -72,6 +72,7 @@ router.post("/login", async (req, res) => {
   const needsReset = db.forcePasswordReset(email);
 
   if (needsReset) {
+    console.log("Si")
     return res.status(400).json({ message: "Se requiere restablecer la contraseña" });
   } else {
     const response = await db.loginUser(email, password);
@@ -102,11 +103,11 @@ router.post("/list", (req, res) => {
 });
 
 // Ruta para restablecer la contraseña
-router.get("/changepass", requireAuth, (req, res) => {
+router.get("/changepass", (req, res) => {
   res.render("auth/change");
 });
 
-router.post("/changepass", requireAuth, async (req, res) => {
+router.post("/changepass", async (req, res) => {
   const { email, password } = req.body;
 
   const result = await db.changePassword(email, password);
