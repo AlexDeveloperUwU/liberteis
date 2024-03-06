@@ -13,16 +13,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Extract tag name
+        id: extract_tag_name
+        run: echo "::set-output name=tag_name::$(echo ${GITHUB_REF#refs/*/})"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Extract tag version
-        id: extract_tag_version
-        run: echo ::set-output name=tag_version::$(echo "${{ github.ref }}" | sed 's/v\(.*\)/\1/')
 
       - name: Login to GHCR
         if: github.event_name != 'pull_request'
@@ -38,7 +38,7 @@ jobs:
           context: .
           platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/alexdeveloperuwu/liberteis:v${{ steps.extract_tag_version.outputs.tag_version }}-amd64
+          tags: ghcr.io/alexdeveloperuwu/liberteis:v${{ steps.extract_tag_name.outputs.tag_name }}-amd64
 
       - name: Build and push ARM64
         uses: docker/build-push-action@v5
@@ -46,4 +46,4 @@ jobs:
           context: .
           platforms: linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/alexdeveloperuwu/liberteis:v${{ steps.extract_tag_version.outputs.tag_version }}-arm64
+          tags: ghcr.io/alexdeveloperuwu/liberteis:v${{ steps.extract_tag_name.outputs.tag_name }}-arm64
