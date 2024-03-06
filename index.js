@@ -18,10 +18,6 @@ const app = express();
 const port = process.env.APP_PORT || 3000;
 const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRoutes");
 
-// Comprueba si el host es Windows (mi entorno de desarrollo)
-const isWindows = os.platform() === 'win32';
-const secureCookie = !isWindows;
-
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use("/thumbs", express.static(__dirname + "/uploads"));
@@ -33,7 +29,7 @@ app.use(
     resave: true,
     saveUninitialized: true,
     cookie: {
-      secure: secureCookie,
+      secure:false,
       httpOnly: true,
     },
   })
