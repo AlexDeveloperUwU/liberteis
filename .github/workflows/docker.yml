@@ -38,7 +38,9 @@ jobs:
           context: .
           platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/alexdeveloperuwu/liberteis:${{ steps.extract_tag_name.outputs.tag_name }}-amd64
+          tags: |
+            ghcr.io/alexdeveloperuwu/liberteis:${{ steps.extract_tag_name.outputs.tag_name }}-amd64
+            ghcr.io/alexdeveloperuwu/liberteis:latest
 
       - name: Build and push ARM64
         uses: docker/build-push-action@v5
@@ -46,4 +48,6 @@ jobs:
           context: .
           platforms: linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/alexdeveloperuwu/liberteis:${{ steps.extract_tag_name.outputs.tag_name }}-arm64
+          tags: |
+            ghcr.io/alexdeveloperuwu/liberteis:${{ steps.extract_tag_name.outputs.tag_name }}-arm64
+            ghcr.io/alexdeveloperuwu/liberteis:latest
