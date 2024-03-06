@@ -40,4 +40,5 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ghcr.io/alexdeveloperuwu/liberteis:${{ steps.extract_tag_name.outputs.tag_name }}
+            ghcr.io/alexdeveloperuwu/liberteis:latest
           platforms: linux/amd64,linux/arm64
