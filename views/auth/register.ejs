@@ -28,24 +28,8 @@
               </div>
             </div>
           </div>
-          <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="Contraseña" name="password" id="password" required>
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-lock"></span>
-              </div>
-            </div>
-          </div>
-          <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="Vuelve a escribir tu contraseña" name="confirmPassword" id="confirmPassword" required>
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-lock"></span>
-              </div>
-            </div>
-          </div>
           <div class="row">
-            <div class="col-4">
+            <div class="col-5">
               <button type="button" class="btn btn-primary btn-block" onclick="registerUser()">Registrarse</button>
             </div>
           </div>
@@ -57,12 +41,6 @@
     <script>
       
       function validateForm() {
-        var password = document.getElementById("password").value;
-        var confirmPassword = document.getElementById("confirmPassword").value;
-        if (password !== confirmPassword) {
-          alert("Las contraseñas no coinciden");
-          return false;
-        }
         return true;
       }
 
@@ -81,7 +59,7 @@
           data: {
             fullname: fullname,
             email: email,
-            password: password,
+            password: "Cambiame123",
             type: "adminUser"
           },
           success: function(response) {
