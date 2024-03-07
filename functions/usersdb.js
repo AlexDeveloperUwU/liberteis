@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const enmap = require("enmap");
-const passgen = require("generate-password")
+const passgen = require("generate-password");
 const users = new enmap({ name: "users" });
 
 function generatePassword() {
@@ -9,7 +9,7 @@ function generatePassword() {
     numbers: true,
     symbols: false,
     lowercase: true,
-    uppercase: true
+    uppercase: true,
   });
 }
 
