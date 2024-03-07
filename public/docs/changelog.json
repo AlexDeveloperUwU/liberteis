@@ -1,7 +1,7 @@
 [
   {
-    "version": "0.13.0",
-    "date": "23/01/24 - 04/03/2024",
+    "version": "0.13.0 => 0.13.4",
+    "date": "23/01/24 => 06/03/2024",
     "list": [
       {
         "label": ["Añadido"],
@@ -54,16 +54,6 @@
       {
         "label": ["Arreglado"],
         "detail": "Mejoras estéticas en los formularios de inicio de sesión y de registro."
-      }
-    ]
-  },
-  {
-    "version": "0.13.0",
-    "date": "22/01/2024",
-    "list": [
-      {
-        "label": ["Arreglado"],
-        "detail": "Limpieza de código innecesario."
       }
     ]
   },
