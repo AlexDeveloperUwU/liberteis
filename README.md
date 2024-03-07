@@ -34,6 +34,8 @@ Estos son los objetivos que he logrado hasta ahora:
 - [✅] Aprender a limitar el acceso de los distintos dispositivos utilizando los User-Agents
 - [✅] Envío de correos electrónicos con Nodemailer
 - [✅] Correos electrónicos con plantillas HTML
+- [✅] Generar automáticamente builds de mis containers, publicarlos en GitHub y que sean multiarquitectura
+- [✅] Generar automáticamente la documentación con VitePress en un único lugar donde tendré la documentación de todos los proyectos que haga
 
 ## Autor
 
