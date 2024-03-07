@@ -44,8 +44,6 @@ generate_session_secret() {
 ask_sensitive_info() {
     echo "Por favor, introduce la siguiente información para guardar en el .env:"
     read -p "URL de la aplicación (por defecto http://localhost:3000): " app_url
-    read -s -p "Tu secreto de sesión: " session_secret
-    echo ""
     read -p "URL del servidor de correo: " mail_host
     read -p "Puerto del servidor de correo: " mail_port
     read -p "Tu usuario de correo: " mail_user
@@ -96,6 +94,14 @@ if command -v docker &>/dev/null; then
         cd $directory/env || exit
         echo -e "\033[0m\nLa instalación se ha completado exitosamente."
     fi
+
+    # Esperar a que el contenedor se lance correctamente
+    echo "Comprobando si el contenedor se ha lanzado correctamente..."
+    until docker inspect -f '{{.State.Running}}' liberteis &>/dev/null; do
+        sleep 10
+    done
+
+    echo "El contenedor se ha lanzado correctamente."
 else
     echo -e "\033[91mLo sentimos, pero Docker no está en el sistema, con lo que no se puede continuar."
 fi
