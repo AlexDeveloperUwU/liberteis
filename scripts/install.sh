@@ -10,7 +10,7 @@ print_header() {
     echo " | |    | | '_ \ / _ \ '__| |/ _ \ / __|"
     echo " | |____| | |_) |  __/ |  | |  __/ \__ \\"
     echo " |______|_|_.__/ \___|_|  |_|\___|_|___/"
-    echo -e "\033[0m\n"
+    echo -e "\033[0m"
 }
 
 # Función para solicitar el puerto
@@ -32,7 +32,6 @@ show_default_directory() {
 ask_directory() {
     echo "Por favor, introduzca el directorio donde desea guardar los archivos de la aplicación:"
     read -p "Directorio: " directory
-    echo "El directorio seleccionado es: $directory"
 }
 
 # Función para generar un secreto de sesión aleatorio de 24 caracteres con caracteres especiales
@@ -56,14 +55,20 @@ setup_env_file() {
     echo "Descargando el fichero de ejemplo para posterior configuración"
     wget -q -O .env.example https://raw.githubusercontent.com/AlexDeveloperUwU/liberteis/main/env/.env.example
     echo "Configurando el archivo .env..."
-    sed -i "s#APP_URL=.*#APP_URL=${app_url:-http://localhost:3000}#g" .env.example
-    sed -i "s#SESSION_SECRET=.*#SESSION_SECRET=${session_secret}#g" .env.example
-    sed -i "s#MAIL_HOST=.*#MAIL_HOST=${mail_host}#g" .env.example
-    sed -i "s#MAIL_PORT=.*#MAIL_PORT=${mail_port}#g" .env.example
-    sed -i "s#MAIL_USER=.*#MAIL_USER=${mail_user}#g" .env.example
-    sed -i "s#MAIL_PASS=.*#MAIL_PASS=${mail_pass}#g" .env.example
-    mv .env.example .env
+    sed -i "s#APP_URL=.*#APP_URL=\"${app_url:-http://localhost:3000}\"#g" .env.example
+    sed -i "s#SESSION_SECRET=.*#SESSION_SECRET=\"${session_secret}\"#g" .env.example
+    sed -i "s#MAIL_HOST=.*#MAIL_HOST=\"${mail_host}\"#g" .env.example
+    sed -i "s#MAIL_PORT=.*#MAIL_PORT=\"${mail_port}\"#g" .env.example
+    sed -i "s#MAIL_USER=.*#MAIL_USER=\"${mail_user}\"#g" .env.example
+    sed -i "s#MAIL_PASS=.*#MAIL_PASS=\"${mail_pass}\"#g" .env.example
+    
+    if [[ $(id -u) -eq 0 ]]; then
+        mv .env.example /liberteis/env/.env
+    else
+        mv .env.example $directory/env/.env
+    fi
 }
+
 
 print_header
 
@@ -76,22 +81,24 @@ if command -v docker &>/dev/null; then
         ask_port
         show_default_directory
         generate_session_secret
+        echo "Creando las carpetas necesarias..."
+        mkdir -p /liberteis/env /liberteis/data /liberteis/uploads
         ask_sensitive_info
         setup_env_file
         echo "Ejecutando el contenedor Docker..."
         docker run -d --name liberteis -e APP_PORT=${port:-3000} -p ${port:-3000}:${port:-3000} -v /liberteis/data:/app/data:rw -v /liberteis/uploads:/app/uploads:rw -v /liberteis/env:/app/env:rw ghcr.io/alexdeveloperuwu/liberteis:latest >/dev/null 2>&1
-        cd /liberteis/env || exit
         echo -e "\033[0m\nLa instalación se ha completado exitosamente."
     else
         echo "El usuario actual no es root."
         ask_port
         ask_directory
         generate_session_secret
+        echo "Creando las carpetas necesarias..."
+        mkdir -p $directory/env $directory/data $directory/uploads
         ask_sensitive_info
         setup_env_file
         echo "Ejecutando el contenedor Docker..."
         docker run -d --name liberteis -e APP_PORT=${port:-3000} -p ${port:-3000}:${port:-3000} -v $directory:/app/data:rw -v $directory:/app/uploads:rw -v $directory:/app/env:rw ghcr.io/alexdeveloperuwu/liberteis:latest >/dev/null 2>&1
-        cd $directory/env || exit
         echo -e "\033[0m\nLa instalación se ha completado exitosamente."
     fi
 
@@ -103,5 +110,5 @@ if command -v docker &>/dev/null; then
 
     echo "El contenedor se ha lanzado correctamente."
 else
-    echo -e "\033[91mLo sentimos, pero Docker no está en el sistema, con lo que no se puede continuar."
+    echo -e "\033[91mLo sentimos, pero Docker no está en el sistema, con lo que no se puede continuar.\033[0m"
 fi
