@@ -21,6 +21,9 @@ fi
 
 # Función para instalar la aplicación
 install() {
+    # Solicitar al usuario el puerto de la aplicación
+    read -p "Por favor, introduce el puerto de la aplicación: " port
+
     # Solicitar al usuario la ubicación base en el host de las carpetas necesarias
     read -p "Por favor, introduce la ubicación base en el host donde se encuentran las carpetas 'data', 'uploads', 'env' y 'logs' (presiona Enter para usar la ubicación predeterminada /liberteis): " base_dir
     base_dir=${base_dir:-/liberteis}
@@ -48,6 +51,9 @@ install() {
 
 # Función para actualizar la aplicación
 update() {
+    # Solicitar al usuario el puerto de la aplicación
+    read -p "Por favor, introduce el puerto de la aplicación: " port
+
     # Obtener los volúmenes del contenedor existente
     volumes=$(sudo docker inspect --format='{{range .Mounts}}{{printf "%s:%s\n" .Source .Destination}}{{end}}' liberteis)
 
