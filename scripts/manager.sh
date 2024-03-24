@@ -39,7 +39,8 @@ install() {
 
     # Ejecutar el contenedor con los volúmenes especificados y el healthcheck
     docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
-    docker exec -it liberteis apk add --no-cache curl
+    sleep 10
+    docker exec -it liberteis apk add --no-cache curl &>/dev/null
 
     # Esperar hasta que el contenedor esté en funcionamiento y saludable
     echo "Esperando a que el contenedor se inicie y sea saludable..."
@@ -64,12 +65,10 @@ update() {
 
     # Descargar la versión actualizada de la imagen desde GitHub Container Registry
     docker pull ghcr.io/alexdeveloperuwu/liberteis:latest
-    echo $port
-    echo $volumes
     # Volver a ejecutar el contenedor con los mismos volúmenes y el healthcheck
-    echo "docker run -d $volumes -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd=\"curl --silent --fail localhost:$port/health || exit 1\" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest"
     docker run -d $volumes -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
-    docker exec -it liberteis apk add --no-cache curl
+    sleep 10
+    docker exec -it liberteis apk add --no-cache curl &>/dev/null
 
     # Esperar hasta que el contenedor esté en funcionamiento y saludable
     echo "Esperando a que el contenedor se reinicie y sea saludable..."
