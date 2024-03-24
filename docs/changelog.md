@@ -3,7 +3,7 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
-  <summary><b>0.13.0 => 0.13.4 - 23/01/24 => 06/03/2024</b></summary>
+  <summary><b>0.13.0 => 0.13.6 - 23/01/24 => 24/03/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Check mínimo de descripción 100 caracteres.
 
@@ -30,6 +30,8 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 - <span style="color: yellow;">Arreglado:</span> Migración del changelog al json
 
 - <span style="color: yellow;">Arreglado:</span> Mejoras estéticas en los formularios de inicio de sesión y de registro.
+
+- <span style="color: yellow;">Arreglado:</span> Añadido un healthcheck para comprobar si el contenedor se está ejecutando correctamente.
 
 </details>
 
