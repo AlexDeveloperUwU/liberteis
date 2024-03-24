@@ -1,7 +1,7 @@
 [
   {
     "version": "0.13.0 => 0.13.4",
-    "date": "23/01/24 => 06/03/2024",
+    "date": "23/01/24 => 24/03/2024",
     "list": [
       {
         "label": ["Añadido"],
@@ -54,7 +54,11 @@
       {
         "label": ["Arreglado"],
         "detail": "Mejoras estéticas en los formularios de inicio de sesión y de registro."
-      }
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Añadido un healthcheck para comprobar si el contenedor se está ejecutando correctamente."
+      }      
     ]
   },
   {
