@@ -14,7 +14,7 @@ print_header() {
 }
 
 # Verificar si Docker está instalado
-if ! command -v docker &> /dev/null; then
+if ! command -v docker &>/dev/null; then
     echo "Error: Docker no está instalado. Por favor, instala Docker y vuelve a intentarlo."
     exit 1
 fi
@@ -34,8 +34,14 @@ install() {
     # Descargar la imagen desde GitHub Container Registry
     docker pull ghcr.io/alexdeveloperuwu/liberteis:latest
 
-    # Ejecutar el contenedor con los volúmenes especificados
-    docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis ghcr.io/alexdeveloperuwu/liberteis:latest
+    # Ejecutar el contenedor con los volúmenes especificados y el healthcheck
+    docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
+
+    # Esperar hasta que el contenedor esté en funcionamiento y saludable
+    echo "Esperando a que el contenedor se inicie y sea saludable..."
+    until docker inspect --format '{{.State.Running}}' liberteis &>/dev/null && [ "$(docker inspect --format '{{.State.Health.Status}}' liberteis)" = "healthy" ]; do
+        sleep 1
+    done
 
     echo "La aplicación se ha instalado correctamente. Los volúmenes han sido montados en las ubicaciones especificadas en el host."
 }
@@ -52,10 +58,29 @@ update() {
     # Descargar la versión actualizada de la imagen desde GitHub Container Registry
     docker pull ghcr.io/alexdeveloperuwu/liberteis:latest
 
-    # Volver a ejecutar el contenedor con los mismos volúmenes
-    docker run -d $volumes -e APP_PORT=$port -p $port:$port --name liberteis ghcr.io/alexdeveloperuwu/liberteis:latest
+    # Volver a ejecutar el contenedor con los mismos volúmenes y el healthcheck
+    docker run -d $volumes -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
+
+    # Esperar hasta que el contenedor esté en funcionamiento y saludable
+    echo "Esperando a que el contenedor se reinicie y sea saludable..."
+    until docker inspect --format '{{.State.Running}}' liberteis &>/dev/null && [ "$(docker inspect --format '{{.State.Health.Status}}' liberteis)" = "healthy" ]; do
+        sleep 1
+    done
 
     echo "La aplicación se ha actualizado correctamente. Los volúmenes siguen montados en las mismas ubicaciones especificadas en el host."
+}
+
+# Función para verificar el estado de salud de la aplicación
+healthcheck() {
+    # Verificar si el contenedor está en ejecución
+    if docker inspect --format '{{.State.Running}}' liberteis &>/dev/null; then
+        echo "La aplicación está en ejecución."
+        # Verificar el estado de salud del contenedor
+        docker inspect --format '{{json .State.Health.Status}}' liberteis
+    else
+        echo "Error: La aplicación no está en ejecución."
+        exit 1
+    fi
 }
 
 # Imprimir la cabecera ASCII
@@ -65,11 +90,13 @@ print_header
 echo "¿Qué acción deseas realizar?"
 echo "1. Instalar la aplicación"
 echo "2. Actualizar la aplicación"
-read -p "Selecciona una opción (1 o 2): " choice
+echo "3. Verificar el estado de salud de la aplicación"
+read -p "Selecciona una opción (1, 2 o 3): " choice
 
 # Ejecutar la acción seleccionada
 case $choice in
-    1) install ;;
-    2) update ;;
-    *) echo "Opción no válida. Por favor, selecciona 1 o 2." ;;
+1) install ;;
+2) update ;;
+3) healthcheck ;;
+*) echo "Opción no válida. Por favor, selecciona 1, 2 o 3." ;;
 esac

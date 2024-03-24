@@ -72,6 +72,10 @@ app.use((req, next) => {
 });
 
 // Rutas del servidor web
+app.get("/health", (req, res) => {
+  res.sendStatus(200);
+});
+
 const apiRoutes = require("./routes/apiRoutes");
 app.use("/api", apiRoutes);
 
