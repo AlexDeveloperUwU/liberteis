@@ -66,6 +66,7 @@ update() {
     echo $port
     echo $volumes
     # Volver a ejecutar el contenedor con los mismos volúmenes y el healthcheck
+    echo "docker run -d $volumes -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd=\"curl --silent --fail localhost:$port/health || exit 1\" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest"
     docker run -d $volumes -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
 
     # Esperar hasta que el contenedor esté en funcionamiento y saludable
