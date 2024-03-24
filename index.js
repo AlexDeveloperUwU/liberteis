@@ -60,7 +60,7 @@ if (!fs.existsSync(logsDirectorio)) {
   fs.mkdirSync(logsDirectorio);
 }
 
-app.use((req, next) => {
+app.use((req, res, next) => {
   const ip = req.ip.replace(/^::ffff:/, "");
   const metodo = req.method;
   const url = req.url;
@@ -68,13 +68,9 @@ app.use((req, next) => {
   const registro = `${ip} [${getTimeDate2()}] ${metodo} ${url}\n`;
   fs.writeFileSync(rutaArchivo, registro, { flag: "a" });
 
-  next();
+  next(); // Call next to move to the next middleware
 });
 
-// Rutas del servidor web
-app.get("/health", (req, res) => {
-  res.sendStatus(200);
-});
 
 const apiRoutes = require("./routes/apiRoutes");
 app.use("/api", apiRoutes);
