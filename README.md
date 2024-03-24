@@ -36,6 +36,9 @@ Estos son los objetivos que he logrado hasta ahora:
 - [✅] Correos electrónicos con plantillas HTML
 - [✅] Generar automáticamente builds de mis containers, publicarlos en GitHub y que sean multiarquitectura
 - [✅] Generar automáticamente la documentación con VitePress en un único lugar donde tendré la documentación de todos los proyectos que haga
+- [✅] Usar HealthChecks en Docker para comprobar que todo funciona correctamente
+- [✅] Un script de Linux que puede obtener los datos de un contenedor para replicar la configuración en el nuevo Docker para actualizarlo
+
 
 ## Autor
 
