@@ -71,6 +71,9 @@ app.use((req, res, next) => {
   next(); // Call next to move to the next middleware
 });
 
+app.get("/health", (req, res) => {
+  res.sendStatus(200); // Healthcheck: OK
+});
 
 const apiRoutes = require("./routes/apiRoutes");
 app.use("/api", apiRoutes);
