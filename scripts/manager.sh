@@ -35,7 +35,7 @@ install() {
     logs_dir="$base_dir/logs"
 
     # Descargar la imagen desde GitHub Container Registry
-    docker pull ghcr.io/alexdeveloperuwu/liberteis:latest
+    docker pull ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
 
     # Ejecutar el contenedor con los volúmenes especificados y el healthcheck
     docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
@@ -60,11 +60,12 @@ update() {
     volumes=$(sudo docker inspect --format='{{range .Mounts}}{{printf "%s:%s\n" .Source .Destination}}{{end}}' liberteis)
 
     # Detener y eliminar el contenedor existente
-    docker stop liberteis
-    docker rm liberteis
+    docker stop liberteis &>/dev/null
+    docker rm liberteis &>/dev/null
 
     # Descargar la versión actualizada de la imagen desde GitHub Container Registry
-    docker pull ghcr.io/alexdeveloperuwu/liberteis:latest
+    docker pull ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
+    
     # Volver a ejecutar el contenedor con los mismos volúmenes y el healthcheck
     docker run -d $volumes -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
     sleep 10
