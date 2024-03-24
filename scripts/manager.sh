@@ -53,8 +53,8 @@ install() {
 
 # Función para actualizar la aplicación
 update() {
-    # Solicitar al usuario el puerto de la aplicación
-    read -p "Por favor, introduce el puerto de la aplicación: " port
+    # Obtener el puerto del contenedor existente
+    port=$(docker port liberteis | awk -F ":" '{print $2}')
 
     # Obtener los volúmenes del contenedor existente
     volumes=$(sudo docker inspect --format='{{range .Mounts}}{{printf "%s:%s\n" .Source .Destination}}{{end}}' liberteis)
@@ -65,8 +65,8 @@ update() {
 
     # Descargar la versión actualizada de la imagen desde GitHub Container Registry
     docker pull ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
-    
-    # Volver a ejecutar el contenedor con los mismos volúmenes y el healthcheck
+
+    # Volver a ejecutar el contenedor con el mismo puerto y los mismos volúmenes, y el healthcheck
     docker run -d $volumes -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
     sleep 10
     docker exec -it liberteis apk add --no-cache curl &>/dev/null
