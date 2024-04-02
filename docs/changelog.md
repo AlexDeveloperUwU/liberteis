@@ -23,6 +23,8 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 
 - <span style="color: green;">Añadido:</span> Formulario de inicio de sesión y de registro.
 
+- <span style="color: green;">Añadido:</span> Traducción al español del calendario de eventos.
+
 - <span style="color: yellow;">Arreglado:</span> Vulnerabilidad generada por un console.log.
 
 - <span style="color: yellow;">Arreglado:</span> Limpieza de código innecesario.

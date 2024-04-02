@@ -40,6 +40,10 @@
         "detail": "Formulario de inicio de sesión y de registro."
       },
       {
+        "label": ["Añadido"],
+        "detail": "Traducción al español del calendario de eventos."
+      },
+      {
         "label": ["Arreglado"],
         "detail": "Vulnerabilidad generada por un console.log."
       },
@@ -58,7 +62,7 @@
       {
         "label": ["Arreglado"],
         "detail": "Añadido un healthcheck para comprobar si el contenedor se está ejecutando correctamente."
-      }      
+      }
     ]
   },
   {
