@@ -40,6 +40,10 @@
         "detail": "Traducción al español del calendario de eventos."
       },
       {
+        "label": ["Añadido"],
+        "detail": "Créditos en el footer de la dashboard."
+      },
+      {
         "label": ["Arreglado"],
         "detail": "Vulnerabilidad generada por un console.log."
       },

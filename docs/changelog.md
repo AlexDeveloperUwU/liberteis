@@ -9,8 +9,6 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 
 - <span style="color: green;">Añadido:</span> Generación automática del Docker Container.
 
-- <span style="color: green;">Añadido:</span> Check mínimo de descripción 100 caracteres.
-
 - <span style="color: green;">Añadido:</span> Generación automática del Docker Container.
 
 - <span style="color: green;">Añadido:</span> Apartado de gestión de usuarios y ruta de eliminación de usuarios.
@@ -24,6 +22,8 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 - <span style="color: green;">Añadido:</span> Formulario de inicio de sesión y de registro.
 
 - <span style="color: green;">Añadido:</span> Traducción al español del calendario de eventos.
+
+- <span style="color: green;">Añadido:</span> Créditos en el footer de la dashboard.
 
 - <span style="color: yellow;">Arreglado:</span> Vulnerabilidad generada por un console.log.
 
