@@ -1,6 +1,6 @@
 const idGen = require("./idgen");
 
-function saveEvent(db, title, desc, event_date, type, thumb_url = null, published_by = "Admin") {
+function saveEvent(db, title, desc, event_date, type, thumb_url = null, published_by) {
   const eventID = idGen.generateUniqueEventID(db);
   const qr_url = `${process.env.APP_URL}/event/${eventID}`
   try {
@@ -19,7 +19,7 @@ function saveEvent(db, title, desc, event_date, type, thumb_url = null, publishe
   }
 }
 
-function editEvent(db, eventID, title, desc, event_date, type, thumb_url = null, qr_url = null, published_by = "Admin") {
+function editEvent(db, eventID, title, desc, event_date, type, thumb_url = null, qr_url = null, published_by) {
   try {
     const event = {
       title: title,

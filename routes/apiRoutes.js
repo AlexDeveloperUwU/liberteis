@@ -24,9 +24,10 @@ router.post("/upload", upload.single("thumbnailfile"), (req, res) => {
 });
 
 router.post("/add", (req, res) => {
-  const { title, desc, event_date, type, thumb_url, qr_url, published_by } = req.body;
+  const { title, desc, event_date, type, thumb_url, published_by } = req.body;
+  console.log(published_by)
   try {
-    database.saveEvent(events, title, desc, event_date, type, thumb_url, qr_url, published_by);
+    database.saveEvent(events, title, desc, event_date, type, thumb_url, published_by);
     res.status(200).send("Evento editado correctamente.");
   } catch (error) {
     console.error("Error al añadir el evento:", error);

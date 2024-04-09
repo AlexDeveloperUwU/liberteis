@@ -625,7 +625,7 @@
                         desc: description,
                         event_date: eventDate,
                         type: category,
-                        published_by: publishedBy,
+                        published_by: "<%= loggedInUsername %>",
                         thumb_url: thumbUrl
                       },
                       success: function(data) {
