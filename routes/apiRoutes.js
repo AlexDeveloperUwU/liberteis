@@ -25,7 +25,6 @@ router.post("/upload", upload.single("thumbnailfile"), (req, res) => {
 
 router.post("/add", (req, res) => {
   const { title, desc, event_date, type, thumb_url, published_by } = req.body;
-  console.log(published_by)
   try {
     database.saveEvent(events, title, desc, event_date, type, thumb_url, published_by);
     res.status(200).send("Evento editado correctamente.");
