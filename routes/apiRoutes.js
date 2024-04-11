@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const database = require("../functions/eventsdb"); // Importamos las funciones de la base de datos
-const { events } = require("../index"); // Importamos las bases de datos
+const database = require("../functions/eventsdb"); 
+const { events } = require("../index"); 
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
@@ -76,7 +76,6 @@ router.post("/delete", (req, res) => {
         }
       });
 
-      // Filtrar eventos con la misma miniatura
       const entriesWithSameThumbnail = eventsList.filter(
         (entry) => entry.thumb_url === thumbnailURL
       );
