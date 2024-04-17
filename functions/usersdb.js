@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
-import("enmap")const passgen = require("generate-password");
+const enmap = require("enmap");
+const passgen = require("generate-password");
 const users = new enmap({ name: "users" });
 
 function generatePassword() {
