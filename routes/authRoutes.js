@@ -77,7 +77,7 @@ router.post("/login", async (req, res) => {
   } else {
     const response = await db.loginUser(email, password);
     if (response === false) {
-      return res.status(400).json({ message: "Credenciales incorrectas" });
+      return res.status(403).json({ message: "Credenciales incorrectas" });
     } else {
       req.session.userId = response[0];
       req.session.userEmail = response[1];
