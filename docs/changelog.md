@@ -3,21 +3,22 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.13.7 => 0.13.9 - 17/04/2024</b></summary>
+
+- <span style="color: yellow;">Arreglado:</span> Fix login con las anteriores credenciales.
+
+</details>
+
+<details>
   <summary><b>0.13.0 => 0.13.6 - 23/01/24 => 24/03/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Check mínimo de descripción 100 caracteres.
 
 - <span style="color: green;">Añadido:</span> Generación automática del Docker Container.
 
-- <span style="color: green;">Añadido:</span> Generación automática del Docker Container.
-
 - <span style="color: green;">Añadido:</span> Apartado de gestión de usuarios y ruta de eliminación de usuarios.
 
 - <span style="color: green;">Añadido:</span> Sistema de correos electrónicos para distintos aspectos.
-
-- <span style="color: green;">Añadido:</span> Changelog que se genera automáticamente a partir del json.
-
-- <span style="color: green;">Añadido:</span> Script generador del changelog automatizado.
 
 - <span style="color: green;">Añadido:</span> Formulario de inicio de sesión y de registro.
 
@@ -28,8 +29,6 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 - <span style="color: yellow;">Arreglado:</span> Vulnerabilidad generada por un console.log.
 
 - <span style="color: yellow;">Arreglado:</span> Limpieza de código innecesario.
-
-- <span style="color: yellow;">Arreglado:</span> Migración del changelog al json
 
 - <span style="color: yellow;">Arreglado:</span> Mejoras estéticas en los formularios de inicio de sesión y de registro.
 
