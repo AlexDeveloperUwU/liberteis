@@ -72,7 +72,6 @@ router.post("/login", async (req, res) => {
   const needsReset = db.forcePasswordReset(email);
 
   if (needsReset) {
-    console.log("Si")
     return res.status(400).json({ message: "Se requiere restablecer la contraseña" });
   } else {
     const response = await db.loginUser(email, password);
