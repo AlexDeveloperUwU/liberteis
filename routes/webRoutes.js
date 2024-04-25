@@ -12,7 +12,7 @@ router.get("/rpi", (req, res) => {
 router.get("/event/:eventID", (req, res) => {
   const userAgent = req.get("User-Agent");
 
-  if (!userAgent || (!userAgent.includes("Android") && !userAgent.includes("iPhone"))) {
+  if (!userAgent || !userAgent.includes("Android") || !userAgent.includes("iPhone")) {
     return res.render("errors/noDevice", {
       device: "dispositivo Android o iPhone",
     });
