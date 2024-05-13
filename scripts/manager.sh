@@ -24,7 +24,20 @@ install() {
     # Solicitar al usuario el puerto de la aplicación
     read -p "Por favor, introduce el puerto de la aplicación: " port
 
-    # Solicitar al usuario la ubicación base en el host de las carpetas necesarias
+    # Solicitar al usuario la URL de la aplicación
+    read -p "Por favor, introduce la URL de la aplicación (por ejemplo, http://localhost:$port): " app_url
+
+    # Generar el secreto de sesión
+    session_secret=$(openssl rand -hex 16)
+
+    # Solicitar al usuario la configuración del servidor de correo
+    read -p "Por favor, introduce la URL del servidor de correo: " mail_host
+    read -p "Por favor, introduce el puerto del servidor de correo: " mail_port
+    read -p "Por favor, introduce tu usuario de correo: " mail_user
+    read -s -p "Por favor, introduce tu contraseña de correo: " mail_pass
+    echo
+
+    # Definir la ubicación base en el host de las carpetas necesarias
     read -p "Por favor, introduce la ubicación base en el host donde se encuentran las carpetas 'data', 'uploads', 'env' y 'logs' (presiona Enter para usar la ubicación predeterminada /liberteis): " base_dir
     base_dir=${base_dir:-/liberteis}
 
@@ -33,6 +46,15 @@ install() {
     uploads_dir="$base_dir/uploads"
     env_dir="$base_dir/env"
     logs_dir="$base_dir/logs"
+
+    # Crear el archivo .env
+    echo "PORT=$port" >"$env_dir/.env"
+    echo "APP_URL=\"$app_url\"" >>"$env_dir/.env"
+    echo "SESSION_SECRET=\"$session_secret\"" >>"$env_dir/.env"
+    echo "MAIL_HOST=\"$mail_host\"" >>"$env_dir/.env"
+    echo "MAIL_PORT=\"$mail_port\"" >>"$env_dir/.env"
+    echo "MAIL_USER=\"$mail_user\"" >>"$env_dir/.env"
+    echo "MAIL_PASS=\"$mail_pass\"" >>"$env_dir/.env"
 
     # Descargar la imagen desde GitHub Container Registry
     docker pull ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
@@ -110,3 +132,4 @@ case $choice in
 3) healthcheck ;;
 *) echo "Opción no válida. Por favor, selecciona 1, 2 o 3." ;;
 esac
+
