@@ -32,13 +32,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate Metadata
+        id: meta_liberteis
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/alexdeveloperuwu/liberteis
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
       - name: Build and push multiarch image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ghcr.io/alexdeveloperuwu/liberteis:${{ steps.extract_tag_name.outputs.tag_name }}
-            ghcr.io/alexdeveloperuwu/liberteis:latest
-          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta_liberteis.outputs.tags }}
+          labels: ${{ steps.meta_liberteis.outputs.labels }}
+          platforms: linux/amd64,linux/arm*
