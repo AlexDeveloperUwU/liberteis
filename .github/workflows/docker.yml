@@ -52,6 +52,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta_liberteis.outputs.tags }}
+          tags: |
+            ghcr.io/alexdeveloperuwu/liberteis:latest
+            ${{ steps.meta_liberteis.outputs.tags }}
           labels: ${{ steps.meta_liberteis.outputs.labels }}
           platforms: linux/amd64,linux/arm64
