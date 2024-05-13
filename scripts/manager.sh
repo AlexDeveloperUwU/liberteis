@@ -37,6 +37,11 @@ install() {
     read -s -p "Por favor, introduce tu contraseña de correo: " mail_pass
     echo
 
+    if [[ -z $mail_host || -z $mail_port || -z $mail_user || -z $mail_pass ]]; then
+        echo "Error: No se proporcionaron todas las configuraciones necesarias del servidor de correo."
+        exit 1
+    fi
+
     # Definir la ubicación base en el host de las carpetas necesarias
     read -p "Por favor, introduce la ubicación base en el host donde se encuentran las carpetas 'data', 'uploads', 'env' y 'logs' (presiona Enter para usar la ubicación predeterminada /liberteis): " base_dir
     base_dir=${base_dir:-/liberteis}
@@ -46,6 +51,10 @@ install() {
     uploads_dir="$base_dir/uploads"
     env_dir="$base_dir/env"
     logs_dir="$base_dir/logs"
+
+    # Construir la configuración por defecto
+    port=${port:-3000}
+    app_url=${app_url:-http://localhost:$port}
 
     # Crear el archivo .env
     echo "PORT=$port" >"$env_dir/.env"
@@ -132,4 +141,3 @@ case $choice in
 3) healthcheck ;;
 *) echo "Opción no válida. Por favor, selecciona 1, 2 o 3." ;;
 esac
-
