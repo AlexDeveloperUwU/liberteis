@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const axios = require("axios");
+
+// Lectura del package.json para obtener la versión
 const packageJsonContent = fs.readFileSync("package.json", "utf8");
 const packageJson = JSON.parse(packageJsonContent);
 const version = `v${packageJson.version}`;
-const axios = require("axios");
 
 // Función para comparar versiones semánticas
 function semverCompare(a, b) {

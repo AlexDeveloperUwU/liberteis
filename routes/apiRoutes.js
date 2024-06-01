@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const database = require("../functions/eventsdb"); 
-const { events } = require("../index"); 
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
+const database = require("../functions/eventsdb"); 
+const { events } = require("../index"); 
 
+// Almacenamiento de imágenes de los eventos
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: (req, file, cb) => {

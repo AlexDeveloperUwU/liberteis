@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/rpi", (req, res) => {
+  // Me falta testear esta parte, con lo que sigue quedando comentada
   //const userAgent = req.get("User-Agent");
   //if (!userAgent || !userAgent.includes("Linux aarch64")) {
   //  return res.render("403");
