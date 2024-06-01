@@ -39,7 +39,12 @@
 
     <%- include('../partials/scripts') %>
     <script>
-      
+      $("#fullname, #email").on("keypress", function(e) {
+        if (e.which === 13) {
+          registerUser();
+        }
+      });
+
       function validateForm() {
         return true;
       }

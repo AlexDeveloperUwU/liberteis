@@ -8,8 +8,8 @@ const axios = require("axios");
 
 // Función para comparar versiones semánticas
 function semverCompare(a, b) {
-  const pa = a.split(".").map(Number);
-  const pb = b.split(".").map(Number);
+  const pa = a.replace(/^v/, '').split(".").map(Number);
+  const pb = b.replace(/^v/, '').split(".").map(Number);
 
   for (let i = 0; i < 3; i++) {
     if (pa[i] !== pb[i]) {
@@ -47,7 +47,11 @@ function getLatestVersion() {
 // Función que devuelve una Promesa para verificar si es la última versión
 function isLatestVersion(version, latestVersion) {
   return new Promise((resolve, reject) => {
-    resolve(version === latestVersion);
+    if (semverCompare(version, latestVersion) >= 0) {
+      resolve(true);
+    } else {
+      resolve(false);
+    }
   });
 }
 

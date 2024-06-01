@@ -47,6 +47,12 @@
 
     <%- include('../partials/scripts') %>
     <script>
+      $("#email, #password, #confirmPassword").on("keypress", function(e) {
+        if (e.which === 13) {
+          changePassUser();
+        }
+      });
+
       function validateForm() {
         var password = document.getElementById("password").value;
         var confirmPassword = document.getElementById("confirmPassword").value;

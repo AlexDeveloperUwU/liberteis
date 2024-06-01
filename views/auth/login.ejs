@@ -40,6 +40,11 @@
     <%- include('../partials/scripts') %>
     <script>
       $(document).ready(function() {
+        $("#email, #password").on("keypress", function(e) {
+          if (e.which === 13) {
+            $("#loginButton").click();
+          }
+        });
         $("#loginButton").click(function() {
           var email = $('#email').val();
           var password = $('#password').val();
