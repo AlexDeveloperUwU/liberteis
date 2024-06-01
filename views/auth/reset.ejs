@@ -3,107 +3,110 @@
 
 <%- include('../partials/head') %>
 
-    <body class="hold-transition register-page">
-        <div class="register-box">
-            <div class="card card-outline card-primary">
-                <div class="card-header text-center">
-                    <a class="h1" style="font-size: xx-large;"><b>LiberTeis</b></a>
-                </div>
-                <div class="card-body">
-                    <p class="login-box-msg">Resetea tu contraseña</p>
-                    <form id="changePassForm">
-                        <div class="input-group mb-3">
-                            <input type="email" class="form-control" placeholder="Correo electrónico" name="email"
-                                id="email" required>
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-envelope"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="number" class="form-control" placeholder="Contraseña" name="captcha"
-                                id="captcha" required>
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-lock"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-7">
-                                <button type="button" class="btn btn-primary btn-block"
-                                    onclick="changePassUser()">Cambiar contraseña</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+<body class="hold-transition register-page">
+  <div class="register-box">
+    <div class="card card-outline card-primary">
+      <div class="card-header text-center">
+        <a class="h1" style="font-size: xx-large;"><b>LiberTeis</b></a>
+      </div>
+      <div class="card-body">
+        <p class="login-box-msg">Resetea tu contraseña</p>
+        <form id="changePassForm">
+          <div class="input-group mb-3">
+            <input type="email" class="form-control" placeholder="Correo electrónico" name="email" id="email" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
             </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="number" class="form-control" placeholder="Contraseña" name="captcha" id="captcha" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-7">
+              <button type="button" class="btn btn-primary btn-block" onclick="changePassUser()">Cambiar contraseña</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
 
-            <%- include('../partials/scripts') %>
-                <script>
-                    var num1 = Math.floor(Math.random() * 10) + 1;
-                    var num2 = Math.floor(Math.random() * 10) + 1;
-                    var operacion = Math.random() < 0.5 ? '+' : '-';
-                    var resultado;
+    <%- include('../partials/scripts') %>
+    <script>
+      $("#fullname, #email").on("keypress", function(e) {
+        if (e.which === 13) {
+          registerUser();
+        }
+      });
 
-                    if (operacion === '+') {
-                        resultado = num1 + num2;
-                    } else {
-                        if (num1 < num2) {
-                            var temp = num1;
-                            num1 = num2;
-                            num2 = temp;
-                        }
-                        resultado = num1 - num2;
-                    }
+      var num1 = Math.floor(Math.random() * 10) + 1;
+      var num2 = Math.floor(Math.random() * 10) + 1;
+      var operacion = Math.random() < 0.5 ? '+' : '-';
+      var resultado;
 
-                    var placeholder = "Introduce la " + (operacion === '+' ? "suma" : "resta") + " de " + num1 + " " + operacion + " " + num2;
-                    document.getElementById("captcha").setAttribute("placeholder", placeholder);
+      if (operacion === '+') {
+        resultado = num1 + num2;
+      } else {
+        if (num1 < num2) {
+          var temp = num1;
+          num1 = num2;
+          num2 = temp;
+        }
+        resultado = num1 - num2;
+      }
 
-                    function validateForm(resultado) {
-                        var captcha = document.getElementById("captcha").value;
-                        var captchaValue = parseInt(captcha);
-                        console.log(captcha)
-                        console.log(resultado)
-                        if (captchaValue !== resultado) {
-                            alert("El captcha no es correcto!");
-                            return false;
-                        }
-                        return true;
-                    }
+      var placeholder = "Introduce la " + (operacion === '+' ? "suma" : "resta") + " de " + num1 + " " + operacion + " " + num2;
+      document.getElementById("captcha").setAttribute("placeholder", placeholder);
 
-                    function changePassUser() {
-                        if (!validateForm(resultado)) {
-                            return;
-                        }
+      function validateForm(resultado) {
+        var captcha = document.getElementById("captcha").value;
+        var captchaValue = parseInt(captcha);
+        console.log(captcha)
+        console.log(resultado)
+        if (captchaValue !== resultado) {
+          alert("El captcha no es correcto!");
+          return false;
+        }
+        return true;
+      }
 
-                        var email = $('#email').val();
+      function changePassUser() {
+        if (!validateForm(resultado)) {
+          return;
+        }
 
-                        $.ajax({
-                            type: "POST",
-                            url: "/auth/resetpass",
-                            data: {
-                                email: email,
-                            },
-                            success: function (response) {
-                                setTimeout(function () {
-                                    window.location.href = "/auth/login";
-                                }, 1000);
-                            },
-                            error: function (error) {
-                                console.error(error);
-                                $(document).Toasts('create', {
-                                    class: 'bg-danger',
-                                    title: 'Ha ocurrido un error',
-                                    autohide: true,
-                                    delay: 5000,
-                                    body: 'La contraseña no ha podido ser restablecida correctamente en el sistema.'
-                                })
-                            }
-                        });
-                    }
-                </script>
-    </body>
+        var email = $('#email').val();
+
+        $.ajax({
+          type: "POST",
+          url: "/auth/resetpass",
+          data: {
+            email: email,
+          },
+          success: function(response) {
+            setTimeout(function() {
+              window.location.href = "/auth/login";
+            }, 1000);
+          },
+          error: function(error) {
+            console.error(error);
+            $(document).Toasts('create', {
+              class: 'bg-danger',
+              title: 'Ha ocurrido un error',
+              autohide: true,
+              delay: 5000,
+              body: 'La contraseña no ha podido ser restablecida correctamente en el sistema.'
+            })
+          }
+        });
+      }
+    </script>
+</body>
 
 </html>
