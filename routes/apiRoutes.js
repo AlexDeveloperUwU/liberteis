@@ -4,10 +4,10 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 const enmap = require("enmap");
-const database = require("../functions/eventsdb"); 
+const database = require("../functions/eventsDb"); 
 const events = new enmap({ name: "events" });
 
-// Almacenamiento de imágenes de los eventos
+//* Almacenamiento de imágenes de los eventos, usamos Multer para poder gestionar las imágenes
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: (req, file, cb) => {
@@ -16,15 +16,18 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + "-" + uniqueSuffix + ext);
   },
 });
+
 const upload = multer({ storage });
 
-router.post("/upload", upload.single("thumbnailfile"), (req, res) => {
+//* Ruta para subir la imagen del evento
+router.post("/upload", upload.single("image"), (req, res) => {
   const fileName = req.file.filename;
   const fileURL = `${process.env.APP_URL}/thumbs/${fileName}`;
 
   res.status(200).send({ url: fileURL });
 });
 
+//* Rutas para gestionar los eventos
 router.post("/add", (req, res) => {
   const { title, desc, event_date, type, thumb_url, published_by } = req.body;
   try {

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../functions/usersdb");
+const db = require("../functions/usersDb");
 const mail = require("../functions/mail");
 
 const requireAuth = (req, res, next) => {
@@ -11,11 +11,12 @@ const requireAuth = (req, res, next) => {
   }
 };
 
-// Rutas de registro de usuarios
+//* Rutas de registro
 router.get("/register", (req, res) => {
   const usersNum = db.getUserCount();
 
-  // Como queremos limitar a que solo se pueda registrar un usuario por cuenta propia, hacemos comprobaciones para saber si ya hay usuarios en la db
+  // Si no hay usuarios registrados, mostramos el formulario de registro
+  // Si ya hay usuarios registrados, redirigimos al formulario de inicio de sesión
   if (usersNum === 0) {
     res.render("auth/register");
   } else {
@@ -56,7 +57,7 @@ router.post("/unregister", async (req, res) => {
   }
 });
 
-// Rutas de inicio de sesión
+//* Rutas de inicio de sesión
 router.get("/login", (req, res) => {
   const usersNum = db.getUserCount();
   if (usersNum !== 0) {
@@ -85,7 +86,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Ruta de cierre de sesión
 router.get("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -95,12 +95,11 @@ router.get("/logout", (req, res) => {
   });
 });
 
-// Ruta para obtener la lista de usuarios
 router.post("/list", (req, res) => {
   res.status(200).json(db.listUsers());
 });
 
-// Ruta para restablecer la contraseña
+//* Rutas para cambiar la contraseña
 router.get("/changepass", (req, res) => {
   res.render("auth/change");
 });
@@ -110,14 +109,14 @@ router.post("/changepass", async (req, res) => {
 
   const result = await db.changePassword(email, password);
   if (result) {
-    res.status(200).json({ message: "Contraseña restablecida exitosamente" });
+    res.status(200).json({ message: "Contraseña modificada exitosamente" });
     await mail(email, "Contrasinal da conta modificada", "mailTemplates/passwordChanged.html");
   } else {
     res.status(500).json({ message: "Error al restablecer la contraseña" });
   }
 });
 
-// Ruta para restablecer la contraseña olvidada
+//* Rutas para restablecer la contraseña olvidada
 router.get("/resetpass", (req, res) => {
   res.render("auth/reset");
 });
@@ -139,7 +138,7 @@ router.post("/resetpass", async (req, res) => {
   }
 });
 
-// Middleware para verificar la autenticación
+//* Middleware para verificar la autenticación
 const checkAuth = (req, res, next) => {
   if (req.session && req.session.userId) {
     res.locals.user = req.session.userId;

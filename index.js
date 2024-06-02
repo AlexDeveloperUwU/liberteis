@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Rutas del server
-const { logRequests } = require("./functions/logrequests");
+const { logRequests } = require("./functions/logRequests");
 const envFilePath = path.join(__dirname, "env", ".env");
 require("dotenv").config({ path: envFilePath });
 

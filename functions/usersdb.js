@@ -3,6 +3,7 @@ const enmap = require("enmap");
 const passgen = require("generate-password");
 const users = new enmap({ name: "users" });
 
+//* Función para generar una contraseña segura
 function generatePassword() {
   return passgen.generate({
     length: 24,
@@ -13,7 +14,7 @@ function generatePassword() {
   });
 }
 
-// Función para guardar un usuario, por defecto se crea como usuario normal
+//* Funciones para gestionar la base de datos de usuarios
 async function saveUser(fullname, email, password, type = "normalUser", createdBy = "SYSTEM") {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,11 +42,9 @@ async function saveUser(fullname, email, password, type = "normalUser", createdB
   }
 }
 
-// Función para iniciar sesión
 async function loginUser(email, password) {
   const user = users.get(email);
 
-  // Guardamos la fecha del último inicio de sesión
   const currentDate = new Date();
   const formattedDate =
     currentDate.toISOString().split("T")[0] +
@@ -62,7 +61,6 @@ async function loginUser(email, password) {
   }
 }
 
-// Función para comprobar si un usuario existe en la base de datos
 function userExists(email) {
   const user = users.get(email);
   if (user) {
@@ -72,12 +70,10 @@ function userExists(email) {
   }
 }
 
-// Función para obtener el número de usuarios en la base de datos
 function getUserCount() {
   return users.count;
 }
 
-// Función para listar los usuarios de la base de datos
 function listUsers() {
   const usersList = [];
   users.forEach((data, key) => {

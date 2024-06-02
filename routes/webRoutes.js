@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+//* Rutas de la web
 router.get("/rpi", (req, res) => {
   // Me falta testear esta parte, con lo que sigue quedando comentada
   //const userAgent = req.get("User-Agent");

@@ -1,14 +1,16 @@
+// * Este fichero contiene funciones para generar IDs únicos para eventos
+
 function generateUniqueEventID(db) {
   let idGenerada = generateEventID();
 
-  while (isIDExist(idGenerada, db)) {
+  while (existsId(idGenerada, db)) {
     idGenerada = generateEventID();
   }
 
   return idGenerada;
 }
 
-function isIDExist(id, db) {
+function existsId(id, db) {
   return db.has(id);
 }
 

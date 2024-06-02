@@ -1,5 +1,6 @@
-const idGen = require("./idgen");
+const idGen = require("./idGen");
 
+//* Funciones para gestionar los eventos
 function saveEvent(db, title, desc, event_date, type, thumb_url = null, published_by) {
   const eventID = idGen.generateUniqueEventID(db);
   const qr_url = `${process.env.APP_URL}/event/${eventID}`

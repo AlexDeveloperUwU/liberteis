@@ -104,5 +104,3 @@ function formatoFecha2(fecha) {
   const año = fecha.getFullYear();
   return `${dia}/${mes}/${año}`;
 }
-
-actualizarFechaYDia();

@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require("fs");
 const axios = require("axios");
 
-// Lectura del package.json para obtener la versión
+//* Funciones relacionadas con las versiones del software y actualizaciones
 const packageJsonContent = fs.readFileSync("package.json", "utf8");
 const packageJson = JSON.parse(packageJsonContent);
 const version = `v${packageJson.version}`;
@@ -21,7 +21,7 @@ function semverCompare(a, b) {
   return 0;
 }
 
-// Función que devuelve una Promesa para obtener la última versión
+// Función para obtener la última versión
 function getLatestVersion() {
   return new Promise((resolve, reject) => {
     const url = "https://api.github.com/repos/AlexDeveloperUwU/liberteis/tags";
@@ -46,7 +46,7 @@ function getLatestVersion() {
   });
 }
 
-// Función que devuelve una Promesa para verificar si es la última versión
+// Función para verificar si es la última versión
 function isLatestVersion(version, latestVersion) {
   return new Promise((resolve, reject) => {
     if (semverCompare(version, latestVersion) >= 0) {
@@ -57,6 +57,7 @@ function isLatestVersion(version, latestVersion) {
   });
 }
 
+//* Rutas de la dashboard
 router.get("/", async (req, res) => {
   try {
     const latestVersion = await getLatestVersion();
@@ -78,7 +79,7 @@ router.get("/eventlist", async (req, res) => {
   try {
     const latestVersion = await getLatestVersion();
     const latest = await isLatestVersion(version, latestVersion);
-    res.render("dash/eventslist", {
+    res.render("dash/eventsList", {
       version,
       latestVersion: latest,
       loggedInUsername: res.locals.user,
@@ -95,7 +96,7 @@ router.get("/userlist", async (req, res) => {
   try {
     const latestVersion = await getLatestVersion();
     const latest = await isLatestVersion(version, latestVersion);
-    res.render("dash/userslist", {
+    res.render("dash/usersList", {
       version,
       latestVersion: latest,
       loggedInUsername: res.locals.user,
