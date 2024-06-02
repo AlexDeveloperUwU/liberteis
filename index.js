@@ -2,21 +2,21 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const enmap = require("enmap");
 const fs = require("fs");
 const path = require("path");
+
+// Rutas del server
+const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRoutes");
+const { logRequests } = require("./functions/logrequests");
 const envFilePath = path.join(__dirname, "env", ".env");
 require("dotenv").config({ path: envFilePath });
-
-// Bases de Datos
-const events = new enmap({ name: "events" });
-module.exports = { events }; // Exportamos las bases de datos para usarlas en otros archivos
 
 // Config del webserver
 const app = express();
 const port = process.env.APP_PORT || 3000;
-const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRoutes");
 
+app.use(logRequests);
+app.use(checkAuth);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use("/thumbs", express.static(__dirname + "/uploads"));
@@ -33,44 +33,8 @@ app.use(
     },
   })
 );
-app.use(checkAuth);
 
 // Mantener un registro de las solicitudes del servidor
-const getTimeDate = () => {
-  const ahora = new Date();
-  const fecha = ahora.toISOString().split("T")[0];
-  const hora = ahora.toLocaleTimeString("es-ES", { hour12: false }).replace(/:/g, "");
-  return `${fecha}-${hora}`;
-};
-
-const getTimeDate2 = () => {
-  const ahora = new Date();
-  const fecha = ahora.toISOString().split("T")[0];
-  const hora = ahora.getHours().toString().padStart(2, '0');
-  const minutos = ahora.getMinutes().toString().padStart(2, '0');
-  const segundos = ahora.getSeconds().toString().padStart(2, '0');
-  return `${fecha} => ${hora}:${minutos}:${segundos}`;
-};
-
-const logsDirectorio = path.join(__dirname, "logs");
-const nombreArchivo = `${getTimeDate()}.log`;
-const rutaArchivo = path.join(logsDirectorio, nombreArchivo);
-
-if (!fs.existsSync(logsDirectorio)) {
-  fs.mkdirSync(logsDirectorio);
-}
-
-app.use((req, res, next) => {
-  const ip = req.ip.replace(/^::ffff:/, "");
-  const metodo = req.method;
-  const url = req.url;
-
-  const registro = `${ip} [${getTimeDate2()}] ${metodo} ${url}\n`;
-  fs.writeFileSync(rutaArchivo, registro, { flag: "a" });
-
-  next(); // Call next to move to the next middleware
-});
-
 app.get("/health", (req, res) => {
   res.sendStatus(200); // Healthcheck: OK
 });

@@ -3,8 +3,9 @@ const router = express.Router();
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
+const enmap = require("enmap");
 const database = require("../functions/eventsdb"); 
-const { events } = require("../index"); 
+const events = new enmap({ name: "events" });
 
 // Almacenamiento de imágenes de los eventos
 const storage = multer.diskStorage({

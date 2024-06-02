@@ -52,99 +52,12 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-
     function comprobarCaracteres(id) {
       var texto = document.getElementById(id).value;
 
       if (texto.length < 100) {
         alert("La descripción tiene menos de 100 caracteres. Cámbiela para cumplir con este minimo.");
       }
-    }
-
-    var logArr;
-
-    fetch('/assets/docs/changelog.json')
-      .then(response => response.json())
-      .then(data => {
-        logArr = data;
-        renderChangelog();
-      })
-      .catch(error => console.error('Error al cargar el archivo JSON:', error));
-
-    function renderChangelog() {
-      var buildLogSection = function(log) {
-        var $section = document.createElement("section");
-        $section.classList.add("log");
-        var $title = buildLogTitle(log);
-        var $list = buildLogList(log);
-        $section.appendChild($title);
-        $section.appendChild($list);
-        return $section;
-      };
-
-      var buildLogTitle = function(log) {
-        var $title = document.createElement("h5");
-        var versionDate = log.version + " - " + log.date;
-        $title.innerText = versionDate;
-        return $title;
-      };
-
-      var buildLogList = function(log) {
-        var $ul = document.createElement("ul");
-        var list = log.list || [];
-        for (var i = 0; i < list.length; i++) {
-          var item = list[i];
-          var $li = buildLogItem(item);
-          $ul.appendChild($li);
-        }
-        return $ul;
-      };
-
-      var buildLogItem = function(item) {
-        var $li = document.createElement("li");
-        var $labels = document.createElement("div");
-        $labels.classList.add("label-wrapper");
-        var $detail = document.createElement("div");
-        $detail.classList.add("detail-wrapper");
-
-        const labelColorMap = {
-          'añadido': 'green',
-          'eliminado': 'red',
-          'arreglado': '#ffc400',
-        };
-
-        const labelColor = labelColorMap[item.label[0].toLowerCase()] || 'black';
-
-        item.label.forEach(function(label) {
-          var $label = document.createElement("span");
-          $label.classList.add("label", "label-" + label.toLowerCase());
-          $label.style.color = labelColor;
-          $label.innerText = label;
-          $labels.appendChild($label);
-        });
-
-        $detail.innerHTML = item.detail;
-
-        $li.appendChild($labels);
-        $li.appendChild($detail);
-
-        return $li;
-      };
-
-      var sectionArr = [];
-
-      // Mostrar las dos primeras entradas del changelog
-      for (var i = 0; i < Math.min(2, logArr.length); i++) {
-        var $section = buildLogSection(logArr[i]);
-        sectionArr.push($section.outerHTML);
-      }
-
-      document.querySelector(".log-wrapper").innerHTML = sectionArr.join("");
-    }
-
-    var pushMenuButton = document.querySelector('.nav-link[data-widget="pushmenu"]');
-    if (pushMenuButton) {
-      pushMenuButton.click();
     }
   });
 </script>

@@ -1,5 +1,27 @@
 [
   {
+    "version": "0.13.10",
+    "date": "01/05/2024 => 02/05/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Posibilidad de utilizar la tecla enter en los formularios relacionados con la autenticación."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Cambiados los mensajes de las páginas de errores."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Actualización de las dependencias."
+      },
+      {
+        "label": ["Eliminado"],
+        "detail": "Sistema de changelog en la dashboard (no aporta lo suficiente para tener justificación de ser)."
+      }
+    ]
+  },
+  {
     "version": "0.13.7 => 0.13.9",
     "date": "17/04/2024",
     "list": [
