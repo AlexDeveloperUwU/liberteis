@@ -10,8 +10,8 @@ const version = `v${packageJson.version}`;
 
 // Función para comparar versiones semánticas
 function semverCompare(a, b) {
-  const pa = a.replace(/^v/, '').split(".").map(Number);
-  const pb = b.replace(/^v/, '').split(".").map(Number);
+  const pa = a.replace(/^v/, "").split(".").map(Number);
+  const pb = b.replace(/^v/, "").split(".").map(Number);
 
   for (let i = 0; i < 3; i++) {
     if (pa[i] !== pb[i]) {
@@ -61,7 +61,13 @@ router.get("/", async (req, res) => {
   try {
     const latestVersion = await getLatestVersion();
     const latest = await isLatestVersion(version, latestVersion);
-    res.render("dash/events", { version, latestVersion: latest, loggedInUsername: res.locals.user, loggedInType: res.locals.type });
+    res.render("dash/events", {
+      version,
+      latestVersion: latest,
+      loggedInUsername: res.locals.user,
+      loggedInType: res.locals.type,
+      page: "dash",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error interno del servidor");
@@ -72,7 +78,13 @@ router.get("/eventlist", async (req, res) => {
   try {
     const latestVersion = await getLatestVersion();
     const latest = await isLatestVersion(version, latestVersion);
-    res.render("dash/eventslist", { version, latestVersion: latest, loggedInUsername: res.locals.user, loggedInType: res.locals.type });
+    res.render("dash/eventslist", {
+      version,
+      latestVersion: latest,
+      loggedInUsername: res.locals.user,
+      loggedInType: res.locals.type,
+      page: "eventList",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error interno del servidor");
@@ -89,6 +101,7 @@ router.get("/userlist", async (req, res) => {
       loggedInUsername: res.locals.user,
       loggedInEmail: res.locals.email,
       loggedInType: res.locals.type,
+      page: "userList",
     });
   } catch (error) {
     console.error(error);
