@@ -128,7 +128,12 @@ router.post("/resetpass", async (req, res) => {
   const result = await db.resetPassword(email, password);
   if (result !== false) {
     res.status(200).json({ message: "Contraseña restablecida exitosamente" });
-    await mail(email, "Tua nova contrasinal dun único uso", "mailTemplates/forgottenPassword.html", result);
+    await mail(
+      email,
+      "Tua nova contrasinal dun único uso",
+      "mailTemplates/forgottenPassword.html",
+      result
+    );
   } else {
     res.status(500).json({ message: "Error al restablecer la contraseña" });
   }

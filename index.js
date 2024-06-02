@@ -6,7 +6,6 @@ const fs = require("fs");
 const path = require("path");
 
 // Rutas del server
-const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRoutes");
 const { logRequests } = require("./functions/logrequests");
 const envFilePath = path.join(__dirname, "env", ".env");
 require("dotenv").config({ path: envFilePath });
@@ -14,9 +13,8 @@ require("dotenv").config({ path: envFilePath });
 // Config del webserver
 const app = express();
 const port = process.env.APP_PORT || 3000;
-
+const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRoutes");
 app.use(logRequests);
-app.use(checkAuth);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use("/thumbs", express.static(__dirname + "/uploads"));
@@ -33,6 +31,7 @@ app.use(
     },
   })
 );
+app.use(checkAuth); // Por algún motivo que desconozco esto debe estar aquí (?
 
 // Mantener un registro de las solicitudes del servidor
 app.get("/health", (req, res) => {
