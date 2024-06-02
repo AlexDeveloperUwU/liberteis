@@ -3,6 +3,19 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.13.10 - 01/05/2024 => 02/05/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Posibilidad de utilizar la tecla enter en los formularios relacionados con la autenticación.
+
+- <span style="color: yellow;">Arreglado:</span> Cambiados los mensajes de las páginas de errores.
+
+- <span style="color: yellow;">Arreglado:</span> Actualización de las dependencias.
+
+- <span style="color: red;">Eliminado:</span> Sistema de changelog en la dashboard (no aporta lo suficiente para tener justificación de ser).
+
+</details>
+
+<details>
   <summary><b>0.13.7 => 0.13.9 - 17/04/2024</b></summary>
 
 - <span style="color: yellow;">Arreglado:</span> Fix login con las anteriores credenciales.
