@@ -52,11 +52,11 @@ install() {
     env_dir="$base_dir/env"
     logs_dir="$base_dir/logs"
 
-    mkdir -p $data_dir 
-    mkdir -p $uploads_dir 
-    mkdir -p $env_dir 
+    mkdir -p $data_dir
+    mkdir -p $uploads_dir
+    mkdir -p $env_dir
     mkdir -p $logs_dir
-    
+
     # Construir la configuración por defecto
     port=${port:-3000}
     app_url=${app_url:-http://localhost:$port}
@@ -69,6 +69,20 @@ install() {
     echo "MAIL_PORT=\"$mail_port\"" >>"$env_dir/.env"
     echo "MAIL_USER=\"$mail_user\"" >>"$env_dir/.env"
     echo "MAIL_PASS=\"$mail_pass\"" >>"$env_dir/.env"
+
+    # Crear el archivo de configuración JSON
+    config_file="$base_dir/config.json"
+    cat <<EOF >"$config_file"
+{
+    "port": "$port",
+    "volumes": {
+        "data_dir": "$data_dir",
+        "uploads_dir": "$uploads_dir",
+        "env_dir": "$env_dir",
+        "logs_dir": "$logs_dir"
+    }
+}
+EOF
 
     # Descargar la imagen desde GitHub Container Registry
     docker pull ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
@@ -89,11 +103,21 @@ install() {
 
 # Función para actualizar la aplicación
 update() {
-    # Obtener el puerto del contenedor existente
-    port=$(docker port liberteis | awk -F ":" '{print $2}')
+    # Leer la configuración desde el archivo JSON
+    echo "Por favor, introduce la ruta base de LiberTeis en el host:"
+    read base_path
 
-    # Obtener los volúmenes del contenedor existente
-    volumes=$(sudo docker inspect --format='{{range .Mounts}}{{printf "%s:%s\n" .Source .Destination}}{{end}}' liberteis)
+    config_file="$base_path/config.json"
+    if [[ ! -f $config_file ]]; then
+        echo "Error: El archivo de configuración no existe."
+        exit 1
+    fi
+
+    port=$(grep -oP '(?<="port": ")[^"]*' $config_file)
+    data_dir=$(grep -oP '(?<="data_dir": ")[^"]*' $config_file)
+    uploads_dir=$(grep -oP '(?<="uploads_dir": ")[^"]*' $config_file)
+    env_dir=$(grep -oP '(?<="env_dir": ")[^"]*' $config_file)
+    logs_dir=$(grep -oP '(?<="logs_dir": ")[^"]*' $config_file)
 
     # Detener y eliminar el contenedor existente
     docker stop liberteis &>/dev/null
@@ -103,7 +127,7 @@ update() {
     docker pull ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
 
     # Volver a ejecutar el contenedor con el mismo puerto y los mismos volúmenes, y el healthcheck
-    docker run -d $volumes -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
+    docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
     sleep 10
     docker exec -it liberteis apk add --no-cache curl &>/dev/null
 
