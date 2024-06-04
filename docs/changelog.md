@@ -7,11 +7,15 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 
 - <span style="color: green;">Añadido:</span> Posibilidad de utilizar la tecla enter en los formularios relacionados con la autenticación.
 
+- <span style="color: green;">Añadido:</span> Script para descargar el manager, darle permisos y ejecutarlo.
+
 - <span style="color: yellow;">Arreglado:</span> Cambiados los mensajes de las páginas de errores.
 
 - <span style="color: yellow;">Arreglado:</span> Actualización de las dependencias.
 
 - <span style="color: red;">Eliminado:</span> Sistema de changelog en la dashboard (no aporta lo suficiente para tener justificación de ser).
+
+- <span style="color: red;">Eliminado:</span> Script para eliminar tags de GitHub.
 
 </details>
 

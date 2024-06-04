@@ -160,7 +160,7 @@ print_header
 echo "¿Qué acción deseas realizar?"
 echo "1. Instalar la aplicación"
 echo "2. Actualizar la aplicación"
-echo "3. Verificar el estado de salud de la aplicación"
+echo "3. Verificar que la aplicación esté funcionando correctamente"
 read -p "Selecciona una opción (1, 2 o 3): " choice
 
 # Ejecutar la acción seleccionada

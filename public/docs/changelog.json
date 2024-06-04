@@ -8,6 +8,10 @@
         "detail": "Posibilidad de utilizar la tecla enter en los formularios relacionados con la autenticación."
       },
       {
+        "label": ["Añadido"],
+        "detail": "Script para descargar el manager, darle permisos y ejecutarlo."
+      },
+      {
         "label": ["Arreglado"],
         "detail": "Cambiados los mensajes de las páginas de errores."
       },
@@ -18,6 +22,10 @@
       {
         "label": ["Eliminado"],
         "detail": "Sistema de changelog en la dashboard (no aporta lo suficiente para tener justificación de ser)."
+      },
+      {
+        "label": ["Eliminado"],
+        "detail": "Script para eliminar tags de GitHub."
       }
     ]
   },
