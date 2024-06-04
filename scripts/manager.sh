@@ -52,6 +52,11 @@ install() {
     env_dir="$base_dir/env"
     logs_dir="$base_dir/logs"
 
+    mkdir -p $data_dir 
+    mkdir -p $uploads_dir 
+    mkdir -p $env_dir 
+    mkdir -p $logs_dir
+    
     # Construir la configuración por defecto
     port=${port:-3000}
     app_url=${app_url:-http://localhost:$port}
