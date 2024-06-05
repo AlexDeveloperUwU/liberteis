@@ -10,10 +10,10 @@
         <p class="h1" style="font-size: xx-large;"><b>LiberTeis</b></p>
       </div>
       <div class="card-body">
-        <p class="login-box-msg">Inicia sesión en la plataforma</p>
+        <p class="login-box-msg"><%= t("login.title") %></p>
         <form id="loginForm">
           <div class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="Correo electrónico" name="email" id="email" required>
+            <input type="email" class="form-control" placeholder="<%= t("common.email") %>" name="email" id="email" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="Contraseña" name="password" id="password" required>
+            <input type="password" class="form-control" placeholder="<%= t("common.password") %>" name="password" id="password" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -30,7 +30,7 @@
           </div>
           <div class="row">
             <div class="col-5">
-              <button type="button" id="loginButton" class="btn btn-primary btn-block">Entrar</button>
+              <button type="button" id="loginButton" class="btn btn-primary btn-block"><%= t("login.button") %></button>
             </div>
           </div>
         </form>
@@ -60,10 +60,10 @@
               console.log(response);
               $(document).Toasts('create', {
                 class: 'bg-success',
-                title: 'Usuario logeado correctamente',
+                title: '<%= t("login.success.title") %>',
                 autohide: true,
                 delay: 5000,
-                body: 'Has accedido correctamente al sistema.'
+                body: '<%= t("login.success.message") %>'
               })
               setTimeout(function() {
                 location.href = "/dash";
@@ -76,10 +76,10 @@
                 console.error(error);
                 $(document).Toasts('create', {
                   class: 'bg-danger',
-                  title: 'Ha ocurrido un error',
+                  title: '<%= t("login.error.title") %>',
                   autohide: true,
                   delay: 5000,
-                  body: 'El servidor ha retornado un error. Intenta reescribir tus credenciales.'
+                  body: '<%= t("login.error.message") %>'
                 })
 
               }

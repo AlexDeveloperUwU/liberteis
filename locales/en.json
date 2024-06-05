@@ -1,0 +1,18 @@
+{
+  "common": {
+    "email": "Email",
+    "password": "Password"
+  },
+  "login": {
+    "title": "Login into the platform",
+    "button": "Login",
+    "success": {
+      "title": "Login successful",
+      "message": "You have successfully logged in"
+    },
+    "error": {
+      "title": "An error occurred",
+      "message": "The server returned an error. Please check your credentials and try again."
+    }
+  }
+}

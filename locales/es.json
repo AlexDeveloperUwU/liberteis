@@ -1,0 +1,18 @@
+{
+  "common": {
+    "email": "Correo electrónico",
+    "password": "Contrasinal"
+  },
+  "login": {
+    "title": "Accede a la plataforma",
+    "button": "Acceder",
+    "success": {
+      "title": "Acceso correcto",
+      "message": "Has entrado correctamente a la plataforma"
+    },
+    "error": {
+      "title": "Ocurrió un error",
+      "message": "El servidor devolvió un error. Por favor, comprueba tus credenciales e inténtalo de nuevo."
+    }
+  }
+}
