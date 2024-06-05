@@ -1,6 +1,4 @@
-#!/bin/bash
-
-# Función para imprimir la cabecera ASCII
+# Función para mostrar el header del script
 print_header() {
     clear
     echo -e "\n\033[1m\033[92m"
@@ -13,28 +11,24 @@ print_header() {
     echo -e "\033[0m"
 }
 
-# Verificar si Docker está instalado
+# Comprobamos si Docker está instalado
 if ! command -v docker &>/dev/null; then
     echo "Error: Docker no está instalado. Por favor, instala Docker y vuelve a intentarlo."
     exit 1
 fi
 
-# Función para instalar la aplicación
 install() {
-    # Solicitar al usuario el puerto de la aplicación
-    read -p "Por favor, introduce el puerto de la aplicación: " port
+    print_header
+    read -p "Introduce el puerto donde quieres ejecutar la aplicación: " port
+    read -p "Introduce la URL desde la que accederás a la aplicación (por ejemplo, http://localhost:$port): " app_url
 
-    # Solicitar al usuario la URL de la aplicación
-    read -p "Por favor, introduce la URL de la aplicación (por ejemplo, http://localhost:$port): " app_url
-
-    # Generar el secreto de sesión
+    # Para la sesión, se genera una clave aleatoria para mayor seguridad
     session_secret=$(openssl rand -hex 16)
 
-    # Solicitar al usuario la configuración del servidor de correo
-    read -p "Por favor, introduce la URL del servidor de correo: " mail_host
-    read -p "Por favor, introduce el puerto del servidor de correo: " mail_port
-    read -p "Por favor, introduce tu usuario de correo: " mail_user
-    read -s -p "Por favor, introduce tu contraseña de correo: " mail_pass
+    read -p "Introduce la URL del servidor de correo electrónico a usar: " mail_host
+    read -p "Introduce el puerto del servidor de correo electrónico a usar: " mail_port
+    read -p "Introduce el usuario de correo electrónico que usará la aplicación: " mail_user
+    read -s -p "Por favor, introduce tu contraseña del correo electrónico que usará la aplicación: " mail_pass
     echo
 
     if [[ -z $mail_host || -z $mail_port || -z $mail_user || -z $mail_pass ]]; then
@@ -42,11 +36,14 @@ install() {
         exit 1
     fi
 
-    # Definir la ubicación base en el host de las carpetas necesarias
-    read -p "Por favor, introduce la ubicación base en el host donde se encuentran las carpetas 'data', 'uploads', 'env' y 'logs' (presiona Enter para usar la ubicación predeterminada /liberteis): " base_dir
-    base_dir=${base_dir:-/liberteis}
+    read -p "Por favor, introduce la ubicación base en el host donde se guardarán las carpetas de la aplicación (presiona Enter para usar la ubicación predeterminada => /liberteis): " base_dir
 
-    # Construir las rutas completas de las carpetas en el host
+    print_header
+
+    echo "Instalando la aplicación, por favor, espera..."
+
+    # Generamos las rutas y creamos las carpetas necesarias
+    base_dir=${base_dir:-/liberteis}
     data_dir="$base_dir/data"
     uploads_dir="$base_dir/uploads"
     env_dir="$base_dir/env"
@@ -57,11 +54,10 @@ install() {
     mkdir -p $env_dir
     mkdir -p $logs_dir
 
-    # Construir la configuración por defecto
     port=${port:-3000}
     app_url=${app_url:-http://localhost:$port}
 
-    # Crear el archivo .env
+    # Creamos el archivo .env con las variables de entorno necesarias
     echo "PORT=$port" >"$env_dir/.env"
     echo "APP_URL=\"$app_url\"" >>"$env_dir/.env"
     echo "SESSION_SECRET=\"$session_secret\"" >>"$env_dir/.env"
@@ -70,7 +66,6 @@ install() {
     echo "MAIL_USER=\"$mail_user\"" >>"$env_dir/.env"
     echo "MAIL_PASS=\"$mail_pass\"" >>"$env_dir/.env"
 
-    # Crear el archivo de configuración JSON
     config_file="$base_dir/config.json"
     cat <<EOF >"$config_file"
 {
@@ -84,16 +79,19 @@ install() {
 }
 EOF
 
-    # Descargar la imagen desde GitHub Container Registry
+    # Hacemos pull de la imagen
     docker pull ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
 
-    # Ejecutar el contenedor con los volúmenes especificados y el healthcheck
-    docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
+    # Ejecutamos el contenedor con todos los parámetros necesarios
+    docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
     sleep 10
+
+    # Instalamos curl en el contenedor para realizar la verificación de salud, ya que por defecto no lo trae y Docker depende de ello
     docker exec -it liberteis apk add --no-cache curl &>/dev/null
 
-    # Esperar hasta que el contenedor esté en funcionamiento y saludable
-    echo "Esperando a que el contenedor se inicie y sea saludable..."
+    print_header
+    # Esperamos a que el contenedor se inicie y sea saludable
+    echo "Instalación finalizada. Esperando a que el contenedor se inicie y sea saludable..."
     until docker inspect --format '{{.State.Running}}' liberteis &>/dev/null && [ "$(docker inspect --format '{{.State.Health.Status}}' liberteis)" = "healthy" ]; do
         sleep 1
     done
@@ -101,38 +99,44 @@ EOF
     echo "La aplicación se ha instalado correctamente. Los volúmenes han sido montados en las ubicaciones especificadas en el host."
 }
 
-# Función para actualizar la aplicación
 update() {
-    # Leer la configuración desde el archivo JSON
-    echo "Por favor, introduce la ruta base de LiberTeis en el host:"
-    read base_path
+    print_header
 
-    config_file="$base_path/config.json"
+    # Le pedimos la ruta base para poder leer la configuración
+    read -p "Por favor, introduce la ubicación base en el host donde se encuentran las carpetas de la aplicación (presiona Enter para usar la ubicación predeterminada => /liberteis): " base_dir
+    base_dir=${base_dir:-/liberteis}
+
+    # Intentamos leer el fichero de configuración
+    config_file="$base_dir/config.json"
     if [[ ! -f $config_file ]]; then
         echo "Error: El archivo de configuración no existe."
         exit 1
     fi
 
+    # Leemos las variables necesarias del archivo de configuración
     port=$(grep -oP '(?<="port": ")[^"]*' $config_file)
     data_dir=$(grep -oP '(?<="data_dir": ")[^"]*' $config_file)
     uploads_dir=$(grep -oP '(?<="uploads_dir": ")[^"]*' $config_file)
     env_dir=$(grep -oP '(?<="env_dir": ")[^"]*' $config_file)
     logs_dir=$(grep -oP '(?<="logs_dir": ")[^"]*' $config_file)
 
-    # Detener y eliminar el contenedor existente
+    # Eliminamos el contenedor
     docker stop liberteis &>/dev/null
     docker rm liberteis &>/dev/null
 
-    # Descargar la versión actualizada de la imagen desde GitHub Container Registry
+    # Hacemos pull de la imagen nueva
     docker pull ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
 
-    # Volver a ejecutar el contenedor con el mismo puerto y los mismos volúmenes, y el healthcheck
-    docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest
+    # Ejecutamos el contenedor con los mismos parámetros que en la instalación
+    docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
     sleep 10
+
+    # Instalamos curl en el contenedor para realizar la verificación de salud, ya que por defecto no lo trae y Docker depende de ello
     docker exec -it liberteis apk add --no-cache curl &>/dev/null
 
-    # Esperar hasta que el contenedor esté en funcionamiento y saludable
-    echo "Esperando a que el contenedor se reinicie y sea saludable..."
+    print_header
+    # Esperamos a que el contenedor se reinicie y sea saludable
+    echo "Instalación finalizada. Esperando a que el contenedor se reinicie y sea saludable..."
     until docker inspect --format '{{.State.Running}}' liberteis &>/dev/null && [ "$(docker inspect --format '{{.State.Health.Status}}' liberteis)" = "healthy" ]; do
         sleep 1
     done
@@ -140,12 +144,12 @@ update() {
     echo "La aplicación se ha actualizado correctamente. Los volúmenes siguen montados en las mismas ubicaciones especificadas en el host."
 }
 
-# Función para verificar el estado de salud de la aplicación
 healthcheck() {
-    # Verificar si el contenedor está en ejecución
+    print_header
+    
+    # Comprobamos si el contenedor está en ejecución y si es saludable
     if docker inspect --format '{{.State.Running}}' liberteis &>/dev/null; then
         echo "La aplicación está en ejecución."
-        # Verificar el estado de salud del contenedor
         docker inspect --format '{{json .State.Health.Status}}' liberteis
     else
         echo "Error: La aplicación no está en ejecución."
@@ -153,17 +157,14 @@ healthcheck() {
     fi
 }
 
-# Imprimir la cabecera ASCII
 print_header
 
-# Menú de opciones
 echo "¿Qué acción deseas realizar?"
 echo "1. Instalar la aplicación"
 echo "2. Actualizar la aplicación"
 echo "3. Verificar que la aplicación esté funcionando correctamente"
 read -p "Selecciona una opción (1, 2 o 3): " choice
 
-# Ejecutar la acción seleccionada
 case $choice in
 1) install ;;
 2) update ;;
