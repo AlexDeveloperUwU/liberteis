@@ -59,6 +59,7 @@ app.use((req, res, next) => {
   res.t = res.__; 
   next();
 });
+
 // Mantener un registro de las solicitudes del servidor
 app.get("/health", (req, res) => {
   res.sendStatus(200); // Healthcheck: OK

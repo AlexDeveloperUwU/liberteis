@@ -24,5 +24,18 @@
       "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo.",
       "passwordsDontMatch": "Las contraseñas no coinciden. Por favor, inténtalo de nuevo."
     }
+  },
+  "register": {
+    "title": "Crea una nueva cuenta (admin)",
+    "name": "Nombre",
+    "button": "Registrarse",
+    "success": {
+      "title": "Cuenta creada",
+      "message": "La cuenta ha sido creada correctamente."
+    },
+    "error": {
+      "title": "Ocurrió un error",
+      "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo más tarde."
+    }
   }
 }

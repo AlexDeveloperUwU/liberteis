@@ -24,5 +24,18 @@
       "message": "O servidor retornou un erro. Por favor, téntao de novo.",
       "passwordsDontMatch": "As contrasinais non coinciden. Por favor, téntao de novo."
     }
+  },
+  "register": {
+    "title": "Crea unha nova conta (admin)",
+    "name": "Nome",
+    "button": "Rexistrarse",
+    "success": {
+      "title": "Conta creada",
+      "message": "A conta foi creada correctamente."
+    },
+    "error": {
+      "title": "Ocorreu un erro",
+      "message": "O servidor devolveu un erro. Por favor, téntao de novo máis tarde."
+    }
   }
 }

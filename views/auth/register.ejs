@@ -10,10 +10,10 @@
         <a class="h1" style="font-size: xx-large;"><b>LiberTeis</b></a>
       </div>
       <div class="card-body">
-        <p class="login-box-msg" id="login-box-msg">Registra a un nuevo usuario</p>
+        <p class="login-box-msg" id="login-box-msg"><%= t("register.title") %></p>
         <form id="registerForm">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Nombre" name="fullname" id="fullname" required>
+            <input type="text" class="form-control" placeholder="<%= t("register.name") %>" name="fullname" id="fullname" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>
@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="Correo electrónico" name="email" id="email" required>
+            <input type="email" class="form-control" placeholder="<%= t("common.email") %>" name="email" id="email" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -30,7 +30,7 @@
           </div>
           <div class="row">
             <div class="col-5">
-              <button type="button" class="btn btn-primary btn-block" onclick="registerUser()">Registrarse</button>
+              <button type="button" class="btn btn-primary btn-block" onclick="registerUser()"><%= t("register.button") %></button>
             </div>
           </div>
         </form>
@@ -71,10 +71,10 @@
             console.log(response);
             $(document).Toasts('create', {
               class: 'bg-success',
-              title: 'Usuario creado correctamente',
+              title: '<%= t("register.success.title") %>',
               autohide: true,
               delay: 5000,
-              body: 'El usuario ha sido registrado correctmente en el sistema.'
+              body: '<%= t("register.success.message") %>'
             })
             setTimeout(function() {
               window.location.href = "/auth/login";
@@ -84,10 +84,10 @@
             console.error(error);
             $(document).Toasts('create', {
               class: 'bg-danger',
-              title: 'Ha ocurrido un error',
+              title: '<%= t("register.error.title") %>',
               autohide: true,
               delay: 5000,
-              body: 'El usuario no ha podido ser registrado correctamente en el sistema.'
+              body: '<%= t("register.error.message") %>'
             })
           }
         });

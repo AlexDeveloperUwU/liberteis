@@ -24,5 +24,18 @@
       "message": "The server returned an error. Please try again.",
       "passwordsDontMatch": "Passwords don't match. Please try again."
     }
+  },
+  "register": {
+    "title": "Create a new account (admin)",
+    "name": "Name",
+    "button": "Register",
+    "success": {
+      "title": "Account created",
+      "message": "You have successfully created an account in the platform."
+    },
+    "error": {
+      "title": "An error occurred",
+      "message": "The server returned an error. Please try again later."
+    }
   }
 }
