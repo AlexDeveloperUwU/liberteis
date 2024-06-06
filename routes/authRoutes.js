@@ -18,7 +18,7 @@ router.get("/register", (req, res) => {
   // Si no hay usuarios registrados, mostramos el formulario de registro
   // Si ya hay usuarios registrados, redirigimos al formulario de inicio de sesión
   if (usersNum === 0) {
-    res.render("auth/register", {page: "register", t: res.t});
+    res.render("auth/register", { page: "register", t: res.t });
   } else {
     res.redirect("/auth/login");
   }
@@ -61,7 +61,7 @@ router.post("/unregister", async (req, res) => {
 router.get("/login", (req, res) => {
   const usersNum = db.getUserCount();
   if (usersNum !== 0) {
-    res.render("auth/login", {page: "login", t: res.t});
+    res.render("auth/login", { page: "login", t: res.t });
   } else {
     res.redirect("/auth/register");
   }
@@ -71,12 +71,12 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const needsReset = db.forcePasswordReset(email);
 
-  if (needsReset) {
-    return res.status(400).json({ message: "Se requiere restablecer la contraseña" });
+  const response = await db.loginUser(email, password);
+  if (response === false) {
+    return res.status(403).json({ message: "Credenciales incorrectas" });
   } else {
-    const response = await db.loginUser(email, password);
-    if (response === false) {
-      return res.status(403).json({ message: "Credenciales incorrectas" });
+    if (needsReset) {
+      return res.status(400).json({ message: "Se requiere restablecer la contraseña" });
     } else {
       req.session.userId = response[0];
       req.session.userEmail = response[1];
@@ -101,7 +101,7 @@ router.post("/list", (req, res) => {
 
 //* Rutas para cambiar la contraseña
 router.get("/changepass", (req, res) => {
-  res.render("auth/change", {page: "changePass", t: res.t});
+  res.render("auth/change", { page: "changePass", t: res.t });
 });
 
 router.post("/changepass", async (req, res) => {
@@ -118,7 +118,7 @@ router.post("/changepass", async (req, res) => {
 
 //* Rutas para restablecer la contraseña olvidada
 router.get("/resetpass", (req, res) => {
-  res.render("auth/reset", {page: "resetPass", t: res.t});
+  res.render("auth/reset", { page: "resetPass", t: res.t });
 });
 
 router.post("/resetpass", async (req, res) => {
