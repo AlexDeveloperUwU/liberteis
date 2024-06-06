@@ -37,5 +37,18 @@
       "title": "Ocorreu un erro",
       "message": "O servidor devolveu un erro. Por favor, téntao de novo máis tarde."
     }
+  },
+  "resetPass": {
+    "title": "Restablece o teu contrasinal",
+    "button": "Restablecer contrasinal",
+    "captcha": "Captcha",
+    "success": {
+      "title": "Contrasinal restablecido",
+      "message": "O teu contrasinal foi restablecido correctamente."
+    },
+    "error": {
+      "title": "Ocorreu un erro",
+      "message": "O servidor devolveu un erro. Por favor, téntao de novo máis tarde."
+    }
   }
 }

@@ -37,5 +37,18 @@
       "title": "Ocurrió un error",
       "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo más tarde."
     }
+  },
+  "resetPass": {
+    "title": "Restablece tu contraseña",
+    "button": "Restablecer contraseña",
+    "captcha": "Captcha",
+    "success": {
+      "title": "Contraseña restablecida",
+      "message": "Tu contraseña ha sido restablecida correctamente."
+    },
+    "error": {
+      "title": "Ocurrió un error",
+      "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo más tarde."
+    }
   }
 }

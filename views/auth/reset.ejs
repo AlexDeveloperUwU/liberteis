@@ -10,10 +10,10 @@
         <a class="h1" style="font-size: xx-large;"><b>LiberTeis</b></a>
       </div>
       <div class="card-body">
-        <p class="login-box-msg">Resetea tu contraseña</p>
+        <p class="login-box-msg"><%= t("resetPass.title") %></p>
         <form id="changePassForm">
           <div class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="Correo electrónico" name="email" id="email" required>
+            <input type="email" class="form-control" placeholder="<%= t("common.email") %>" name="email" id="email" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="number" class="form-control" placeholder="Contraseña" name="captcha" id="captcha" required>
+            <input type="number" class="form-control" placeholder="<%= t("resetPass.captcha") %>" name="captcha" id="captcha" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -30,7 +30,7 @@
           </div>
           <div class="row">
             <div class="col-7">
-              <button type="button" class="btn btn-primary btn-block" onclick="changePassUser()">Cambiar contraseña</button>
+              <button type="button" class="btn btn-primary btn-block" onclick="changePassUser()"><%= t("resetPass.button) %></button>
             </div>
           </div>
         </form>

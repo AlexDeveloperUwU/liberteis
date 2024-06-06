@@ -37,5 +37,18 @@
       "title": "An error occurred",
       "message": "The server returned an error. Please try again later."
     }
+  },
+  "resetPass": {
+    "title": "Reset your password",
+    "button": "Reset password",
+    "captcha": "Captcha",
+    "success": {
+      "title": "Password reset",
+      "message": "Your password has been reset successfully."
+    },
+    "error": {
+      "title": "An error occurred",
+      "message": "The server returned an error. Please try again later."
+    }
   }
 }
