@@ -10,10 +10,10 @@
         <a class="h1" style="font-size: xx-large;"><b>LiberTeis</b></a>
       </div>
       <div class="card-body">
-        <p class="login-box-msg">Cambia tu contraseña</p>
+        <p class="login-box-msg"><%= t("changePass.title") %></p>
         <form id="changePassForm">
           <div class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="Correo electrónico" name="email" id="email" required>
+            <input type="email" class="form-control" placeholder="<%= t("common.email") %>" name="email" id="email" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="Contraseña" name="password" id="password" required>
+            <input type="password" class="form-control" placeholder="<%= t("common.password") %>" name="password" id="password" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -29,7 +29,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="Vuelve a escribir tu contraseña" name="confirmPassword" id="confirmPassword" required>
+            <input type="password" class="form-control" placeholder="<%= t("changePass.retypePassword") %>" name="confirmPassword" id="confirmPassword" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -38,7 +38,7 @@
           </div>
           <div class="row">
             <div class="col-7">
-              <button type="button" class="btn btn-primary btn-block" onclick="changePassUser()">Cambiar contraseña</button>
+              <button type="button" class="btn btn-primary btn-block" onclick="changePassUser()"><%= t("changePass.button") %></button>
             </div>
           </div>
         </form>
@@ -57,7 +57,13 @@
         var password = document.getElementById("password").value;
         var confirmPassword = document.getElementById("confirmPassword").value;
         if (password !== confirmPassword) {
-          alert("Las contraseñas no coinciden");
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: '<%= t("changePass.error.title") %>',
+            autohide: true,
+            delay: 5000,
+            body: '<%= t("changePass.error.passwordsDontMatch") %>'
+          })
           return false;
         }
         return true;
@@ -87,10 +93,10 @@
             console.error(error);
             $(document).Toasts('create', {
               class: 'bg-danger',
-              title: 'Ha ocurrido un error',
+              title: '<%= t("changePass.error.title") %>',
               autohide: true,
               delay: 5000,
-              body: 'La contraseña no ha podido ser guardada correctamente en el sistema.'
+              body: '<%= t("changePass.error.message") %>'
             })
           }
         });

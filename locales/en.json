@@ -14,5 +14,15 @@
       "title": "An error occurred",
       "message": "The server returned an error. Please check your credentials and try again."
     }
+  },
+  "changePass": {
+    "title": "Change your password",
+    "retypePassword": "Retype your password",
+    "button": "Change password",
+    "error": {
+      "title": "An error occurred",
+      "message": "The server returned an error. Please try again.",
+      "passwordsDontMatch": "Passwords don't match. Please try again."
+    }
   }
 }

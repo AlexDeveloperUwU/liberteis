@@ -8,11 +8,21 @@
     "button": "Acceder",
     "success": {
       "title": "Acceso correcto",
-      "message": "Accedeches correctamente"
+      "message": "Accediches correctamente"
     },
     "error": {
       "title": "Ocorreu un erro",
-      "message": "O servidor devolveu un erro. Por favor, comproba as túas credenciais e inténtao de novo."
+      "message": "O servidor devolveu un erro. Por favor, comproba as túas credenciais e téntao de novo."
+    }
+  },
+  "changePass": {
+    "title": "Cambia o teu contrasinal",
+    "retypePassword": "Volve escribir o contrasinal",
+    "button": "Cambiar contrasinal",
+    "error": {
+      "title": "Ocorreu un erro",
+      "message": "O servidor retornou un erro. Por favor, téntao de novo.",
+      "passwordsDontMatch": "As contrasinais non coinciden. Por favor, téntao de novo."
     }
   }
 }
