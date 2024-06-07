@@ -40,7 +40,7 @@
   },
   "resetPass": {
     "title": "Restablece o teu contrasinal",
-    "button": "Restablecer contrasinal",
+    "button": "Restablecer",
     "captcha": "Captcha",
     "success": {
       "title": "Contrasinal restablecido",
@@ -49,6 +49,16 @@
     "error": {
       "title": "Ocorreu un erro",
       "message": "O servidor devolveu un erro. Por favor, téntao de novo máis tarde."
+    },
+    "captchaRelated": {
+      "introduce": "Introduce a", 
+      "sum": "suma",
+      "subtraction": "resta",
+      "of": "de",
+      "error": {
+        "title": "Erro no captcha",
+        "message": "O captcha é incorrecto. Por favor, téntao de novo."
+      }
     }
   }
 }

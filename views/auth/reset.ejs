@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="number" class="form-control" placeholder="<%= t("resetPass.captcha") %>" name="captcha" id="captcha" required>
+            <input type="number" class="form-control" placeholder="" name="captcha" id="captcha" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -29,8 +29,8 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-7">
-              <button type="button" class="btn btn-primary btn-block" onclick="changePassUser()"><%= t("resetPass.button) %></button>
+            <div class="col-5">
+              <button type="button" class="btn btn-primary btn-block" onclick="changePassUser()"><%= t("resetPass.button") %></button>
             </div>
           </div>
         </form>
@@ -61,7 +61,7 @@
         resultado = num1 - num2;
       }
 
-      var placeholder = "Introduce la " + (operacion === '+' ? "suma" : "resta") + " de " + num1 + " " + operacion + " " + num2;
+      var placeholder = "<%= t('resetPass.captchaRelated.introduce') %> " + (operacion === '+' ? "<%= t('resetPass.captchaRelated.sum') %>" : "<%= t('resetPass.captchaRelated.subtraction') %>") + " <%= t('resetPass.captchaRelated.of') %> " + num1 + " " + operacion + " " + num2;
       document.getElementById("captcha").setAttribute("placeholder", placeholder);
 
       function validateForm(resultado) {
@@ -70,7 +70,13 @@
         console.log(captcha)
         console.log(resultado)
         if (captchaValue !== resultado) {
-          alert("El captcha no es correcto!");
+          $(document).Toasts('create', {
+              class: 'bg-danger',
+              title: '<%= t("resetPass.captchaRelated.error.title") %>',
+              autohide: true,
+              delay: 5000,
+              body: '<%= t("resetPass.captchaRelated.error.message") %>'
+            })
           return false;
         }
         return true;
@@ -98,10 +104,10 @@
             console.error(error);
             $(document).Toasts('create', {
               class: 'bg-danger',
-              title: 'Ha ocurrido un error',
+              title: '<%= t("resetPass.error.title") %>',
               autohide: true,
               delay: 5000,
-              body: 'La contraseña no ha podido ser restablecida correctamente en el sistema.'
+              body: '<%= t("resetPass.error.message") %>'
             })
           }
         });

@@ -40,7 +40,7 @@
   },
   "resetPass": {
     "title": "Reset your password",
-    "button": "Reset password",
+    "button": "Reset",
     "captcha": "Captcha",
     "success": {
       "title": "Password reset",
@@ -49,6 +49,16 @@
     "error": {
       "title": "An error occurred",
       "message": "The server returned an error. Please try again later."
-    }
+    },
+    "captchaRelated": {
+      "introduce": "Enter the", 
+      "sum": "sum",
+      "subtraction": "subtraction",
+      "of": "of",
+      "error": {
+        "title": "Captcha error",
+        "message": "The captcha is incorrect. Please try again."
+      }
+    } 
   }
 }

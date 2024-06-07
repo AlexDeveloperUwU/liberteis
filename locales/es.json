@@ -40,7 +40,7 @@
   },
   "resetPass": {
     "title": "Restablece tu contraseña",
-    "button": "Restablecer contraseña",
+    "button": "Restablecer",
     "captcha": "Captcha",
     "success": {
       "title": "Contraseña restablecida",
@@ -49,6 +49,16 @@
     "error": {
       "title": "Ocurrió un error",
       "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo más tarde."
+    },
+    "captchaRelated": {
+      "introduce": "Introduce la", 
+      "sum": "suma",
+      "subtraction": "resta",
+      "of": "de",
+      "error": {
+        "title": "Error en el captcha",
+        "message": "El captcha es incorrecto. Por favor, inténtalo de nuevo."
+      }
     }
   }
 }
