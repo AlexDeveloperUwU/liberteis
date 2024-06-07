@@ -3,6 +3,11 @@
     "email": "Correo electrónico",
     "password": "Contrasinal"
   },
+  "langs": {
+    "es": "Español",
+    "en": "Inglés",
+    "gl": "Galego"
+  },
   "login": {
     "title": "Accede a la plataforma",
     "button": "Acceder",
@@ -51,7 +56,7 @@
       "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo más tarde."
     },
     "captchaRelated": {
-      "introduce": "Introduce la", 
+      "introduce": "Introduce la",
       "sum": "suma",
       "subtraction": "resta",
       "of": "de",
@@ -60,5 +65,8 @@
         "message": "El captcha es incorrecto. Por favor, inténtalo de nuevo."
       }
     }
+  },
+  "langModal": {
+    "title": "Selecciona un idioma"
   }
 }

@@ -3,6 +3,11 @@
     "email": "Correo electrónico",
     "password": "Contrasinal"
   },
+  "langs": {
+    "es": "Español",
+    "en": "Inglés",
+    "gl": "Galego"
+  },
   "login": {
     "title": "Accede á plataforma",
     "button": "Acceder",
@@ -60,5 +65,8 @@
         "message": "O captcha é incorrecto. Por favor, téntao de novo."
       }
     }
+  },
+  "langModal": {
+    "title": "Escolle un idioma"
   }
 }

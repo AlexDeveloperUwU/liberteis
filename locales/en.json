@@ -3,6 +3,11 @@
     "email": "Email",
     "password": "Password"
   },
+  "langs": {
+    "es": "Spanish",
+    "en": "English",
+    "gl": "Galician"
+  },
   "login": {
     "title": "Login into the platform",
     "button": "Login",
@@ -51,7 +56,7 @@
       "message": "The server returned an error. Please try again later."
     },
     "captchaRelated": {
-      "introduce": "Enter the", 
+      "introduce": "Enter the",
       "sum": "sum",
       "subtraction": "subtraction",
       "of": "of",
@@ -59,6 +64,9 @@
         "title": "Captcha error",
         "message": "The captcha is incorrect. Please try again."
       }
-    } 
+    }
+  },
+  "langModal": {
+    "title": "Select a language"
   }
 }

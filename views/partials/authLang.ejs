@@ -1,0 +1,50 @@
+<div id="openLangModal" style="cursor: pointer;">
+  <svg xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 24 24">
+    <path d="M0 0h24v24H0z" fill="none" />
+    <image xlink:href="/assets/img/lang.svg" src="/assets/img/lang.svg" width="100%" height="100%" />
+  </svg>
+</div>
+<section>
+  <div class="modal fade" id="langModal" tabindex="-1" role="dialog" aria-labelledby="langModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="langModalTitle"><%= t("langModal.title") %></h5>
+          <button type="button" id="closeLangModal" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="langModalBody">
+          <div class="d-flex justify-content-center">
+            <button type="button" class="btn <%= lang === 'gl' ? 'btn-info' : 'btn-primary' %> mx-2" id="langModalGal"><%= t("langs.gl") %></button>
+            <button type="button" class="btn <%= lang === 'es' ? 'btn-info' : 'btn-primary' %> mx-2" id="langModalEs"><%= t("langs.es") %></button>
+            <button type="button" class="btn <%= lang === 'en' ? 'btn-info' : 'btn-primary' %> mx-2" id="langModalEn"><%= t("langs.en") %></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('langModalGal').addEventListener('click', function() {
+      window.location.href = "?lang=gl";
+    });
+
+    document.getElementById('langModalEs').addEventListener('click', function() {
+      window.location.href = "?lang=es";
+    });
+
+    document.getElementById('langModalEn').addEventListener('click', function() {
+      window.location.href = "?lang=en";
+    });
+
+    document.getElementById('closeLangModal').addEventListener('click', function() {
+      $('#langModal').modal('hide');
+    });
+
+    document.getElementById('openLangModal').addEventListener('click', function() {
+      $('#langModal').modal('show');
+    });
+  });
+</script>
