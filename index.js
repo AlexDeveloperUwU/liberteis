@@ -54,9 +54,9 @@ app.use(i18n.init);
 // Middleware para adjuntar función de traducción a cada solicitud
 app.use((req, res, next) => {
   let selectedLanguage = req.query.lang || req.cookies.lang || "gl";
-  res.cookie("lang", selectedLanguage, { maxAge: 900000, httpOnly: true }); 
+  res.cookie("lang", selectedLanguage, { maxAge: 900000, httpOnly: true });
   req.setLocale(selectedLanguage);
-  res.t = res.__; 
+  res.t = res.__;
   next();
 });
 
@@ -77,7 +77,7 @@ app.use("/", webRoutes);
 app.use("/auth", authRouter);
 
 app.get("*", (req, res) => {
-  res.render("errors/404");
+  res.render("errors/404", { t: res.t, lang: req.getLocale() });
 });
 
 // Iniciamos el servidor web express

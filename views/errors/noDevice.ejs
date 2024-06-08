@@ -6,14 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="/assets/css/error.css" rel="stylesheet" type="text/css" />
   <title>Error 403</title>
-  <!-- Favicon -->
   <link rel="icon" href="/assets/img/favicon/favicon.png" type="image/png">
 </head>
 
 <body>
   <div class="container">
     <h1 class="error-code">403</h1>
-    <p class="error-message">¡Oops! Parece ser que no estás usando el dispositivo indicado para ver la página, con lo que se te denegó el acceso.<br> Necesitas utilizar un <%= device %>!</p>
+    <p class="error-message"><%= t("errors.noDevice1") %><br><%= t("errors.noDevice2") %> <%= device %>!</p>
     <div class="animation-container">
       <div class="funny-character">¯\_(ツ)_/¯</div>
     </div>

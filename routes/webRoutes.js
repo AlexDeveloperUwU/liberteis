@@ -8,7 +8,7 @@ router.get("/rpi", (req, res) => {
   //if (!userAgent || !userAgent.includes("Linux aarch64")) {
   //  return res.render("403");
   //}
-  res.render("others/rpi");
+  res.render("others/rpi", { t: res.t, lang: req.getLocale() });
 });
 
 router.get("/event/:eventID", (req, res) => {
@@ -17,18 +17,20 @@ router.get("/event/:eventID", (req, res) => {
   if (!userAgent || !userAgent.includes("Android") || !userAgent.includes("iPhone")) {
     return res.render("errors/noDevice", {
       device: "dispositivo Android o iPhone",
+      t: res.t,
+      lang: req.getLocale(),
     });
   }
 
-  res.render("others/event");
+  res.render("others/event", { t: res.t, lang: req.getLocale() });
 });
 
 router.get("/500", (req, res) => {
-  res.render("errors/500");
+  res.render("errors/500", { t: res.t, lang: req.getLocale() });
 });
 
 router.get("/403", (req, res) => {
-  res.render("errors/403");
+  res.render("errors/403", { t: res.t, lang: req.getLocale() });
 });
 
 module.exports = router;

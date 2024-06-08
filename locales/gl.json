@@ -56,7 +56,7 @@
       "message": "O servidor devolveu un erro. Por favor, téntao de novo máis tarde."
     },
     "captchaRelated": {
-      "introduce": "Introduce a", 
+      "introduce": "Introduce a",
       "sum": "suma",
       "subtraction": "resta",
       "of": "de",
@@ -68,5 +68,10 @@
   },
   "langModal": {
     "title": "Escolle un idioma"
+  },
+  "errors": {
+    "403": "¡Oops! Parece que non tes acceso a esta páxina, pero quen sabe... quizais é un erro de código ;3",
+    "404": "¡Oops! Non puidemos atopar ningunha páxina por aquí... ¿Quizais equivocácheste?",
+    "500": "¡Oops! Algo saíu mal no servidor, pero... ¡quen sabe!"
   }
 }

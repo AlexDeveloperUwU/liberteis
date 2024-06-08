@@ -68,5 +68,12 @@
   },
   "langModal": {
     "title": "Selecciona un idioma"
+  },
+  "errors": {
+    "403": "¡Oops! Parece ser que no tienes acceso a esta página, pero quién sabe... quizás es error de código ;3",
+    "404": "¡Oops! No hemos podido encontrar ninguna página por aquí... ¿Quizás te has equivocado?",
+    "500": "¡Oops! Algo salió mal en el servidor, pero... ¡quién sabe!",
+    "noDevice1": "¡Oops! Parece ser que no estás usando el dispositivo indicado para ver la página, con lo que se te denegó el acceso.",
+    "noDevice2": "Necesitas utilizar un"
   }
 }
