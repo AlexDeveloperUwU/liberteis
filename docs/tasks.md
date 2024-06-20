@@ -8,3 +8,10 @@ Las tareas que tengo pendientes para las distintas versiones (no se seguirá al 
 => Logo de IES de Teis en la pantalla de la RPi abajo izquierda
 => Mejoras visuales en los modals para cuando estás esperando a que la solicitud se procese
 => Texto encima del código QR que ponga "Escanéame"
+=> Página de config de la app
+=> Página de config para devs (2fa y mantenimiento)
+=> Página de config para el perfil de user
+=> Traducciones de la dash
+=> Página de reserva de espacios de la biblio
+=> Reserva de espacios conectados con eventos
+=> Reserva de materiales de la biblioteca
