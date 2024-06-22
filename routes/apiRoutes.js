@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 //* Ruta para subir la imagen del evento
-router.post("/upload", upload.single("image"), (req, res) => {
+router.post("/upload", upload.single("thumbnailfile"), (req, res) => {
   const fileName = req.file.filename;
   const fileURL = `${process.env.APP_URL}/thumbs/${fileName}`;
 
