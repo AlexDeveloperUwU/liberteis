@@ -75,5 +75,10 @@
     "500": "¡Oops! Algo salió mal en el servidor, pero... ¡quién sabe!",
     "noDevice1": "¡Oops! Parece ser que no estás usando el dispositivo indicado para ver la página, con lo que se te denegó el acceso.",
     "noDevice2": "Necesitas utilizar un"
+  },
+  "sidebar": {
+    "home": "Inicio",
+    "eventList": "Lista de eventos",
+    "userList": "Lista de usuarios"
   }
 }

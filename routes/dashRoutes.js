@@ -68,6 +68,8 @@ router.get("/", async (req, res) => {
       loggedInUsername: res.locals.user,
       loggedInType: res.locals.type,
       page: "dash",
+      t: res.t,
+      lang: req.getLocale(),
     });
   } catch (error) {
     console.error(error);
@@ -85,6 +87,8 @@ router.get("/eventlist", async (req, res) => {
       loggedInUsername: res.locals.user,
       loggedInType: res.locals.type,
       page: "eventList",
+      t: res.t,
+      lang: req.getLocale(),
     });
   } catch (error) {
     console.error(error);
@@ -103,6 +107,8 @@ router.get("/userlist", async (req, res) => {
       loggedInEmail: res.locals.email,
       loggedInType: res.locals.type,
       page: "userList",
+      t: res.t,
+      lang: req.getLocale(),
     });
   } catch (error) {
     console.error(error);

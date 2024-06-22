@@ -73,5 +73,10 @@
     "403": "Oops! It seems you don't have access to this page, but who knows... maybe it's a code error ;3",
     "404": "Oops! We couldn't find any page around here... Maybe you made a mistake?",
     "500": "Oops! Something went wrong on the server, but... who knows!"
+  },
+  "sidebar": {
+    "home": "Home",
+    "eventList": "Event List",
+    "userList": "User List"
   }
 }

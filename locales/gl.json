@@ -73,5 +73,10 @@
     "403": "¡Oops! Parece que non tes acceso a esta páxina, pero quen sabe... quizais é un erro de código ;3",
     "404": "¡Oops! Non puidemos atopar ningunha páxina por aquí... ¿Quizais equivocácheste?",
     "500": "¡Oops! Algo saíu mal no servidor, pero... ¡quen sabe!"
+  },
+  "sidebar": {
+    "home": "Inicio",
+    "userList": "Listaxe de usuarios",
+    "eventList": "Listaxe de eventos"
   }
 }

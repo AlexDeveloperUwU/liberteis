@@ -17,20 +17,20 @@
         <li class="nav-item">
           <a href="/dash/" class="nav-link <% if (page === 'dash') { %> active <% } %>">
             <i class="nav-icon fas fa-home"></i>
-            <p>Inicio</p>
+            <p><%= t("sidebar.home") %></p>
           </a>
         </li>
         <li class="nav-item">
           <a href="/dash/eventlist" class="nav-link <% if (page === 'eventList') { %> active <% } %>">
             <i class="nav-icon fas fa-home"></i>
-            <p>Listado de eventos</p>
+            <p><%= t("sidebar.eventList") %></p>
           </a>
         </li>
         <% if (loggedInType === 'adminUser') { %>
         <li class="nav-item">
           <a href="/dash/userlist" class="nav-link <% if (page === 'userList') { %> active <% } %>">
             <i class="nav-icon fas fa-home"></i>
-            <p>Gestión de usuarios</p>
+            <p><%= t("sidebar.userList") %></p>
           </a>
         </li>
         <% } %>
