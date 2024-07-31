@@ -20,12 +20,12 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Inicio</h1>
+              <h1 class="m-0"><%= t("sidebar.home") %></h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                <li class="breadcrumb-item active">Vista general</li>
+                <li class="breadcrumb-item"><a href="#"><%= t("sidebar.home") %></a></li>
+                <li class="breadcrumb-item active"><%= t("sidebar.mainView") %></li>
               </ol>
             </div>
           </div>
@@ -33,19 +33,13 @@
       </div>
       <section class="content">
         <div class="container-fluid">
-          <% if (latestVersion === false && loggedInType === 'adminUser') { %>
-          <div class="alert alert-danger alert-dismissible" id="updateAvaliable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h5><i class="icon fas fa-tag"></i> Nueva versión disponible!</h5>
-            Una nueva versión del software está disponible. Por favor, contacta con el administrador para que lo actualice siguiendo las <a href="https://github.com/AlexDeveloperUwU/liberteis/wiki/Actualizaci%C3%B3n">instrucciones</a>
-          </div>
-          <% } %>
+          <%- include('../partials/latestVersion') %>
           <div class="row">
             <div class="col-lg-4 col-4">
               <div class="small-box bg-info">
                 <div class="inner">
                   <h3>150</h3>
-                  <p>Eventos totales</p>
+                  <p><%= t("eventCards.card1") %></p>
                 </div>
                 <div class="icon">
                   <i class="fas fa-theater-masks"></i>
@@ -56,7 +50,7 @@
               <div class="small-box bg-warning">
                 <div class="inner">
                   <h3>150</h3>
-                  <p>Eventos por realizar</p>
+                  <p><%= t("eventCards.card2") %></p>
                 </div>
                 <div class="icon">
                   <i class="fas fa-theater-masks"></i>
@@ -67,7 +61,7 @@
               <div class="small-box bg-success">
                 <div class="inner">
                   <h3>150</h3>
-                  <p>Eventos ya realizados</p>
+                  <p><%= t("eventCards.card3") %></p>
                 </div>
                 <div class="icon">
                   <i class="fas fa-theater-masks"></i>
@@ -89,7 +83,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="eventModalLabel">Detalles del evento</h5>
+                <h5 class="modal-title" id="eventModalLabel"><%= t("detailsModal.title") %></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -100,28 +94,11 @@
           </div>
         </div>
       </section>
-      <section>
-        <div class="modal fade" id="changelogModal" tabindex="-1" role="dialog" aria-labelledby="changelogModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="changelogModalLabel">Changelog</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="log-wrapper"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
     <footer class="main-footer">
       <strong>IES De Teis - Alejandro Verde</strong>
       <div class="float-right d-none d-sm-inline-block">
-        <b>Versión <%= version %></b>
+        <b><%= t("update.version") %> <%= version %></b>
       </div>
     </footer>
     <aside class="control-sidebar control-sidebar-dark">
@@ -134,13 +111,13 @@
       // Función para abrir el formulario de borrar un evento
       function openRemoveEventForm(event) {
         $('#eventModal').modal('show');
-        $('#eventModalLabel').text('Eliminar evento');
+        $('#eventModalLabel').text('<%= t("removeEventForm.title") %>');
         $('#eventModalBody').html(
           '<form id="removeEventForm">' +
-          '  <p class="text-danger">¿Estás seguro de que quieres eliminar el evento <strong>' + event.title + '</strong>?</p>' +
+          '  <p class="text-danger"><%= t("removeEventForm.question") %> <strong>' + event.title + '</strong>?</p>' +
           '<br><div class="d-flex justify-content-between">' +
-          '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
-          '<button type="submit" class="btn btn-danger">Eliminar evento</button>' +
+          '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("removeEventForm.cancel") %></button>' +
+          '<button type="submit" class="btn btn-danger"><%= t("removeEventForm.button") %></button>' +
           '</div>' +
           '</form>'
         );
@@ -154,7 +131,6 @@
         $('#removeEventForm').submit(function(event) {
           event.preventDefault();
           var eventId = $(this).data('eventId');
-          console.log(eventId)
           removeEvent(eventId);
         });
 
@@ -170,15 +146,13 @@
             eventID: eventId
           },
           success: function(data) {
-            console.log('Evento eliminado con éxito:', data);
             $('#eventModal').modal('hide');
             setTimeout(function() {
               location.reload(true);
             }, 1000);
           },
           error: function(error) {
-            console.error('Error al eliminar el evento:', error);
-            alert('Error al eliminar el evento. Por favor, inténtalo de nuevo.');
+            alert('<%= t("removeEventForm.error.title") %>');
           }
         });
       }
@@ -186,7 +160,7 @@
       // Función para abrir el formulario de edición de eventos
       function openEditEventForm(event) {
         $('#eventModal').modal('show');
-        $('#eventModalLabel').text('Editar evento');
+        $('#eventModalLabel').text('<%= t("editEventForm.title") %>');
 
         var currentCategory = event.extendedProps.type;
         var categoryOptions = '';
@@ -201,34 +175,34 @@
         $('#eventModalBody').html(
           '<form id="editEventForm">' +
           '  <div class="form-group">' +
-          '    <label for="editEventTitle">Título del evento:</label>' +
+          '    <label for="editEventTitle"><%= t("editEventForm.eventTitle") %>:</label>' +
           '    <input type="text" class="form-control" id="editEventTitle" value="' + event.title + '" required maxlength=60>' +
           '  </div>' +
           '  <div class="form-group">' +
-          '    <label for="editEventDescription">Descripción del evento (min. 100 char.):</label>' +
+          '    <label for="editEventDescription"><%= t("editEventForm.eventDescription") %>:</label>' +
           '    <textarea class="form-control" id="editEventDescription" rows="3" minlength=100 maxlength=400 required>' + event.extendedProps.description + '</textarea>' +
           '  </div>' +
           '  <div class="form-group">' +
-          '    <label for="editEventDate">Fecha del evento:</label>' +
+          '    <label for="editEventDate"><%= t("editEventForm.eventDate") %>:</label>' +
           '    <input type="datetime-local" class="form-control" id="editEventDate" value="' + moment(event.start).format('YYYY-MM-DDTHH:mm') + '" required>' +
           '  </div>' +
           '  <div class="form-group">' +
-          '    <label for="editEventCategory">Categoría:</label>' +
+          '    <label for="editEventCategory"><%= t("editEventForm.eventCategory") %>:</label>' +
           '    <select class="form-control" id="editEventCategory" required>' +
           '       ' + categoryOptions +
           '    </select>' +
           '  </div>' +
           '  <div class="form-group" style="display: none;">' +
-          '    <label for="editEventThumbUrl">URL de la miniatura:</label>' +
+          '    <label for="editEventThumbUrl"><%= t("editEventForm.thumbnailURL") %>:</label>' +
           '    <input type="text" class="form-control" id="editEventThumbUrl" value="' + event.extendedProps.thumb_url + '">' +
           '  </div>' +
           '  <div class="form-group" style="display: none;">' +
-          '    <label for="editEventQrUrl">URL del QR:</label>' +
+          '    <label for="editEventQrUrl"><%= t("editEventForm.qrUrl") %>:</label>' +
           '    <input type="text" class="form-control" id="editEventQrUrl" value="' + event.extendedProps.qr_url + '">' +
           '  </div>' +
-          '   <label for="editEventPublishedBy">Miniatura:</label>' +
-          '   <p class="text-warning">No se puede editar la miniatura, con lo que deberás crear un evento nuevo para poder subir la nueva miniatura</p>' +
-          '  <button type="submit" id="editEventButton" class="btn btn-primary">Guardar cambios</button>' +
+          '   <label for="editEventPublishedBy"><%= t("editEventForm.thumbnail") %>:</label>' +
+          '   <p class="text-warning"><%= t("editEventForm.warning") %></p>' +
+          '  <button type="submit" id="editEventButton" class="btn btn-primary"><%= t("editEventForm.button") %></button>' +
           '</form>'
         );
 

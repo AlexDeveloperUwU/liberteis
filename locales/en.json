@@ -77,6 +77,55 @@
   "sidebar": {
     "home": "Home",
     "eventList": "Event List",
-    "userList": "User List"
+    "userList": "User List",
+    "mainView": "Main View"
+  },
+  "update":  {
+    "version": "Version",
+    "title": "New version available!",
+    "message": "A new version of the app is available. Please tell the administrator to update it."
+  },
+  "eventCards": {
+    "card1": "Total events",
+    "card2": "Evets to be made",
+    "card3": "Events made"
+  },
+  "detailsModal": {
+    "title": "Event details"
+  },
+  "removeEventForm": {
+    "title": "Remove event",
+    "button": "Remove",
+    "cancel": "Cancel",
+    "question": "Are you sure you want to remove the event",
+    "success": {
+      "title": "Event removed",
+      "message": "The event has been removed successfully."
+    },
+    "error": {
+      "title": "An error occurred",
+      "message": "The server returned an error. Please try again later."
+    }
+  },
+  "editEventForm": {
+    "title": "Edit event",
+    "button": "Edit",
+    "cancel": "Cancel",
+    "success": {
+      "title": "Event edited",
+      "message": "The event has been edited successfully."
+    },
+    "error": {
+      "title": "An error occurred",
+      "message": "The server returned an error. Please try again later."
+    },
+    "eventTitle": "Event title",
+    "eventDescription": "Event description",
+    "eventDate": "Event date",
+    "eventCategory": "Event category",
+    "thumbnailURL": "Thumbnail URL",
+    "qrUrl": "QR URL",
+    "thumbnail": "Thumbnail",
+    "warning": "You can't edit the event's thumbnail, so you need to create the event again (clonning it doesn't work)."
   }
 }
