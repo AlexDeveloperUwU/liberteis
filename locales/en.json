@@ -72,7 +72,11 @@
   "errors": {
     "403": "Oops! It seems you don't have access to this page, but who knows... maybe it's a code error ;3",
     "404": "Oops! We couldn't find any page around here... Maybe you made a mistake?",
-    "500": "Oops! Something went wrong on the server, but... who knows!"
+    "500": "Oops! Something went wrong on the server, but... who knows!",
+    "noDevice1": "Oops! It seems you are not using the indicated device to view the page, so access has been denied.",
+    "noDevice2": "You need to use a",
+    "pc": "portable device like a laptop or a desktop computer like a PC",
+    "mobile": "mobile device like a smartphone or a tablet"
   },
   "sidebar": {
     "home": "Home",

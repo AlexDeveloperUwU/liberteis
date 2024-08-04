@@ -14,7 +14,7 @@
         <p class="login-box-msg" id="login-box-msg"><%= t("register.title") %></p>
         <form id="registerForm">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<%= t("register.name") %>" name="fullname" id="fullname" required>
+            <input type="text" class="form-control" placeholder="<%= t("register.name") %>" name="fullname" id="fullname" required autocomplete="name">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>
@@ -22,7 +22,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="<%= t("common.email") %>" name="email" id="email" required>
+            <input type="email" class="form-control" placeholder="<%= t("common.email") %>" name="email" id="email" required autocomplete="username">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>

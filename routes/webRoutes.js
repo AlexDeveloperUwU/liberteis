@@ -16,7 +16,7 @@ router.get("/event/:eventID", (req, res) => {
 
   if (!userAgent || !userAgent.includes("Android") || !userAgent.includes("iPhone")) {
     return res.render("errors/noDevice", {
-      device: "dispositivo Android o iPhone",
+      device: res.t("errors.mobile"),
       t: res.t,
       lang: req.getLocale(),
     });

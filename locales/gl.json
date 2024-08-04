@@ -72,7 +72,11 @@
   "errors": {
     "403": "¡Oops! Parece que non tes acceso a esta páxina, pero quen sabe... quizais é un erro de código ;3",
     "404": "¡Oops! Non puidemos atopar ningunha páxina por aquí... ¿Quizais equivocácheste?",
-    "500": "¡Oops! Algo saíu mal no servidor, pero... ¡quen sabe!"
+    "500": "¡Oops! Algo saíu mal no servidor, pero... ¡quen sabe!",
+    "noDevice1": "¡Ops! Parece que non estás a usar o dispositivo indicado para ver a páxina, polo que se che denegou o acceso.",
+    "noDevice2": "Necesitas usar un",
+    "pc": "dispositivo portátil como un ordenador portátil ou un ordenador de sobremesa como un PC",
+    "mobile": "dispositivo móbil como un smartphone ou unha tablet"
   },
   "sidebar": {
     "home": "Inicio",

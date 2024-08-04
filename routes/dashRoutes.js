@@ -57,6 +57,20 @@ function isLatestVersion(version, latestVersion) {
   });
 }
 
+function checkPCDevice(req, res, next) {
+  const userAgent = req.get("User-Agent");
+  if (/Mobi|Android|iPad|iPhone|Windows Phone/.test(userAgent)) {
+    return res.render("errors/noDevice", {
+      device: res.t("errors.pc"),
+      t: res.t,
+      lang: req.getLocale(),
+    });
+  }
+
+  next();
+}
+router.use(checkPCDevice);
+
 //* Rutas de la dashboard
 router.get("/", async (req, res) => {
   try {

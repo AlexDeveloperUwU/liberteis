@@ -73,15 +73,16 @@
     "403": "¡Oops! Parece ser que no tienes acceso a esta página, pero quién sabe... quizás es error de código ;3",
     "404": "¡Oops! No hemos podido encontrar ninguna página por aquí... ¿Quizás te has equivocado?",
     "500": "¡Oops! Algo salió mal en el servidor, pero... ¡quién sabe!",
-    "noDevice1": "¡Oops! Parece ser que no estás usando el dispositivo indicado para ver la página, con lo que se te denegó el acceso.",
-    "noDevice2": "Necesitas utilizar un"
+    "noDevice1": "¡Oops! Parece que no estás utilizando el dispositivo indicado para ver la página, por lo que se te ha denegado el acceso.",
+    "noDevice2": "Necesitas usar un",
+    "pc": "dispositivo portátil como un ordenador portátil o un ordenador de sobremesa como un PC",
+    "mobile": "dispositivo móvil como un smartphone o una tablet"
   },
   "sidebar": {
     "home": "Inicio",
     "eventList": "Lista de eventos",
     "userList": "Lista de usuarios",
     "mainView": "Vista general"
-
   },
 
   "update": {
