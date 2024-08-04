@@ -2,12 +2,12 @@
 <html lang="en">
 <%- include('../partials/head') %>
 
-<body class="hold-transition sidebar-mini layout-fixed layout-footer-fixed">
+<body class="hold-transition sidebar-mini sidebar-collapse layout-fixed layout-footer-fixed">
   <div class="wrapper">
     <div class="preloader flex-column justify-content-center align-items-center">
       <img class="animation__shake" src="/assets/img/logoies.jpg" height="60" width="60">
     </div>
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <nav class="main-header navbar  navbar-white navbar-light">
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -18,21 +18,15 @@
     <div class="content-wrapper">
       <div class="content-header">
         <div class="container-fluid">
-          <% if (latestVersion === false && loggedInType === 'adminUser') { %>
-          <div class="alert alert-danger alert-dismissible" id="updateAvaliable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h5><i class="icon fas fa-tag"></i> Nueva versión disponible!</h5>
-            Una nueva versión del software está disponible. Por favor, contacta con el administrador para que lo actualice siguiendo las <a href="https://github.com/AlexDeveloperUwU/liberteis/wiki/Actualizaci%C3%B3n">instrucciones</a>
-          </div>
-          <% } %>
+          <%- include('../partials/latestVersion') %>
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Listado de eventos</h1>
+              <h1 class="m-0"><%= t("sidebar.eventList") %></h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                <li class="breadcrumb-item active">Listado de eventos</li>
+                <li class="breadcrumb-item"><a href="#"><%= t("sidebar.home") %></a></li>
+                <li class="breadcrumb-item active"><%= t("sidebar.eventList") %></li>
               </ol>
             </div>
           </div>
@@ -48,15 +42,15 @@
                     <thead>
                       <tr>
                         <th></th>
-                        <th>ID</th>
-                        <th>Fecha y hora</th>
-                        <th>Título</th>
-                        <th>Descripción</th>
-                        <th>Categoría</th>
-                        <th>Miniatura</th>
-                        <th>QR</th>
-                        <th>Publicado por</th>
-                        <th>Acción</th>
+                        <th><%= t("eventListTable.id") %></th>
+                        <th><%= t("eventListTable.dateTime") %></th>
+                        <th><%= t("eventListTable.title") %></th>
+                        <th><%= t("eventListTable.description") %></th>
+                        <th><%= t("eventListTable.category") %></th>
+                        <th><%= t("eventListTable.thumbnail") %></th>
+                        <th><%= t("eventListTable.qr") %></th>
+                        <th><%= t("eventListTable.publishedBy") %></th>
+                        <th><%= t("eventListTable.action") %></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -88,7 +82,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="eventModalLabel">Detalles del evento</h5>
+                <h5 class="modal-title" id="eventModalLabel"><%= t("eventListTable.eventDetails") %></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -99,29 +93,12 @@
           </div>
         </div>
       </section>
-      <section>
-        <div class="modal fade" id="changelogModal" tabindex="-1" role="dialog" aria-labelledby="changelogModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="changelogModalLabel">Changelog</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="log-wrapper"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   </div>
   <footer class="main-footer">
     <strong>IES De Teis - Alejandro Verde</strong>
     <div class="float-right d-none d-sm-inline-block">
-      <b>Versión <%= version %></b>
+      <b><%= t("update.version") %> <%= version %></b>
     </div>
   </footer>
   <aside class="control-sidebar control-sidebar-dark">
@@ -141,17 +118,17 @@
 
             $('#listadoeventos tbody').append(`
         <tr>
-          <td><input type="checkbox" class="event-checkbox"></td> <!-- Columna de selección múltiple -->
+          <td><input type="checkbox" class="event-checkbox"></td>
           <td>${evento.id}</td>
           <td>${formattedDate}</td>
           <td>${evento.title}</td>
           <td>${evento.desc}</td>
           <td>${evento.type}</td>
-          <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.thumb_url}" data-type="imagen" data-title="Miniatura">Pincha aquí</a></td>
-          <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.qr_url}" data-type="qr" data-title="QR Code">Pincha aquí</a></td>
+          <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.thumb_url}" data-type="imagen" data-title="Miniatura"><%= t("eventListTable.clickHere") %></a></td>
+          <td><a href="#" class="modal-link" data-toggle="modal" data-target="#imagenModal" data-src="${evento.qr_url}" data-type="qr" data-title="QR Code"><%= t("eventListTable.clickHere") %></a></td>
           <td>${evento.published_by}</td>
           <td>
-            <a href="#" class="delete-event" data-id="${evento.id}" title="Eliminar"><i class="fas fa-trash"></i></a>
+            <a href="#" class="delete-event" data-id="${evento.id}" title="<%= t("eventListTable.deleteButton") %>"><i class="fas fa-trash"></i></a>
           </td>
         </tr>
       `);
@@ -187,27 +164,27 @@
             "autoWidth": false,
             "buttons": [{
                 extend: 'pdf',
-                text: 'Exportar PDF',
+                text: '<%= t("eventListTable.pdfButton") %>',
                 exportOptions: {
                   columns: [1, 2, 3, 4, 5, 8]
                 }
               },
               {
                 extend: 'excel',
-                text: 'Exportar Excel',
+                text: '<%= t("eventListTable.excelButton") %>',
                 exportOptions: {
                   columns: [1, 2, 3, 4, 5, 8]
                 }
               },
               {
                 extend: 'print',
-                text: 'Imprimir',
+                text: '<%= t("eventListTable.printButton") %>',
                 exportOptions: {
                   columns: [1, 2, 3, 4, 5, 8]
                 }
               },
               {
-                text: 'Borrar selección',
+                text: '<%= t("eventListTable.delSelection") %>',
                 className: 'btn-danger buttons-html5',
                 action: function() {
                   var selectedEvents = [];
@@ -222,22 +199,22 @@
                   } else {
                     $(document).Toasts('create', {
                       class: 'bg-danger',
-                      title: 'Ha ocurrido un error',
+                      title: '<%= t("eventListTable.error.title") %>',
                       autohide: true,
                       delay: 5000,
-                      body: 'No has seleccionado ningún evento para eliminar'
+                      body: '<%= t("eventListTable.error.noSelected") %>'
                     })
                   }
 
                   function openRemoveEventForm() {
                     $('#eventModal').modal('show');
-                    $('#eventModalLabel').text('Eliminar eventos');
+                    $('#eventModalLabel').text('<%= t("eventListTable.modal.title") %>');
                     $('#eventModalBody').html(
                       '<form id="removeEventForm">' +
-                      '  <p class="text-danger">¿Estás seguro de que quieres eliminar los eventos seleccionados?</p>' +
+                      '  <p class="text-danger"><%= t("eventListTable.modal.question") %></p>' +
                       '<br><div class="d-flex justify-content-between">' +
-                      '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
-                      '<button type="submit" class="btn btn-danger">Eliminar evento</button>' +
+                      '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("eventListTable.modal.cancel") %></button>' +
+                      '<button type="submit" class="btn btn-danger"><%= t("eventListTable.modal.delete") %></button>' +
                       '</div>' +
                       '</form>'
                     );
@@ -257,15 +234,13 @@
                             eventID: eventId
                           },
                           success: function(data) {
-                            console.log('Evento eliminado con éxito:', data);
                             $('#eventModal').modal('hide');
                             setTimeout(function() {
                               location.reload(true);
                             }, 1000);
                           },
                           error: function(error) {
-                            console.error('Error al eliminar el evento:', error);
-                            alert('Error al eliminar el evento. Por favor, inténtalo de nuevo.');
+                            alert('<%= t("eventListTable.modal.error") %>');
                           }
                         });
                       });
@@ -292,22 +267,20 @@
           })
 
         },
-        error: function(error) {
-          console.error('Error al obtener la lista de eventos:', error);
-        }
+        error: function(error) {}
       });
 
       $('#listadoeventos').on('click', '.delete-event', function() {
         var eventId = $(this).data('id');
 
         $('#eventModal').modal('show');
-        $('#eventModalLabel').text('Eliminar evento');
+        $('#eventModalLabel').text('<%= t("eventListTable.modal2.title") %>');
         $('#eventModalBody').html(
           '<form id="removeEventForm">' +
-          '  <p class="text-danger">¿Estás seguro de que quieres eliminar el evento con ID ' + eventId + '?</p>' +
+          '  <p class="text-danger"><%= t("eventListTable.modal2.question") %> ' + eventId + '?</p>' +
           '<br><div class="d-flex justify-content-between">' +
-          '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
-          '<button type="submit" class="btn btn-danger">Eliminar evento</button>' +
+          '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("eventListTable.modal2.cancel") %></button>' +
+          '<button type="submit" class="btn btn-danger"><%= t("eventListTable.modal2.delete") %></button>' +
           '</div>' +
           '</form>'
         );
@@ -326,15 +299,13 @@
               eventID: eventId
             },
             success: function(data) {
-              console.log('Evento eliminado con éxito:', data);
               $('#eventModal').modal('hide');
               setTimeout(function() {
                 location.reload(true);
               }, 1000);
             },
             error: function(error) {
-              console.error('Error al eliminar el evento:', error);
-              alert('Error al eliminar el evento. Por favor, inténtalo de nuevo.');
+              alert('<%= t("eventListTable.modal2.error") %>');
             }
           });
         });

@@ -1,5 +1,27 @@
 [
   {
+    "version": "0.13.11",
+    "date": "02/08/2024 => 04/08/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Traducción completa de la dashboard en los 3 idiomas disponibles."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Posbilidad de utilizar password managers con el login."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Traducciones en las páginas de errores."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "La dash únicamente será usable desde PC por cuestiones técnicas."
+      }
+    ]
+  },
+  {
     "version": "0.13.10",
     "date": "01/05/2024 => 02/05/2024",
     "list": [

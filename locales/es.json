@@ -212,5 +212,54 @@
     "qrUrl": "URL del código QR",
     "thumbnail": "Miniatura"
   },
-  "errorLoading": "Ocurrió un error cargando los datos. Por favor, inténtalo de nuevo más tarde."
+  "errorLoading": "Ocurrió un error cargando los datos. Por favor, inténtalo de nuevo más tarde.",
+  "eventListTable": {
+    "emptyHeader": "",
+    "id": "ID",
+    "dateTime": "Fecha y hora",
+    "title": "Título",
+    "description": "Descripción",
+    "category": "Categoría",
+    "thumbnail": "Miniatura",
+    "qr": "QR",
+    "publishedBy": "Publicado por",
+    "action": "Acción"
+  },
+  "eventListTable": {
+    "emptyHeader": "",
+    "id": "ID",
+    "dateTime": "Fecha y hora",
+    "title": "Título",
+    "description": "Descripción",
+    "category": "Categoría",
+    "thumbnail": "Miniatura",
+    "qr": "QR",
+    "publishedBy": "Publicado por",
+    "action": "Acción",
+    "eventDetails": "Detalles del evento",
+    "deleteButton": "Eliminar",
+    "pdfButton": "Exportar PDF",
+    "excelButton": "Exportar Excel",
+    "printButton": "Imprimir",
+    "delSelection": "Eliminar selección",
+    "clickHere": "Haz clic aquí",
+    "error": {
+      "title": "Ha ocurrido un error",
+      "noSelected": "No has seleccionado ningún evento para eliminar."
+    },
+    "modal": {
+      "title": "Eliminar eventos",
+      "question": "¿Estás seguro de que quieres eliminar los eventos seleccionados?",
+      "cancel": "Cancelar",
+      "delete": "Eliminar eventos",
+      "error": "Ocurrió un error. Por favor, inténtalo de nuevo más tarde."
+    },
+    "modal2": {
+      "title": "Eliminar evento",
+      "question": "¿Estás seguro de que quieres eliminar el evento con ID ",
+      "cancel": "Cancelar",
+      "delete": "Eliminar evento",
+      "error": "Ocurrió un error. Por favor, inténtalo de nuevo más tarde."
+    }
+  }
 }

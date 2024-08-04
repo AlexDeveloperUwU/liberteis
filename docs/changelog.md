@@ -3,6 +3,19 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.13.11 - 02/08/2024 => 04/08/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Traducción completa de la dashboard en los 3 idiomas disponibles.
+
+- <span style="color: green;">Añadido:</span> Posbilidad de utilizar password managers con el login.
+
+- <span style="color: yellow;">Arreglado:</span> Traducciones en las páginas de errores.
+
+- <span style="color: yellow;">Arreglado:</span> La dash únicamente será usable desde PC por cuestiones técnicas.
+
+</details>
+
+<details>
   <summary><b>0.13.10 - 01/05/2024 => 02/05/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Posibilidad de utilizar la tecla enter en los formularios relacionados con la autenticación.

@@ -211,5 +211,54 @@
     "qrUrl": "QR code URL",
     "thumbnail": "Thumbnail"
   },
-  "errorLoading": "An error occurred loading the data. Please try again later."
+  "errorLoading": "An error occurred loading the data. Please try again later.",
+  "eventListTable": {
+    "emptyHeader": "",
+    "id": "ID",
+    "dateTime": "Date and Time",
+    "title": "Title",
+    "description": "Description",
+    "category": "Category",
+    "thumbnail": "Thumbnail",
+    "qr": "QR",
+    "publishedBy": "Published by",
+    "action": "Action"
+  },
+  "eventListTable": {
+    "emptyHeader": "",
+    "id": "ID",
+    "dateTime": "Date and Time",
+    "title": "Title",
+    "description": "Description",
+    "category": "Category",
+    "thumbnail": "Thumbnail",
+    "qr": "QR",
+    "publishedBy": "Published By",
+    "action": "Action",
+    "eventDetails": "Event Details",
+    "deleteButton": "Delete",
+    "pdfButton": "Export PDF",
+    "excelButton": "Export Excel",
+    "printButton": "Print",
+    "delSelection": "Delete Selection",
+    "clickHere": "Click here",
+    "error": {
+      "title": "An error occurred",
+      "noSelected": "You have not selected any event to delete."
+    },
+    "modal": {
+      "title": "Delete Events",
+      "question": "Are you sure you want to delete the selected events?",
+      "cancel": "Cancel",
+      "delete": "Delete Events",
+      "error": "An error occurred. Please try again later."
+    },
+    "modal2": {
+      "title": "Delete Event",
+      "question": "Are you sure you want to delete the event with ID ",
+      "cancel": "Cancel",
+      "delete": "Delete Event",
+      "error": "An error occurred. Please try again later."
+    }
+  }
 }
