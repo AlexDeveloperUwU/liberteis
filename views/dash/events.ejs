@@ -437,7 +437,7 @@
                 '<br><br><strong><%= t("eventForm.qrUrl") %>:</strong><br><div id="qrcode"></div>' +
                 '<br><br><strong><%= t("eventForm.addedBy") %>:</strong><br>' + info.event.extendedProps.published_by +
                 '<br><br><div class="d-flex justify-content-between">' +
-                '<button type="button" class="btn btn-primary" id="editEventButton"><%= t("eventForm.edit") %>o</button>' +
+                '<button type="button" class="btn btn-primary" id="editEventButton"><%= t("eventForm.edit") %></button>' +
                 '<button type="button" class="btn btn-warning" id="cloneEventButton"><%= t("eventForm.clone") %></button>' +
                 '<button type="button" class="btn btn-danger" id="removeEventButton"><%= t("eventForm.remove") %></button>' +
                 '</div>';
@@ -470,23 +470,23 @@
             },
             dateClick: function(info) {
               var formattedDate = moment(info.date).format('YYYY-MM-DDTHH:mm');
-              $('#eventModalLabel').text('Crear nuevo evento');
+              $('#eventModalLabel').text('<%= t("newEventForm.title") %>');
               $('#eventModalBody').html(
                 '<form id="createEventForm">' +
                 '  <div class="form-group">' +
-                '    <label for="eventTitle">Título del evento:</label>' +
+                '    <label for="eventTitle"><%= t("newEventForm.eventTitle") %>:</label>' +
                 '    <input type="text" class="form-control" id="eventTitle" required maxlength=60>' +
                 '  </div>' +
                 '  <div class="form-group">' +
-                '    <label for="eventDescription">Descripción del evento (min. 100 char.):</label>' +
+                '    <label for="eventDescription"><%= t("newEventForm.eventDescription") %>:</label>' +
                 '    <textarea class="form-control" id="eventDescription" rows="3" minlength=100 maxlength=400 required></textarea>' +
                 '  </div>' +
                 '  <div class="form-group">' +
-                '    <label for="eventDate">Fecha del evento:</label>' +
+                '    <label for="eventDate"><%= t("newEventForm.eventDate") %>:</label>' +
                 '    <input type="datetime-local" class="form-control" id="eventDate" value="' + formattedDate + '" required>' +
                 '  </div>' +
                 '  <div class="form-group">' +
-                '    <label for="eventCategory">Categoría:</label>' +
+                '    <label for="eventCategory"><%= t("newEventForm.eventCategory") %>:</label>' +
                 '    <select class="form-control" id="eventCategory" required>' +
                 '       <option value="General">General</option>' +
                 '       <option value="Espacio Maker">Espacio Maker</option>' +
@@ -496,10 +496,10 @@
 
                 '<form id="uploadThumbnailForm" enctype="multipart/form-data">' +
                 '  <div class="form-group">' +
-                '     <label for="eventThumb">Miniatura del evento:</label>' +
+                '     <label for="eventThumb"><%= t("newEventForm.thumbnail") %>:</label>' +
                 '     <input type="file" class="form-control-file" id="eventThumb" name="thumbnailfile" accept="image/*">' +
                 '  </div>' +
-                '  <button type="submit" id="saveEventButton" class="btn btn-primary" disabled>Guardar evento</button>' +
+                '  <button type="submit" id="saveEventButton" class="btn btn-primary" disabled><%= t("newEventForm.button") %></button>' +
                 '</form>'
               );
 
@@ -553,14 +553,12 @@
                         }, 1000);
                       },
                       error: function(error) {
-                        console.error('Error al añadir el evento:', error);
-                        alert('Error al añadir el evento. Por favor, inténtalo de nuevo.');
+                        alert('<%= t("newEventForm.error.message") %>');
                       }
                     });
                   },
                   error: function(error) {
-                    console.error('Error al subir la miniatura:', error);
-                    alert('Error al subir la miniatura. Por favor, inténtalo de nuevo.');
+                    alert('<%= t("newEventForm.error.thumbnail") %>');
                   }
                 });
               });
@@ -570,7 +568,7 @@
           calendar.render();
         },
         error: function() {
-          console.error('Error al obtener la lista de eventos');
+          console.error('<%= t("newEventForm.errorLoading") %>');
         }
       });
     });

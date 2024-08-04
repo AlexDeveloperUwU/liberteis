@@ -185,5 +185,27 @@
     "clone": "Clone event",
     "remove": "Remove event",
     "formTitle": "Event Info"
-  }
+  },
+  "newEventForm": {
+    "title": "Create a new event",
+    "button": "Create event",
+    "cancel": "Cancel",
+    "success": {
+      "title": "Event created",
+      "message": "The event has been created successfully."
+    },
+    "error": {
+      "title": "An error occurred",
+      "message": "The server returned an error. Please try again later.",
+      "thumbnail": "The thumbnail could not be loaded. Please try again."
+    },
+    "eventTitle": "Event title",
+    "eventDescription": "Event description",
+    "eventDate": "Event date",
+    "eventCategory": "Event category",
+    "thumbnailURL": "Thumbnail URL",
+    "qrUrl": "QR code URL",
+    "thumbnail": "Thumbnail"
+  },
+  "errorLoading": "An error occurred loading the data. Please try again later."
 }

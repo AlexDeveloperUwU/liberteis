@@ -79,6 +79,137 @@
   "sidebar": {
     "home": "Inicio",
     "eventList": "Lista de eventos",
-    "userList": "Lista de usuarios"
-  }
+    "userList": "Lista de usuarios",
+    "mainView": "Vista general"
+
+  },
+
+  "update": {
+    "version": "Versión",
+    "title": "¡Nueva versión disponible!",
+    "message": "Hay una nueva versión de la aplicación disponible. Por favor, informa al administrador para que la actualice."
+  },
+  "eventCards": {
+    "card1": "Eventos totales",
+    "card2": "Eventos por hacer",
+    "card3": "Eventos realizados"
+  },
+  "detailsModal": {
+    "title": "Detalles del evento"
+  },
+  "removeEventForm": {
+    "title": "Eliminar evento",
+    "button": "Eliminar",
+    "cancel": "Cancelar",
+    "question": "¿Estás seguro de que quieres eliminar el evento?",
+    "success": {
+      "title": "Evento eliminado",
+      "message": "El evento ha sido eliminado con éxito."
+    },
+    "error": {
+      "title": "Ocurrió un error",
+      "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo más tarde."
+    }
+  },
+  "editEventForm": {
+    "title": "Editar evento",
+    "button": "Editar evento",
+    "cancel": "Cancelar",
+    "success": {
+      "title": "Evento editado",
+      "message": "El evento ha sido editado con éxito."
+    },
+    "error": {
+      "title": "Ocurrió un error",
+      "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo más tarde."
+    },
+    "eventTitle": "Título del evento",
+    "eventDescription": "Descripción del evento",
+    "eventDate": "Fecha del evento",
+    "eventCategory": "Categoría del evento",
+    "thumbnailURL": "URL de la miniatura",
+    "qrUrl": "URL del código QR",
+    "thumbnail": "Miniatura",
+    "warning": "No puedes editar la miniatura del evento, por lo que necesitas crear el evento de nuevo (clonarlo no funciona)."
+  },
+  "cloneEventForm": {
+    "title": "Clonar evento",
+    "button": "Clonar evento",
+    "cancel": "Cancelar",
+    "eventTitle": "Título del evento",
+    "eventDescription": "Descripción del evento",
+    "eventDate": "Fecha del evento",
+    "eventCategory": "Categoría del evento",
+    "thumbnailURL": "URL de la miniatura",
+    "qrUrl": "URL del código QR",
+    "thumbnail": "Miniatura",
+    "success": {
+      "title": "Evento clonado",
+      "message": "El evento ha sido clonado con éxito."
+    },
+    "error": {
+      "title": "Ocurrió un error",
+      "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo más tarde."
+    },
+    "warning": "No puedes editar la miniatura del evento, por lo que necesitas crear el evento de nuevo (clonarlo no funciona)."
+  },
+  "calendar": {
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "today": "Hoy",
+    "month": "Mes",
+    "week": "Semana",
+    "day": "Día",
+    "list": "Lista",
+    "view": "Vista",
+    "ofThe": " de la",
+    "of": " del",
+    "weekText": "Sem",
+    "weekTextLong": "Semana",
+    "allDayText": "Todo el día",
+    "more": "más",
+    "show": "Mostrar",
+    "moreEvents": "más eventos",
+    "noEventsText": "No hay eventos para mostrar",
+    "navLinkHint": "Ir a $0",
+    "closeHint": "Cerrar",
+    "timeHint": "Hora",
+    "eventHint": "Evento",
+    "locale": "es"
+  },
+  "eventForm": {
+    "title": "Título del evento",
+    "date": "Fecha del evento",
+    "description": "Descripción del evento",
+    "category": "Categoría del evento",
+    "thumbnail": "Miniatura",
+    "qrUrl": "Código QR",
+    "addedBy": "Añadido por",
+    "edit": "Editar evento",
+    "clone": "Clonar evento",
+    "remove": "Eliminar evento",
+    "formTitle": "Información del evento"
+  },
+  "newEventForm": {
+    "title": "Crear un nuevo evento",
+    "button": "Crear evento",
+    "cancel": "Cancelar",
+    "success": {
+      "title": "Evento creado",
+      "message": "El evento ha sido creado con éxito."
+    },
+    "error": {
+      "title": "Ocurrió un error",
+      "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo más tarde.",
+      "thumbnail": "La miniatura no pudo ser cargada. Por favor, inténtalo de nuevo."
+    },
+    "eventTitle": "Título del evento",
+    "eventDescription": "Descripción del evento",
+    "eventDate": "Fecha del evento",
+    "eventCategory": "Categoría del evento",
+    "thumbnailURL": "URL de la miniatura",
+    "qrUrl": "URL del código QR",
+    "thumbnail": "Miniatura"
+  },
+  "errorLoading": "Ocurrió un error cargando los datos. Por favor, inténtalo de nuevo más tarde."
 }
