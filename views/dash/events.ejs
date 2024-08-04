@@ -251,22 +251,20 @@
             published_by: publishedBy
           },
           success: function(data) {
-            console.log('Evento editado con éxito:', data);
             $('#eventModal').modal('hide');
             setTimeout(function() {
               location.reload(true);
             }, 1000);
           },
           error: function(error) {
-            console.error('Error al editar el evento:', error);
-            alert('Error al editar el evento. Por favor, inténtalo de nuevo.');
+            alert('t("editEventForm.error.message") %>');
           }
         });
       }
 
       function openCloneEventForm(event) {
         $('#eventModal').modal('show');
-        $('#eventModalLabel').text('Clonar evento');
+        $('#eventModalLabel').text('<%= t("cloneEventForm.title") %>');
 
         var currentCategory = event.extendedProps.type;
         var categoryOptions = '';
@@ -278,30 +276,30 @@
         $('#eventModalBody').html(
           '<form id="cloneEventForm">' +
           '  <div class="form-group">' +
-          '    <label for="cloneEventTitle">Título del evento:</label>' +
+          '    <label for="cloneEventTitle"><%= t("cloneEventForm.eventTitle") %>:</label>' +
           '    <input type="text" class="form-control" id="cloneEventTitle" value="' + event.title + '" required maxlength=60>' +
           '  </div>' +
           '  <div class="form-group">' +
-          '    <label for="cloneEventDescription">Descripción del evento (min. 100 char.):</label>' +
+          '    <label for="cloneEventDescription"><%= t("cloneEventForm.eventDescription") %>:</label>' +
           '     <textarea class="form-control" id="cloneEventDescription" rows="3" minlength=100 maxlength=400 required>' + event.extendedProps.description + '</textarea>' +
           '  </div>' +
           '  <div class="form-group">' +
-          '    <label for="cloneEventDate">Fecha del evento:</label>' +
+          '    <label for="cloneEventDate"><%= t("cloneEventForm.eventDate") %>:</label>' +
           '    <input type="datetime-local" class="form-control" id="cloneEventDate" value="' + moment(event.start).format('YYYY-MM-DDTHH:mm') + '" required>' +
           '  </div>' +
           '  <div class="form-group">' +
-          '    <label for="cloneEventCategory">Categoría:</label>' +
+          '    <label for="cloneEventCategory"><%= t("cloneEventForm.eventCategory") %>:</label>' +
           '    <select class="form-control" id="cloneEventCategory" required>' +
           '       ' + categoryOptions +
           '    </select>' +
           '  </div>' +
           '  <div class="form-group" style="display: none;">' +
-          '    <label for="cloneEventThumbUrl">URL de la miniatura:</label>' +
+          '    <label for="cloneEventThumbUrl"><%= t("cloneEventForm.thumbnailURL") %>:</label>' +
           '    <input type="text" class="form-control" id="cloneEventThumbUrl" value="' + event.extendedProps.thumb_url + '">' +
           '  </div>' +
-          '   <label for="cloneEventAlert">Miniatura:</label>' +
-          '   <p class="text-warning">No se puede editar la miniatura al clonar un evento, con lo que deberás crear un evento nuevo para poder subir la nueva miniatura</p>' +
-          '  <button type="submit" id="cloneEventButton" class="btn btn-warning">Clonar evento</button>' +
+          '   <label for="cloneEventAlert"><%= t("cloneEventForm.thumbnail") %>:</label>' +
+          '   <p class="text-warning"><%= t("cloneEventForm.warning") %></p>' +
+          '  <button type="submit" id="cloneEventButton" class="btn btn-warning"><%= t("eventForm.clone") %></button>' +
           '</form>'
         );
 
@@ -337,14 +335,12 @@
               published_by: publishedBy,
             },
             success: function(data) {
-              console.log('Evento añadido con éxito:', data);
               setTimeout(function() {
                 location.reload(true);
               }, 1000);
             },
             error: function(error) {
-              console.error('Error al añadir el evento:', error);
-              alert('Error al añadir el evento. Por favor, inténtalo de nuevo.');
+              alert('<%= t("cloneEventForm.error.message") %>');
             }
           });
         });
@@ -375,30 +371,30 @@
           var calendarEl = document.getElementById('calendar');
           var calendar = new FullCalendar.Calendar(calendarEl, {
             buttonText: {
-              prev: 'Anterior',
-              next: 'Siguiente',
-              today: 'Hoy',
-              month: 'Mes',
-              week: 'Semana',
-              day: 'Día',
-              list: 'Agenda',
+              prev: '<%= t("calendar.prev") %>',
+              next: '<%= t("calendar.next") %>',
+              today: '<%= t("calendar.today") %>',
+              month: '<%= t("calendar.month") %>',
+              week: '<%= t("calendar.week") %>',
+              day: '<%= t("calendar.day") %>',
+              list: '<%= t("calendar.list") %>',
             },
             viewHint(buttonText) {
-              return 'Vista ' + (buttonText === 'Semana' ? 'de la' : 'del') + ' ' + buttonText.toLocaleLowerCase()
+              return '<%= t("calendar.view") %>' + (buttonText === '<%= t("calendar.week") %> ' ? '<%= t("calendar.ofThe") %>' : '<%= t("calendar.of") %>') + ' ' + buttonText.toLocaleLowerCase()
             },
-            weekText: 'Sm',
-            weekTextLong: 'Semana',
-            allDayText: 'Todo el día',
-            moreLinkText: 'más',
+            weekText: '<%= t("calendar.weekText") %>',
+            weekTextLong: '<%= t("calendar.weekTextLong") %>',
+            allDayText: '<%= t("calendar.allDayText") %>',
+            moreLinkText: '<%= t("calendar.more") %>',
             moreLinkHint(eventCnt) {
-              return `Mostrar ${eventCnt} eventos más`
+              return `<%= t("calendar.show") %> ${eventCnt} <%= t("calendar.moreEvents") %>`
             },
-            noEventsText: 'No hay eventos para mostrar',
-            navLinkHint: 'Ir al $0',
-            closeHint: 'Cerrar',
-            timeHint: 'La hora',
-            eventHint: 'Evento',
-            locale: "es",
+            noEventsText: '<%= t("calendar.noEventsText") %>',
+            navLinkHint: '<%= t("calendar.navLinkHint") %>',
+            closeHint: '<%= t("calendar.closeHint") %>',
+            timeHint: '<%= t("calendar.timeHint") %>',
+            eventHint: '<%= t("calendar.eventHint") %>',
+            locale: '<%= t("calendar.locale") %>',
             firstDay: 1,
             headerToolbar: {
               left: 'prev,next,today',
@@ -420,27 +416,33 @@
             }),
             eventClick: function(info) {
               function obtenerDia(fecha) {
+                <% if (lang === 'es') { %>
                 const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+                <% } else if (lang === 'gl') { %>
+                const diasSemana = ["Domingo", "Luns", "Martes", "Mércores", "Xoves", "Venres", "Sábado"];
+                <% } else if (lang === 'en') { %>
+                const diasSemana = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                <% } %>
                 const fechaObj = new Date(fecha);
                 const diaSemana = fechaObj.getDay();
                 return diasSemana[diaSemana];
               }
               var formattedDate = obtenerDia(info.event.start) + ', ' + moment(info.event.start).format('MM/DD/YYYY, HH:mm');
 
-              var eventDetails = '<strong>Título del evento:</strong><br>' + info.event.title +
-                '<br><br><strong>Fecha del evento:</strong><br>' + formattedDate +
-                '<br><br><strong>Descripción del evento:</strong><br>' + info.event.extendedProps.description +
-                '<br><br><strong>Categoría:</strong><br>' + info.event.extendedProps.type +
-                '<br><br><strong>Miniatura del evento:</strong><br><img src="' + info.event.extendedProps.thumb_url + '" alt="Miniatura del evento" style="max-width: 75%;">' +
-                '<br><br><strong>QR del evento:</strong><br><div id="qrcode"></div>' +
-                '<br><br><strong>Añadido por:</strong><br>' + info.event.extendedProps.published_by +
+              var eventDetails = '<strong><%= t("eventForm.title") %>:</strong><br>' + info.event.title +
+                '<br><br><strong><%= t("eventForm.date") %>:</strong><br>' + formattedDate +
+                '<br><br><strong><%= t("eventForm.description") %>:</strong><br>' + info.event.extendedProps.description +
+                '<br><br><strong><%= t("eventForm.category") %>:</strong><br>' + info.event.extendedProps.type +
+                '<br><br><strong><%= t("eventForm.thumbnail") %>:</strong><br><img src="' + info.event.extendedProps.thumb_url + '" alt="Miniatura del evento" style="max-width: 75%;">' +
+                '<br><br><strong><%= t("eventForm.qrUrl") %>:</strong><br><div id="qrcode"></div>' +
+                '<br><br><strong><%= t("eventForm.addedBy") %>:</strong><br>' + info.event.extendedProps.published_by +
                 '<br><br><div class="d-flex justify-content-between">' +
-                '<button type="button" class="btn btn-primary" id="editEventButton">Editar evento</button>' +
-                '<button type="button" class="btn btn-warning" id="cloneEventButton">Clonar evento</button>' +
-                '<button type="button" class="btn btn-danger" id="removeEventButton">Eliminar evento</button>' +
+                '<button type="button" class="btn btn-primary" id="editEventButton"><%= t("eventForm.edit") %>o</button>' +
+                '<button type="button" class="btn btn-warning" id="cloneEventButton"><%= t("eventForm.clone") %></button>' +
+                '<button type="button" class="btn btn-danger" id="removeEventButton"><%= t("eventForm.remove") %></button>' +
                 '</div>';
 
-              $('#eventModalLabel').text('Información del evento');
+              $('#eventModalLabel').text('<%= t("eventForm.formTitle") %>');
               $('#eventModalBody').html(eventDetails);
 
               var qrcode = new QRCode(document.getElementById("qrcode"), {

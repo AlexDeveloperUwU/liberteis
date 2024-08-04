@@ -54,7 +54,8 @@ app.use(i18n.init);
 // Middleware para adjuntar función de traducción a cada solicitud
 app.use((req, res, next) => {
   let selectedLanguage = req.query.lang || req.cookies.lang || "gl";
-  res.cookie("lang", selectedLanguage, { maxAge: 900000, httpOnly: true });
+  const tenYearsInMilliseconds = 10 * 365 * 24 * 60 * 60 * 1000;
+  res.cookie("lang", selectedLanguage, { maxAge: tenYearsInMilliseconds, httpOnly: true });
   req.setLocale(selectedLanguage);
   res.t = res.__;
   next();

@@ -80,14 +80,14 @@
     "userList": "User List",
     "mainView": "Main View"
   },
-  "update":  {
+  "update": {
     "version": "Version",
     "title": "New version available!",
     "message": "A new version of the app is available. Please tell the administrator to update it."
   },
   "eventCards": {
     "card1": "Total events",
-    "card2": "Evets to be made",
+    "card2": "Events to be made",
     "card3": "Events made"
   },
   "detailsModal": {
@@ -109,7 +109,7 @@
   },
   "editEventForm": {
     "title": "Edit event",
-    "button": "Edit",
+    "button": "Edit event",
     "cancel": "Cancel",
     "success": {
       "title": "Event edited",
@@ -127,5 +127,63 @@
     "qrUrl": "QR URL",
     "thumbnail": "Thumbnail",
     "warning": "You can't edit the event's thumbnail, so you need to create the event again (clonning it doesn't work)."
+  },
+  "cloneEventForm": {
+    "title": "Clone event",
+    "button": "Clone event",
+    "cancel": "Cancel",
+    "eventTitle": "Event title",
+    "eventDescription": "Event description",
+    "eventDate": "Event date",
+    "eventCategory": "Event category",
+    "thumbnailURL": "Thumbnail URL",
+    "qrUrl": "QR URL",
+    "thumbnail": "Thumbnail",
+    "success": {
+      "title": "Event cloned",
+      "message": "The event has been cloned successfully."
+    },
+    "error": {
+      "title": "An error occurred",
+      "message": "The server returned an error. Please try again later."
+    },
+    "warning": "You can't edit the event's thumbnail, so you need to create the event again (clonning it doesn't work)."
+  },
+  "calendar": {
+    "prev": "Previous",
+    "next": "Next",
+    "today": "Today",
+    "month": "Month",
+    "week": "Week",
+    "day": "Day",
+    "list": "List",
+    "view": "View",
+    "ofThe": " of the",
+    "of": " of the",
+    "weekText": "Wk",
+    "weekTextLong": "Week",
+    "allDayText": "All day long",
+    "more": "more",
+    "show": "Show",
+    "moreEvents": "more events",
+    "noEventsText": "No events to show",
+    "navLinkHint": "Go to $0",
+    "closeHint": "Close",
+    "timeHint": "Time",
+    "eventHint": "Event",
+    "locale": "en"
+  },
+  "eventForm": {
+    "title": "Event title",
+    "date": "Event date",
+    "description": "Event description",
+    "category": "Event category",
+    "thumbnail": "Thumbnail",
+    "qrUrl": "QR Code",
+    "addedBy": "Added by",
+    "edit": "Edit event",
+    "clone": "Clone event",
+    "remove": "Remove event",
+    "formTitle": "Event Info"
   }
 }
