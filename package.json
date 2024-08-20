@@ -1,6 +1,6 @@
 {
   "name": "liberteis",
-  "version": "0.13.11",
+  "version": "0.13.10",
   "main": "index.js",
   "scripts": {
     "start": "npx nodemon index.js",
