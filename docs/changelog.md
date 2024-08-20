@@ -9,6 +9,8 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 
 - <span style="color: green;">Añadido:</span> Posbilidad de utilizar password managers con el login.
 
+- <span style="color: green;">Añadido:</span> Sección de ajustes de usuario para cambiar idioma y cerrar sesión.
+
 - <span style="color: yellow;">Arreglado:</span> Traducciones en las páginas de errores.
 
 - <span style="color: yellow;">Arreglado:</span> La dash únicamente será usable desde PC por cuestiones técnicas.
