@@ -221,18 +221,6 @@
     "category": "Category",
     "thumbnail": "Thumbnail",
     "qr": "QR",
-    "publishedBy": "Published by",
-    "action": "Action"
-  },
-  "eventListTable": {
-    "emptyHeader": "",
-    "id": "ID",
-    "dateTime": "Date and Time",
-    "title": "Title",
-    "description": "Description",
-    "category": "Category",
-    "thumbnail": "Thumbnail",
-    "qr": "QR",
     "publishedBy": "Published By",
     "action": "Action",
     "eventDetails": "Event Details",
@@ -258,6 +246,49 @@
       "question": "Are you sure you want to delete the event with ID ",
       "cancel": "Cancel",
       "delete": "Delete Event",
+      "error": "An error occurred. Please try again later."
+    }
+  },
+  "userListTable": {
+    "name": "Name",
+    "email": "Email",
+    "type": "User Type",
+    "lastSession": "Last Session",
+    "createdBy": "Created By",
+    "createdAt": "Registration Date",
+    "actions": "Actions",
+    "userDetails": "User Details",
+    "admin": "Admin",
+    "user": "User",
+    "never": "Never",
+    "delete": "Delete",
+    "excelButton": "Export to Excel",
+    "printButton": "Print",
+    "createUser": "Create User",
+    "deleteSelection": "Delete Selection",
+    "noSelected": "You haven't selected any users to delete.",
+    "modal": {
+      "email": "Email",
+      "name": "Name",
+      "userType": "User Type",
+      "admin": "Admin",
+      "user": "User",
+      "cancel": "Cancel",
+      "createUser": "Create User",
+      "error": "An error occurred while creating the user. Please try again later."
+    },
+    "modal2": {
+      "title": "Delete Users",
+      "question": "Are you sure you want to delete the selected users?",
+      "cancel": "Cancel",
+      "delete": "Delete Users",
+      "error": "An error occurred. Please try again later."
+    },
+    "modal3": {
+      "title": "Delete User",
+      "question": "Are you sure you want to delete the user ",
+      "cancel": "Cancel",
+      "delete": "Delete User",
       "error": "An error occurred. Please try again later."
     }
   }

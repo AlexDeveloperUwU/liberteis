@@ -1,0 +1,62 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": [],
+      "label": "Start Development Server",
+      "detail": "npx nodemon index.js",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "type": "npm",
+      "script": "patch",
+      "problemMatcher": [],
+      "label": "Bump Version: Patch",
+      "detail": "git push && npm version patch && git push && git push --tags"
+    },
+    {
+      "type": "npm",
+      "script": "minor",
+      "problemMatcher": [],
+      "label": "Bump Version: Minor",
+      "detail": "git push && npm version minor && git push && git push --tags"
+    },
+    {
+      "type": "npm",
+      "script": "major",
+      "problemMatcher": [],
+      "label": "Bump Version: Major",
+      "detail": "git push && npm version major && git push && git push --tags"
+    },
+    {
+      "type": "npm",
+      "script": "docker:build",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "Docker: Build Image",
+      "detail": "docker build -t liberteis-app ."
+    },
+    {
+      "type": "npm",
+      "script": "docker:remove",
+      "problemMatcher": [],
+      "label": "Docker: Remove Container & Image",
+      "detail": "docker stop liberteis && docker rm liberteis && docker rmi liberteis-app"
+    },
+    {
+      "type": "npm",
+      "script": "docker:run",
+      "problemMatcher": [],
+      "label": "Docker: Run Container",
+      "detail": "docker run -d --name liberteis -e APP_PORT=${PORT:-3000} -p ${PORT:-3000}:${PORT:-3000} -v /liberteis/data:/app/data:rw -v /liberteis/uploads:/app/uploads:rw -v /liberteis/env:/app/env:rw liberteis-app"
+    }
+  ]
+}

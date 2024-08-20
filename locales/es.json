@@ -223,18 +223,6 @@
     "thumbnail": "Miniatura",
     "qr": "QR",
     "publishedBy": "Publicado por",
-    "action": "Acción"
-  },
-  "eventListTable": {
-    "emptyHeader": "",
-    "id": "ID",
-    "dateTime": "Fecha y hora",
-    "title": "Título",
-    "description": "Descripción",
-    "category": "Categoría",
-    "thumbnail": "Miniatura",
-    "qr": "QR",
-    "publishedBy": "Publicado por",
     "action": "Acción",
     "eventDetails": "Detalles del evento",
     "deleteButton": "Eliminar",
@@ -259,6 +247,49 @@
       "question": "¿Estás seguro de que quieres eliminar el evento con ID ",
       "cancel": "Cancelar",
       "delete": "Eliminar evento",
+      "error": "Ocurrió un error. Por favor, inténtalo de nuevo más tarde."
+    }
+  },
+  "userListTable": {
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "type": "Tipo de usuario",
+    "lastSession": "Última sesión",
+    "createdBy": "Creado por",
+    "createdAt": "Fecha de registro",
+    "actions": "Acciones",
+    "userDetails": "Detalles del usuario",
+    "admin": "Administrador",
+    "user": "Usuario",
+    "never": "Nunca",
+    "delete": "Eliminar",
+    "excelButton": "Exportar Excel",
+    "printButton": "Imprimir",
+    "createUser": "Crear usuario",
+    "deleteSelection": "Eliminar selección",
+    "noSelected": "No has seleccionado ningún usuario para eliminar.",
+    "modal": {
+      "email": "Correo electrónico",
+      "name": "Nombre",
+      "userType": "Tipo de usuario",
+      "admin": "Administrador",
+      "user": "Usuario",
+      "cancel": "Cancelar",
+      "createUser": "Crear usuario",
+      "error": "Ha ocurrido un error al crear el usuario. Por favor, inténtalo de nuevo más tarde."
+    },
+    "modal2": {
+      "title": "Eliminar usuarios",
+      "question": "¿Estás seguro de que quieres eliminar los usuarios seleccionados?",
+      "cancel": "Cancelar",
+      "delete": "Eliminar usuarios",
+      "error": "Ocurrió un error. Por favor, inténtalo de nuevo más tarde."
+    },
+    "modal3": {
+      "title": "Eliminar usuario",
+      "question": "¿Estás seguro de que quieres eliminar al usuario ",
+      "cancel": "Cancelar",
+      "delete": "Eliminar usuario",
       "error": "Ocurrió un error. Por favor, inténtalo de nuevo más tarde."
     }
   }

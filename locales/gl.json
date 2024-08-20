@@ -248,5 +248,48 @@
       "delete": "Eliminar evento",
       "error": "Ocurríu un erro. Por favor, inténtao de novo máis tarde."
     }
+  },
+  "userListTable": {
+    "name": "Nome",
+    "email": "Correo electrónico",
+    "type": "Tipo de usuario",
+    "lastSession": "Última sesión",
+    "createdBy": "Creato por",
+    "createdAt": "Data de rexistro",
+    "actions": "Accións",
+    "userDetails": "Detalles do usuario",
+    "admin": "Administrador",
+    "user": "Usuario",
+    "never": "Nunca",
+    "delete": "Eliminar",
+    "excelButton": "Exportar Excel",
+    "printButton": "Imprimir",
+    "createUser": "Crear usuario",
+    "deleteSelection": "Eliminar selección",
+    "noSelected": "Non seleccionaches ningún usuario para eliminar.",
+    "modal": {
+      "email": "Correo electrónico",
+      "name": "Nome",
+      "userType": "Tipo de usuario",
+      "admin": "Administrador",
+      "user": "Usuario",
+      "cancel": "Cancelar",
+      "createUser": "Crear usuario",
+      "error": "Ocorreu un erro ao crear o usuario. Por favor, inténtao de novo máis tarde."
+    },
+    "modal2": {
+      "title": "Eliminar usuarios",
+      "question": "Estás seguro de que queres eliminar os usuarios seleccionados?",
+      "cancel": "Cancelar",
+      "delete": "Eliminar usuarios",
+      "error": "Produciuse un erro. Por favor, inténtao de novo máis tarde."
+    },
+    "modal3": {
+      "title": "Eliminar usuario",
+      "question": "Estás seguro de que queres eliminar ao usuario ",
+      "cancel": "Cancelar",
+      "delete": "Eliminar usuario",
+      "error": "Produciuse un erro. Por favor, inténtao de novo máis tarde."
+    }
   }
 }

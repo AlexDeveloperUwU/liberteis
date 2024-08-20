@@ -18,21 +18,15 @@
     <div class="content-wrapper">
       <div class="content-header">
         <div class="container-fluid">
-          <% if (latestVersion === false && loggedInType === 'adminUser') { %>
-          <div class="alert alert-danger alert-dismissible" id="updateAvaliable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h5><i class="icon fas fa-tag"></i> Nueva versión disponible!</h5>
-            Una nueva versión del software está disponible. Por favor, contacta con el administrador para que lo actualice siguiendo las <a href="https://github.com/AlexDeveloperUwU/liberteis/wiki/Actualizaci%C3%B3n">instrucciones</a>
-          </div>
-          <% } %>
+          <%- include('../partials/latestVersion') %>
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Listado de usuarios</h1>
+              <h1 class="m-0"><%= t("sidebar.userList") %></h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                <li class="breadcrumb-item active">Listado de usuarios</li>
+                <li class="breadcrumb-item"><a href="#"><%= t("sidebar.home") %></a></li>
+                <li class="breadcrumb-item active"><%= t("sidebar.userList") %></li>
               </ol>
             </div>
           </div>
@@ -48,13 +42,13 @@
                     <thead>
                       <tr>
                         <th></th>
-                        <th>Nombre</th>
-                        <th>E-Mail</th>
-                        <th>Tipo de user</th>
-                        <th>Última sesión</th>
-                        <th>Creado por</th>
-                        <th>Fecha de registro</th>
-                        <th>Acciones</th>
+                        <th><%= t("userListTable.name") %></th>
+                        <th><%= t("userListTable.email") %></th>
+                        <th><%= t("userListTable.type") %></th>
+                        <th><%= t("userListTable.lastSession") %></th>
+                        <th><%= t("userListTable.createdBy") %></th>
+                        <th><%= t("userListTable.createdAt") %></th>
+                        <th><%= t("userListTable.actions") %></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -71,7 +65,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">Detalles del usuario</h5>
+                <h5 class="modal-title" id="userModalLabel"><%= t("userListTable.userDetails") %></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -82,29 +76,12 @@
           </div>
         </div>
       </section>
-      <section>
-        <div class="modal fade" id="changelogModal" tabindex="-1" role="dialog" aria-labelledby="changelogModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="changelogModalLabel">Changelog</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="log-wrapper"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   </div>
   <footer class="main-footer">
     <strong>IES De Teis - Alejandro Verde</strong>
     <div class="float-right d-none d-sm-inline-block">
-      <b>Versión <%= version %></b>
+      <b><%= t("update.version") %> <%= version %></b>
     </div>
   </footer>
   <aside class="control-sidebar control-sidebar-dark">
@@ -120,9 +97,9 @@
         success: function(data) {
           data.forEach(function(user) {
             if (user.type === 'adminUser') {
-              user.type = 'Administrador';
+              user.type = '<%= t("userListTable.admin") %>';
             } else if (user.type === 'normalUser') {
-              user.type = 'Usuario';
+              user.type = '<%= t("userListTable.user") %>';
             }
 
             var loggedInUserEmail = "<%= loggedInEmail %>";
@@ -131,7 +108,7 @@
             var formattedDate = createdDate.toLocaleString();
 
             if (user.lastLogin === null) {
-              lastLoginFormattedDate = 'Nunca';
+              lastLoginFormattedDate = '<%= t("userListTable.never") %>';
             } else {
               var createdDate2 = new Date(user.lastLogin);
               var lastLoginFormattedDate = createdDate2.toLocaleString();
@@ -147,7 +124,7 @@
           <td>${user.createdBy}</td>
           <td>${formattedDate}</td>
           <td>
-            <a href="#" class="delete-user" data-id="${user.email}" title="Eliminar" id="deletebutton"><i class="fas fa-trash"></i></a>          </td>
+            <a href="#" class="delete-user" data-id="${user.email}" title="<%= t("userListTable.delete") %>" id="deletebutton"><i class="fas fa-trash"></i></a>          </td>
         </tr>
       `);
 
@@ -168,47 +145,47 @@
             "autoWidth": false,
             "buttons": [{
                 extend: 'excel',
-                text: 'Exportar Excel',
+                text: '<%= t("userListTable.excelButton") %>',
                 exportOptions: {
                   columns: [1, 2, 3, 4, 5]
                 }
               },
               {
                 extend: 'print',
-                text: 'Imprimir',
+                text: '<%= t("userListTable.printButton") %>',
                 exportOptions: {
                   columns: [1, 2, 3, 4, 5]
                 }
               },
               {
-                text: 'Crear usuario',
+                text: '<%= t("userListTable.createUser") %>',
                 className: 'btn-primary buttons-html5',
                 action: function() {
                   openCreateUserForm();
 
                   function openCreateUserForm() {
                     $('#userModal').modal('show');
-                    $('#userModalLabel').text('Crear usuario');
+                    $('#userModalLabel').text('<%= t("userListTable.createUser") %>');
                     $('#userModalBody').html(
                       '<form id="createUserForm">' +
                       '  <div class="form-group">' +
-                      '    <label for="userEmail">E-Mail</label>' +
+                      '    <label for="userEmail"><%= t("userListTable.modal.email") %></label>' +
                       '    <input type="email" class="form-control" id="userEmail" placeholder="E-Mail" required>' +
                       '  </div>' +
                       '  <div class="form-group">' +
-                      '    <label for="userFullname">Nombre</label>' +
-                      '    <input type="text" class="form-control" id="userFullname" placeholder="Nombre" required>' +
+                      '    <label for="userFullname"><%= t("userListTable.modal.name") %></label>' +
+                      '    <input type="text" class="form-control" id="userFullname" placeholder="<%= t("userListTable.modal.name") %>" required>' +
                       '  </div>' +
                       '  <div class="form-group">' +
-                      '    <label for="userType">Tipo de usuario</label>' +
+                      '    <label for="userType"><%= t("userListTable.modal.userType") %></label>' +
                       '    <select class="form-control" id="userType" required>' +
-                      '      <option value="normalUser">Usuario</option>' +
-                      '      <option value="adminUser">Administrador</option>' +
+                      '      <option value="normalUser"><%= t("userListTable.modal.user") %></option>' +
+                      '      <option value="adminUser"><%= t("userListTable.modal.admin") %></option>' +
                       '    </select>' +
                       '  </div>' +
                       '<br><div class="d-flex justify-content-between">' +
-                      '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
-                      '<button type="submit" class="btn btn-success">Crear usuario</button>' +
+                      '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("userListTable.modal.cancel") %></button>' +
+                      '<button type="submit" class="btn btn-success"><%= t("userListTable.modal.createUser") %></button>' +
                       '</div>' +
                       '</form>'
                     );
@@ -236,15 +213,13 @@
                           createdBy: userCreatedBy
                         },
                         success: function(data) {
-                          console.log('Usuario creado con éxito:', data);
                           $('#userModal').modal('hide');
                           setTimeout(function() {
                             location.reload(true);
                           }, 1000);
                         },
                         error: function(error) {
-                          console.error('Error al crear el usuario:', error);
-                          alert('Error al crear el usuario. Por favor, inténtalo de nuevo.');
+                          alert('<%= t("userListTable.modal.error") %>');
                         }
                       });
                     });
@@ -254,7 +229,7 @@
                 }
               },
               {
-                text: 'Borrar selección',
+                text: '<%= t("userListTable.deleteSelection") %>',
                 className: 'btn-danger buttons-html5',
                 action: function() {
                   var selectedUsers = [];
@@ -271,19 +246,19 @@
                       title: 'Ha ocurrido un error',
                       autohide: true,
                       delay: 5000,
-                      body: 'No has seleccionado ningún usuario para eliminar'
+                      body: '<%= t("userListTable.noSelected") %>'
                     })
                   }
 
                   function openRemoveUserForm() {
                     $('#userModal').modal('show');
-                    $('#userModalLabel').text('Eliminar usuarios');
+                    $('#userModalLabel').text('<%= t("userListTable.modal2.title") %>');
                     $('#userModalBody').html(
                       '<form id="removeUserForm">' +
-                      '  <p class="text-danger">¿Estás seguro de que quieres eliminar los usuarios seleccionados?</p>' +
+                      '  <p class="text-danger"><%= t("userListTable.modal2.question") %></p>' +
                       '<br><div class="d-flex justify-content-between">' +
-                      '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
-                      '<button type="submit" class="btn btn-danger">Eliminar usuarios</button>' +
+                      '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("userListTable.modal2.cancel") %></button>' +
+                      '<button type="submit" class="btn btn-danger"><%= t("userListTable.modal2.delete") %></button>' +
                       '</div>' +
                       '</form>'
                     );
@@ -302,15 +277,13 @@
                             email: userEmail
                           },
                           success: function(data) {
-                            console.log('Usuario eliminado con éxito:', data);
                             $('#userModal').modal('hide');
                             setTimeout(function() {
                               location.reload(true);
                             }, 1000);
                           },
                           error: function(error) {
-                            console.error('Error al eliminar el usuario:', error);
-                            alert('Error al eliminar el usuario. Por favor, inténtalo de nuevo.');
+                            alert('<%= t("userListTable.modal2.error") %>');
                           }
                         });
                       });
@@ -342,13 +315,13 @@
 
             function openRemoveUserForm(userEmail) {
               $('#userModal').modal('show');
-              $('#userModalLabel').text('Eliminar usuario');
+              $('#userModalLabel').text('<%= t("userListTable.modal3.title") %>');
               $('#userModalBody').html(
                 '<form id="removeUserForm">' +
-                '  <p class="text-danger">¿Estás seguro de que quieres eliminar el usuario ' + userEmail + '?</p>' +
+                '  <p class="text-danger"><%= t("userListTable.modal3.question") %> ' + userEmail + '?</p>' +
                 '<br><div class="d-flex justify-content-between">' +
-                '<button type="button" class="btn btn-primary" id="closeModalButton">Cancelar</button>' +
-                '<button type="submit" class="btn btn-danger">Eliminar usuario</button>' +
+                '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("userListTable.modal3.cancel") %></button>' +
+                '<button type="submit" class="btn btn-danger"><%= t("userListTable.modal3.delete") %></button>' +
                 '</div>' +
                 '</form>'
               );
@@ -367,15 +340,13 @@
                     email: userEmail
                   },
                   success: function(data) {
-                    console.log('Usuario eliminado con éxito:', data);
                     $('#userModal').modal('hide');
                     setTimeout(function() {
                       location.reload(true);
                     }, 1000);
                   },
                   error: function(error) {
-                    console.error('Error al eliminar el usuario:', error);
-                    alert('Error al eliminar el usuario. Por favor, inténtalo de nuevo.');
+                    alert('<%= t("userListTable.modal3.error") %>');
                   }
                 });
               });
