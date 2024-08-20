@@ -82,7 +82,8 @@
     "home": "Home",
     "eventList": "Event List",
     "userList": "User List",
-    "mainView": "Main View"
+    "mainView": "Main View",
+    "settings": "Settings"
   },
   "update": {
     "version": "Version",
@@ -291,5 +292,21 @@
       "delete": "Delete User",
       "error": "An error occurred. Please try again later."
     }
+  },
+  "settings": {
+    "title": "User Settings",
+    "language": "Language Settings",
+    "selectLanguage": "Select Language",
+    "save": "Save",
+    "name": "Name",
+    "email": "Email",
+    "admin": "Admin",
+    "user": "User",
+    "userType": "User Type",
+    "lastSession": "Last Session",
+    "createdBy": "Created By",
+    "createdAt": "Registration Date",
+    "userInfo": "User Information",
+    "logout": "Logout"
   }
 }

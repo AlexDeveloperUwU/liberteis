@@ -8,8 +8,8 @@
       <div class="image">
         <img src="/assets/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
       </div>
-      <div class="info">
-        <a href="/auth/logout" class="d-block"><%= loggedInUsername %></a>
+      <div class="info d-flex align-items-center">
+        <a href="#" class="d-block mr-2"><%= loggedInUsername %></a>
       </div>
     </div>
     <nav class="mt-2">
@@ -22,18 +22,30 @@
         </li>
         <li class="nav-item">
           <a href="/dash/eventlist" class="nav-link <% if (page === 'eventList') { %> active <% } %>">
-            <i class="nav-icon fas fa-home"></i>
+            <i class="nav-icon fas fa-calendar"></i>
             <p><%= t("sidebar.eventList") %></p>
           </a>
         </li>
         <% if (loggedInType === 'adminUser') { %>
         <li class="nav-item">
           <a href="/dash/userlist" class="nav-link <% if (page === 'userList') { %> active <% } %>">
-            <i class="nav-icon fas fa-home"></i>
+            <i class="nav-icon fas fa-users"></i>
             <p><%= t("sidebar.userList") %></p>
           </a>
         </li>
         <% } %>
+        <li class="nav-item">
+          <a href="/dash/settings" class="nav-link <% if (page === 'userSettings') { %> active <% } %>">
+            <i class="nav-icon fas fa-wrench"></i>
+            <p><%= t("settings.title") %></p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/auth/logout" class="nav-link bg-danger">
+            <i class="nav-icon fas fa-door-open"></i>
+            <p><%= t("settings.logout") %></p>
+          </a>
+        </li>
       </ul>
     </nav>
   </div>

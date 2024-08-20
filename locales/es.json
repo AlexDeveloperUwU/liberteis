@@ -292,5 +292,21 @@
       "delete": "Eliminar usuario",
       "error": "Ocurrió un error. Por favor, inténtalo de nuevo más tarde."
     }
+  },
+  "settings": {
+    "title": "Configuración de Usuario",
+    "language": "Configuración de Idioma",
+    "selectLanguage": "Seleccionar Idioma",
+    "save": "Guardar",
+    "name": "Nombre",
+    "email": "Correo Electrónico",
+    "admin": "Administrador",
+    "user": "Usuario",
+    "userType": "Tipo de Usuario",
+    "lastSession": "Última Sesión",
+    "createdBy": "Creado Por",
+    "createdAt": "Fecha de Registro",
+    "userInfo": "Información del Usuario",
+    "logout": "Cerrar Sesión"
   }
 }

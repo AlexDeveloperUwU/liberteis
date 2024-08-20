@@ -46,6 +46,7 @@
             $("#loginButton").click();
           }
         });
+
         $("#loginButton").click(function() {
           var email = $('#email').val();
           var password = $('#password').val();
@@ -65,9 +66,11 @@
                 autohide: true,
                 delay: 5000,
                 body: '<%= t("login.success.message") %>'
-              })
+              });
+
+              var lang = response.lang || 'gl'; 
               setTimeout(function() {
-                location.href = "/dash";
+                location.href = `/dash?lang=${lang}`;
               }, 1000);
             },
             error: function(error) {
@@ -81,8 +84,7 @@
                   autohide: true,
                   delay: 5000,
                   body: '<%= t("login.error.message") %>'
-                })
-
+                });
               }
             }
           });

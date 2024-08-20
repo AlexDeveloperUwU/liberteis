@@ -15,7 +15,7 @@ function generatePassword() {
 }
 
 //* Funciones para gestionar la base de datos de usuarios
-async function saveUser(fullname, email, password, type = "normalUser", createdBy = "SYSTEM") {
+async function saveUser(fullname, email, password, type = "normalUser", createdBy = "SYSTEM", lang = "gl") {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const currentDate = new Date();
@@ -34,6 +34,7 @@ async function saveUser(fullname, email, password, type = "normalUser", createdB
       createdBy,
       createdDate: formattedDate,
       lastLogin: null,
+      lang
     });
     return true;
   } catch (error) {
@@ -57,7 +58,7 @@ async function loginUser(email, password) {
     return false;
   } else {
     users.set(email, formattedDate, "lastLogin");
-    return [user.fullname, user.email, user.type];
+    return [user.fullname, user.email, user.type, user.lang];
   }
 }
 
@@ -84,6 +85,7 @@ function listUsers() {
       createdDate: data.createdDate,
       createdBy: data.createdBy,
       lastLogin: data.lastLogin,
+      lang: data.lang
     });
   });
 
@@ -146,6 +148,30 @@ function forcePasswordReset(email) {
   }
 }
 
+function getUserInfo(user) {
+  try {
+    console.log(user);
+    const userData = users.get(user);
+    if (userData && userData.hasOwnProperty("hashedPassword")) {
+      delete userData.hashedPassword;
+    }
+    return userData;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+function changeUserLang(user, lang) {
+  const userData = users.get(user);
+  if (userData) {
+    users.set(user, lang, "lang");
+    return true;
+  } else {
+    return false;
+  }
+}
+
 module.exports = {
   saveUser,
   getUserCount,
@@ -156,4 +182,6 @@ module.exports = {
   changePassword,
   resetPassword,
   forcePasswordReset,
+  getUserInfo,
+  changeUserLang
 };

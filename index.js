@@ -28,12 +28,20 @@ i18n.configure({
 const app = express();
 const port = process.env.APP_PORT || 3000;
 const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRoutes");
+
 app.use(logRequests);
+
+// Configuración de las vistas
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use("/thumbs", express.static(__dirname + "/uploads"));
 app.use("/assets", express.static(__dirname + "/public"));
+
+// Middleware para manejar datos en el body de las solicitudes
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // Agrega esta línea para manejar solicitudes JSON
+
+// Configuración de la sesión
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -45,13 +53,12 @@ app.use(
     },
   })
 );
-app.use(checkAuth); // Por algún motivo que desconozco esto debe estar aquí (?
 
-// Middleware para inicializar i18n
+// Inicialización de cookieParser e i18n
 app.use(cookieParser());
 app.use(i18n.init);
 
-// Middleware para adjuntar función de traducción a cada solicitud
+// Middleware para establecer el idioma según la cookie o el parámetro de consulta
 app.use((req, res, next) => {
   let selectedLanguage = req.query.lang || req.cookies.lang || "gl";
   const tenYearsInMilliseconds = 10 * 365 * 24 * 60 * 60 * 1000;
@@ -61,11 +68,15 @@ app.use((req, res, next) => {
   next();
 });
 
+// Middleware de autenticación
+app.use(checkAuth);
+
 // Mantener un registro de las solicitudes del servidor
 app.get("/health", (req, res) => {
   res.sendStatus(200); // Healthcheck: OK
 });
 
+// Rutas
 const apiRoutes = require("./routes/apiRoutes");
 app.use("/api", apiRoutes);
 
