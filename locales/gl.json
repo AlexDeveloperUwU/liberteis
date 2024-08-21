@@ -307,5 +307,11 @@
     "createdAt": "Data de Rexistro",
     "userInfo": "Información do Usuario",
     "logout": "Pechar Sesión"
+  },
+  "logout": {
+    "title": "Estás a piques de pechar sesión",
+    "message": "Se volves facer clic no botón de pechar sesión en menos de 5 segundos, pecharase a túa sesión.",
+    "title2": "Pechando sesión",
+    "message2": "A túa sesión está a pecharse, por favor agarda."
   }
 }

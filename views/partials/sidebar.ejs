@@ -41,11 +41,60 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="/auth/logout" class="nav-link bg-danger">
+          <a href="/auth/logout" class="nav-link" id="logout-item">
             <i class="nav-icon fas fa-door-open"></i>
             <p><%= t("settings.logout") %></p>
           </a>
         </li>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            const logoutItem = document.getElementById("logout-item");
+            let clickCount = 0;
+            let clickTimeout;
+
+            logoutItem.addEventListener("mouseover", function() {
+              this.classList.add("bg-danger");
+            });
+
+            logoutItem.addEventListener("mouseout", function() {
+              this.classList.remove("bg-danger");
+            });
+
+            logoutItem.addEventListener("click", function(event) {
+              event.preventDefault();
+              clickCount++;
+
+              if (clickCount === 1) {
+                $(document).Toasts('create', {
+                  class: 'bg-danger',
+                  title: '<%= t("logout.title") %>',
+                  autohide: true,
+                  delay: 5000,
+                  body: '<%= t("logout.message") %>'
+                });
+
+                clickTimeout = setTimeout(function() {
+                  clickCount = 0;
+                }, 5000);
+              } else if (clickCount === 2) {
+                clearTimeout(clickTimeout);
+
+                $(document).Toasts('create', {
+                  class: 'bg-danger',
+                  title: '<%= t("logout.title2") %>',
+                  autohide: true,
+                  delay: 900,
+                  body: '<%= t("logout.message2") %>'
+                });
+
+                setTimeout(function() {
+                  window.location.href = '/auth/logout';
+                }, 1000);
+              }
+            });
+          });
+        </script>
       </ul>
     </nav>
   </div>

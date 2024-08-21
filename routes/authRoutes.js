@@ -73,13 +73,7 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const needsReset = db.forcePasswordReset(email);
 
-  // Obtener el valor de la cookie 'lang'
   const cookieLang = req.cookies.lang || "gl";
-
-  // Verificar si el valor de la cookie 'lang' es distinto a 'gl'
-  if (cookieLang !== "gl") {
-    await db.changeUserLang(email, cookieLang);
-  }
 
   const response = await db.loginUser(email, password);
   if (response === false) {
@@ -175,7 +169,6 @@ router.get("/userInfo", async (req, res) => {
 
 router.post("/updateLang", async (req, res) => {
   const { lang } = req.body;
-  console.log(req.body)
   if (req.session && req.session.userId) {
     try {
       const result = await db.changeUserLang(req.session.userEmail, lang);

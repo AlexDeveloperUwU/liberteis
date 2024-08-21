@@ -308,5 +308,11 @@
     "createdAt": "Fecha de Registro",
     "userInfo": "Información del Usuario",
     "logout": "Cerrar Sesión"
+  },
+  "logout": {
+    "title": "Estás a punto de cerrar sesión",
+    "message": "Si haces clic nuevamente en el botón de cerrar sesión en menos de 5 segundos, se cerrará tu sesión.",
+    "title2": "Cerrando sesión",
+    "message2": "Tu sesión se está cerrando, por favor espera."
   }
 }

@@ -308,5 +308,11 @@
     "createdAt": "Registration Date",
     "userInfo": "User Information",
     "logout": "Logout"
+  },
+  "logout": {
+    "title": "You are about to logout",
+    "message": "If you click again the logout button in under 5 seconds, you will be logged out.",
+    "title2": "Logging out",
+    "message2": "Your session is being closed, please wait."
   }
 }
