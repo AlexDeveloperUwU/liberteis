@@ -112,6 +112,7 @@ EOF
     done
 
     echo "La aplicación se ha instalado correctamente. Los volúmenes han sido montados en las ubicaciones especificadas en el host."
+    read -n 1 -s -r -p "Presiona cualquier tecla para continuar..."
 }
 
 update() {
@@ -155,6 +156,7 @@ update() {
     done
 
     echo "La aplicación se ha actualizado correctamente. Los volúmenes siguen montados en las mismas ubicaciones especificadas en el host."
+    read -n 1 -s -r -p "Presiona cualquier tecla para continuar..."
 }
 
 healthcheck() {
@@ -169,6 +171,7 @@ healthcheck() {
         echo "Error: La aplicación no está en ejecución."
         exit 1
     fi
+    read -n 1 -s -r -p "Presiona cualquier tecla para continuar..."
 }
 
 # Función principal del menú
