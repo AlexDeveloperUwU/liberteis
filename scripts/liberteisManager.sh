@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Función para mostrar el header del script
 print_header() {
     clear
@@ -11,14 +13,29 @@ print_header() {
     echo -e "\033[0m"
 }
 
+# Comprobamos si Docker está instalado y en funcionamiento
+check_docker() {
+    # Verifica si el binario de Docker está disponible
+    if ! command -v docker &>/dev/null; then
+        echo "Error: Docker no está instalado. Por favor, instala Docker y vuelve a intentarlo."
+        exit 1
+    fi
 
-# Comprobamos si Docker está instalado
-if ! command -v docker &>/dev/null; then
-    echo "Error: Docker no está instalado. Por favor, instala Docker y vuelve a intentarlo."
-    exit 1
-fi
+    # Verifica si el daemon de Docker está corriendo
+    if ! systemctl is-active --quiet docker; then
+        echo "Error: El daemon de Docker no está corriendo. Inicia el servicio Docker y vuelve a intentarlo."
+        exit 1
+    fi
+
+    # Ejecuta un comando simple para verificar que Docker funciona correctamente
+    if ! docker info >/dev/null 2>&1; then
+        echo "Error: Docker está instalado pero no puede comunicarse con el daemon. Verifica la instalación y configuración de Docker."
+        exit 1
+    fi
+}
 
 install() {
+    check_docker
     print_header
     read -p "Introduce el puerto donde quieres ejecutar la aplicación: " port
     read -p "Introduce la URL desde la que accederás a la aplicación (por ejemplo, http://localhost:$port): " app_url
@@ -101,6 +118,7 @@ EOF
 }
 
 update() {
+    check_docker
     print_header
 
     # Le pedimos la ruta base para poder leer la configuración
@@ -146,6 +164,7 @@ update() {
 }
 
 healthcheck() {
+    check_docker
     print_header
 
     # Comprobamos si el contenedor está en ejecución y si es saludable
