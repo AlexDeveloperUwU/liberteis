@@ -11,11 +11,6 @@ print_header() {
     echo -e "\033[0m"
 }
 
-# Buscamos el archivo liberteisDownloader.sh y lo borramos si existe
-DOWNLOADER_SCRIPT="./liberteisDownloader.sh"
-if [[ -f "$DOWNLOADER_SCRIPT" ]]; then
-    rm "$DOWNLOADER_SCRIPT"
-fi
 
 # Comprobamos si Docker está instalado
 if ! command -v docker &>/dev/null; then
