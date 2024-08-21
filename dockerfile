@@ -4,6 +4,9 @@ FROM node:18-alpine
 # Establece el directorio de trabajo en /app
 WORKDIR /app
 
+# Instala curl para realizar peticiones HTTP en el contenedor para el health check
+RUN apk add --no-cache curl
+
 # Copia el archivo package.json y package-lock.json (si existe)
 COPY package*.json ./
 
