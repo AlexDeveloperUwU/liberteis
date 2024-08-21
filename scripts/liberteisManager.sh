@@ -185,7 +185,10 @@ menu() {
 while true; do
     menu
     read -p "Selecciona una opción (1, 2, 3 o 4): " choice
-    choice=$(echo $choice | tr -d '[:space:]')  # Eliminar espacios en blanco
+    choice=$(echo $choice | tr -d '[:space:]') # Eliminar espacios en blanco
+
+    # Depuración: Mostrar la opción leída
+    echo "Opción leída: '$choice'"
 
     case $choice in
     1) install ;;
