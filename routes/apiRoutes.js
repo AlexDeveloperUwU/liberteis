@@ -4,7 +4,7 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 const enmap = require("enmap");
-const database = require("../functions/eventsDb"); 
+const database = require("../functions/eventsdb.js"); 
 const events = new enmap({ name: "events" });
 
 //* Almacenamiento de imágenes de los eventos, usamos Multer para poder gestionar las imágenes

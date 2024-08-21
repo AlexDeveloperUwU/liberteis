@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../functions/usersdb");
-const mail = require("../functions/mail");
+const db = require("../functions/usersdb.js");
+const mail = require("../functions/mail.js");
 
 // Middleware para requerir autenticación
 const requireAuth = (req, res, next) => {

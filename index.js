@@ -8,7 +8,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Rutas del server
-const { logRequests } = require("./functions/logRequests");
+const { logRequests } = require("./functions/logrequests.js");
 const envFilePath = path.join(__dirname, "env", ".env");
 require("dotenv").config({ path: envFilePath });
 
@@ -27,7 +27,7 @@ i18n.configure({
 // Config del webserver
 const app = express();
 const port = process.env.APP_PORT || 3000;
-const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRoutes");
+const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRoutes.js");
 
 app.use(logRequests);
 
@@ -77,13 +77,13 @@ app.get("/health", (req, res) => {
 });
 
 // Rutas
-const apiRoutes = require("./routes/apiRoutes");
+const apiRoutes = require("./routes/apiRoutes.js");
 app.use("/api", apiRoutes);
 
-const dashRoutes = require("./routes/dashRoutes");
+const dashRoutes = require("./routes/dashRoutes.js");
 app.use("/dash", requireAuth, dashRoutes);
 
-const webRoutes = require("./routes/webRoutes");
+const webRoutes = require("./routes/webRoutes.js");
 app.use("/", webRoutes);
 
 app.use("/auth", authRouter);

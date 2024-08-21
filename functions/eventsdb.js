@@ -1,4 +1,4 @@
-const idGen = require("./idGen");
+const idGen = require("./idgen.js");
 
 //* Funciones para gestionar los eventos
 function saveEvent(db, title, desc, event_date, type, thumb_url = null, published_by) {
