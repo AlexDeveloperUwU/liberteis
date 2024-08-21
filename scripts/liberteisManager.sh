@@ -11,6 +11,12 @@ print_header() {
     echo -e "\033[0m"
 }
 
+# Buscamos el archivo liberteisDownloader.sh y lo borramos si existe
+DOWNLOADER_SCRIPT="./liberteisDownloader.sh"
+if [[ -f "$DOWNLOADER_SCRIPT" ]]; then
+    rm "$DOWNLOADER_SCRIPT"
+fi
+
 # Comprobamos si Docker está instalado
 if ! command -v docker &>/dev/null; then
     echo "Error: Docker no está instalado. Por favor, instala Docker y vuelve a intentarlo."
@@ -146,7 +152,7 @@ update() {
 
 healthcheck() {
     print_header
-    
+
     # Comprobamos si el contenedor está en ejecución y si es saludable
     if docker inspect --format '{{.State.Running}}' liberteis &>/dev/null; then
         echo "La aplicación está en ejecución."
