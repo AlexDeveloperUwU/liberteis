@@ -3,9 +3,15 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
-  <summary><b>0.13.12 => 0.13.14 - 21/08/2024</b></summary>
+  <summary><b>0.13.12 => 0.13.15 - 21/08/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Botón para mostrar la contraseña en los formularios de auth.
 
 - <span style="color: yellow;">Arreglado:</span> Fixes de todo tipo.
+
+- <span style="color: yellow;">Arreglado:</span> Documentación actualizada para instalación y actualización.
+
+- <span style="color: red;">Eliminado:</span> Eliminado el script de mantenimiento de la db, ya que ya está fixeada la db y no es necesario en nuevas instalaciones.
 
 </details>
 

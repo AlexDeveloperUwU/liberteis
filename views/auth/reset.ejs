@@ -22,6 +22,17 @@
             </div>
           </div>
           <div class="input-group mb-3">
+            <input type="password" class="form-control" placeholder="<%= t("common.password") %>" name="password" id="password" required autocomplete="new-password">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+              <button type="button" class="btn btn-secondary" onclick="togglePasswordVisibility()">
+                <span class="fas fa-eye"></span>
+              </button>
+            </div>
+          </div>
+          <div class="input-group mb-3">
             <input type="number" class="form-control" placeholder="" name="captcha" id="captcha" required>
             <div class="input-group-append">
               <div class="input-group-text">
@@ -112,6 +123,15 @@
             })
           }
         });
+      }
+
+      function togglePasswordVisibility() {
+        var passwordField = document.getElementById("password");
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+        } else {
+          passwordField.type = "password";
+        }
       }
     </script>
 </body>

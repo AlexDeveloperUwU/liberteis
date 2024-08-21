@@ -1,11 +1,23 @@
 [
   {
-    "version": "0.13.12 => 0.13.14",
+    "version": "0.13.12 => 0.13.15",
     "date": "21/08/2024",
     "list": [
       {
+        "label": ["Añadido"],
+        "detail": "Botón para mostrar la contraseña en los formularios de auth."
+      },
+      {
         "label": ["Arreglado"],
         "detail": "Fixes de todo tipo."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Documentación actualizada para instalación y actualización."
+      },
+      {
+        "label": ["Eliminado"],
+        "detail": "Eliminado el script de mantenimiento de la db, ya que ya está fixeada la db y no es necesario en nuevas instalaciones."
       }
     ]
   },

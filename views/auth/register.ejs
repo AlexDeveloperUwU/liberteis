@@ -22,16 +22,19 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="<%= t("common.email") %>" name="email" id="email" required autocomplete="username">
+            <input type="password" class="form-control" placeholder="<%= t("register.password") %>" name="password" id="password" required autocomplete="new-password">
             <div class="input-group-append">
               <div class="input-group-text">
-                <span class="fas fa-envelope"></span>
+                <span class="fas fa-lock"></span>
               </div>
+              <button type="button" class="btn btn-secondary" onclick="togglePasswordVisibility()">
+                <span class="fas fa-eye"></span>
+              </button>
             </div>
           </div>
           <div class="row">
             <div class="col-5">
-              <button type="button" class="btn btn-primary btn-block" onclick="registerUser()"><%= t("register.button") %></button>
+              <button type="submit" class="btn btn-primary btn-block"><%= t("register.button") %></button>
             </div>
           </div>
         </form>
@@ -40,58 +43,13 @@
 
     <%- include('../partials/scripts') %>
     <script>
-      $("#fullname, #email").on("keypress", function(e) {
-        if (e.which === 13) {
-          registerUser();
+      function togglePasswordVisibility() {
+        var passwordField = document.getElementById("password");
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+        } else {
+          passwordField.type = "password";
         }
-      });
-
-      function validateForm() {
-        return true;
-      }
-
-      function registerUser() {
-        if (!validateForm()) {
-          return;
-        }
-
-        var fullname = $('#fullname').val();
-        var email = $('#email').val();
-        var password = $('#password').val();
-
-        $.ajax({
-          type: "POST",
-          url: "/auth/register",
-          data: {
-            fullname: fullname,
-            email: email,
-            password: "Cambiame123",
-            type: "adminUser"
-          },
-          success: function(response) {
-            console.log(response);
-            $(document).Toasts('create', {
-              class: 'bg-success',
-              title: '<%= t("register.success.title") %>',
-              autohide: true,
-              delay: 5000,
-              body: '<%= t("register.success.message") %>'
-            })
-            setTimeout(function() {
-              window.location.href = "/auth/login";
-            }, 1000);
-          },
-          error: function(error) {
-            console.error(error);
-            $(document).Toasts('create', {
-              class: 'bg-danger',
-              title: '<%= t("register.error.title") %>',
-              autohide: true,
-              delay: 5000,
-              body: '<%= t("register.error.message") %>'
-            })
-          }
-        });
       }
     </script>
 </body>
