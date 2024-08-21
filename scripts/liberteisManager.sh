@@ -104,9 +104,6 @@ EOF
     docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
     sleep 10
 
-    # Instalamos curl en el contenedor para realizar la verificación de salud, ya que por defecto no lo trae y Docker depende de ello
-    docker exec -it liberteis apk add --no-cache curl &>/dev/null
-
     print_header
     # Esperamos a que el contenedor se inicie y sea saludable
     echo "Instalación finalizada. Esperando a que el contenedor se inicie y sea saludable..."
@@ -150,9 +147,6 @@ update() {
     docker run -d -v $data_dir:/app/data -v $uploads_dir:/app/uploads -v $env_dir:/app/env -v $logs_dir:/app/logs -e APP_PORT=$port -p $port:$port --name liberteis --health-cmd="curl --silent --fail localhost:$port/health || exit 1" --health-interval=30s --health-retries=3 --health-start-period=10s ghcr.io/alexdeveloperuwu/liberteis:latest &>/dev/null
     sleep 10
 
-    # Instalamos curl en el contenedor para realizar la verificación de salud, ya que por defecto no lo trae y Docker depende de ello
-    docker exec -it liberteis apk add --no-cache curl &>/dev/null
-
     print_header
     # Esperamos a que el contenedor se reinicie y sea saludable
     echo "Instalación finalizada. Esperando a que el contenedor se reinicie y sea saludable..."
@@ -177,17 +171,29 @@ healthcheck() {
     fi
 }
 
-print_header
+# Función principal del menú
+menu() {
+    print_header
+    echo "¿Qué acción deseas realizar?"
+    echo "1. Instalar la aplicación"
+    echo "2. Actualizar la aplicación"
+    echo "3. Verificar que la aplicación esté funcionando correctamente"
+    echo "4. Salir"
+}
 
-echo "¿Qué acción deseas realizar?"
-echo "1. Instalar la aplicación"
-echo "2. Actualizar la aplicación"
-echo "3. Verificar que la aplicación esté funcionando correctamente"
-read -p "Selecciona una opción (1, 2 o 3): " choice
+# Bucle para mostrar el menú y procesar la opción seleccionada
+while true; do
+    menu
+    read -p "Selecciona una opción (1, 2, 3 o 4): " choice
 
-case $choice in
-1) install ;;
-2) update ;;
-3) healthcheck ;;
-*) echo "Opción no válida. Por favor, selecciona 1, 2 o 3." ;;
-esac
+    case $choice in
+    1) install ;;
+    2) update ;;
+    3) healthcheck ;;
+    4)
+        echo "Saliendo..."
+        exit 0
+        ;;
+    *) echo "Opción no válida. Por favor, selecciona 1, 2, 3 o 4." ;;
+    esac
+done
