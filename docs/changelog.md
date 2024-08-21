@@ -3,6 +3,17 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.13.12 => 0.13.13 - 21/08/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Botón de logout.
+
+- <span style="color: green;">Añadido:</span> Traducciones del logout.
+
+- <span style="color: green;">Añadido:</span> Script de mantenimiento de la db.
+
+</details>
+
+<details>
   <summary><b>0.13.12 - 21/08/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Botón de logout.
