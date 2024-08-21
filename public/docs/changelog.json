@@ -1,7 +1,25 @@
 [
   {
+    "version": "0.13.12",
+    "date": "21/08/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Botón de logout."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Traducciones del logout."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Script de mantenimiento de la db."
+      }
+    ]
+  },
+  {
     "version": "0.13.11",
-    "date": "02/08/2024 => 04/08/2024",
+    "date": "02/08/2024 => 20/08/2024",
     "list": [
       {
         "label": ["Añadido"],

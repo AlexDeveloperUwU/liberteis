@@ -3,7 +3,18 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
-  <summary><b>0.13.11 - 02/08/2024 => 04/08/2024</b></summary>
+  <summary><b>0.13.12 - 21/08/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Botón de logout.
+
+- <span style="color: green;">Añadido:</span> Traducciones del logout.
+
+- <span style="color: green;">Añadido:</span> Script de mantenimiento de la db.
+
+</details>
+
+<details>
+  <summary><b>0.13.11 - 02/08/2024 => 20/08/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Traducción completa de la dashboard en los 3 idiomas disponibles.
 
