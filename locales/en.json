@@ -310,7 +310,8 @@
     "createdBy": "Created By",
     "createdAt": "Registration Date",
     "userInfo": "User Information",
-    "logout": "Logout"
+    "logout": "Logout",
+    "changePass": "Change Password"
   },
   "logout": {
     "title": "You are about to logout",

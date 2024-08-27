@@ -2,8 +2,21 @@ const express = require("express");
 const router = express.Router();
 const db = require("../functions/usersdb.js");
 const mail = require("../functions/mail.js");
+const passgen = require("generate-password");
+const bcrypt = require("bcrypt");
 
-// Middleware para requerir autenticación
+async function generatePassword() {
+  const password = passgen.generate({
+    length: 24,
+    numbers: true,
+    symbols: false,
+    lowercase: true,
+    uppercase: true,
+  });
+  const hashedPassword = await bcrypt.hash(password, 10);
+  return { password, hashedPassword };
+}
+
 const requireAuth = (req, res, next) => {
   if (req.session && req.session.userId) {
     return next();
@@ -32,7 +45,6 @@ const estadoAuth = (autenticado) => {
 
 //* Rutas de registro
 
-// Solo debe ser accesible si no está autenticado
 router.get("/register", estadoAuth(false), (req, res) => {
   const usersNum = db.getUserCount();
   if (usersNum === 0) {
@@ -42,34 +54,56 @@ router.get("/register", estadoAuth(false), (req, res) => {
   }
 });
 
-// Esta debe ser accesible en ambos casos => No middleware
 router.post("/register", async (req, res) => {
   const { fullname, email, password, type, createdBy } = req.body;
 
-  // Comprobamos si el usuario ya existe en la base de datos antes de registrarlo para evitar duplicados
+  let plainPassword = password;
+  let hashedPassword;
+  if (!plainPassword) {
+    const generated = await generatePassword();
+    plainPassword = generated.password;
+    hashedPassword = generated.hashedPassword;
+  } else {
+    hashedPassword = await bcrypt.hash(plainPassword, 10);
+  }
+
   if (db.userExists(email)) {
     return res.status(400).json({ message: "El usuario ya existe en la base de datos" });
   } else {
     const lang = req.getLocale();
-    const result = await db.saveUser(fullname, email, password, type, createdBy, lang);
+    const result = await db.saveUser(fullname, email, hashedPassword, type, createdBy, lang);
 
     if (!result) {
       return res.status(500).json({ message: "Error al registrar el usuario" });
     } else {
       res.status(201).json({ message: "Usuario registrado exitosamente" });
-      await mail(email, "Rexistro exitoso", "mailTemplates/registeredUser.html");
+      await mail(
+        "Biblioteca IES de Teis <biblio@iesteis.gal>",
+        email,
+        "registration_success",
+        "registeredUser.html",
+        plainPassword,
+        lang
+      );
     }
   }
 });
 
-// Esta solo debe ser accesible si está autenticado
 router.post("/unregister", estadoAuth(true), async (req, res) => {
   const { email } = req.body;
   if (db.userExists(email)) {
     const result = db.unregisterUser(email);
     if (result) {
       res.status(200).json({ message: "Usuario eliminado exitosamente" });
-      await mail(email, "Conta eliminada", "mailTemplates/unregisteredUser.html");
+      const lang = req.cookies.lang || "gl";
+      await mail(
+        "Biblioteca IES de Teis <biblio@iesteis.gal>",
+        email,
+        "account_deleted",
+        "unregisteredUser.html",
+        null,
+        lang
+      );
     } else {
       res.status(500).json({ message: "Error al eliminar el usuario" });
     }
@@ -79,7 +113,7 @@ router.post("/unregister", estadoAuth(true), async (req, res) => {
 });
 
 //* Rutas de inicio de sesión
-// Solo debe ser accesible si no está autenticado
+
 router.get("/login", estadoAuth(false), (req, res) => {
   const usersNum = db.getUserCount();
   if (usersNum !== 0) {
@@ -89,11 +123,9 @@ router.get("/login", estadoAuth(false), (req, res) => {
   }
 });
 
-// Solo debe ser accesible si no está autenticado
 router.post("/login", estadoAuth(false), async (req, res) => {
   const { email, password } = req.body;
   const cookieLang = req.cookies.lang || "gl";
-
   const response = await db.loginUser(email, password);
   if (response === false) {
     return res.status(403).json({ message: "Credenciales incorrectas" });
@@ -117,7 +149,6 @@ router.post("/login", estadoAuth(false), async (req, res) => {
   }
 });
 
-// Solo debe ser accesible si está autenticado
 router.get("/logout", estadoAuth(true), (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -127,48 +158,56 @@ router.get("/logout", estadoAuth(true), (req, res) => {
   });
 });
 
-// Solo debe ser accesible si está autenticado
 router.post("/list", estadoAuth(true), (req, res) => {
   res.status(200).json(db.listUsers());
 });
 
 //* Rutas para cambiar la contraseña
-// Solo debe ser accesible si está autenticado
+
 router.get("/changepass", estadoAuth(true), (req, res) => {
   res.render("auth/change", { page: "changePass", t: res.t, lang: req.getLocale() });
 });
 
-// Solo debe ser accesible si está autenticado
 router.post("/changepass", estadoAuth(true), async (req, res) => {
   const { email, password } = req.body;
 
   const result = await db.changePassword(email, password);
   if (result) {
     res.status(200).json({ message: "Contraseña modificada exitosamente" });
-    await mail(email, "Contrasinal da conta modificada", "mailTemplates/passwordChanged.html");
+    const lang = req.cookies.lang || "gl";
+    await mail(
+      "Biblioteca IES de Teis <biblio@iesteis.gal>",
+      email,
+      "password_changed",
+      "passwordChanged.html",
+      null,
+      lang
+    );
   } else {
     res.status(500).json({ message: "Error al restablecer la contraseña" });
   }
 });
 
 //* Rutas para restablecer la contraseña olvidada
-// Solo debe ser accesible si no está autenticado
+
 router.get("/resetpass", estadoAuth(false), (req, res) => {
   res.render("auth/reset", { page: "resetPass", t: res.t, lang: req.getLocale() });
 });
 
-// Solo debe ser accesible si no está autenticado
 router.post("/resetpass", estadoAuth(false), async (req, res) => {
   const { email, password } = req.body;
 
   const result = await db.resetPassword(email, password);
   if (result !== false) {
     res.status(200).json({ message: "Contraseña restablecida exitosamente" });
+    const lang = req.cookies.lang || "gl";
     await mail(
+      "Biblioteca IES de Teis <biblio@iesteis.gal>",
       email,
-      "Tua nova contrasinal dun único uso",
-      "mailTemplates/forgottenPassword.html",
-      result
+      "forgotten_password",
+      "forgottenPassword.html",
+      result,
+      lang
     );
   } else {
     res.status(500).json({ message: "Error al restablecer la contraseña" });
@@ -176,7 +215,7 @@ router.post("/resetpass", estadoAuth(false), async (req, res) => {
 });
 
 //* Rutas para obtener información del usuario
-// Solo debe ser accesible si está autenticado
+
 router.get("/userInfo", estadoAuth(true), async (req, res) => {
   if (req.session && req.session.userId) {
     const user = db.getUserInfo(req.session.userEmail);
@@ -191,7 +230,7 @@ router.get("/userInfo", estadoAuth(true), async (req, res) => {
 });
 
 //* Rutas para actualizar la información del usuario
-// Solo debe ser accesible si está autenticado
+
 router.post("/updateLang", estadoAuth(true), async (req, res) => {
   const { lang } = req.body;
   if (req.session && req.session.userId) {
@@ -213,6 +252,7 @@ router.post("/updateLang", estadoAuth(true), async (req, res) => {
 });
 
 //* Middleware para verificar la autenticación
+
 const checkAuth = (req, res, next) => {
   if (req.session && req.session.userId) {
     res.locals.user = req.session.userId;

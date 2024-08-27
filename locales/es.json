@@ -310,7 +310,8 @@
     "createdBy": "Creado Por",
     "createdAt": "Fecha de Registro",
     "userInfo": "Información del Usuario",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "changePass": "Cambiar Contraseña"
   },
   "logout": {
     "title": "Estás a punto de cerrar sesión",

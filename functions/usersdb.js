@@ -20,11 +20,10 @@ async function saveUser(
   email,
   password,
   type = "normalUser",
-  createdBy = "SYSTEM",
+  createdBy = "System",
   lang = "gl"
 ) {
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
     const currentDate = new Date();
     const formattedDate =
       currentDate.toISOString().split("T")[0] +
@@ -36,7 +35,7 @@ async function saveUser(
     users.set(email, {
       email,
       fullname,
-      hashedPassword,
+      hashedPassword: password,
       type,
       createdBy,
       createdDate: formattedDate,
@@ -60,7 +59,6 @@ async function loginUser(email, password) {
     ("0" + currentDate.getHours()).slice(-2) +
     ":" +
     ("0" + currentDate.getMinutes()).slice(-2);
-
   if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
     return false;
   } else {

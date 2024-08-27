@@ -309,7 +309,8 @@
     "createdBy": "Creado Por",
     "createdAt": "Data de Rexistro",
     "userInfo": "Información do Usuario",
-    "logout": "Pechar Sesión"
+    "logout": "Pechar Sesión",
+    "changePass": "Cambiar Contrasinal"
   },
   "logout": {
     "title": "Estás a piques de pechar sesión",

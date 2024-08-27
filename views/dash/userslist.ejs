@@ -115,7 +115,8 @@
             // Añadir las filas a la tabla
             $('#listadousuarios tbody').append(`
               <tr>
-                <td><input type="checkbox" class="user-checkbox"></td>
+                <td>${user.createdBy === 'System' ? '' : '<input type="checkbox" class="user-checkbox">'}
+                </td>
                 <td>${user.fullname}</td>
                 <td>${user.email}</td>
                 <td>${user.type}</td>
@@ -301,7 +302,6 @@
                 data: {
                   fullname: userFullname,
                   email: userEmail,
-                  password: "Cambiame123",
                   type: userType,
                   createdBy: userCreatedBy
                 },
@@ -323,13 +323,13 @@
           // Función para abrir el formulario de eliminación de usuarios
           function openRemoveUserForm(selectedUsers) {
             $('#userModal').modal('show');
-            $('#userModalLabel').text('<%= t("userListTable.modal3.title") %>');
+            $('#userModalLabel').text('<%= t("userListTable.modal2.title") %>');
             $('#userModalBody').html(
               '<form id="removeUserForm">' +
-              '<p><%= t("userListTable.modal3.warning") %></p>' +
+              '<p><%= t("userListTable.modal2.question") %></p>' +
               '<br><div class="d-flex justify-content-between">' +
               '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("userListTable.modal.cancel") %></button>' +
-              '<button type="submit" class="btn btn-danger"><%= t("userListTable.modal3.delete") %></button>' +
+              '<button type="submit" class="btn btn-danger"><%= t("userListTable.modal2.delete") %></button>' +
               '</div>' +
               '</form>'
             );
@@ -343,22 +343,29 @@
             $('#removeUserForm').on('submit', function(event) {
               event.preventDefault();
 
-              $.ajax({
-                url: '/auth/delete',
-                type: 'POST',
-                data: {
-                  emails: selectedUsers
-                },
-                success: function(data) {
-                  $('#userModal').modal('hide');
-                  setTimeout(function() {
-                    location.reload(true);
-                  }, 1000);
-                },
-                error: function(error) {
-                  alert('<%= t("userListTable.modal3.error") %>');
-                }
+              // Enviar una solicitud de eliminación para cada usuario seleccionado
+              selectedUsers.forEach(function(email) {
+                $.ajax({
+                  url: '/auth/unregister',
+                  type: 'POST',
+                  data: {
+                    email: email
+                  },
+                  success: function(data) {
+                    // Aquí puedes manejar la respuesta de cada solicitud, si es necesario
+                    console.log('User deleted:', email);
+                  },
+                  error: function(error) {
+                    console.error('Error deleting user:', email);
+                  }
+                });
               });
+
+              // Cerrar el modal y recargar la página después de un pequeño retraso
+              $('#userModal').modal('hide');
+              setTimeout(function() {
+                location.reload(true);
+              }, 1000);
             });
 
             $('#userModal').modal('show');
