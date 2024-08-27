@@ -3,6 +3,13 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.13.17 - 27/08/2024</b></summary>
+
+- <span style="color: yellow;">Arreglado:</span> La web se podía abrir desde cualquier dispositivo, ahora solo se puede desde PC.
+
+</details>
+
+<details>
   <summary><b>0.13.16 - 27/08/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Sistemas de validación de los formularios.
