@@ -3,6 +3,17 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.13.16 - 27/08/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Sistemas de validación de los formularios.
+
+- <span style="color: green;">Añadido:</span> Sistema multilenguaje de los correos electrónicos que depende del user que los emita (registro o eliminación de cuenta de la persona administradora que los emite y cambio de contraseña además de reset de contraseña por parte del usuario).
+
+- <span style="color: yellow;">Arreglado:</span> Fixes de todo tipo.
+
+</details>
+
+<details>
   <summary><b>0.13.12 => 0.13.15 - 21/08/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Botón para mostrar la contraseña en los formularios de auth.

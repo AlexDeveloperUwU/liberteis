@@ -1,5 +1,23 @@
 [
   {
+    "version": "0.13.16",
+    "date": "27/08/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Sistemas de validación de los formularios."
+      },
+      {
+        "label": ["Añadido"],
+        "detail": "Sistema multilenguaje de los correos electrónicos que depende del user que los emita (registro o eliminación de cuenta de la persona administradora que los emite y cambio de contraseña además de reset de contraseña por parte del usuario)."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Fixes de todo tipo."
+      }
+    ]
+  },
+  {
     "version": "0.13.12 => 0.13.15",
     "date": "21/08/2024",
     "list": [
