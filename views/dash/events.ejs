@@ -206,14 +206,19 @@
           '</form>'
         );
 
-        $('#editEventDescription').on('blur', function() {
+        $('#editEventDescription').on('input', function() {
           var descriptionLength = $(this).val().length;
+          var $editEventButton = $('#editEventButton');
+
           if (descriptionLength < 100 || descriptionLength > 400) {
-            $('#editEventButton').prop('disabled', true);
+            $(this).addClass('is-invalid').removeClass('is-valid');
+            $editEventButton.prop('disabled', true);
           } else {
-            $('#editEventButton').prop('disabled', false);
+            $(this).addClass('is-valid').removeClass('is-invalid');
+            $editEventButton.prop('disabled', false);
           }
         });
+
 
         $('#editEventForm').data('eventId', event.id);
 
@@ -303,14 +308,19 @@
           '</form>'
         );
 
-        $('#cloneEventDescription').on('blur', function() {
+        $('#cloneEventDescription').on('input', function() {
           var descriptionLength = $(this).val().length;
+          var $cloneEventButton = $('#cloneEventButton');
+
           if (descriptionLength < 100 || descriptionLength > 400) {
-            $('#cloneEventButton').prop('disabled', true);
+            $(this).addClass('is-invalid').removeClass('is-valid');
+            $cloneEventButton.prop('disabled', true);
           } else {
-            $('#cloneEventButton').prop('disabled', false);
+            $(this).addClass('is-valid').removeClass('is-invalid');
+            $cloneEventButton.prop('disabled', false);
           }
         });
+
 
         $('#cloneEventForm').data('eventId', event.id);
 
@@ -503,15 +513,18 @@
                 '</form>'
               );
 
-              $('#eventDescription').on('blur', function() {
+              $('#eventDescription').on('input', function() {
                 var descriptionLength = $(this).val().length;
+                var $saveEventButton = $('#saveEventButton');
+
                 if (descriptionLength < 100 || descriptionLength > 400) {
-                  $('#saveEventButton').prop('disabled', true);
+                  $(this).addClass('is-invalid').removeClass('is-valid');
+                  $saveEventButton.prop('disabled', true);
                 } else {
-                  $('#saveEventButton').prop('disabled', false);
+                  $(this).addClass('is-valid').removeClass('is-invalid');
+                  $saveEventButton.prop('disabled', false);
                 }
               });
-
 
               $('#eventModal').modal('show');
 

@@ -45,7 +45,7 @@
           </div>
           <div class="row">
             <div class="col-7">
-              <button type="button" class="btn btn-primary btn-block" onclick="changePassUser()"><%= t("changePass.button") %></button>
+              <button type="submit" id="changePassButton" class="btn btn-primary btn-block" disabled><%= t("changePass.button") %></button>
             </div>
           </div>
         </form>
@@ -54,69 +54,96 @@
 
     <%- include('../partials/scripts') %>
     <script>
-      $("#email, #password, #confirmPassword").on("keypress", function(e) {
-        if (e.which === 13) {
-          changePassUser();
-        }
-      });
-
-      function validateForm() {
-        var password = document.getElementById("password").value;
-        var confirmPassword = document.getElementById("confirmPassword").value;
-        if (password !== confirmPassword) {
-          $(document).Toasts('create', {
-            class: 'bg-danger',
-            title: '<%= t("changePass.error.title") %>',
-            autohide: true,
-            delay: 5000,
-            body: '<%= t("changePass.error.passwordsDontMatch") %>'
-          })
-          return false;
-        }
-        return true;
-      }
-
-      function changePassUser() {
-        if (!validateForm()) {
-          return;
+      $(document).ready(function() {
+        function validateEmail(email) {
+          var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailPattern.test(email);
         }
 
-        var email = $('#email').val();
-        var password = $('#password').val();
+        function validateForm() {
+          var email = $('#email').val().trim();
+          var password = $('#password').val().trim();
+          var confirmPassword = $('#confirmPassword').val().trim();
+          var passwordsMatch = password === confirmPassword;
 
-        $.ajax({
-          type: "POST",
-          url: "/auth/changepass",
-          data: {
-            email: email,
-            password: password,
-          },
-          success: function(response) {
-            setTimeout(function() {
-              window.location.href = "/auth/login";
-            }, 1000);
-          },
-          error: function(error) {
-            console.error(error);
-            $(document).Toasts('create', {
-              class: 'bg-danger',
-              title: '<%= t("changePass.error.title") %>',
-              autohide: true,
-              delay: 5000,
-              body: '<%= t("changePass.error.message") %>'
-            })
+          // Update the visual feedback for each field
+          validateField($('#email'), validateEmail(email));
+          validateField($('#password'), password.length > 0);
+          validateField($('#confirmPassword'), passwordsMatch);
+
+          return email && validateEmail(email) && password && confirmPassword && passwordsMatch;
+        }
+
+        function validateField(field, isValid) {
+          if (isValid) {
+            field.removeClass('is-invalid').addClass('is-valid');
+          } else {
+            field.removeClass('is-valid').addClass('is-invalid');
+          }
+        }
+
+        function updateButtonState() {
+          if (validateForm()) {
+            $('#changePassButton').prop('disabled', false);
+          } else {
+            $('#changePassButton').prop('disabled', true);
+          }
+        }
+
+        $('#email, #password, #confirmPassword').on('input', function() {
+          updateButtonState();
+        });
+
+        $('#changePassForm').on('keypress', function(e) {
+          if (e.which === 13 && !$('#changePassButton').prop('disabled')) {
+            $('#changePassButton').click();
           }
         });
-      }
 
-      function togglePasswordVisibility(fieldId) {
-        var field = document.getElementById(fieldId);
-        if (field.type === "password") {
-          field.type = "text";
-        } else {
-          field.type = "password";
+        $('#changePassForm').on('submit', function(event) {
+          event.preventDefault(); // Prevent the default form submission
+
+          if (!validateForm()) {
+            return;
+          }
+
+          var email = $('#email').val();
+          var password = $('#password').val();
+
+          $.ajax({
+            type: "POST",
+            url: "/auth/changepass",
+            data: {
+              email: email,
+              password: password,
+            },
+            success: function(response) {
+              setTimeout(function() {
+                window.location.href = "/auth/login";
+              }, 1000);
+            },
+            error: function(error) {
+              console.error(error);
+              $(document).Toasts('create', {
+                class: 'bg-danger',
+                title: '<%= t("changePass.error.title") %>',
+                autohide: true,
+                delay: 5000,
+                body: '<%= t("changePass.error.message") %>'
+              });
+            }
+          });
+        });
+
+        window.togglePasswordVisibility = function(fieldId) {
+          var field = document.getElementById(fieldId);
+          if (field.type === "password") {
+            field.type = "text";
+          } else {
+            field.type = "password";
+          }
         }
-      }
+      });
     </script>
 </body>
 

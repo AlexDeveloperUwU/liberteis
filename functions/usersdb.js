@@ -15,7 +15,14 @@ function generatePassword() {
 }
 
 //* Funciones para gestionar la base de datos de usuarios
-async function saveUser(fullname, email, password, type = "normalUser", createdBy = "SYSTEM", lang = "gl") {
+async function saveUser(
+  fullname,
+  email,
+  password,
+  type = "normalUser",
+  createdBy = "SYSTEM",
+  lang = "gl"
+) {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const currentDate = new Date();
@@ -34,7 +41,7 @@ async function saveUser(fullname, email, password, type = "normalUser", createdB
       createdBy,
       createdDate: formattedDate,
       lastLogin: null,
-      lang
+      lang,
     });
     return true;
   } catch (error) {
@@ -85,7 +92,7 @@ function listUsers() {
       createdDate: data.createdDate,
       createdBy: data.createdBy,
       lastLogin: data.lastLogin,
-      lang: data.lang
+      lang: data.lang,
     });
   });
 
@@ -136,18 +143,6 @@ async function resetPassword(email) {
   }
 }
 
-function forcePasswordReset(email) {
-  const user = users.get(email);
-  if (user) {
-    const isnull = user.lastLogin;
-    if (isnull === null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
 function getUserInfo(user) {
   try {
     console.log(user);
@@ -181,7 +176,6 @@ module.exports = {
   unregisterUser,
   changePassword,
   resetPassword,
-  forcePasswordReset,
   getUserInfo,
-  changeUserLang
+  changeUserLang,
 };

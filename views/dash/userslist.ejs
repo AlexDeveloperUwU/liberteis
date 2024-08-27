@@ -96,54 +96,54 @@
         type: 'POST',
         success: function(data) {
           data.forEach(function(user) {
+            // Traducir el tipo de usuario
             if (user.type === 'adminUser') {
               user.type = '<%= t("userListTable.admin") %>';
             } else if (user.type === 'normalUser') {
               user.type = '<%= t("userListTable.user") %>';
             }
 
+            // Obtener el email del usuario logueado
             var loggedInUserEmail = "<%= loggedInEmail %>";
 
+            // Formatear las fechas
             var createdDate = new Date(user.createdDate);
             var formattedDate = createdDate.toLocaleString();
 
-            if (user.lastLogin === null) {
-              lastLoginFormattedDate = '<%= t("userListTable.never") %>';
-            } else {
-              var createdDate2 = new Date(user.lastLogin);
-              var lastLoginFormattedDate = createdDate2.toLocaleString();
-            }
+            var lastLoginFormattedDate = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : '<%= t("userListTable.never") %>';
 
+            // Añadir las filas a la tabla
             $('#listadousuarios tbody').append(`
-        <tr>
-          <td><input type="checkbox" class="user-checkbox"></td>
-          <td>${user.fullname}</td>
-          <td>${user.email}</td>
-          <td>${user.type}</td>
-          <td>${lastLoginFormattedDate}</td>
-          <td>${user.createdBy}</td>
-          <td>${formattedDate}</td>
-          <td>
-            <a href="#" class="delete-user" data-id="${user.email}" title="<%= t("userListTable.delete") %>" id="deletebutton"><i class="fas fa-trash"></i></a>          </td>
-        </tr>
-      `);
+              <tr>
+                <td><input type="checkbox" class="user-checkbox"></td>
+                <td>${user.fullname}</td>
+                <td>${user.email}</td>
+                <td>${user.type}</td>
+                <td>${lastLoginFormattedDate}</td>
+                <td>${user.createdBy}</td>
+                <td>${formattedDate}</td>
+                <td>
+                  <a href="#" class="delete-user" data-id="${user.email}" title="<%= t("userListTable.delete") %>" id="deletebutton"><i class="fas fa-trash"></i></a>
+                </td>
+              </tr>
+            `);
 
-            if (loggedInUserEmail === user.email) {
+            // Remover botón de eliminar para el usuario logueado y para usuarios creados por el sistema
+            if (loggedInUserEmail === user.email || user.createdBy === 'SYSTEM') {
               $('.delete-user').last().remove();
-            }
-
-            if (user.createdBy === 'SYSTEM') {
-              $('.delete-user').last().remove();
-              $('.user-checkbox').last().remove();
+              if (user.createdBy === 'SYSTEM') {
+                $('.user-checkbox').last().remove();
+              }
             }
           });
 
+          // Inicializar DataTable
           var table = $('#listadousuarios').DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "pageLength": 20,
-            "autoWidth": false,
-            "buttons": [{
+            responsive: true,
+            lengthChange: false,
+            pageLength: 20,
+            autoWidth: false,
+            buttons: [{
                 extend: 'excel',
                 text: '<%= t("userListTable.excelButton") %>',
                 exportOptions: {
@@ -160,73 +160,7 @@
               {
                 text: '<%= t("userListTable.createUser") %>',
                 className: 'btn-primary buttons-html5',
-                action: function() {
-                  openCreateUserForm();
-
-                  function openCreateUserForm() {
-                    $('#userModal').modal('show');
-                    $('#userModalLabel').text('<%= t("userListTable.createUser") %>');
-                    $('#userModalBody').html(
-                      '<form id="createUserForm">' +
-                      '  <div class="form-group">' +
-                      '    <label for="userEmail"><%= t("userListTable.modal.email") %></label>' +
-                      '    <input type="email" class="form-control" id="userEmail" placeholder="E-Mail" required>' +
-                      '  </div>' +
-                      '  <div class="form-group">' +
-                      '    <label for="userFullname"><%= t("userListTable.modal.name") %></label>' +
-                      '    <input type="text" class="form-control" id="userFullname" placeholder="<%= t("userListTable.modal.name") %>" required>' +
-                      '  </div>' +
-                      '  <div class="form-group">' +
-                      '    <label for="userType"><%= t("userListTable.modal.userType") %></label>' +
-                      '    <select class="form-control" id="userType" required>' +
-                      '      <option value="normalUser"><%= t("userListTable.modal.user") %></option>' +
-                      '      <option value="adminUser"><%= t("userListTable.modal.admin") %></option>' +
-                      '    </select>' +
-                      '  </div>' +
-                      '<br><div class="d-flex justify-content-between">' +
-                      '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("userListTable.modal.cancel") %></button>' +
-                      '<button type="submit" class="btn btn-success"><%= t("userListTable.modal.createUser") %></button>' +
-                      '</div>' +
-                      '</form>'
-                    );
-
-                    $('#closeModalButton').on('click', function() {
-                      $('#userModal').modal('hide');
-                    });
-
-                    $('#createUserForm').submit(function() {
-                      event.preventDefault();
-
-                      var userEmail = $('#userEmail').val();
-                      var userFullname = $('#userFullname').val();
-                      var userType = $('#userType').val();
-                      var userCreatedBy = "<%= loggedInUsername %>"
-
-                      $.ajax({
-                        url: '/auth/register',
-                        type: 'POST',
-                        data: {
-                          fullname: userFullname,
-                          email: userEmail,
-                          password: "Cambiame123",
-                          type: userType,
-                          createdBy: userCreatedBy
-                        },
-                        success: function(data) {
-                          $('#userModal').modal('hide');
-                          setTimeout(function() {
-                            location.reload(true);
-                          }, 1000);
-                        },
-                        error: function(error) {
-                          alert('<%= t("userListTable.modal.error") %>');
-                        }
-                      });
-                    });
-
-                    $('#userModal').modal('show');
-                  }
-                }
+                action: openCreateUserForm
               },
               {
                 text: '<%= t("userListTable.deleteSelection") %>',
@@ -239,7 +173,7 @@
                   });
 
                   if (selectedUsers.length > 0) {
-                    openRemoveUserForm();
+                    openRemoveUserForm(selectedUsers);
                   } else {
                     $(document).Toasts('create', {
                       class: 'bg-danger',
@@ -247,49 +181,7 @@
                       autohide: true,
                       delay: 5000,
                       body: '<%= t("userListTable.noSelected") %>'
-                    })
-                  }
-
-                  function openRemoveUserForm() {
-                    $('#userModal').modal('show');
-                    $('#userModalLabel').text('<%= t("userListTable.modal2.title") %>');
-                    $('#userModalBody').html(
-                      '<form id="removeUserForm">' +
-                      '  <p class="text-danger"><%= t("userListTable.modal2.question") %></p>' +
-                      '<br><div class="d-flex justify-content-between">' +
-                      '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("userListTable.modal2.cancel") %></button>' +
-                      '<button type="submit" class="btn btn-danger"><%= t("userListTable.modal2.delete") %></button>' +
-                      '</div>' +
-                      '</form>'
-                    );
-
-                    $('#closeModalButton').on('click', function() {
-                      $('#userModal').modal('hide');
                     });
-
-                    $('#removeUserForm').submit(function() {
-                      event.preventDefault();
-                      selectedUsers.forEach(function(userEmail) {
-                        $.ajax({
-                          url: '/auth/unregister',
-                          type: 'POST',
-                          data: {
-                            email: userEmail
-                          },
-                          success: function(data) {
-                            $('#userModal').modal('hide');
-                            setTimeout(function() {
-                              location.reload(true);
-                            }, 1000);
-                          },
-                          error: function(error) {
-                            alert('<%= t("userListTable.modal2.error") %>');
-                          }
-                        });
-                      });
-                    });
-
-                    $('#userModal').modal('show');
                   }
                 }
               }
@@ -297,7 +189,6 @@
             order: [
               [1, 'asc']
             ],
-
             language: {
               url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
             },
@@ -307,60 +198,176 @@
                 $('#listadousuarios_filter').next().remove();
               }, 10);
             }
-          })
+          });
 
+          // Eliminar usuario individual
           $('#listadousuarios tbody').on('click', '.delete-user', function() {
             var userEmail = $(this).data('id');
-            openRemoveUserForm(userEmail);
-
-            function openRemoveUserForm(userEmail) {
-              $('#userModal').modal('show');
-              $('#userModalLabel').text('<%= t("userListTable.modal3.title") %>');
-              $('#userModalBody').html(
-                '<form id="removeUserForm">' +
-                '  <p class="text-danger"><%= t("userListTable.modal3.question") %> ' + userEmail + '?</p>' +
-                '<br><div class="d-flex justify-content-between">' +
-                '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("userListTable.modal3.cancel") %></button>' +
-                '<button type="submit" class="btn btn-danger"><%= t("userListTable.modal3.delete") %></button>' +
-                '</div>' +
-                '</form>'
-              );
-
-              $('#closeModalButton').on('click', function() {
-                $('#userModal').modal('hide');
-              });
-
-              $('#removeUserForm').submit(function() {
-                event.preventDefault();
-
-                $.ajax({
-                  url: '/auth/unregister',
-                  type: 'POST',
-                  data: {
-                    email: userEmail
-                  },
-                  success: function(data) {
-                    $('#userModal').modal('hide');
-                    setTimeout(function() {
-                      location.reload(true);
-                    }, 1000);
-                  },
-                  error: function(error) {
-                    alert('<%= t("userListTable.modal3.error") %>');
-                  }
-                });
-              });
-
-              $('#userModal').modal('show');
-            }
+            openRemoveUserForm([userEmail]);
           });
-        },
-        error: function(error) {
-          console.error('Error al obtener la lista de usuarios:', error);
+
+          // Función para abrir el formulario de creación de usuarios
+          function openCreateUserForm() {
+            $('#userModal').modal('show');
+            $('#userModalLabel').text('<%= t("userListTable.createUser") %>');
+            $('#userModalBody').html(
+              '<form id="createUserForm">' +
+              '  <div class="form-group">' +
+              '    <label for="userEmail"><%= t("userListTable.modal.email") %></label>' +
+              '    <input type="email" class="form-control is-invalid" id="userEmail" placeholder="E-Mail" required>' +
+              '  </div>' +
+              '  <div class="form-group">' +
+              '    <label for="userFullname"><%= t("userListTable.modal.name") %></label>' +
+              '    <input type="text" class="form-control is-invalid" id="userFullname" placeholder="<%= t("userListTable.modal.name") %>" required>' +
+              '  </div>' +
+              '  <div class="form-group">' +
+              '    <label for="userType"><%= t("userListTable.modal.userType") %></label>' +
+              '    <select class="form-control is-valid" id="userType" required>' +
+              '      <option value="normalUser"><%= t("userListTable.modal.user") %></option>' +
+              '      <option value="adminUser"><%= t("userListTable.modal.admin") %></option>' +
+              '    </select>' +
+              '  </div>' +
+              '<br><div class="d-flex justify-content-between">' +
+              '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("userListTable.modal.cancel") %></button>' +
+              '<button type="submit" class="btn btn-success" id="createUserButton" disabled><%= t("userListTable.modal.createUser") %></button>' +
+              '</div>' +
+              '</form>'
+            );
+
+            // Validar formulario y habilitar el botón
+            function validateCreateUserForm() {
+              const email = $('#userEmail').val().trim();
+              const fullname = $('#userFullname').val().trim();
+              const userType = $('#userType').val();
+
+              const isValidEmail = email.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+              const isValidFullname = fullname.length > 0;
+              const isValidType = userType.length > 0;
+
+              // Añadir o remover clases de validación
+              if (isValidEmail) {
+                $('#userEmail').addClass('is-valid').removeClass('is-invalid');
+              } else {
+                $('#userEmail').addClass('is-invalid').removeClass('is-valid');
+              }
+
+              if (isValidFullname) {
+                $('#userFullname').addClass('is-valid').removeClass('is-invalid');
+              } else {
+                $('#userFullname').addClass('is-invalid').removeClass('is-valid');
+              }
+
+              if (isValidType) {
+                $('#userType').addClass('is-valid').removeClass('is-invalid');
+              } else {
+                $('#userType').addClass('is-invalid').removeClass('is-valid');
+              }
+
+              return isValidEmail && isValidFullname && isValidType;
+            }
+
+            function updateCreateUserButtonState() {
+              if (validateCreateUserForm()) {
+                $('#createUserButton').prop('disabled', false);
+              } else {
+                $('#createUserButton').prop('disabled', true);
+              }
+            }
+
+            // Monitorear cambios en los campos del formulario
+            $('#userEmail, #userFullname, #userType').on('input', updateCreateUserButtonState);
+
+            // Cerrar el modal
+            $('#closeModalButton').on('click', function() {
+              $('#userModal').modal('hide');
+            });
+
+            // Enviar el formulario
+            $('#createUserForm').on('submit', function(event) {
+              event.preventDefault();
+
+              if (!validateCreateUserForm()) {
+                return;
+              }
+
+              const userEmail = $('#userEmail').val().trim();
+              const userFullname = $('#userFullname').val().trim();
+              const userType = $('#userType').val();
+              const userCreatedBy = "<%= loggedInUsername %>";
+
+              $.ajax({
+                url: '/auth/register',
+                type: 'POST',
+                data: {
+                  fullname: userFullname,
+                  email: userEmail,
+                  password: "Cambiame123",
+                  type: userType,
+                  createdBy: userCreatedBy
+                },
+                success: function(data) {
+                  $('#userModal').modal('hide');
+                  setTimeout(function() {
+                    location.reload(true);
+                  }, 1000);
+                },
+                error: function(error) {
+                  alert('<%= t("userListTable.modal.error") %>');
+                }
+              });
+            });
+
+            $('#userModal').modal('show');
+          }
+
+          // Función para abrir el formulario de eliminación de usuarios
+          function openRemoveUserForm(selectedUsers) {
+            $('#userModal').modal('show');
+            $('#userModalLabel').text('<%= t("userListTable.modal3.title") %>');
+            $('#userModalBody').html(
+              '<form id="removeUserForm">' +
+              '<p><%= t("userListTable.modal3.warning") %></p>' +
+              '<br><div class="d-flex justify-content-between">' +
+              '<button type="button" class="btn btn-primary" id="closeModalButton"><%= t("userListTable.modal.cancel") %></button>' +
+              '<button type="submit" class="btn btn-danger"><%= t("userListTable.modal3.delete") %></button>' +
+              '</div>' +
+              '</form>'
+            );
+
+            // Cerrar el modal
+            $('#closeModalButton').on('click', function() {
+              $('#userModal').modal('hide');
+            });
+
+            // Enviar formulario de eliminación
+            $('#removeUserForm').on('submit', function(event) {
+              event.preventDefault();
+
+              $.ajax({
+                url: '/auth/delete',
+                type: 'POST',
+                data: {
+                  emails: selectedUsers
+                },
+                success: function(data) {
+                  $('#userModal').modal('hide');
+                  setTimeout(function() {
+                    location.reload(true);
+                  }, 1000);
+                },
+                error: function(error) {
+                  alert('<%= t("userListTable.modal3.error") %>');
+                }
+              });
+            });
+
+            $('#userModal').modal('show');
+          }
         }
       });
     });
   </script>
+
 </body>
 
 </html>

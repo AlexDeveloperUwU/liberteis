@@ -9,6 +9,7 @@
     "gl": "Galego"
   },
   "login": {
+    "forgotPassword": "¿Te olvidaste?",
     "title": "Accede a la plataforma",
     "button": "Acceder",
     "success": {
@@ -33,6 +34,8 @@
   "register": {
     "title": "Crea una nueva cuenta (admin)",
     "name": "Nombre",
+    "password": "Contraseña",
+    "email": "Correo electrónico",
     "button": "Registrarse",
     "success": {
       "title": "Cuenta creada",

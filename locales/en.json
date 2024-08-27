@@ -9,6 +9,7 @@
     "gl": "Galician"
   },
   "login": {
+    "forgotPassword": "You forgot?",
     "title": "Login into the platform",
     "button": "Login",
     "success": {
@@ -33,6 +34,8 @@
   "register": {
     "title": "Create a new account (admin)",
     "name": "Name",
+    "password": "Password",
+    "email": "Email",
     "button": "Register",
     "success": {
       "title": "Account created",

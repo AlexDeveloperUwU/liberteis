@@ -12,8 +12,28 @@ const requireAuth = (req, res, next) => {
   }
 };
 
+const estadoAuth = (autenticado) => {
+  return (req, res, next) => {
+    if (autenticado) {
+      if (req.session && req.session.userId) {
+        return next();
+      } else {
+        return res.redirect("/auth/login");
+      }
+    } else {
+      if (!req.session || !req.session.userId) {
+        return next();
+      } else {
+        return res.redirect("/dash");
+      }
+    }
+  };
+};
+
 //* Rutas de registro
-router.get("/register", (req, res) => {
+
+// Solo debe ser accesible si no está autenticado
+router.get("/register", estadoAuth(false), (req, res) => {
   const usersNum = db.getUserCount();
 
   // Si no hay usuarios registrados, mostramos el formulario de registro
@@ -25,6 +45,7 @@ router.get("/register", (req, res) => {
   }
 });
 
+// Esta debe ser accesible en ambos casos => No middleware
 router.post("/register", async (req, res) => {
   const { fullname, email, password, type, createdBy } = req.body;
 
@@ -44,7 +65,8 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/unregister", async (req, res) => {
+// Esta solo debe ser accesible si está autenticado
+router.post("/unregister", estadoAuth(true), async (req, res) => {
   const { email } = req.body;
   if (db.userExists(email)) {
     const result = db.unregisterUser(email);
@@ -60,7 +82,8 @@ router.post("/unregister", async (req, res) => {
 });
 
 //* Rutas de inicio de sesión
-router.get("/login", (req, res) => {
+// Solo debe ser accesible si no está autenticado
+router.get("/login", estadoAuth(false), (req, res) => {
   const usersNum = db.getUserCount();
   if (usersNum !== 0) {
     res.render("auth/login", { page: "login", t: res.t, lang: req.getLocale() });
@@ -69,40 +92,36 @@ router.get("/login", (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+// Solo debe ser accesible si no está autenticado
+router.post("/login", estadoAuth(false), async (req, res) => {
   const { email, password } = req.body;
-  const needsReset = db.forcePasswordReset(email);
-
   const cookieLang = req.cookies.lang || "gl";
 
   const response = await db.loginUser(email, password);
   if (response === false) {
     return res.status(403).json({ message: "Credenciales incorrectas" });
   } else {
-    if (needsReset) {
-      return res.status(400).json({ message: "Se requiere restablecer la contraseña" });
-    } else {
-      req.session.userId = response[0];
-      req.session.userEmail = response[1];
-      req.session.userType = response[2];
-      req.session.userLang = response[3];
+    req.session.userId = response[0];
+    req.session.userEmail = response[1];
+    req.session.userType = response[2];
+    req.session.userLang = response[3];
 
-      if (response[3] !== cookieLang) {
-        return res.status(200).json({
-          message: "Inicio de sesión exitoso",
-          lang: response[3],
-        });
-      }
-
-      res.status(200).json({
+    if (response[3] !== cookieLang) {
+      return res.status(200).json({
         message: "Inicio de sesión exitoso",
-        lang: cookieLang,
+        lang: response[3],
       });
     }
+
+    res.status(200).json({
+      message: "Inicio de sesión exitoso",
+      lang: cookieLang,
+    });
   }
 });
 
-router.get("/logout", (req, res) => {
+// Solo debe ser accesible si está autenticado
+router.get("/logout", estadoAuth(true), (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       return res.status(500).json({ message: "Error al cerrar sesión" });
@@ -111,16 +130,19 @@ router.get("/logout", (req, res) => {
   });
 });
 
-router.post("/list", (req, res) => {
+// Solo debe ser accesible si está autenticado
+router.post("/list", estadoAuth(true), (req, res) => {
   res.status(200).json(db.listUsers());
 });
 
 //* Rutas para cambiar la contraseña
-router.get("/changepass", (req, res) => {
+// Solo debe ser accesible si está autenticado
+router.get("/changepass", estadoAuth(true), (req, res) => {
   res.render("auth/change", { page: "changePass", t: res.t, lang: req.getLocale() });
 });
 
-router.post("/changepass", async (req, res) => {
+// Solo debe ser accesible si está autenticado
+router.post("/changepass", estadoAuth(true), async (req, res) => {
   const { email, password } = req.body;
 
   const result = await db.changePassword(email, password);
@@ -133,11 +155,13 @@ router.post("/changepass", async (req, res) => {
 });
 
 //* Rutas para restablecer la contraseña olvidada
-router.get("/resetpass", (req, res) => {
+// Solo debe ser accesible si no está autenticado
+router.get("/resetpass", estadoAuth(false), (req, res) => {
   res.render("auth/reset", { page: "resetPass", t: res.t, lang: req.getLocale() });
 });
 
-router.post("/resetpass", async (req, res) => {
+// Solo debe ser accesible si no está autenticado
+router.post("/resetpass", estadoAuth(false), async (req, res) => {
   const { email, password } = req.body;
 
   const result = await db.resetPassword(email, password);
@@ -154,7 +178,9 @@ router.post("/resetpass", async (req, res) => {
   }
 });
 
-router.get("/userInfo", async (req, res) => {
+//* Rutas para obtener información del usuario
+// Solo debe ser accesible si está autenticado
+router.get("/userInfo", estadoAuth(true), async (req, res) => {
   if (req.session && req.session.userId) {
     const user = db.getUserInfo(req.session.userEmail);
     if (user) {
@@ -167,7 +193,9 @@ router.get("/userInfo", async (req, res) => {
   }
 });
 
-router.post("/updateLang", async (req, res) => {
+//* Rutas para actualizar la información del usuario
+// Solo debe ser accesible si está autenticado
+router.post("/updateLang", estadoAuth(true), async (req, res) => {
   const { lang } = req.body;
   if (req.session && req.session.userId) {
     try {
@@ -198,4 +226,4 @@ const checkAuth = (req, res, next) => {
   next();
 };
 
-module.exports = { router, requireAuth, checkAuth };
+module.exports = { router, requireAuth, estadoAuth, checkAuth };

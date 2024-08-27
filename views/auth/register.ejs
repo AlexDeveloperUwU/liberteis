@@ -14,7 +14,7 @@
         <p class="login-box-msg" id="login-box-msg"><%= t("register.title") %></p>
         <form id="registerForm">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<%= t("register.name") %>" name="fullname" id="fullname" required autocomplete="name">
+            <input type="text" class="form-control is-invalid" placeholder="<%= t("register.name") %>" name="fullname" id="fullname" required autocomplete="name">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>
@@ -22,7 +22,15 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="<%= t("register.password") %>" name="password" id="password" required autocomplete="new-password">
+            <input type="email" class="form-control is-invalid" placeholder="<%= t("register.email") %>" name="email" id="email" required autocomplete="email">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" class="form-control is-invalid" placeholder="<%= t("register.password") %>" name="password" id="password" required autocomplete="new-password">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -34,7 +42,7 @@
           </div>
           <div class="row">
             <div class="col-5">
-              <button type="submit" class="btn btn-primary btn-block"><%= t("register.button") %></button>
+              <button type="submit" id="registerButton" class="btn btn-primary btn-block" disabled><%= t("register.button") %></button>
             </div>
           </div>
         </form>
@@ -43,14 +51,94 @@
 
     <%- include('../partials/scripts') %>
     <script>
-      function togglePasswordVisibility() {
-        var passwordField = document.getElementById("password");
-        if (passwordField.type === "password") {
-          passwordField.type = "text";
-        } else {
-          passwordField.type = "password";
+      $(document).ready(function() {
+        function validateEmail(email) {
+          var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailPattern.test(email);
         }
-      }
+
+        function validateField(field) {
+          var value = field.val().trim();
+          if (field.attr('type') === 'email') {
+            if (validateEmail(value)) {
+              field.removeClass('is-invalid').addClass('is-valid');
+            } else {
+              field.removeClass('is-valid').addClass('is-invalid');
+            }
+          } else {
+            if (value) {
+              field.removeClass('is-invalid').addClass('is-valid');
+            } else {
+              field.removeClass('is-valid').addClass('is-invalid');
+            }
+          }
+        }
+
+        function validateForm() {
+          var fullnameValid = $('#fullname').val().trim() !== "";
+          var emailValid = validateEmail($('#email').val().trim());
+          var passwordValid = $('#password').val().trim() !== "";
+
+          validateField($('#fullname'));
+          validateField($('#email'));
+          validateField($('#password'));
+
+          if (fullnameValid && emailValid && passwordValid) {
+            $('#registerButton').prop('disabled', false);
+          } else {
+            $('#registerButton').prop('disabled', true);
+          }
+        }
+
+        $('#fullname, #email, #password').on('input', function() {
+          validateForm();
+        });
+
+        validateForm();
+
+        $('#registerForm').on('keypress', function(e) {
+          if (e.which === 13 && !$('#registerButton').prop('disabled')) {
+            $('#registerButton').click();
+          }
+        });
+
+        $('#registerForm').on('submit', function(event) {
+          event.preventDefault();
+
+          var userFullname = $('#fullname').val().trim();
+          var userEmail = $('#email').val().trim();
+          var userPassword = $('#password').val().trim();
+
+          $.ajax({
+            url: '/auth/register',
+            type: 'POST',
+            data: {
+              fullname: userFullname,
+              email: userEmail,
+              password: userPassword,
+              type: "adminUser",
+              createdBy: "System"
+            },
+            success: function(data) {
+              setTimeout(function() {
+                location.reload(true);
+              }, 1000);
+            },
+            error: function(error) {
+              console.log("Error", error);
+            }
+          });
+        });
+
+        window.togglePasswordVisibility = function() {
+          var passwordField = document.getElementById("password");
+          if (passwordField.type === "password") {
+            passwordField.type = "text";
+          } else {
+            passwordField.type = "password";
+          }
+        }
+      });
     </script>
 </body>
 

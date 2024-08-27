@@ -14,7 +14,7 @@
         <p class="login-box-msg"><%= t("login.title") %></p>
         <form id="loginForm">
           <div class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="<%= t("common.email") %>" name="email" id="email" required autocomplete="username">
+            <input type="email" class="form-control is-invalid" placeholder="<%= t("common.email") %>" name="email" id="email" required autocomplete="username">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -22,7 +22,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="<%= t("common.password") %>" name="password" id="password" required autocomplete="current-password">
+            <input type="password" class="form-control is-invalid" placeholder="<%= t("common.password") %>" name="password" id="password" required autocomplete="current-password">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -34,7 +34,10 @@
           </div>
           <div class="row">
             <div class="col-5">
-              <button type="button" id="loginButton" class="btn btn-primary btn-block"><%= t("login.button") %></button>
+              <button type="button" id="loginButton" class="btn btn-primary btn-block" disabled><%= t("login.button") %></button>
+            </div>
+            <div class="col-7 text-right">
+              <a href="/auth/resetpass" class="btn btn-link"><%= t("login.forgotPassword") %></a>
             </div>
           </div>
         </form>
@@ -44,9 +47,48 @@
     <%- include('../partials/scripts') %>
     <script>
       $(document).ready(function() {
-        $("#email, #password").on("keypress", function(e) {
-          if (e.which === 13) {
-            $("#loginButton").click();
+        function validateEmail(email) {
+          var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailPattern.test(email);
+        }
+
+        function validateField(field) {
+          var value = field.val().trim();
+          if (field.attr('type') === 'email') {
+            if (validateEmail(value)) {
+              field.removeClass('is-invalid').addClass('is-valid');
+            } else {
+              field.removeClass('is-valid').addClass('is-invalid');
+            }
+          } else {
+            if (value) {
+              field.removeClass('is-invalid').addClass('is-valid');
+            } else {
+              field.removeClass('is-valid').addClass('is-invalid');
+            }
+          }
+        }
+
+        function toggleLoginButton() {
+          var email = $('#email').val().trim();
+          var password = $('#password').val().trim();
+          if (validateEmail(email) && password) {
+            $('#loginButton').prop('disabled', false);
+          } else {
+            $('#loginButton').prop('disabled', true);
+          }
+        }
+
+        $('#email, #password').on('input', function() {
+          validateField($(this));
+          toggleLoginButton();
+        });
+
+        toggleLoginButton();
+
+        $('#loginForm').on('keypress', function(e) {
+          if (e.which === 13 && !$('#loginButton').prop('disabled')) {
+            $('#loginButton').click();
           }
         });
 
@@ -71,7 +113,7 @@
                 body: '<%= t("login.success.message") %>'
               });
 
-              var lang = response.lang || 'gl'; 
+              var lang = response.lang || 'gl';
               setTimeout(function() {
                 location.href = `/dash?lang=${lang}`;
               }, 1000);
@@ -92,16 +134,18 @@
             }
           });
         });
-      });
 
-      function togglePasswordVisibility() {
-        var passwordField = document.getElementById("password");
-        if (passwordField.type === "password") {
-          passwordField.type = "text";
-        } else {
-          passwordField.type = "password";
+        function togglePasswordVisibility() {
+          var passwordField = document.getElementById("password");
+          if (passwordField.type === "password") {
+            passwordField.type = "text";
+          } else {
+            passwordField.type = "password";
+          }
         }
-      }
+
+        document.querySelector('.btn-secondary').addEventListener('click', togglePasswordVisibility);
+      });
     </script>
 
 </body>
