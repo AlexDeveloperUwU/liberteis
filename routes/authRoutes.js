@@ -35,9 +35,6 @@ const estadoAuth = (autenticado) => {
 // Solo debe ser accesible si no está autenticado
 router.get("/register", estadoAuth(false), (req, res) => {
   const usersNum = db.getUserCount();
-
-  // Si no hay usuarios registrados, mostramos el formulario de registro
-  // Si ya hay usuarios registrados, redirigimos al formulario de inicio de sesión
   if (usersNum === 0) {
     res.render("auth/register", { page: "register", t: res.t, lang: req.getLocale() });
   } else {

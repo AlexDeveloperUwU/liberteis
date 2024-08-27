@@ -157,7 +157,6 @@
         });
       }
 
-      // Función para abrir el formulario de edición de eventos
       function openEditEventForm(event) {
         $('#eventModal').modal('show');
         $('#eventModalLabel').text('<%= t("editEventForm.title") %>');
@@ -165,22 +164,19 @@
         var currentCategory = event.extendedProps.type;
         var categoryOptions = '';
         ['General', 'Espacio Maker'].forEach(function(category) {
-          // Agregar 'selected' si la categoría coincide con la categoría actual del evento
           var selectedAttribute = category === currentCategory ? 'selected' : '';
-
           categoryOptions += '<option value="' + category + '" ' + selectedAttribute + '>' + category + '</option>';
         });
-
 
         $('#eventModalBody').html(
           '<form id="editEventForm">' +
           '  <div class="form-group">' +
           '    <label for="editEventTitle"><%= t("editEventForm.eventTitle") %>:</label>' +
-          '    <input type="text" class="form-control" id="editEventTitle" value="' + event.title + '" required maxlength=60>' +
+          '    <input type="text" class="form-control" id="editEventTitle" value="' + event.title + '" required maxlength="60">' +
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="editEventDescription"><%= t("editEventForm.eventDescription") %>:</label>' +
-          '    <textarea class="form-control" id="editEventDescription" rows="3" minlength=100 maxlength=400 required>' + event.extendedProps.description + '</textarea>' +
+          '    <textarea class="form-control" id="editEventDescription" rows="3" minlength="100" maxlength="400" required>' + event.extendedProps.description + '</textarea>' +
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="editEventDate"><%= t("editEventForm.eventDate") %>:</label>' +
@@ -202,34 +198,80 @@
           '  </div>' +
           '   <label for="editEventPublishedBy"><%= t("editEventForm.thumbnail") %>:</label>' +
           '   <p class="text-warning"><%= t("editEventForm.warning") %></p>' +
-          '  <button type="submit" id="editEventButton" class="btn btn-primary"><%= t("editEventForm.button") %></button>' +
+          '  <button type="submit" id="editEventButton" class="btn btn-primary" disabled><%= t("editEventForm.button") %></button>' +
           '</form>'
         );
 
-        $('#editEventDescription').on('input', function() {
-          var descriptionLength = $(this).val().length;
-          var $editEventButton = $('#editEventButton');
+        // Función para validar el formulario
+        function validateForm() {
+          var isValid = true;
 
-          if (descriptionLength < 100 || descriptionLength > 400) {
-            $(this).addClass('is-invalid').removeClass('is-valid');
-            $editEventButton.prop('disabled', true);
+          var title = $('#editEventTitle').val();
+          var description = $('#editEventDescription').val();
+          var eventDate = $('#editEventDate').val();
+          var category = $('#editEventCategory').val();
+
+          // Validar título
+          if (title.trim() === '' || title.length > 60) {
+            $('#editEventTitle').addClass('is-invalid').removeClass('is-valid');
+            isValid = false;
           } else {
-            $(this).addClass('is-valid').removeClass('is-invalid');
-            $editEventButton.prop('disabled', false);
+            $('#editEventTitle').addClass('is-valid').removeClass('is-invalid');
           }
-        });
 
+          // Validar descripción
+          if (description.length < 100 || description.length > 400) {
+            $('#editEventDescription').addClass('is-invalid').removeClass('is-valid');
+            isValid = false;
+          } else {
+            $('#editEventDescription').addClass('is-valid').removeClass('is-invalid');
+          }
 
+          // Validar fecha
+          if (!eventDate) {
+            $('#editEventDate').addClass('is-invalid').removeClass('is-valid');
+            isValid = false;
+          } else {
+            $('#editEventDate').addClass('is-valid').removeClass('is-invalid');
+          }
+
+          // Validar categoría
+          if (!category) {
+            $('#editEventCategory').addClass('is-invalid').removeClass('is-valid');
+            isValid = false;
+          } else {
+            $('#editEventCategory').addClass('is-valid').removeClass('is-invalid');
+          }
+
+          // Habilitar o deshabilitar el botón según la validez del formulario
+          $('#editEventButton').prop('disabled', !isValid);
+        }
+
+        // Validar el formulario al cargarlo
+        validateForm();
+
+        // Validar al cambiar cualquier campo
+        $('#editEventTitle, #editEventDescription, #editEventDate, #editEventCategory').on('input change', validateForm);
+
+        // Evento de envío del formulario
         $('#editEventForm').data('eventId', event.id);
 
         $('#editEventForm').submit(function(event) {
-          console.log($(this).data('eventId'))
           event.preventDefault();
+          if ($('#editEventButton').prop('disabled')) {
+            return; // No hacer nada si el botón está deshabilitado
+          }
           var eventId = $(this).data('eventId');
           saveEditedEvent(eventId);
         });
 
-        $('#eventModal').modal('show');
+        // Permitir que el botón de enviar funcione con Enter
+        $('#editEventForm').on('keypress', function(e) {
+          if (e.which === 13 && !$('#editEventButton').prop('disabled')) {
+            e.preventDefault();
+            $(this).submit();
+          }
+        });
       }
 
       // Función para guardar los cambios en un evento editado
@@ -239,7 +281,7 @@
         var category = $('#editEventCategory').val();
         var thumbUrl = $('#editEventThumbUrl').val();
         var qrUrl = $('#editEventQrUrl').val();
-        var publishedBy = "<%= loggedInUsername %>"
+        var publishedBy = "<%= loggedInUsername %>";
         var eventDate = $('#editEventDate').val();
 
         $.ajax({
@@ -262,7 +304,7 @@
             }, 1000);
           },
           error: function(error) {
-            alert('t("editEventForm.error.message") %>');
+            alert('<%= t("editEventForm.error.message") %>');
           }
         });
       }
@@ -282,11 +324,11 @@
           '<form id="cloneEventForm">' +
           '  <div class="form-group">' +
           '    <label for="cloneEventTitle"><%= t("cloneEventForm.eventTitle") %>:</label>' +
-          '    <input type="text" class="form-control" id="cloneEventTitle" value="' + event.title + '" required maxlength=60>' +
+          '    <input type="text" class="form-control" id="cloneEventTitle" value="' + event.title + '" required maxlength="60">' +
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="cloneEventDescription"><%= t("cloneEventForm.eventDescription") %>:</label>' +
-          '     <textarea class="form-control" id="cloneEventDescription" rows="3" minlength=100 maxlength=400 required>' + event.extendedProps.description + '</textarea>' +
+          '    <textarea class="form-control" id="cloneEventDescription" rows="3" minlength="100" maxlength="400" required>' + event.extendedProps.description + '</textarea>' +
           '  </div>' +
           '  <div class="form-group">' +
           '    <label for="cloneEventDate"><%= t("cloneEventForm.eventDate") %>:</label>' +
@@ -304,33 +346,72 @@
           '  </div>' +
           '   <label for="cloneEventAlert"><%= t("cloneEventForm.thumbnail") %>:</label>' +
           '   <p class="text-warning"><%= t("cloneEventForm.warning") %></p>' +
-          '  <button type="submit" id="cloneEventButton" class="btn btn-warning"><%= t("eventForm.clone") %></button>' +
+          '  <button type="submit" id="cloneEventButton" class="btn btn-warning" disabled><%= t("eventForm.clone") %></button>' +
           '</form>'
         );
 
-        $('#cloneEventDescription').on('input', function() {
-          var descriptionLength = $(this).val().length;
-          var $cloneEventButton = $('#cloneEventButton');
+        // Función para validar el formulario
+        function validateForm() {
+          var isValid = true;
 
-          if (descriptionLength < 100 || descriptionLength > 400) {
-            $(this).addClass('is-invalid').removeClass('is-valid');
-            $cloneEventButton.prop('disabled', true);
+          var title = $('#cloneEventTitle').val();
+          var description = $('#cloneEventDescription').val();
+          var eventDate = $('#cloneEventDate').val();
+          var category = $('#cloneEventCategory').val();
+
+          // Validar título
+          if (title.trim() === '' || title.length > 60) {
+            $('#cloneEventTitle').addClass('is-invalid').removeClass('is-valid');
+            isValid = false;
           } else {
-            $(this).addClass('is-valid').removeClass('is-invalid');
-            $cloneEventButton.prop('disabled', false);
+            $('#cloneEventTitle').addClass('is-valid').removeClass('is-invalid');
           }
-        });
 
+          // Validar descripción
+          if (description.length < 100 || description.length > 400) {
+            $('#cloneEventDescription').addClass('is-invalid').removeClass('is-valid');
+            isValid = false;
+          } else {
+            $('#cloneEventDescription').addClass('is-valid').removeClass('is-invalid');
+          }
 
-        $('#cloneEventForm').data('eventId', event.id);
+          // Validar fecha
+          if (!eventDate) {
+            $('#cloneEventDate').addClass('is-invalid').removeClass('is-valid');
+            isValid = false;
+          } else {
+            $('#cloneEventDate').addClass('is-valid').removeClass('is-invalid');
+          }
 
+          // Validar categoría
+          if (!category) {
+            $('#cloneEventCategory').addClass('is-invalid').removeClass('is-valid');
+            isValid = false;
+          } else {
+            $('#cloneEventCategory').addClass('is-valid').removeClass('is-invalid');
+          }
+
+          // Habilitar o deshabilitar el botón según la validez del formulario
+          $('#cloneEventButton').prop('disabled', !isValid);
+        }
+
+        // Validar el formulario al cargarlo
+        validateForm();
+
+        // Validar al cambiar cualquier campo
+        $('#cloneEventTitle, #cloneEventDescription, #cloneEventDate, #cloneEventCategory').on('input change', validateForm);
+
+        // Evento de envío del formulario
         $('#cloneEventForm').submit(function(event) {
           event.preventDefault();
+          if ($('#cloneEventButton').prop('disabled')) {
+            return; // No hacer nada si el botón está deshabilitado
+          }
           var title = $('#cloneEventTitle').val();
           var description = $('#cloneEventDescription').val();
           var category = $('#cloneEventCategory').val();
           var thumbUrl = $('#cloneEventThumbUrl').val();
-          var publishedBy = "<%= loggedInUsername %>"
+          var publishedBy = "<%= loggedInUsername %>";
           var eventDate = $('#cloneEventDate').val();
 
           $.ajax({
@@ -345,6 +426,7 @@
               published_by: publishedBy,
             },
             success: function(data) {
+              $('#eventModal').modal('hide');
               setTimeout(function() {
                 location.reload(true);
               }, 1000);
@@ -355,7 +437,13 @@
           });
         });
 
-        $('#eventModal').modal('show');
+        // Permitir que el botón de enviar funcione con Enter
+        $('#cloneEventForm').on('keypress', function(e) {
+          if (e.which === 13 && !$('#cloneEventButton').prop('disabled')) {
+            e.preventDefault();
+            $(this).submit();
+          }
+        });
       }
 
       // Función que maneja el calendario y casi todo lo relacionado con él, carga los eventos en el calendario, los añade si haces click y etc
@@ -481,15 +569,16 @@
             dateClick: function(info) {
               var formattedDate = moment(info.date).format('YYYY-MM-DDTHH:mm');
               $('#eventModalLabel').text('<%= t("newEventForm.title") %>');
+
               $('#eventModalBody').html(
                 '<form id="createEventForm">' +
                 '  <div class="form-group">' +
                 '    <label for="eventTitle"><%= t("newEventForm.eventTitle") %>:</label>' +
-                '    <input type="text" class="form-control" id="eventTitle" required maxlength=60>' +
+                '    <input type="text" class="form-control" id="eventTitle" required maxlength="60">' +
                 '  </div>' +
                 '  <div class="form-group">' +
                 '    <label for="eventDescription"><%= t("newEventForm.eventDescription") %>:</label>' +
-                '    <textarea class="form-control" id="eventDescription" rows="3" minlength=100 maxlength=400 required></textarea>' +
+                '    <textarea class="form-control" id="eventDescription" rows="3" minlength="100" maxlength="400" required></textarea>' +
                 '  </div>' +
                 '  <div class="form-group">' +
                 '    <label for="eventDate"><%= t("newEventForm.eventDate") %>:</label>' +
@@ -498,6 +587,7 @@
                 '  <div class="form-group">' +
                 '    <label for="eventCategory"><%= t("newEventForm.eventCategory") %>:</label>' +
                 '    <select class="form-control" id="eventCategory" required>' +
+                '       <option value="">Select a category</option>' +
                 '       <option value="General">General</option>' +
                 '       <option value="Espacio Maker">Espacio Maker</option>' +
                 '    </select>' +
@@ -513,68 +603,135 @@
                 '</form>'
               );
 
-              $('#eventDescription').on('input', function() {
-                var descriptionLength = $(this).val().length;
-                var $saveEventButton = $('#saveEventButton');
+              // Función para validar el formulario
+              function validateForm() {
+                var isValid = true;
 
-                if (descriptionLength < 100 || descriptionLength > 400) {
-                  $(this).addClass('is-invalid').removeClass('is-valid');
-                  $saveEventButton.prop('disabled', true);
+                var title = $('#eventTitle').val().trim();
+                var description = $('#eventDescription').val();
+                var eventDate = $('#eventDate').val();
+                var category = $('#eventCategory').val();
+                var thumbnailFile = $('#eventThumb')[0].files.length > 0;
+
+                // Validar título
+                if (title === '' || title.length > 60) {
+                  $('#eventTitle').addClass('is-invalid').removeClass('is-valid');
+                  isValid = false;
                 } else {
-                  $(this).addClass('is-valid').removeClass('is-invalid');
-                  $saveEventButton.prop('disabled', false);
+                  $('#eventTitle').addClass('is-valid').removeClass('is-invalid');
+                }
+
+                // Validar descripción
+                if (description.length < 100 || description.length > 400) {
+                  $('#eventDescription').addClass('is-invalid').removeClass('is-valid');
+                  isValid = false;
+                } else {
+                  $('#eventDescription').addClass('is-valid').removeClass('is-invalid');
+                }
+
+                // Validar fecha
+                if (!eventDate) {
+                  $('#eventDate').addClass('is-invalid').removeClass('is-valid');
+                  isValid = false;
+                } else {
+                  $('#eventDate').addClass('is-valid').removeClass('is-invalid');
+                }
+
+                // Validar categoría
+                if (!category) {
+                  $('#eventCategory').addClass('is-invalid').removeClass('is-valid');
+                  isValid = false;
+                } else {
+                  $('#eventCategory').addClass('is-valid').removeClass('is-invalid');
+                }
+
+                // Validar miniatura
+                if (!thumbnailFile) {
+                  $('#eventThumb').addClass('is-invalid').removeClass('is-valid');
+                  isValid = false;
+                } else {
+                  $('#eventThumb').addClass('is-valid').removeClass('is-invalid');
+                }
+
+                // Habilitar o deshabilitar el botón según la validez del formulario
+                $('#saveEventButton').prop('disabled', !isValid);
+              }
+
+              // Validar el formulario al cargarlo
+              validateForm();
+
+              // Validar al cambiar cualquier campo del formulario
+              $('#eventTitle, #eventDescription, #eventDate, #eventCategory, #eventThumb').on('input change', validateForm);
+
+              // Validar al seleccionar un archivo en el campo de miniatura
+              $('#eventThumb').on('change', function() {
+                validateForm();
+              });
+
+              // Evento de envío del formulario de subida de miniatura
+              $('#uploadThumbnailForm').submit(function(event) {
+                event.preventDefault();
+                if ($('#saveEventButton').prop('disabled')) {
+                  return; // No hacer nada si el botón está deshabilitado
+                }
+
+                var formData = new FormData();
+                var thumbnailFile = $('#eventThumb')[0].files[0];
+
+                if (thumbnailFile) {
+                  formData.append('thumbnailfile', thumbnailFile);
+
+                  $.ajax({
+                    url: '/api/upload',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                      var thumbUrl = data.url;
+                      var title = $('#eventTitle').val();
+                      var description = $('#eventDescription').val();
+                      var eventDate = $('#eventDate').val();
+                      var category = $('#eventCategory').val();
+
+                      $.ajax({
+                        url: '/api/add',
+                        type: 'POST',
+                        data: {
+                          title: title,
+                          desc: description,
+                          event_date: eventDate,
+                          type: category,
+                          published_by: "<%= loggedInUsername %>",
+                          thumb_url: thumbUrl
+                        },
+                        success: function(data) {
+                          console.log('Evento añadido con éxito:', data);
+                          setTimeout(function() {
+                            location.reload(true);
+                          }, 1000);
+                        },
+                        error: function(error) {
+                          console.error('<%= t("newEventForm.error.message") %>', error);
+                        }
+                      });
+                    },
+                    error: function(error) {
+                      console.error('<%= t("newEventForm.error.thumbnail") %>', error);
+                    }
+                  });
+                }
+              });
+
+              // Permitir que el botón de enviar funcione con Enter
+              $('#createEventForm').on('keypress', function(e) {
+                if (e.which === 13 && !$('#saveEventButton').prop('disabled')) {
+                  e.preventDefault();
+                  $('#uploadThumbnailForm').submit();
                 }
               });
 
               $('#eventModal').modal('show');
-
-              $('#uploadThumbnailForm').submit(function(event) {
-                event.preventDefault();
-
-                var formData = new FormData();
-                formData.append('thumbnailfile', $('#eventThumb')[0].files[0]);
-
-                $.ajax({
-                  url: '/api/upload',
-                  type: 'POST',
-                  data: formData,
-                  processData: false,
-                  contentType: false,
-                  success: function(data) {
-                    var thumbUrl = data.url;
-                    var title = $('#eventTitle').val();
-                    var description = $('#eventDescription').val();
-                    var publishedBy = $('#eventPublishedBy').val();
-                    var eventDate = $('#eventDate').val();
-                    var category = $('#eventCategory').val();
-
-                    $.ajax({
-                      url: '/api/add',
-                      type: 'POST',
-                      data: {
-                        title: title,
-                        desc: description,
-                        event_date: eventDate,
-                        type: category,
-                        published_by: "<%= loggedInUsername %>",
-                        thumb_url: thumbUrl
-                      },
-                      success: function(data) {
-                        console.log('Evento añadido con éxito:', data);
-                        setTimeout(function() {
-                          location.reload(true);
-                        }, 1000);
-                      },
-                      error: function(error) {
-                        alert('<%= t("newEventForm.error.message") %>');
-                      }
-                    });
-                  },
-                  error: function(error) {
-                    alert('<%= t("newEventForm.error.thumbnail") %>');
-                  }
-                });
-              });
             }
           });
 
