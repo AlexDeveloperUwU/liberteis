@@ -5,6 +5,20 @@ const mail = require("../functions/mail.js");
 const passgen = require("generate-password");
 const bcrypt = require("bcrypt");
 
+function checkPCDevice(req, res, next) {
+  const userAgent = req.get("User-Agent");
+  if (/Mobi|Android|iPad|iPhone|Windows Phone/.test(userAgent)) {
+    return res.render("errors/noDevice", {
+      device: res.t("errors.pc"),
+      t: res.t,
+      lang: req.getLocale(),
+    });
+  }
+
+  next();
+}
+router.use(checkPCDevice);
+
 async function generatePassword() {
   const password = passgen.generate({
     length: 24,
