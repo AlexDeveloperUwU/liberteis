@@ -1,4 +1,3 @@
-// Dependencias del server
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
@@ -6,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const i18n = require("i18n");
 const fs = require("fs");
 const path = require("path");
+const FileStore = require("session-file-store")(session);
 
 // Rutas del server
 const { logRequests } = require("./functions/logrequests.js");
@@ -39,15 +39,20 @@ app.use("/assets", express.static(__dirname + "/public"));
 
 // Middleware para manejar datos en el body de las solicitudes
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json()); // Agrega esta línea para manejar solicitudes JSON
+app.use(bodyParser.json());
 
-// Configuración de la sesión
+// Configuración de la sesión con FileStore
 app.use(
   session({
+    store: new FileStore({
+      path: path.join(__dirname, "data", "sessions"),
+      logFn: function () {},
+    }),
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
       secure: false,
       httpOnly: true,
     },

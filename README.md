@@ -36,7 +36,9 @@ Estos son los objetivos que he logrado hasta ahora:
 - [✅] Generar automáticamente la documentación con VitePress en un único lugar donde tendré la documentación de todos los proyectos que haga
 - [✅] Usar HealthChecks en Docker para comprobar que todo funciona correctamente
 - [✅] Un script de Linux que puede obtener los datos de un contenedor para replicar la configuración en el nuevo Docker para actualizarlo
-
+- [✅] Uso de sesiones permanentes en Express usando ficheros JSON
+- [✅] Uso de validaciones en los formularios para comprobar los datos de entrada
+- [✅] Creación de un sistema de traducciones desde 0 con i18n y los JSON
 
 ## Autor
 
