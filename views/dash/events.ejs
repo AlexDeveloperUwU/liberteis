@@ -147,12 +147,26 @@
           },
           success: function(data) {
             $('#eventModal').modal('hide');
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: '<%= t("removeEventForm.success.title") %>',
+              autohide: true,
+              delay: 5000,
+              body: '<%= t("removeEventForm.success.message") %>'
+            });
             setTimeout(function() {
               location.reload(true);
             }, 1000);
           },
           error: function(error) {
-            alert('<%= t("removeEventForm.error.title") %>');
+            $('#eventModal').modal('hide');
+            $(document).Toasts('create', {
+              class: 'bg-danger',
+              title: '<%= t("removeEventForm.error.title") %>',
+              autohide: true,
+              delay: 5000,
+              body: '<%= t("removeEventForm.error.message") %>'
+            });
           }
         });
       }
@@ -299,12 +313,25 @@
           },
           success: function(data) {
             $('#eventModal').modal('hide');
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: '<%= t("editEventForm.success.title") %>',
+              autohide: true,
+              delay: 5000,
+              body: '<%= t("editEventForm.success.message") %>'
+            });
             setTimeout(function() {
               location.reload(true);
             }, 1000);
           },
           error: function(error) {
-            alert('<%= t("editEventForm.error.message") %>');
+            $(document).Toasts('create', {
+              class: 'bg-danger',
+              title: '<%= t("editEventForm.error.title") %>',
+              autohide: true,
+              delay: 5000,
+              body: '<%= t("editEventForm.error.message") %>'
+            });
           }
         });
       }
@@ -427,12 +454,25 @@
             },
             success: function(data) {
               $('#eventModal').modal('hide');
+              $(document).Toasts('create', {
+                class: 'bg-success',
+                title: '<%= t("cloneEventForm.success.title") %>',
+                autohide: true,
+                delay: 5000,
+                body: '<%= t("cloneEventForm.success.message") %>'
+              });
               setTimeout(function() {
                 location.reload(true);
               }, 1000);
             },
             error: function(error) {
-              alert('<%= t("cloneEventForm.error.message") %>');
+              $(document).Toasts('create', {
+                class: 'bg-danger',
+                title: '<%= t("cloneEventForm.success.title") %>',
+                autohide: true,
+                delay: 5000,
+                body: '<%= t("cloneEventForm.success.message") %>'
+              });
             }
           });
         });
@@ -706,13 +746,25 @@
                           thumb_url: thumbUrl
                         },
                         success: function(data) {
-                          console.log('Evento añadido con éxito:', data);
+                          $(document).Toasts('create', {
+                            class: 'bg-success',
+                            title: '<%= t("newEventForm.success.title") %>',
+                            autohide: true,
+                            delay: 5000,
+                            body: '<%= t("newEventForm.success.message") %>'
+                          });
                           setTimeout(function() {
                             location.reload(true);
                           }, 1000);
                         },
                         error: function(error) {
-                          console.error('<%= t("newEventForm.error.message") %>', error);
+                          $(document).Toasts('create', {
+                            class: 'bg-success',
+                            title: '<%= t("newEventForm.error.title") %>',
+                            autohide: true,
+                            delay: 5000,
+                            body: '<%= t("newEventForm.error.message") %>'
+                          });
                         }
                       });
                     },

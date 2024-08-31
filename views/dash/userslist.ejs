@@ -96,20 +96,15 @@
         type: 'POST',
         success: function(data) {
           data.forEach(function(user) {
-            // Traducir el tipo de usuario
             if (user.type === 'adminUser') {
               user.type = '<%= t("userListTable.admin") %>';
             } else if (user.type === 'normalUser') {
               user.type = '<%= t("userListTable.user") %>';
             }
 
-            // Obtener el email del usuario logueado
             var loggedInUserEmail = "<%= loggedInEmail %>";
-
-            // Formatear las fechas
             var createdDate = new Date(user.createdDate);
             var formattedDate = createdDate.toLocaleString();
-
             var lastLoginFormattedDate = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : '<%= t("userListTable.never") %>';
 
             // Añadir las filas a la tabla
@@ -307,12 +302,26 @@
                 },
                 success: function(data) {
                   $('#userModal').modal('hide');
+                  $(document).Toasts('create', {
+                    class: 'bg-success',
+                    title: '<%= t("userListTable.success.title") %>',
+                    autohide: true,
+                    delay: 5000,
+                    body: '<%= t("userListTable.success.message") %>'
+                  });
                   setTimeout(function() {
                     location.reload(true);
                   }, 1000);
                 },
                 error: function(error) {
-                  alert('<%= t("userListTable.modal.error") %>');
+                  console.error('Error creating user:', error);
+                  $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: '<%= t("userListTable.error.title") %>',
+                    autohide: true,
+                    delay: 5000,
+                    body: '<%= t("userListTable.error.message") %>'
+                  });
                 }
               });
             });
@@ -351,13 +360,8 @@
                   data: {
                     email: email
                   },
-                  success: function(data) {
-                    // Aquí puedes manejar la respuesta de cada solicitud, si es necesario
-                    console.log('User deleted:', email);
-                  },
-                  error: function(error) {
-                    console.error('Error deleting user:', email);
-                  }
+                  success: function(data) {},
+                  error: function(error) {}
                 });
               });
 

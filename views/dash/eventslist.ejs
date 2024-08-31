@@ -235,12 +235,26 @@
                           },
                           success: function(data) {
                             $('#eventModal').modal('hide');
+                            $(document).Toasts('create', {
+                              class: 'bg-success',
+                              title: '<%= t("eventListTable.success.title") %>',
+                              autohide: true,
+                              delay: 5000,
+                              body: '<%= t("eventListTable.success.message") %>'
+                            });
                             setTimeout(function() {
                               location.reload(true);
                             }, 1000);
                           },
                           error: function(error) {
-                            alert('<%= t("eventListTable.modal.error") %>');
+                            $('#eventModal').modal('hide');
+                            $(document).Toasts('create', {
+                              class: 'bg-danger',
+                              title: '<%= t("eventListTable.error.title") %>',
+                              autohide: true,
+                              delay: 5000,
+                              body: '<%= t("eventListTable.error.message") %>'
+                            });
                           }
                         });
                       });
@@ -300,12 +314,27 @@
             },
             success: function(data) {
               $('#eventModal').modal('hide');
+              $('#eventModal').modal('hide');
+              $(document).Toasts('create', {
+                class: 'bg-success',
+                title: '<%= t("eventListTable.success.title") %>',
+                autohide: true,
+                delay: 5000,
+                body: '<%= t("eventListTable.success.message") %>'
+              });
               setTimeout(function() {
                 location.reload(true);
               }, 1000);
             },
             error: function(error) {
-              alert('<%= t("eventListTable.modal2.error") %>');
+              $('#eventModal').modal('hide');
+              $(document).Toasts('create', {
+                class: 'bg-danger',
+                title: '<%= t("eventListTable.error.title") %>',
+                autohide: true,
+                delay: 5000,
+                body: '<%= t("eventListTable.error.message") %>'
+              });
             }
           });
         });

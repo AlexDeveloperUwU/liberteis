@@ -241,6 +241,10 @@
       "title": "Ocorreu un erro",
       "noSelected": "Non elixiches ningun evento para eliminar."
     },
+    "success": {
+      "title": "Eventos eliminados",
+      "message": "Os eventos seleccionados foron eliminados con éxito."
+    },
     "modal": {
       "title": "Eliminar eventos",
       "question": "Estás seguro de que queres eliminar os eventos seleccionados?",
@@ -274,6 +278,14 @@
     "createUser": "Crear usuario",
     "deleteSelection": "Eliminar selección",
     "noSelected": "Non seleccionaches ningún usuario para eliminar.",
+    "success": {
+      "title": "Usuarios eliminados",
+      "message": "Os usuarios seleccionados foron eliminados con éxito."
+    },
+    "error": {
+      "title": "Ocorreu un erro",
+      "message": "O servidor devolveu un erro. Por favor, inténtao de novo máis tarde."
+    },
     "modal": {
       "email": "Correo electrónico",
       "name": "Nome",

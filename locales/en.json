@@ -242,6 +242,10 @@
       "title": "An error occurred",
       "noSelected": "You have not selected any event to delete."
     },
+    "success": {
+      "title": "Events deleted",
+      "message": "The selected events have been deleted successfully."
+    },
     "modal": {
       "title": "Delete Events",
       "question": "Are you sure you want to delete the selected events?",
@@ -275,6 +279,14 @@
     "createUser": "Create User",
     "deleteSelection": "Delete Selection",
     "noSelected": "You haven't selected any users to delete.",
+    "success": {
+      "title": "Users deleted",
+      "message": "The selected users have been deleted successfully."
+    },
+    "error": {
+      "title": "An error occurred",
+      "message": "The server returned an error. Please try again later."
+    },
     "modal": {
       "email": "Email",
       "name": "Name",
