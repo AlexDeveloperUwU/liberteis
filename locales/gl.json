@@ -279,8 +279,8 @@
     "deleteSelection": "Eliminar selección",
     "noSelected": "Non seleccionaches ningún usuario para eliminar.",
     "success": {
-      "title": "Usuarios eliminados",
-      "message": "Os usuarios seleccionados foron eliminados con éxito."
+      "title": "Usuario creado",
+      "message": "O usuario foi creado con éxito."
     },
     "error": {
       "title": "Ocorreu un erro",
