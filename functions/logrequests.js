@@ -29,6 +29,24 @@ if (!fs.existsSync(logsDirectorio)) {
   fs.mkdirSync(logsDirectorio);
 }
 
+// Función para mantener solo los últimos 4 archivos .log
+const mantenerUltimos4Logs = () => {
+  const archivos = fs
+    .readdirSync(logsDirectorio)
+    .filter((file) => file.endsWith(".log"))
+    .map((file) => ({
+      nombre: file,
+      tiempo: fs.statSync(path.join(logsDirectorio, file)).mtime.getTime(),
+    }))
+    .sort((a, b) => b.tiempo - a.tiempo);
+
+  const archivosAEliminar = archivos.slice(4);
+
+  archivosAEliminar.forEach((archivo) => {
+    fs.unlinkSync(path.join(logsDirectorio, archivo.nombre));
+  });
+};
+
 // Middleware para registrar las solicitudes
 const logRequests = (req, res, next) => {
   const ip = req.ip.replace(/^::ffff:/, "");
@@ -36,10 +54,9 @@ const logRequests = (req, res, next) => {
   const url = req.url;
   const registro = `${ip} [${getTimeDate2()}] ${metodo} ${url}\n`;
 
-  // Escribir el registro en el archivo de logs
   fs.writeFileSync(rutaArchivo, registro, { flag: "a" });
 
-  // Pasar al siguiente middleware
+  mantenerUltimos4Logs();
   next();
 };
 
