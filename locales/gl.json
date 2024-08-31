@@ -29,6 +29,10 @@
       "title": "Ocorreu un erro",
       "message": "O servidor retornou un erro. Por favor, téntao de novo.",
       "passwordsDontMatch": "As contrasinais non coinciden. Por favor, téntao de novo."
+    },
+    "success": {
+      "title": "Contrasinal cambiado",
+      "message": "O contrasinal foi cambiado correctamente."
     }
   },
   "register": {

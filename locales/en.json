@@ -29,6 +29,10 @@
       "title": "An error occurred",
       "message": "The server returned an error. Please try again.",
       "passwordsDontMatch": "Passwords don't match. Please try again."
+    },
+    "success": {
+      "title": "Password changed",
+      "message": "Your password has been changed successfully."
     }
   },
   "register": {

@@ -134,6 +134,13 @@
             email: email,
           },
           success: function(response) {
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: '<%= t("reset.success.title") %>',
+              autohide: true,
+              delay: 5000,
+              body: '<%= t(reset.success.message") %>'
+            });
             setTimeout(function() {
               window.location.href = "/auth/login";
             }, 1000);

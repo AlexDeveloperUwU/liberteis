@@ -29,6 +29,10 @@
       "title": "Ocurrió un error",
       "message": "El servidor devolvió un error. Por favor, inténtalo de nuevo.",
       "passwordsDontMatch": "Las contraseñas no coinciden. Por favor, inténtalo de nuevo."
+    },
+    "success": {
+      "title": "Contraseña cambiada",
+      "message": "Tu contraseña ha sido cambiada correctamente."
     }
   },
   "register": {

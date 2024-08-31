@@ -120,6 +120,13 @@
               createdBy: "System"
             },
             success: function(data) {
+              $(document).Toasts('create', {
+                class: 'bg-success',
+                title: '<%= t("register.success.title") %>',
+                autohide: true,
+                delay: 5000,
+                body: '<%= t(register.success.message") %>'
+              });
               setTimeout(function() {
                 location.reload(true);
               }, 1000);
