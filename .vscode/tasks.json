@@ -3,7 +3,7 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "start",
+      "script": "start:dev",
       "problemMatcher": [],
       "label": "Start Development Server",
       "detail": "npx nodemon index.js",

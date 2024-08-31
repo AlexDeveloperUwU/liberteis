@@ -3,7 +3,8 @@
   "version": "0.13.18",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon index.js",
+    "start:dev": "npx nodemon index.js",
+    "start:prod": "node index.js",
     "patch": "git push && npm version patch && git push && git push --tags",
     "minor": "git push && npm version minor && git push && git push --tags",
     "major": "git push && npm version major && git push && git push --tags",
@@ -12,7 +13,7 @@
     "docker:remove": "docker stop liberteis && docker rm liberteis && docker rmi liberteis-app"
   },
   "dependencies": {
-    "axios": "^1.7.4",
+    "axios": "^1.7.6",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
