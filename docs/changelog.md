@@ -3,6 +3,15 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.13.18 - 31/08/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Toasts de aviso para las operaciones en las páginas de autenticación y en las páginas de la Dashboard para que el usuario sepa como salió la operación solicitada.
+
+- <span style="color: green;">Añadido:</span> Sistema de sesiones persistentes durane 24h almacenadas en ficheros JSON para evitar pérdidas de sesión cuando el servidor se reinicia.
+
+</details>
+
+<details>
   <summary><b>0.13.17 - 27/08/2024</b></summary>
 
 - <span style="color: yellow;">Arreglado:</span> La web se podía abrir desde cualquier dispositivo, ahora solo se puede desde PC.
