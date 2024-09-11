@@ -199,6 +199,8 @@
     "formTitle": "Event Info"
   },
   "newEventForm": {
+    "aspectRatioIncorrect": "The thumbnail does not have the correct aspect ratio, errors in displays may occur. Please, use a 9:16 image instead (example: 1080x1920). Click here to open a template with the correct aspect ratio.",
+    "aspectRatioCorrect": "The thumbnail has the correct aspect ratio.",
     "title": "Create a new event",
     "button": "Create event",
     "cancel": "Cancel",

@@ -198,6 +198,8 @@
     "formTitle": "Información do evento"
   },
   "newEventForm": {
+    "aspectRatioIncorrect": "A miniatura non ten a proporción correcta, poden ocorrer erros na visualización. Por favor, usa unha imaxe cunha proporción 9:16 (exemplo: 1080x1920). Fai click aquí para abrir un modelo coa proporción correcta.",
+    "aspectRatioCorrect": "A proporción da miniatura é correcta.",
     "title": "Crear un novo evento",
     "button": "Crear evento",
     "cancel": "Cancelar",

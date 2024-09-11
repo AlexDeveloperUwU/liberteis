@@ -5,7 +5,7 @@
 <body class="hold-transition sidebar-collapse sidebar-mini layout-fixed">
   <div class="wrapper">
     <div class="preloader flex-column justify-content-center align-items-center">
-      <img class="animation__shake" src="/assets/img/logoies.png" height="60" width="60">
+      <img class="animation__shake" src="/assets/img/logoies.png" height="60" width="60" />
     </div>
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       <ul class="navbar-nav">
@@ -88,8 +88,7 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body" id="eventModalBody">
-              </div>
+              <div class="modal-body" id="eventModalBody"></div>
             </div>
           </div>
         </div>
@@ -101,8 +100,7 @@
         <b><%= t("update.version") %> <%= version %></b>
       </div>
     </footer>
-    <aside class="control-sidebar control-sidebar-dark">
-    </aside>
+    <aside class="control-sidebar control-sidebar-dark"></aside>
   </div>
   <%- include('../partials/scripts') %>
   <script>
@@ -638,12 +636,12 @@
                 '  <div class="form-group">' +
                 '     <label for="eventThumb"><%= t("newEventForm.thumbnail") %>:</label>' +
                 '     <input type="file" class="form-control-file" id="eventThumb" name="thumbnailfile" accept="image/*">' +
+                '     <div id="aspectRatioMessage" class="message" style="margin-top: 10px"></div>' + // Añadido para el mensaje de relación de aspecto
                 '  </div>' +
                 '  <button type="submit" id="saveEventButton" class="btn btn-primary" disabled><%= t("newEventForm.button") %></button>' +
                 '</form>'
               );
 
-              // Función para validar el formulario
               function validateForm() {
                 var isValid = true;
 
@@ -688,13 +686,63 @@
                 // Validar miniatura
                 if (!thumbnailFile) {
                   $('#eventThumb').addClass('is-invalid').removeClass('is-valid');
-                  isValid = false;
                 } else {
                   $('#eventThumb').addClass('is-valid').removeClass('is-invalid');
                 }
 
                 // Habilitar o deshabilitar el botón según la validez del formulario
                 $('#saveEventButton').prop('disabled', !isValid);
+              }
+
+              function validateAspectRatio() {
+                var fileInput = $('#eventThumb')[0];
+                var messageDiv = $('#aspectRatioMessage');
+                var incorrectAspectRatioUrl = 'https://www.canva.com/design?create&type=TACUOfRHN_8&category=tACZCtLTC_A&analyticsCorrelationId=264f3ff0-587b-4a9f-94ce-dab580224656';
+
+                if (fileInput.files.length > 0) {
+                  var file = fileInput.files[0];
+                  var img = new Image();
+                  img.src = URL.createObjectURL(file);
+
+                  img.onload = function() {
+                    var width = img.width;
+                    var height = img.height;
+                    var aspectRatio = width / height;
+
+                    messageDiv.show();
+
+                    if (Math.abs(aspectRatio - 9 / 16) < 0.01) {
+                      messageDiv.text('<%= t("newEventForm.aspectRatioCorrect") %>');
+                      messageDiv.css({
+                        'background-color': '#d4edda',
+                        'color': '#155724',
+                        'padding': '10px',
+                        'border': '1px solid #c3e6cb',
+                        'cursor': 'default'
+                      });
+                      $('#eventThumb').css({
+                        'border': '2px solid #28a745'
+                      });
+                      messageDiv.off('click');
+                    } else {
+                      messageDiv.html('<a href="' + incorrectAspectRatioUrl + '" target="_blank"><%= t("newEventForm.aspectRatioIncorrect") %></a>');
+                      messageDiv.css({
+                        'background-color': '#f8d7da',
+                        'color': '#721c24',
+                        'padding': '10px',
+                        'border': '1px solid #f5c6cb',
+                        'cursor': 'pointer'
+                      });
+                      $('#eventThumb').css({
+                        'border': '2px solid #dc3545'
+                      });
+                      messageDiv.off('click'); // Elimina el evento de clic
+                    }
+
+                    URL.revokeObjectURL(img.src);
+                    validateForm();
+                  };
+                }
               }
 
               // Validar el formulario al cargarlo
@@ -705,10 +753,9 @@
 
               // Validar al seleccionar un archivo en el campo de miniatura
               $('#eventThumb').on('change', function() {
-                validateForm();
+                validateAspectRatio(); // Validar la relación de aspecto cuando se cambia el archivo
               });
 
-              // Evento de envío del formulario de subida de miniatura
               $('#uploadThumbnailForm').submit(function(event) {
                 event.preventDefault();
                 if ($('#saveEventButton').prop('disabled')) {
@@ -785,6 +832,7 @@
 
               $('#eventModal').modal('show');
             }
+
           });
 
           calendar.render();

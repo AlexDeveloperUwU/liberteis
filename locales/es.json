@@ -199,6 +199,8 @@
     "formTitle": "Información del evento"
   },
   "newEventForm": {
+    "aspectRatioIncorrect": "La miniatura no tiene una relación de aspecto correcta, pueden ocurrir errores en la visualización. Por favor, usa una imagen con una relación de aspecto 9:16 (ejemplo: 1080x1920). Haz click aquí para abir una plantilla con la relación de aspecto correcta.",
+    "aspectRatioCorrect": "La miniatura tiene una relación de aspecto correcta.",
     "title": "Crear un nuevo evento",
     "button": "Crear evento",
     "cancel": "Cancelar",
