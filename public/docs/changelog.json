@@ -1,5 +1,19 @@
 [
   {
+    "version": "0.13.19",
+    "date": "31/08/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Docker VNC para poder utilizar las RPi como Thin Clients, para si llega a ser necesario en el futuro."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Optimizaciones en la pantalla de la RPi para menor consumo de RAM y CPU para los dispositivos SBC."
+      }
+    ]
+  },
+  {
     "version": "0.13.18",
     "date": "31/08/2024",
     "list": [

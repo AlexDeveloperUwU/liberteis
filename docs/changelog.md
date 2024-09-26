@@ -3,6 +3,15 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.13.19 - 31/08/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Docker VNC para poder utilizar las RPi como Thin Clients, para si llega a ser necesario en el futuro.
+
+- <span style="color: yellow;">Arreglado:</span> Optimizaciones en la pantalla de la RPi para menor consumo de RAM y CPU para los dispositivos SBC.
+
+</details>
+
+<details>
   <summary><b>0.13.18 - 31/08/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Toasts de aviso para las operaciones en las páginas de autenticación y en las páginas de la Dashboard para que el usuario sepa como salió la operación solicitada.
