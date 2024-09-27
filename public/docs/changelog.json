@@ -1,7 +1,17 @@
 [
   {
+    "version": "0.13.22",
+    "date": "27/09/2024",
+    "list": [
+      {
+        "label": ["Arreglado"],
+        "detail": "Nuevo método de filtrado server side y nueva interfaz client side para las rpi."
+      }
+    ]
+  },
+  {
     "version": "0.13.21",
-    "date": "31/08/2024",
+    "date": "26/09/2024",
     "list": [
       {
         "label": ["Añadido"],
