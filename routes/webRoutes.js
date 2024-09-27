@@ -14,15 +14,15 @@ router.get("/rpi", (req, res) => {
 router.get("/event/:eventID", (req, res) => {
   const userAgent = req.get("User-Agent");
 
-  if (!userAgent || !userAgent.includes("Android") || !userAgent.includes("iPhone")) {
-    return res.render("errors/noDevice", {
-      device: res.t("errors.mobile"),
-      t: res.t,
-      lang: req.getLocale(),
-    });
+  if (/Mobi|Android|iPad|iPhone|Windows Phone/.test(userAgent)) {
+    return res.render("others/event", { t: res.t, lang: req.getLocale() });
   }
 
-  res.render("others/event", { t: res.t, lang: req.getLocale() });
+  res.render("errors/noDevice", {
+    device: res.t("errors.mobile"),
+    t: res.t,
+    lang: req.getLocale(),
+  });
 });
 
 router.get("/500", (req, res) => {

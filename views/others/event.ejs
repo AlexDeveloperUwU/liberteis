@@ -1,36 +1,157 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/assets/css/eventweb_norpi.css">
-  <title>Evento detallado | IES Teis</title>
+  <title>Event Details - LiberTeis</title>
   <link rel="icon" href="/assets/img/favicon/favicon.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/assets/js/plugins/qrcodejs/qrcode.js"></script>
+  <style>
+    @font-face {
+      font-family: "PP Agrandir";
+      src: local("PP Agrandir Regular"), local("PPAgrandir-Regular"),
+        url("/assets/fonts/PPAgrandir-Regular.woff2") format("woff2");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    * {
+      font-family: "PP Agrandir", sans-serif;
+    }
+
+    .image-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-popup img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+  </style>
 </head>
 
-<body>
-  <div class="header">
-    <div class="date">
-      <b><span id="day">Domingo</span>, <span id="date">01/01/2024</span></b>
-    </div>
-    <b>
-      <div class="time" id="current-time"></div>
-    </b>
+<body class="bg-gray-100 font-sans">
+  <div id="app" class="min-h-screen flex flex-col">
+    <header class="bg-blue-600 text-white p-4 text-xl font-bold">
+      <h1 class="text-center">Detalles do evento</h1>
+    </header>
+
+    <main class="flex-grow p-4">
+      <div id="eventDisplay" class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <img id="eventImage" class="w-full h-64 object-cover cursor-pointer" src="" alt="Event image">
+        <div class="p-4">
+          <span id="eventDateTime" class="text-gray-600 block mb-2"></span>
+          <h2 id="eventTitle" class="text-2xl font-bold mb-2"></h2>
+          <span id="eventCategory" class="inline-block bg-blue-100 text-blue-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded mb-4"></span>
+          <p id="eventDescription" class="text-gray-700 mb-4"></p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center text-xl flex justify-between">
+      <p class="text-left">IES de Teis</p>
+      <p class="text-right">Alejandro Verde</p>
+    </footer>
   </div>
 
-  <div class="content">
-    <div class="event-info">
-      <h1 id="event-title"></h1>
-      <p class="subtitle"><span id="eventday"></span> <span id="eventdate"></span> <span id="event-time"></span><br>Categoría: <span id="eventCategory"></span></p>
-      <div class="description">
-        <p id="parrafop"><span id="description-text"></span></p>
-      </div>
-    </div>
+  <div id="imagePopup" class="image-popup" onclick="closeImagePopup()">
+    <img id="popupImage" src="" alt="Full size event image">
   </div>
-  <script src="/assets/js/eventweb_norpi.js"></script>
-  <script src="/assets/js/plugins/qrcodejs/qrcode.js"></script>
-  <script src="/assets/js/plugins/jquery/jquery.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const eventImage = document.getElementById("eventImage");
+      const eventDateTime = document.getElementById("eventDateTime");
+      const eventTitle = document.getElementById("eventTitle");
+      const eventCategory = document.getElementById("eventCategory");
+      const eventDescription = document.getElementById("eventDescription");
+      const imagePopup = document.getElementById("imagePopup");
+      const popupImage = document.getElementById("popupImage");
+
+      function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      }
+
+      function formatDateString(dateString) {
+        const parts = dateString.split(" ");
+        parts[0] = capitalizeFirstLetter(parts[0]);
+        parts[3] = capitalizeFirstLetter(parts[3]);
+        return parts.join(" ");
+      }
+
+      function displayEvent(event) {
+        const eventDate = new Date(event.event_date);
+
+        eventImage.src = event.thumb_url;
+        eventImage.alt = event.title;
+        eventDateTime.textContent = formatDateString(
+          eventDate.toLocaleString("es-ES", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          })
+        );
+        eventTitle.textContent = event.title;
+        eventCategory.textContent = event.type;
+        eventDescription.textContent = event.desc;
+
+        eventImage.addEventListener("click", function() {
+          popupImage.src = event.thumb_url;
+          popupImage.alt = event.title;
+          imagePopup.style.display = "flex";
+        });
+      }
+
+      async function fetchEvent() {
+        const url = window.location.href;
+        const segments = url.split("/");
+        const eventID = segments.pop().toString();
+
+        try {
+          const response = await fetch("/api/eventdata", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: eventID
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const eventData = await response.json();
+          displayEvent(eventData);
+        } catch (error) {
+          console.error("Error fetching event:", error);
+        }
+      }
+
+      fetchEvent();
+    });
+
+    function closeImagePopup() {
+      document.getElementById("imagePopup").style.display = "none";
+    }
+  </script>
 </body>
 
 </html>
