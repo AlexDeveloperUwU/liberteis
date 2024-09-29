@@ -5,7 +5,7 @@
     "list": [
       {
         "label": ["Arreglado"],
-        "detail": "Nuevo método de filtrado server side y nueva interfaz client side para las rpi."
+        "detail": "Nueva interfaz client side para las rpi con el JS optimizado para las RPi más antiguas."
       }
     ]
   },

@@ -3,7 +3,14 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
-  <summary><b>0.13.21 - 31/08/2024</b></summary>
+  <summary><b>0.13.22 - 27/09/2024</b></summary>
+
+- <span style="color: yellow;">Arreglado:</span> Nueva interfaz client side para las rpi con el JS optimizado para las RPi más antiguas.
+
+</details>
+
+<details>
+  <summary><b>0.13.21 - 26/09/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Docker VNC para poder utilizar las RPi como Thin Clients, para si llega a ser necesario en el futuro.
 
