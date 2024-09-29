@@ -1,6 +1,6 @@
 {
   "name": "liberteis",
-  "version": "0.13.21",
+  "version": "0.13.22",
   "main": "index.js",
   "scripts": {
     "start:dev": "npx nodemon --ignore /logs index.js",
