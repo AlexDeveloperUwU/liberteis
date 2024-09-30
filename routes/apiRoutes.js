@@ -4,7 +4,7 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 const enmap = require("enmap");
-const database = require("../functions/eventsdb.js"); 
+const database = require("../functions/eventsdb.js");
 const events = new enmap({ name: "events" });
 
 //* Almacenamiento de imágenes de los eventos, usamos Multer para poder gestionar las imágenes
@@ -44,7 +44,17 @@ router.post("/edit", (req, res) => {
   try {
     const event = database.checkEvent(events, id);
     if (event) {
-      database.editEvent(events,id,title,desc,event_date,type,thumb_url,qr_url,published_by);
+      database.editEvent(
+        events,
+        id,
+        title,
+        desc,
+        event_date,
+        type,
+        thumb_url,
+        qr_url,
+        published_by
+      );
       res.status(200).send("Evento editado correctamente.");
     } else {
       res.status(404).send("El evento no existe.");
@@ -76,7 +86,7 @@ router.post("/delete", (req, res) => {
         if (id !== "savedid") {
           eventsList.push({
             id: id,
-            thumb_url: data.thumb_url
+            thumb_url: data.thumb_url,
           });
         }
       });
@@ -123,7 +133,57 @@ router.post("/eventdata", (req, res) => {
 });
 
 router.post("/list", (req, res) => {
-  const eventsList = database.getEvents(events);
+  const { days, category } = req.query;
+  let eventsList = database.getEvents(events);
+
+  const now = new Date();
+  const nowInSpain = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Madrid" }));
+
+  if (!days && !category) {
+    eventsList.sort((a, b) => {
+      const dateA = new Date(a.event_date);
+      const dateB = new Date(b.event_date);
+      return dateA - dateB;
+    });
+
+    return res.status(200).json(eventsList);
+  }
+
+  eventsList = eventsList.filter((event) => {
+    const eventDate = new Date(event.event_date);
+    const eventDateInSpain = new Date(
+      eventDate.toLocaleString("en-US", { timeZone: "Europe/Madrid" })
+    );
+
+    const eventDateWithMargin = new Date(eventDateInSpain.getTime() + 60 * 60 * 1000);
+    return eventDateWithMargin > nowInSpain;
+  });
+
+  if (days) {
+    const daysInt = parseInt(days, 10);
+    eventsList = eventsList.filter((event) => {
+      const eventDate = new Date(event.event_date);
+      const eventDateInSpain = new Date(
+        eventDate.toLocaleString("en-US", { timeZone: "Europe/Madrid" })
+      );
+
+      const eventDateWithMargin = new Date(eventDateInSpain.getTime() + 60 * 60 * 1000);
+      const diffTime = eventDateWithMargin - nowInSpain;
+      const diffDays = diffTime / (1000 * 60 * 60 * 24);
+      return diffDays <= daysInt;
+    });
+  }
+
+  if (category) {
+    eventsList = eventsList.filter((event) => event.type.toLowerCase() === category.toLowerCase());
+  }
+
+  eventsList.sort((a, b) => {
+    const dateA = new Date(a.event_date);
+    const dateB = new Date(b.event_date);
+    return dateA - dateB;
+  });
+
   res.status(200).json(eventsList);
 });
 

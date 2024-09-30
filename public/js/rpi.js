@@ -50,27 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  function filterEvents(allEvents) {
-    const now = new Date();
-    const endOfWeek = new Date(now);
-    endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
-    endOfWeek.setHours(23, 59, 59, 999);
-
-    const filteredEvents = allEvents.filter((event) => {
-      const eventDate = new Date(event.event_date);
-      return eventDate > now || (eventDate <= now && now - eventDate <= 3600000);
-    });
-
-    filteredEvents.sort((a, b) => {
-      const dateA = new Date(a.event_date);
-      const dateB = new Date(b.event_date);
-      return dateA - dateB;
-    });
-
-    console.log(filteredEvents)
-    return filteredEvents;
-  }
-
   function displayEvent(event) {
     const eventDate = new Date(event.event_date);
 
@@ -113,9 +92,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function fetchEvents() {
     try {
-      const response = await fetch("/api/list", { method: "POST" });
-      const allEvents = await response.json();
-      events = filterEvents(allEvents);
+      const urlParams = new URLSearchParams(window.location.search);
+      const days = urlParams.get("days") || 7;
+      const category = urlParams.get("category") || "";
+
+      const params = new URLSearchParams({
+        days: days.toString(),
+        category: category,
+      });
+
+      const response = await fetch(`/api/list?${params.toString()}`, { method: "POST" });
+      events = await response.json();
+
       if (events.length > 0) {
         rotateEvents();
       }

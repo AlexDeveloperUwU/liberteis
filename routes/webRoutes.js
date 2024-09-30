@@ -3,11 +3,6 @@ const router = express.Router();
 
 //* Rutas de la web
 router.get("/rpi", (req, res) => {
-  // Me falta testear esta parte, con lo que sigue quedando comentada
-  //const userAgent = req.get("User-Agent");
-  //if (!userAgent || !userAgent.includes("Linux aarch64")) {
-  //  return res.render("403");
-  //}
   res.render("others/rpi", { t: res.t, lang: req.getLocale() });
 });
 
