@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const multer = require("multer");
+const sharp = require("sharp");
 const fs = require("fs");
 const enmap = require("enmap");
 const database = require("../functions/eventsdb.js");
@@ -20,11 +21,24 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 //* Ruta para subir la imagen del evento
-router.post("/upload", upload.single("thumbnailfile"), (req, res) => {
-  const fileName = req.file.filename;
-  const fileURL = `${process.env.APP_URL}/thumbs/${fileName}`;
+router.post("/upload", upload.single("thumbnailfile"), async (req, res) => {
+  try {
+    const fileName = req.file.filename;
+    const filePath = path.join("uploads", fileName);
+    const avifFileName = `${path.parse(fileName).name}.avif`;
+    const avifFilePath = path.join("uploads", avifFileName);
 
-  res.status(200).send({ url: fileURL });
+    await sharp(filePath).toFormat("avif").toFile(avifFilePath);
+
+    fs.unlinkSync(filePath);
+
+    const fileURL = `${process.env.APP_URL}/thumbs/${avifFileName}`;
+
+    res.status(200).send({ url: fileURL });
+  } catch (error) {
+    console.error("Error al procesar la imagen:", error);
+    res.status(500).send("Error al procesar la imagen. Por favor, inténtalo de nuevo.");
+  }
 });
 
 //* Rutas para gestionar los eventos
