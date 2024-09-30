@@ -14,6 +14,12 @@ Una pequeña aplicación web que permite la gestión de eventos de la biblioteca
 - Página web generada automáticamente con todos los detalles de un evento en concreto
 - Autenticación de usuarios local y cifrada
 
+## Noticia sobre el versionado semántico
+
+He notado que, sin darme cuenta, apliqué incorrectamente la semántica de versionado (SemVer) en la versión 0.13.x. Como se puede ver en el changelog, varios cambios que deberían haberse clasificado como versiones menores se registraron erróneamente como parches.
+
+Para corregir esto, después de introducir la nueva interfaz pública en las versiones v0.13.22 y v0.13.23, he decidido actualizar la versión a 0.14.0. En esta nueva versión, se implementa un nuevo manejador de imágenes que optimiza su procesamiento.
+
 ## Objetivos logrados
 
 A pesar de que este proyecto fue una especie de reto / encargo por parte de una profesora, me he propuesto una serie de objetivos que voy cumpliendo poco a poco.
@@ -39,6 +45,7 @@ Estos son los objetivos que he logrado hasta ahora:
 - [✅] Uso de sesiones permanentes en Express usando ficheros JSON
 - [✅] Uso de validaciones en los formularios para comprobar los datos de entrada
 - [✅] Creación de un sistema de traducciones desde 0 con i18n y los JSON
+- [✅] Conversión entre tipo de imágenes y optimización de las mismas
 
 ## Autor
 
