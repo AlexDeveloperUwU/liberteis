@@ -3,6 +3,13 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.14.0 - 30/09/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Nuevo sistema de gestión de imágenes, reemplaza la original por una en formato comprimido avif.
+
+</details>
+
+<details>
   <summary><b>0.13.23 - 30/09/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Nueva interfaz para visualizar un evento en el móvil.
@@ -161,7 +168,7 @@ Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos ext
 </details>
 
 <details>
-  <summary><b>0.12.3 - 22/01/2024</b></summary>
+  <summary><b>0.12.4 - 22/01/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Mensaje de que no hay eventos por si no hay eventos en la db.
 
