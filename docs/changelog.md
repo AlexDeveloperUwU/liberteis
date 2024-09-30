@@ -3,6 +3,17 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.13.23 - 30/09/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Nueva interfaz para visualizar un evento en el móvil.
+
+- <span style="color: yellow;">Arreglado:</span> Uso por completo del server side rendering para aliviar carga en las SBC.
+
+- <span style="color: yellow;">Arreglado:</span> Ampliado el tamaño del código QR para que sea más fácil de escanear.
+
+</details>
+
+<details>
   <summary><b>0.13.22 - 27/09/2024</b></summary>
 
 - <span style="color: yellow;">Arreglado:</span> Nueva interfaz client side para las rpi con el JS optimizado para las RPi más antiguas.

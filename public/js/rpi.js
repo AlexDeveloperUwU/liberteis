@@ -78,8 +78,8 @@ document.addEventListener("DOMContentLoaded", function () {
     qrCodeElement.innerHTML = "";
     new QRCode(qrCodeElement, {
       text: event.qr_url,
-      width: 128,
-      height: 128,
+      width: 256,
+      height: 256,
     });
   }
 
