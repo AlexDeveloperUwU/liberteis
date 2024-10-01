@@ -57,7 +57,7 @@ A pesar de que este proyecto fue una especie de reto / encargo por parte de una 
 
 ## Tiempo invertido en desarrollo
 
-Primer año de desarrollo: 22/12/2023 - 10/09/2024 => Aproximadamente 120h acomuladas en desarrollo
+Primer año de desarrollo: 22/12/2023 - 10/09/2024 => Aproximadamente 120h acomuladas en desarrollo  
 Segundo año de desarrollo: 11/09/2024 - Actualidad
 
 ## Stats del repo
