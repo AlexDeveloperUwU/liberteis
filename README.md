@@ -4,8 +4,6 @@ Una pequeña aplicación web que permite la gestión de eventos de la biblioteca
 
 [Puedes consultar el historial de cambios aquí](./docs/changelog.md)
 
-[Puedes consultar las tareas a futuro aquí](./docs/tasks.md)
-
 ## Características
 
 - Gestión de eventos mediante un calendario
@@ -31,7 +29,7 @@ A pesar de que este proyecto fue una especie de reto / encargo por parte de una 
 [✔️] Conseguir uniformidad en el uso del puerto en el host, el container y la app.  
 [✔️] Generar automáticamente builds de mis containers, publicarlos en GitHub y que sean multiarquitectura.  
 [✔️] Usar HealthChecks en Docker para comprobar que todo funciona correctamente.  
-[✔️] Crear un script en Linux para replicar la configuración de un contenedor en un nuevo Docker para actualizarlo.  
+[✔️] Crear un script en Linux para replicar la configuración de un contenedor en un nuevo Docker para actualizarlo.
 
 ### Objetivos relacionados con Git y GitHub:
 
@@ -40,7 +38,7 @@ A pesar de que este proyecto fue una especie de reto / encargo por parte de una 
 [✔️] Crear y subir tags a GitHub.  
 [✔️] Usar la API de GitHub para comprobar actualizaciones.  
 [✔️] Generar fixes de problemas de CodeQL automáticamente con GitHub Copilot.  
-[✔️] Utilizar revisiones automáticas de código con CodeQL.  
+[✔️] Utilizar revisiones automáticas de código con CodeQL.
 
 ### Objetivos relacionados con APIs y herramientas:
 
@@ -48,19 +46,23 @@ A pesar de que este proyecto fue una especie de reto / encargo por parte de una 
 [✔️] Usar Nodemailer para el envío de correos electrónicos.  
 [✔️] Enviar correos electrónicos con plantillas HTML.  
 [✔️] Aprender a gestionar contraseñas usando encriptado HASH.  
-[✔️] Limitar el acceso a dispositivos mediante User-Agents.  
+[✔️] Limitar el acceso a dispositivos mediante User-Agents.
 
 ### Objetivos relacionados con desarrollo web y aplicaciones:
 
 [✔️] Uso de sesiones permanentes en Express con archivos JSON.  
 [✔️] Validación de formularios para comprobar los datos de entrada.  
 [✔️] Creación de un sistema de traducciones desde 0 con i18n y JSON.  
-[✔️] Conversión y optimización de tipos de imágenes.  
+[✔️] Conversión y optimización de tipos de imágenes.
 
 ## Tiempo invertido en desarrollo
 
 Primer año de desarrollo: 22/12/2023 - 10/09/2024 => Aproximadamente 120h acomuladas en desarrollo
 Segundo año de desarrollo: 11/09/2024 - Actualidad
+
+## Stats del repo
+
+![Alt](https://repobeats.axiom.co/api/embed/31271bb411db22e430e939d345535195abc7ede4.svg "Repobeats analytics image")
 
 ## Autor
 
