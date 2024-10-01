@@ -1,5 +1,19 @@
 [
   {
+    "version": "0.14.1",
+    "date": "30/09/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Uso de NODE_ENV para poder definir el tipo de enviroment en el que se usa el proyecto, además de cross-env para poder hacer cross-os."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Vulnerabilidad generada por tener la cookie como secure:false en producción."
+      }
+    ]
+  },
+  {
     "version": "0.14.0",
     "date": "30/09/2024",
     "list": [

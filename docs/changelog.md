@@ -3,6 +3,15 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.14.1 - 30/09/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Uso de NODE_ENV para poder definir el tipo de enviroment en el que se usa el proyecto, además de cross-env para poder hacer cross-os.
+
+- <span style="color: yellow;">Arreglado:</span> Vulnerabilidad generada por tener la cookie como secure:false en producción.
+
+</details>
+
+<details>
   <summary><b>0.14.0 - 30/09/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Nuevo sistema de gestión de imágenes, reemplaza la original por una en formato comprimido avif.
