@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const today = new Date();
     const isToday = eventDate.toDateString() === today.toDateString();
 
-    const shortDesc = event.desc.length > 150 ? event.desc.substring(0, 150) + "..." : event.desc;
+    // Elimina cualquier lógica de corte de la descripción
     const fullDesc = event.desc;
 
     const eventCard = document.createElement("div");
@@ -47,28 +47,10 @@ document.addEventListener("DOMContentLoaded", function () {
             ${event.type}
           </span>
           <p class="text-gray-700 mb-4" id="description-${event.id}">
-            ${shortDesc} <span class="text-blue-500 cursor-pointer" id="toggleDesc-${event.id}">Ver más</span>
+            ${fullDesc}
           </p>
         </div>
       `;
-
-    const toggleDescButton = eventCard.querySelector(`#toggleDesc-${event.id}`);
-    const descriptionParagraph = eventCard.querySelector(`#description-${event.id}`);
-
-    toggleDescButton.addEventListener("click", function () {
-      const isExpanded = descriptionParagraph.textContent.includes("Ver menos");
-
-      if (isExpanded) {
-        descriptionParagraph.innerHTML = `${shortDesc} <span class="text-blue-500 text-bold cursor-pointer" id="toggleDesc-${event.id}">Ver más</span>`;
-      } else {
-        descriptionParagraph.innerHTML = `${fullDesc} <span class="text-blue-500 text-bold cursor-pointer" id="toggleDesc-${event.id}">Ver menos</span>`;
-      }
-
-      const newToggleDescButton = descriptionParagraph.querySelector(`#toggleDesc-${event.id}`);
-      newToggleDescButton.addEventListener("click", function () {
-        toggleDescButton.click();
-      });
-    });
 
     const eventImage = eventCard.querySelector("img");
 
@@ -82,19 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return eventCard;
   }
 
-  function toggleDescription(event, id) {
-    const descriptionElement = document.getElementById(`desc-${id}`);
-    const fullDescription = event.target.innerText === "Ver más";
-
-    if (fullDescription) {
-      descriptionElement.innerHTML = `${event.target.previousSibling.textContent} ${event.desc} 
-        <span class="text-blue-600 cursor-pointer" onclick="toggleDescription(event, '${id}')">Ver menos</span>`;
-    } else {
-      descriptionElement.innerHTML = `${event.desc.length > 150 ? event.desc.substring(0, 150) + "..." : event.desc} 
-        <span class="text-blue-600 cursor-pointer" onclick="toggleDescription(event, '${id}')">Ver más</span>`;
-    }
-  }
-
   function displayEvents(events) {
     eventList.innerHTML = "";
     events.forEach((event) => {
@@ -105,14 +74,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function fetchEvents() {
     try {
-      const response = await fetch("/api/list", {
+      const response = await fetch("/api/list?days=7", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          days: 7,
-        }),
       });
 
       if (!response.ok) {
