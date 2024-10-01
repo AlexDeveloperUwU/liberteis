@@ -3,7 +3,20 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
-  <summary><b>0.14.1 - 30/09/2024</b></summary>
+  <summary><b>0.14.2 - 01/10/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Vista de los próximos 7 días de eventos.
+
+- <span style="color: yellow;">Arreglado:</span> Uso de secure cookie eliminado, por el momento NGINX no la transmite correctamente. Falta más investigación.
+
+- <span style="color: yellow;">Arreglado:</span> Popup de imagen en la vista de evento.
+
+- <span style="color: yellow;">Arreglado:</span> Dockerfile con la TZ correcta.
+
+</details>
+
+<details>
+  <summary><b>0.14.1 - 01/10/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Uso de NODE_ENV para poder definir el tipo de enviroment en el que se usa el proyecto, además de cross-env para poder hacer cross-os.
 

@@ -10,6 +10,14 @@
       {
         "label": ["Arreglado"],
         "detail": "Uso de secure cookie eliminado, por el momento NGINX no la transmite correctamente. Falta más investigación."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Popup de imagen en la vista de evento."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Dockerfile con la TZ correcta."
       }
     ]
   },
