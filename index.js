@@ -6,6 +6,7 @@ const i18n = require("i18n");
 const fs = require("fs");
 const path = require("path");
 const FileStore = require("session-file-store")(session);
+const lusca = require("lusca");
 
 // Rutas del server
 const { logRequests } = require("./functions/logrequests.js");
@@ -62,6 +63,7 @@ app.use(
 // Inicialización de cookieParser e i18n
 app.use(cookieParser());
 app.use(i18n.init);
+app.use(lusca.csrf());
 
 // Middleware para establecer el idioma según la cookie o el parámetro de consulta
 app.use((req, res, next) => {
