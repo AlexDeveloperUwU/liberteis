@@ -7,9 +7,9 @@ WORKDIR /app
 # Instala curl y tzdata para la configuración de la zona horaria
 RUN apk add --no-cache curl tzdata
 
-# Copia la zona horaria de Europa/Madrid
-RUN cp /usr/share/zoneinfo/Europe/Madrid /etc/localtime &&
-    echo "Europe/Madrid" >/etc/timezone
+# Configura la zona horaria a Europa/Madrid
+RUN cp /usr/share/zoneinfo/Europe/Madrid /etc/localtime && \
+    echo "Europe/Madrid" > /etc/timezone
 
 # Copia el archivo package.json y package-lock.json (si existe)
 COPY package*.json ./
