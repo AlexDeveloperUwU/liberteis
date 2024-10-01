@@ -20,6 +20,20 @@ router.get("/event/:eventID", (req, res) => {
   });
 });
 
+router.get("/eventos", (req, res) => {
+  const userAgent = req.get("User-Agent");
+
+  if (/Mobi|Android|iPad|iPhone|Windows Phone/.test(userAgent)) {
+    return res.render("others/eventList", { t: res.t, lang: req.getLocale() });
+  }
+
+  res.render("errors/noDevice", {
+    device: res.t("errors.mobile"),
+    t: res.t,
+    lang: req.getLocale(),
+  });
+});
+
 router.get("/500", (req, res) => {
   res.render("errors/500", { t: res.t, lang: req.getLocale() });
 });

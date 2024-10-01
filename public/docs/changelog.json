@@ -1,7 +1,21 @@
 [
   {
+    "version": "0.14.2",
+    "date": "01/10/2024",
+    "list": [
+      {
+        "label": ["Añadido"],
+        "detail": "Vista de los próximos 7 días de eventos."
+      },
+      {
+        "label": ["Arreglado"],
+        "detail": "Uso de secure cookie eliminado, por el momento NGINX no la transmite correctamente. Falta más investigación."
+      }
+    ]
+  },
+  {
     "version": "0.14.1",
-    "date": "30/09/2024",
+    "date": "01/10/2024",
     "list": [
       {
         "label": ["Añadido"],

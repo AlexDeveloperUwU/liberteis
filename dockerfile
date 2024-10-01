@@ -4,8 +4,12 @@ FROM node:18-alpine
 # Establece el directorio de trabajo en /app
 WORKDIR /app
 
-# Instala curl para realizar peticiones HTTP en el contenedor para el health check
-RUN apk add --no-cache curl
+# Instala curl y tzdata para la configuración de la zona horaria
+RUN apk add --no-cache curl tzdata
+
+# Copia la zona horaria de Europa/Madrid
+RUN cp /usr/share/zoneinfo/Europe/Madrid /etc/localtime &&
+    echo "Europe/Madrid" >/etc/timezone
 
 # Copia el archivo package.json y package-lock.json (si existe)
 COPY package*.json ./
@@ -22,4 +26,4 @@ ENV PORT $PORT
 EXPOSE $PORT
 
 # Comando para iniciar la aplicación
-CMD ["npm", "run" ,"prod"]
+CMD ["npm", "run", "prod"]

@@ -4,10 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Details - LiberTeis</title>
+  <title>Upcoming Events - LiberTeis</title>
   <link rel="icon" href="/assets/img/favicon/favicon.png" type="image/png">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/assets/js/event.js"></script>
   <script src="/assets/js/plugins/qrcodejs/qrcode.js"></script>
   <style>
     @font-face {
@@ -18,14 +17,15 @@
       font-style: normal;
       font-display: swap;
     }
+    
 
-    body,
-    html {
+    body, html {
       user-select: none;
     }
 
     * {
       font-family: "PP Agrandir", sans-serif;
+      user-select: none;
     }
 
     .image-popup {
@@ -68,18 +68,11 @@
 <body class="bg-gray-100 font-sans">
   <div id="app" class="min-h-screen flex flex-col">
     <header class="bg-blue-600 text-white p-4 text-xl font-bold">
-      <h1 class="text-center">Detalles do evento</h1>
+      <h1 class="text-center">Eventos dos próximos 7 días</h1>
     </header>
 
     <main class="flex-grow p-4">
-      <div id="eventDisplay" class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <img id="eventImage" class="w-full h-64 object-cover cursor-pointer" src="" alt="Event image">
-        <div class="p-4">
-          <span id="eventDateTime" class="text-gray-600 block mb-2"></span>
-          <h2 id="eventTitle" class="text-2xl font-bold mb-2"></h2>
-          <span id="eventCategory" class="inline-block bg-blue-100 text-blue-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded mb-4"></span>
-          <p id="eventDescription" class="text-gray-700 mb-4"></p>
-        </div>
+      <div id="eventList" class="grid grid-cols-1 gap-4">
       </div>
     </main>
 
@@ -93,6 +86,15 @@
     <button class="close-popup" onclick="closeImagePopup(); event.stopPropagation();">X</button>
     <img id="popupImage" src="" alt="Full size event image">
   </div>
+
+  <script src="/assets/js/events.js"></script>
+  <script>
+    const imagePopup = document.getElementById("imagePopup");
+
+    function closeImagePopup() {
+      imagePopup.style.display = "none";
+    }
+  </script>
 </body>
 
 </html>
