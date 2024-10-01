@@ -3,14 +3,11 @@
   "version": "0.14.0",
   "main": "index.js",
   "scripts": {
-    "start:dev": "npx nodemon --ignore /logs index.js",
-    "start:prod": "node index.js",
+    "dev": "cross-env NODE_ENV=development npx nodemon --ignore 'logs/*' --ignore 'data/*' index.js",
+    "prod": "cross-env NODE_ENV=production node index.js",
     "patch": "git push && npm version patch && git push && git push --tags",
     "minor": "git push && npm version minor && git push && git push --tags",
-    "major": "git push && npm version major && git push && git push --tags",
-    "docker:build": "docker build -t liberteis-app .",
-    "docker:run": "docker run -d --name liberteis -e APP_PORT=${PORT:-3000} -p ${PORT:-3000}:${PORT:-3000} -v /liberteis/data:/app/data:rw -v /liberteis/uploads:/app/uploads:rw -v /liberteis/env:/app/env:rw liberteis-app",
-    "docker:remove": "docker stop liberteis && docker rm liberteis && docker rmi liberteis-app"
+    "major": "git push && npm version major && git push && git push --tags"
   },
   "dependencies": {
     "axios": "^1.7.7",
@@ -32,5 +29,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
 }
