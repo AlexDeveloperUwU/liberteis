@@ -7,6 +7,13 @@ const fs = require("fs");
 const enmap = require("enmap");
 const database = require("../functions/eventsdb.js");
 const events = new enmap({ name: "events" });
+const rateLimit = require("express-rate-limit");
+
+// Set up rate limiter: maximum of 100 requests per 15 minutes
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // max 100 requests per windowMs
+});
 
 //* Almacenamiento de imágenes de los eventos, usamos Multer para poder gestionar las imágenes
 const storage = multer.diskStorage({
@@ -21,7 +28,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 //* Ruta para subir la imagen del evento
-router.post("/upload", upload.single("thumbnailfile"), async (req, res) => {
+router.post("/upload", limiter, upload.single("thumbnailfile"), async (req, res) => {
   try {
     const fileName = req.file.filename;
     const filePath = path.join("uploads", fileName);
