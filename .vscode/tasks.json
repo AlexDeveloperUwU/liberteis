@@ -3,60 +3,65 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "start:dev",
+      "script": "dev",
       "problemMatcher": [],
-      "label": "Start Development Server",
-      "detail": "npx nodemon index.js",
+      "label": "npm: dev",
+      "detail": "cross-env NODE_ENV=development npx nodemon --ignore /logs index.js",
       "isBackground": true,
       "presentation": {
-        "reveal": "never"
-      },
-      "runOptions": {
-        "runOn": "folderOpen"
+        "reveal": "always",
+        "panel": "shared",
+        "echo": true
+      }
+    },
+    {
+      "type": "npm",
+      "script": "prod",
+      "problemMatcher": [],
+      "label": "npm: prod",
+      "detail": "cross-env NODE_ENV=production node index.js",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "echo": true
+      }
+    },
+    {
+      "type": "npm",
+      "script": "major",
+      "problemMatcher": [],
+      "label": "npm: major",
+      "detail": "git push && npm version major && git push && git push --tags",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "echo": true
+      }
+    },
+    {
+      "type": "npm",
+      "script": "minor",
+      "problemMatcher": [],
+      "label": "npm: minor",
+      "detail": "git push && npm version minor && git push && git push --tags",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "echo": true
       }
     },
     {
       "type": "npm",
       "script": "patch",
       "problemMatcher": [],
-      "label": "Bump Version: Patch",
-      "detail": "git push && npm version patch && git push && git push --tags"
-    },
-    {
-      "type": "npm",
-      "script": "minor",
-      "problemMatcher": [],
-      "label": "Bump Version: Minor",
-      "detail": "git push && npm version minor && git push && git push --tags"
-    },
-    {
-      "type": "npm",
-      "script": "major",
-      "problemMatcher": [],
-      "label": "Bump Version: Major",
-      "detail": "git push && npm version major && git push && git push --tags"
-    },
-    {
-      "type": "npm",
-      "script": "docker:build",
-      "group": "build",
-      "problemMatcher": [],
-      "label": "Docker: Build Image",
-      "detail": "docker build -t liberteis-app ."
-    },
-    {
-      "type": "npm",
-      "script": "docker:remove",
-      "problemMatcher": [],
-      "label": "Docker: Remove Container & Image",
-      "detail": "docker stop liberteis && docker rm liberteis && docker rmi liberteis-app"
-    },
-    {
-      "type": "npm",
-      "script": "docker:run",
-      "problemMatcher": [],
-      "label": "Docker: Run Container",
-      "detail": "docker run -d --name liberteis -e APP_PORT=${PORT:-3000} -p ${PORT:-3000}:${PORT:-3000} -v /liberteis/data:/app/data:rw -v /liberteis/uploads:/app/uploads:rw -v /liberteis/env:/app/env:rw liberteis-app"
+      "label": "npm: patch",
+      "detail": "git push && npm version patch && git push && git push --tags",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "echo": true
+      }
     }
   ]
 }

@@ -20,32 +20,47 @@ He notado que, sin darme cuenta, apliqué incorrectamente la semántica de versi
 
 Para corregir esto, después de introducir la nueva interfaz pública en las versiones v0.13.22 y v0.13.23, he decidido actualizar la versión a 0.14.0. En esta nueva versión, se implementa un nuevo manejador de imágenes que optimiza su procesamiento.
 
-## Objetivos logrados
+## Objetivos cumplidos
 
 A pesar de que este proyecto fue una especie de reto / encargo por parte de una profesora, me he propuesto una serie de objetivos que voy cumpliendo poco a poco.
 
-Estos son los objetivos que he logrado hasta ahora:
+### Objetivos relacionados con Docker:
 
-- [✅] Crear un dockerfile desde 0
-- [✅] Pasar la aplicación a un container de Docker
-- [✅] Conseguir que la app entera, incluyendo los comandos de Docker, tengan uniformidad en cuanto al puerto usado (usa el mismo puerto el host, el container y la app)
-- [✅] Aprender a usar Postman y a crear una API completa
-- [✅] Utilizar GPG para firmar commits y tags y que aparezca en GitHub
-- [✅] Aprender a usar el versionado semántico
-- [✅] Aprender a crear y subir tags a GitHub
-- [✅] Aprender a usar la API de GitHub para saber cuando hay nuevas actualizaciones
-- [✅] Aprender a gestionar contraseñas con encriptado HASH
-- [✅] Aprender a limitar el acceso de los distintos dispositivos utilizando los User-Agents
-- [✅] Envío de correos electrónicos con Nodemailer
-- [✅] Correos electrónicos con plantillas HTML
-- [✅] Generar automáticamente builds de mis containers, publicarlos en GitHub y que sean multiarquitectura
-- [✅] Generar automáticamente la documentación con VitePress en un único lugar donde tendré la documentación de todos los proyectos que haga
-- [✅] Usar HealthChecks en Docker para comprobar que todo funciona correctamente
-- [✅] Un script de Linux que puede obtener los datos de un contenedor para replicar la configuración en el nuevo Docker para actualizarlo
-- [✅] Uso de sesiones permanentes en Express usando ficheros JSON
-- [✅] Uso de validaciones en los formularios para comprobar los datos de entrada
-- [✅] Creación de un sistema de traducciones desde 0 con i18n y los JSON
-- [✅] Conversión entre tipo de imágenes y optimización de las mismas
+[✔️] Crear un Dockerfile desde 0.  
+[✔️] Pasar la aplicación a un container de Docker.  
+[✔️] Conseguir uniformidad en el uso del puerto en el host, el container y la app.  
+[✔️] Generar automáticamente builds de mis containers, publicarlos en GitHub y que sean multiarquitectura.  
+[✔️] Usar HealthChecks en Docker para comprobar que todo funciona correctamente.  
+[✔️] Crear un script en Linux para replicar la configuración de un contenedor en un nuevo Docker para actualizarlo.  
+
+### Objetivos relacionados con Git y GitHub:
+
+[✔️] Utilizar GPG para firmar commits y tags, y que aparezca en GitHub.  
+[✔️] Aprender a usar el versionado semántico.  
+[✔️] Crear y subir tags a GitHub.  
+[✔️] Usar la API de GitHub para comprobar actualizaciones.  
+[✔️] Generar fixes de problemas de CodeQL automáticamente con GitHub Copilot.  
+[✔️] Utilizar revisiones automáticas de código con CodeQL.  
+
+### Objetivos relacionados con APIs y herramientas:
+
+[✔️] Aprender a usar Postman y crear una API completa.  
+[✔️] Usar Nodemailer para el envío de correos electrónicos.  
+[✔️] Enviar correos electrónicos con plantillas HTML.  
+[✔️] Aprender a gestionar contraseñas usando encriptado HASH.  
+[✔️] Limitar el acceso a dispositivos mediante User-Agents.  
+
+### Objetivos relacionados con desarrollo web y aplicaciones:
+
+[✔️] Uso de sesiones permanentes en Express con archivos JSON.  
+[✔️] Validación de formularios para comprobar los datos de entrada.  
+[✔️] Creación de un sistema de traducciones desde 0 con i18n y JSON.  
+[✔️] Conversión y optimización de tipos de imágenes.  
+
+## Tiempo invertido en desarrollo
+
+Primer año de desarrollo: 22/12/2023 - 10/09/2024 => Aproximadamente 120h acomuladas en desarrollo
+Segundo año de desarrollo: 11/09/2024 - Actualidad
 
 ## Autor
 

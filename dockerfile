@@ -22,4 +22,4 @@ ENV PORT $PORT
 EXPOSE $PORT
 
 # Comando para iniciar la aplicación
-CMD ["npm", "run" ,"start:prod"]
+CMD ["npm", "run" ,"prod"]
