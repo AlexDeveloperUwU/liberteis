@@ -3,6 +3,13 @@
 Aquí encontrarás las distintas versiones con sus cambios, la fecha y datos extras.
 
 <details>
+  <summary><b>0.14.3 - 04/10/2024</b></summary>
+
+- <span style="color: green;">Añadido:</span> Botones de añadir evento al calendario en la vista del móvil.
+
+</details>
+
+<details>
   <summary><b>0.14.2 - 01/10/2024</b></summary>
 
 - <span style="color: green;">Añadido:</span> Vista de los próximos 7 días de eventos.
