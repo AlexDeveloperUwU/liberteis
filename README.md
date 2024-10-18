@@ -2,6 +2,9 @@
 
 Una pequeña aplicación web que permite la gestión de eventos de la biblioteca del IES de Teis.
 
+> [!IMPORTANTE] V1 EN DESARROLLO.
+> Actualmente, se está trabajando en una nueva base de datos en la rama `dbRedesign`, lo que también implica cambios en el backend y el frontend, ya que las APIs, los datos a almacenar y otros aspectos adicionales están siendo modificados. Por favor, ten en cuenta que la rama `main` no está actualizada y que la rama `dbRedesign` contiene los cambios más recientes. <br> Además, esta versión rompe completamente la compatibilidad con la base de datos de la última versión disponible, por lo que se recomienda exportar todos los datos antes de actualizar. Al instalar la nueva versión, se creará una base de datos nueva sin opción de migración.
+
 [Puedes consultar el historial de cambios aquí](./docs/changelog.md)
 
 ## Características
