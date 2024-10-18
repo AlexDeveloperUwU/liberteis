@@ -7,7 +7,7 @@ const db = new Kysely({
   }),
 });
 
-export async function createTables() {
+async function createTables() {
   await db.schema
     .createTable("events")
     .ifNotExists()
@@ -74,10 +74,16 @@ export async function createTables() {
     .execute();
 }
 
+//! Sentencias SQL para uso en utilidades
+
+async function checkExistence(table, id) {
+  return await db.select().from(table).where("id", "=", id).execute();
+}
+
 //! Sentencias SQL relacionadas con la tabla de eventos
 
 // Insertar un evento en la base de datos
-export async function addEvent(event) {
+async function addEvent(event) {
   return await db
     .insertInto("events")
     .values({
@@ -94,17 +100,17 @@ export async function addEvent(event) {
 }
 
 // Obtener los datos de un evento de la base de datos
-export async function getEvent(eventId) {
+async function getEvent(eventId) {
   return await db.select().from("events").where("id", "=", eventId).execute();
 }
 
 // Obtener todos los eventos de la base de datos
-export async function getEvents() {
+async function getEvents() {
   return await db.select().from("events").execute();
 }
 
 // Actualizar los datos de un evento en la base de datos
-export async function updateEvent(event) {
+async function updateEvent(event) {
   return await db
     .update("events")
     .set({
@@ -121,14 +127,14 @@ export async function updateEvent(event) {
 }
 
 // Eliminar un evento de la base de datos
-export async function deleteEvent(eventId) {
+async function deleteEvent(eventId) {
   return await db.deleteFrom("events").where("id", "=", eventId).execute();
 }
 
 //! Sentencias SQL relacionadas con la tabla de reservas
 
 // Insertar una reserva en la base de datos
-export async function addBooking(booking) {
+async function addBooking(booking) {
   return await db
     .insertInto("bookings")
     .values({
@@ -145,17 +151,17 @@ export async function addBooking(booking) {
 }
 
 // Obtener los datos de una reserva de la base de datos
-export async function getBooking(bookingId) {
+async function getBooking(bookingId) {
   return await db.select().from("bookings").where("id", "=", bookingId).execute();
 }
 
 // Obtener todas las reservas de la base de datos
-export async function getBookings() {
+async function getBookings() {
   return await db.select().from("bookings").execute();
 }
 
 // Actualizar los datos de una reserva en la base de datos
-export async function updateBooking(booking) {
+async function updateBooking(booking) {
   return await db
     .update("bookings")
     .set({
@@ -172,7 +178,7 @@ export async function updateBooking(booking) {
 }
 
 // Actualizar el estado de una reserva en la base de datos
-export async function updateBookingStatus(bookingId, status) {
+async function updateBookingStatus(bookingId, status) {
   return await db
     .update("bookings")
     .set({
@@ -183,14 +189,14 @@ export async function updateBookingStatus(bookingId, status) {
 }
 
 // Eliminar una reserva de la base de datos
-export async function deleteBooking(bookingId) {
+async function deleteBooking(bookingId) {
   return await db.deleteFrom("bookings").where("id", "=", bookingId).execute();
 }
 
 //! Sentencias SQL relacionadas con la tabla de usuarios
 
 // Insertar un usuario en la base de datos
-export async function addUser(user) {
+async function addUser(user) {
   return await db
     .insertInto("users")
     .values({
@@ -207,17 +213,17 @@ export async function addUser(user) {
 }
 
 // Obtener los datos de un usuario de la base de datos
-export async function getUser(userId) {
+async function getUser(userId) {
   return await db.select().from("users").where("id", "=", userId).execute();
 }
 
 // Obtener todos los usuarios de la base de datos
-export async function getUsers() {
+async function getUsers() {
   return await db.select().from("users").execute();
 }
 
 // Actualizar los datos de un usuario en la base de datos
-export async function updateUser(user) {
+async function updateUser(user) {
   return await db
     .update("users")
     .set({
@@ -234,7 +240,7 @@ export async function updateUser(user) {
 }
 
 // Actualizar la fecha de último acceso de un usuario en la base de datos
-export async function updateUserLastLogin(userId, lastLogin) {
+async function updateUserLastLogin(userId, lastLogin) {
   return await db
     .update("users")
     .set({
@@ -245,6 +251,72 @@ export async function updateUserLastLogin(userId, lastLogin) {
 }
 
 // Eliminar un usuario de la base de datos
-export async function deleteUser(userId) {
+async function deleteUser(userId) {
   return await db.deleteFrom("users").where("id", "=", userId).execute();
 }
+
+//! Sentencias SQL relacionadas con la tabla de configuración
+
+// Insertar un valor de configuración en la base de datos
+async function setConfig(key, value) {
+  return await db
+    .insertInto("config")
+    .values({
+      key: key,
+      value: value,
+    })
+    .execute();
+}
+
+// Obtener un valor de configuración de la base de datos
+async function getConfig(key) {
+  return await db.select().from("config").where("key", "=", key).execute();
+}
+
+// Obtener todos los valores de configuración de la base de datos
+async function getAllConfig() {
+  return await db.select().from("config").execute();
+}
+
+// Actualizar un valor de configuración en la base de datos
+async function updateConfig(key, value) {
+  return await db
+    .update("config")
+    .set({
+      value: value,
+    })
+    .where("key", "=", key)
+    .execute();
+}
+
+// Eliminar un valor de configuración de la base de datos
+async function deleteConfig(key) {
+  return await db.deleteFrom("config").where("key", "=", key).execute();
+}
+
+module.exports = {
+  createTables,
+  checkExistence,
+  addEvent,
+  getEvent,
+  getEvents,
+  updateEvent,
+  deleteEvent,
+  addBooking,
+  getBooking,
+  getBookings,
+  updateBooking,
+  updateBookingStatus,
+  deleteBooking,
+  addUser,
+  getUser,
+  getUsers,
+  updateUser,
+  updateUserLastLogin,
+  deleteUser,
+  setConfig,
+  getConfig,
+  getAllConfig,
+  updateConfig,
+  deleteConfig,
+};

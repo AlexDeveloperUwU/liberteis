@@ -1,44 +1,54 @@
-// * Este fichero contiene funciones para generar IDs únicos para eventos
+const db = require("./dbController");
 
-function generateUniqueEventID(db) {
-  let idGenerada = generateEventID();
-
-  while (existsId(idGenerada, db)) {
-    idGenerada = generateEventID();
+function generateUniqueId(type) {
+  let letter;
+  let uniqueId;
+  switch (type) {
+    case "event":
+      letter = "E";
+      do {
+        uniqueId = generateId(letter);
+      } while (db.checkExistence("events", uniqueId));
+      return uniqueId;
+    case "user":
+      letter = "U";
+      do {
+        uniqueId = generateId(letter);
+      } while (db.checkExistence("events", uniqueId));
+      return uniqueId;
+    case "booking":
+      letter = "B";
+      do {
+        uniqueId = generateId(letter);
+      } while (db.checkExistence("events", uniqueId));
+      return uniqueId;
+    case "space":
+      letter = "S";
+      do {
+        uniqueId = generateId(letter);
+      } while (db.checkExistence("events", uniqueId));
+      return uniqueId;
+    case "category":
+      letter = "C";
+      do {
+        uniqueId = generateId(letter);
+      } while (db.checkExistence("events", uniqueId));
+      return uniqueId;
   }
-
-  return idGenerada;
 }
 
-function existsId(id, db) {
-  return db.has(id);
+function generateId(letter) {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const numbers = "0123456789";
+
+  const randomLetters = Array.from({ length: 2 }, () => letters[Math.floor(Math.random() * letters.length)]).join("");
+  const randomNumbers = Array.from({ length: 2 }, () => numbers[Math.floor(Math.random() * numbers.length)]).join("");
+
+  const combined = `${randomLetters}${randomNumbers}`
+    .split("")
+    .sort(() => Math.random() - 0.5)
+    .join("");
+  return `${letter}${combined}`;
 }
 
-function generateEventID() {
-  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const numeros = "0123456789";
-
-  let idGenerada = "";
-  for (let i = 0; i < 3; i++) {
-    const indice = Math.floor(Math.random() * letras.length);
-    idGenerada += letras.charAt(indice);
-  }
-
-  for (let i = 0; i < 3; i++) {
-    const indice = Math.floor(Math.random() * numeros.length);
-    idGenerada += numeros.charAt(indice);
-  }
-
-  idGenerada =
-    "E" +
-    idGenerada
-      .split("")
-      .sort(() => Math.random() - 0.5)
-      .join("");
-
-  return idGenerada;
-}
-
-module.exports = {
-  generateUniqueEventID,
-};
+module.exports = { generateUniqueId };

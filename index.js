@@ -6,6 +6,7 @@ const i18n = require("i18n");
 const fs = require("fs");
 const path = require("path");
 const FileStore = require("session-file-store")(session);
+const { swaggerUi, specs } = require("./swaggerConfig");
 
 // Rutas del server
 const { logRequests } = require("./functions/logrequests.js");
@@ -82,6 +83,8 @@ app.get("/health", (req, res) => {
 });
 
 // Rutas
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+
 const apiRoutes = require("./routes/apiRoutes.js");
 app.use("/api", apiRoutes);
 
