@@ -6,14 +6,14 @@ const i18n = require("i18n");
 const fs = require("fs");
 const path = require("path");
 const FileStore = require("session-file-store")(session);
-const { swaggerUi, specs } = require("./swaggerConfig");
-
-// Rutas del server
+const swaggerUi = require("swagger-ui-express");
+const { specs } = require("./swaggerConfig.js");
 const { logRequests } = require("./functions/logrequests.js");
 const envFilePath = path.join(__dirname, "env", ".env");
 require("dotenv").config({ path: envFilePath });
+const db = require("./functions/dbController.js");
 
-// Configuración de i18n
+//! Configuración de i18n
 i18n.configure({
   locales: ["en", "es", "gl"],
   directory: __dirname + "/locales",
@@ -25,24 +25,25 @@ i18n.configure({
   objectNotation: true,
 });
 
-// Config del webserver
+//! Config del webserver
+db.createTables(); // Siempre intentamos crear las tablas si no existen
 const app = express();
 const port = process.env.APP_PORT || 3000;
 const { router: authRouter, requireAuth, checkAuth } = require("./routes/authRoutes.js");
 
 app.use(logRequests);
 
-// Configuración de las vistas
+//! Configuración de las vistas y rutas estáticas
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use("/thumbs", express.static(__dirname + "/uploads"));
 app.use("/assets", express.static(__dirname + "/public"));
 
-// Middleware para manejar datos en el body de las solicitudes
+//! Middlewares para los bodys y para los json de las peticiones
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Configuración de la sesión con FileStore
+//! Configuracion de las sesiones y cookies
 app.use(
   session({
     store: new FileStore({
@@ -60,11 +61,9 @@ app.use(
   })
 );
 
-// Inicialización de cookieParser e i18n
+//! Inicialización de los middlewares de cookies y i18n
 app.use(cookieParser());
 app.use(i18n.init);
-
-// Middleware para establecer el idioma según la cookie o el parámetro de consulta
 app.use((req, res, next) => {
   let selectedLanguage = req.query.lang || req.cookies.lang || "gl";
   const tenYearsInMilliseconds = 10 * 365 * 24 * 60 * 60 * 1000;
@@ -75,26 +74,35 @@ app.use((req, res, next) => {
 });
 
 // Middleware de autenticación
-app.use(checkAuth);
+//app.use(checkAuth);
 
 // Mantener un registro de las solicitudes del servidor
 app.get("/health", (req, res) => {
   res.sendStatus(200); // Healthcheck: OK
 });
 
-// Rutas
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+//! Rutas de la API (se crea un router para toda la /api/)
+// Importaciones de los ficheros de las API
+const eventsApi = require("./routes/api/eventsApi.js");
 
-const apiRoutes = require("./routes/apiRoutes.js");
-app.use("/api", apiRoutes);
+// Creamos el router de nivel superior /api/
+const apiRouter = express.Router();
+apiRouter.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
+//apiRouter.use("/events", eventsApi);
 
-const dashRoutes = require("./routes/dashRoutes.js");
-app.use("/dash", requireAuth, dashRoutes);
+// Montamos el router en la aplicación
+app.use("/api", apiRouter);
 
-const webRoutes = require("./routes/webRoutes.js");
-app.use("/", webRoutes);
+//const apiRoutes = require("./routes/apiRoutes.js");
+//app.use("/api", apiRoutes);
 
-app.use("/auth", authRouter);
+//const dashRoutes = require("./routes/dashRoutes.js");
+//app.use("/dash", requireAuth, dashRoutes);
+
+//const webRoutes = require("./routes/webRoutes.js");
+//app.use("/", webRoutes);
+
+//app.use("/auth", authRouter);
 
 // Middleware para manejar rutas no encontradas (404)
 app.use((req, res, next) => {

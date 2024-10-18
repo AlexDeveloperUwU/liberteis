@@ -3,7 +3,7 @@ const Database = require("better-sqlite3");
 
 const db = new Kysely({
   dialect: new SqliteDialect({
-    database: new Database("../data/liberteis.db"),
+    database: new Database("./data/liberteis.db"),
   }),
 });
 
