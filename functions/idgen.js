@@ -1,6 +1,6 @@
 const db = require("./dbController.js");
 
-function generateUniqueId(type) {
+async function generateUniqueId(type) {
   let letter;
   let uniqueId;
   switch (type) {
@@ -8,31 +8,31 @@ function generateUniqueId(type) {
       letter = "E";
       do {
         uniqueId = generateId(letter);
-      } while (db.checkExistence("events", uniqueId));
+      } while (await db.checkExistence("events", uniqueId));
       return uniqueId;
     case "user":
       letter = "U";
       do {
         uniqueId = generateId(letter);
-      } while (db.checkExistence("events", uniqueId));
+      } while (await db.checkExistence("events", uniqueId));
       return uniqueId;
     case "booking":
       letter = "B";
       do {
         uniqueId = generateId(letter);
-      } while (db.checkExistence("events", uniqueId));
+      } while (await db.checkExistence("events", uniqueId));
       return uniqueId;
     case "space":
       letter = "S";
       do {
         uniqueId = generateId(letter);
-      } while (db.checkExistence("events", uniqueId));
+      } while (await db.checkExistence("events", uniqueId));
       return uniqueId;
     case "category":
       letter = "C";
       do {
         uniqueId = generateId(letter);
-      } while (db.checkExistence("events", uniqueId));
+      } while (await db.checkExistence("events", uniqueId));
       return uniqueId;
   }
 }

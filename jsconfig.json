@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "forceConsistentCasingInFileNames": true
-  },
-  "exclude": [
-    "node_modules",
-  ]
-} 

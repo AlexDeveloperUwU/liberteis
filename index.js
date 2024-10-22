@@ -7,7 +7,7 @@ const fs = require("fs");
 const path = require("path");
 const FileStore = require("session-file-store")(session);
 const swaggerUi = require("swagger-ui-express");
-const { specs } = require("./swaggerConfig.js");
+const { specs } = require("./docs/swaggerConfig.js");
 const { logRequests } = require("./functions/logrequests.js");
 const envFilePath = path.join(__dirname, "env", ".env");
 require("dotenv").config({ path: envFilePath });

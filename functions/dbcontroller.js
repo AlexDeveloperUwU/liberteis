@@ -31,7 +31,7 @@ async function createTables() {
     .addColumn("bookedBy", "varchar", (col) => col.references("users.id"))
     .addColumn("bookedDate", "date", (col) => col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`))
     .addColumn("info", "varchar")
-    .addColumn("status", "varchar", (col) => col.defaultTo("active").check(sql`status IN ('active', 'canceled')`))
+    .addColumn("status", "varchar", (col) => col.defaultTo("active").check(sql`status IN ('active', 'cancelled')`))
     .execute();
 
   await db.schema
@@ -77,7 +77,8 @@ async function createTables() {
 //! Sentencias SQL para uso en utilidades
 
 async function checkExistence(table, id) {
-  return await db.select().from(table).where("id", "=", id).execute();
+  const result = await db.selectFrom(table).select("id").where("id", "=", id).execute();
+  return result.length > 0;
 }
 
 //! Sentencias SQL relacionadas con la tabla de eventos
@@ -101,28 +102,26 @@ async function addEvent(event) {
 
 // Obtener los datos de un evento de la base de datos
 async function getEvent(eventId) {
-  return await db.select().from("events").where("id", "=", eventId).execute();
+  return await db.selectFrom("events").selectAll().where("id", "=", eventId).execute();
 }
 
 // Obtener todos los eventos de la base de datos
 async function getEvents() {
-  return await db.select().from("events").execute();
+  return await db.selectFrom("events").selectAll().execute();
 }
 
 // Actualizar los datos de un evento en la base de datos
-async function updateEvent(event) {
+async function updateEvent(eventId, fieldName, newValue) {
+  if (fieldName === 'createdDate' || fieldName === 'lastLogin') {
+    newValue = new Date(newValue).toISOString();
+  }
+
+  const updateObject = { [fieldName]: newValue };
+
   return await db
-    .update("events")
-    .set({
-      title: event.title,
-      info: event.info,
-      duration: event.duration,
-      thumbUrl: event.thumbUrl,
-      qrUrl: event.qrUrl,
-      category: event.category,
-      creator: event.creator,
-    })
-    .where("id", "=", event.id)
+    .updateTable("events")
+    .set(updateObject)
+    .where("id", "=", eventId)
     .execute();
 }
 
@@ -141,9 +140,9 @@ async function addBooking(booking) {
       id: booking.id,
       eventId: booking.eventId,
       space: booking.space,
-      bookingDate: booking.bookingDate,
+      bookingDate: booking.bookingDate.toISOString(),
       bookedBy: booking.bookedBy,
-      bookedDate: booking.bookedDate,
+      bookedDate: booking.bookedDate.toISOString(),
       info: booking.info,
       status: booking.status,
     })
@@ -152,35 +151,29 @@ async function addBooking(booking) {
 
 // Obtener los datos de una reserva de la base de datos
 async function getBooking(bookingId) {
-  return await db.select().from("bookings").where("id", "=", bookingId).execute();
+  return await db.selectFrom("bookings").selectAll().where("id", "=", bookingId).execute();
 }
 
 // Obtener todas las reservas de la base de datos
 async function getBookings() {
-  return await db.select().from("bookings").execute();
+  return await db.selectFrom("bookings").selectAll().execute();
 }
 
 // Actualizar los datos de una reserva en la base de datos
-async function updateBooking(booking) {
-  return await db
-    .update("bookings")
-    .set({
-      eventId: booking.eventId,
-      space: booking.space,
-      bookingDate: booking.bookingDate,
-      bookedBy: booking.bookedBy,
-      bookedDate: booking.bookedDate,
-      info: booking.info,
-      status: booking.status,
-    })
-    .where("id", "=", booking.id)
-    .execute();
+async function updateBooking(bookingId, fieldName, newValue) {
+  if (fieldName === "bookingDate" || fieldName === "bookedDate") {
+    newValue = new Date(newValue).toISOString();
+  }
+
+  const updateObject = { [fieldName]: newValue };
+
+  return await db.updateTable("bookings").set(updateObject).where("id", "=", bookingId).execute();
 }
 
 // Actualizar el estado de una reserva en la base de datos
 async function updateBookingStatus(bookingId, status) {
   return await db
-    .update("bookings")
+    .updateTable("bookings")
     .set({
       status: status,
     })
@@ -205,8 +198,8 @@ async function addUser(user) {
       hashedPassword: user.hashedPassword,
       type: user.type,
       createdBy: user.createdBy,
-      createdDate: user.createdDate,
-      lastLogin: user.lastLogin,
+      createdDate: user.createdDate.toISOString(),
+      lastLogin: user.lastLogin.toISOString(),
       lang: user.lang,
     })
     .execute();
@@ -214,37 +207,31 @@ async function addUser(user) {
 
 // Obtener los datos de un usuario de la base de datos
 async function getUser(userId) {
-  return await db.select().from("users").where("id", "=", userId).execute();
+  return await db.selectFrom("users").selectAll().where("id", "=", userId).execute();
 }
 
 // Obtener todos los usuarios de la base de datos
 async function getUsers() {
-  return await db.select().from("users").execute();
+  return await db.selectFrom("users").selectAll().execute();
 }
 
 // Actualizar los datos de un usuario en la base de datos
-async function updateUser(user) {
-  return await db
-    .update("users")
-    .set({
-      email: user.email,
-      hashedPassword: user.hashedPassword,
-      type: user.type,
-      createdBy: user.createdBy,
-      createdDate: user.createdDate,
-      lastLogin: user.lastLogin,
-      lang: user.lang,
-    })
-    .where("id", "=", user.id)
-    .execute();
+async function updateUser(userId, fieldName, newValue) {
+  if (fieldName === "createdDate" || fieldName === "lastLogin") {
+    newValue = new Date(newValue).toISOString();
+  }
+
+  const updateObject = { [fieldName]: newValue };
+
+  return await db.updateTable("users").set(updateObject).where("id", "=", userId).execute();
 }
 
 // Actualizar la fecha de último acceso de un usuario en la base de datos
 async function updateUserLastLogin(userId, lastLogin) {
   return await db
-    .update("users")
+    .updateTable("users")
     .set({
-      lastLogin: lastLogin,
+      lastLogin: lastLogin.toISOString(),
     })
     .where("id", "=", userId)
     .execute();
@@ -270,18 +257,18 @@ async function setConfig(key, value) {
 
 // Obtener un valor de configuración de la base de datos
 async function getConfig(key) {
-  return await db.select().from("config").where("key", "=", key).execute();
+  return await db.selectFrom("config").selectAll().where("key", "=", key).execute();
 }
 
 // Obtener todos los valores de configuración de la base de datos
 async function getAllConfig() {
-  return await db.select().from("config").execute();
+  return await db.selectFrom("config").selectAll().execute();
 }
 
 // Actualizar un valor de configuración en la base de datos
 async function updateConfig(key, value) {
   return await db
-    .update("config")
+    .updateTable("config")
     .set({
       value: value,
     })
@@ -294,6 +281,80 @@ async function deleteConfig(key) {
   return await db.deleteFrom("config").where("key", "=", key).execute();
 }
 
+//! Sentencias SQL relacionadas con la tabla de espacios
+
+// Insertar un espacio en la base de datos
+async function addSpace(space) {
+  return await db
+    .insertInto("spaces")
+    .values({
+      id: space.id,
+      name: space.name,
+      location: space.location,
+      info: space.info,
+    })
+    .execute();
+}
+
+// Obtener los datos de un espacio de la base de datos
+async function getSpace(spaceId) {
+  return await db.selectFrom("spaces").selectAll().where("id", "=", spaceId).execute();
+}
+
+// Obtener todos los espacios de la base de datos
+async function getSpaces() {
+  return await db.selectFrom("spaces").selectAll().execute();
+}
+
+// Actualizar los datos de un espacio en la base de datos
+async function updateSpace(spaceId, fieldName, newValue) {
+  const updateObject = { [fieldName]: newValue };
+
+  return await db.updateTable("spaces").set(updateObject).where("id", "=", spaceId).execute();
+}
+
+// Eliminar un espacio de la base de datos
+async function deleteSpace(spaceId) {
+  return await db.deleteFrom("spaces").where("id", "=", spaceId).execute();
+}
+
+//! Sentencias SQL relacionadas con la tabla de categorías
+
+// Insertar una categoría en la base de datos
+async function addCategory(category) {
+  return await db
+    .insertInto("categories")
+    .values({
+      id: category.id,
+      title: category.title,
+      spaces: category.spaces,
+    })
+    .execute();
+}
+
+// Obtener los datos de una categoría de la base de datos
+async function getCategory(categoryId) {
+  return await db.selectFrom("categories").selectAll().where("id", "=", categoryId).execute();
+}
+
+// Obtener todas las categorías de la base de datos
+async function getCategories() {
+  return await db.selectFrom("categories").selectAll().execute();
+}
+
+// Actualizar los datos de una categoría en la base de datos
+async function updateCategory(categoryId, fieldName, newValue) {
+  const updateObject = { [fieldName]: newValue };
+
+  return await db.updateTable("categories").set(updateObject).where("id", "=", categoryId).execute();
+}
+
+// Eliminar una categoría de la base de datos
+async function deleteCategory(categoryId) {
+  return await db.deleteFrom("categories").where("id", "=", categoryId).execute();
+}
+
+//! Exportar todas las funciones
 module.exports = {
   createTables,
   checkExistence,
@@ -314,6 +375,16 @@ module.exports = {
   updateUser,
   updateUserLastLogin,
   deleteUser,
+  addSpace,
+  getSpace,
+  getSpaces,
+  updateSpace,
+  deleteSpace,
+  addCategory,
+  getCategory,
+  getCategories,
+  updateCategory,
+  deleteCategory,
   setConfig,
   getConfig,
   getAllConfig,
