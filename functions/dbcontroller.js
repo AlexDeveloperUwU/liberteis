@@ -112,17 +112,13 @@ async function getEvents() {
 
 // Actualizar los datos de un evento en la base de datos
 async function updateEvent(eventId, fieldName, newValue) {
-  if (fieldName === 'createdDate' || fieldName === 'lastLogin') {
+  if (fieldName === "createdDate" || fieldName === "lastLogin") {
     newValue = new Date(newValue).toISOString();
   }
 
   const updateObject = { [fieldName]: newValue };
 
-  return await db
-    .updateTable("events")
-    .set(updateObject)
-    .where("id", "=", eventId)
-    .execute();
+  return await db.updateTable("events").set(updateObject).where("id", "=", eventId).execute();
 }
 
 // Eliminar un evento de la base de datos
@@ -152,6 +148,11 @@ async function addBooking(booking) {
 // Obtener los datos de una reserva de la base de datos
 async function getBooking(bookingId) {
   return await db.selectFrom("bookings").selectAll().where("id", "=", bookingId).execute();
+}
+
+// Obtener las reservas de un evento de la base de datos
+async function getEventBookings(eventId) {
+  return await db.selectFrom("bookings").selectAll().where("eventId", "=", eventId).execute();
 }
 
 // Obtener todas las reservas de la base de datos
@@ -366,6 +367,7 @@ module.exports = {
   addBooking,
   getBooking,
   getBookings,
+  getEventBookings,
   updateBooking,
   updateBookingStatus,
   deleteBooking,

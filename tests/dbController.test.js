@@ -171,6 +171,11 @@ describe("Database Functions", () => {
     expect(bookings.length).toBeGreaterThan(0);
   });
 
+  it("should retrieve all bookings of an event", async () => {
+    const bookings = await db.getEventBookings(eventId);
+    expect(bookings.length).toBeGreaterThan(0); // Investigaré luego cómo hacer una prueba más específica
+  });
+
   it("should update a booking's bookingDate", async () => {
     const fieldName = "bookingDate";
     const newValue = "2024-10-07T12:00:00.000Z";

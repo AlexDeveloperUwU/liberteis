@@ -1,0 +1,3 @@
+- Endpoint SQL con filtrado por fechas
+- Calendario muestra año escolar
+- Tabla puede tener filtrado personalizado o en su defecto por año escolar
