@@ -6,8 +6,6 @@ const i18n = require("i18n");
 const fs = require("fs");
 const path = require("path");
 const FileStore = require("session-file-store")(session);
-const swaggerUi = require("swagger-ui-express");
-const { specs } = require("./docs/swaggerConfig.js");
 const { logRequests } = require("./functions/logrequests.js");
 const envFilePath = path.join(__dirname, "env", ".env");
 require("dotenv").config({ path: envFilePath });
@@ -87,7 +85,6 @@ const eventsApi = require("./routes/api/eventsApi.js");
 
 // Creamos el router de nivel superior /api/
 const apiRouter = express.Router();
-apiRouter.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 //apiRouter.use("/events", eventsApi);
 
 // Montamos el router en la aplicación
