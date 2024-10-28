@@ -82,6 +82,11 @@ app.get("/health", (req, res) => {
 });
 
 // Rutas
+
+app.get("/", (req, res) => {
+  res.render("errors/404", { t: res.t, lang: req.getLocale() });
+});
+
 const apiRoutes = require("./routes/apiRoutes.js");
 app.use("/api", apiRoutes);
 
