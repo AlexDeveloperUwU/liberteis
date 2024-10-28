@@ -9,7 +9,7 @@ const FileStore = require("session-file-store")(session);
 const { logRequests } = require("./functions/logrequests.js");
 const envFilePath = path.join(__dirname, "env", ".env");
 require("dotenv").config({ path: envFilePath });
-const db = require("./functions/dbController.js");
+const db = require("./controllers/dbController.js");
 
 //! Configuración de i18n
 i18n.configure({

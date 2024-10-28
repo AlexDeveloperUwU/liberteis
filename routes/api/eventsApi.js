@@ -1,8 +1,8 @@
-const db = require("../../functions/dbController.js");
 const Router = require("express").Router;
 const router = Router();
 const multer = require("multer");
 const sharp = require("sharp");
+const controller = require("../../controllers/eventsController.js");
 
 router.get("/", (res) => {
   res.status(404).send("API Endpoint not avaliable.");
@@ -42,13 +42,20 @@ router.post("/upload", upload.single("thumbnailfile"), async (req, res) => {
 
     res.status(200).send({ url: fileURL });
   } catch (error) {
-    res.status(500).send("Error al procesar la imagen. Por favor, inténtalo de nuevo.");
+    res.status(500).json({ message: "Error al procesar la imagen.", error: error.message });
   }
 });
 
 //! Rutas para gestionar los eventos
 
-
+router.post("/add", (req, res) => {
+  try {
+    controller.addEvent(req.body);
+    res.status(200).json({ message: "Evento añadido correctamente." });
+  } catch (error) {
+    res.status(500).json({ message: "Error al añadir el evento.", error: error.message });
+  }
+});
 
 //! Exportamos el router para añadirlo al index de la web
 module.exports = router;

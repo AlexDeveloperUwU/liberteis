@@ -1,4 +1,4 @@
-const db = require("./dbController.js");
+const db = require("../controllers/dbController.js");
 
 async function generateUniqueId(type) {
   let letter;
