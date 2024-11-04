@@ -5,7 +5,7 @@ const sharp = require("sharp");
 const controller = require("../../controllers/eventsController.js");
 
 router.get("/", (res) => {
-  res.status(404).send("API Endpoint not avaliable.");
+  res.status(404).send("API Endpoint not found.");
 });
 
 //! Gestor de uploads para los eventos

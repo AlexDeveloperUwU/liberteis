@@ -3,7 +3,6 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const i18n = require("i18n");
-const fs = require("fs");
 const path = require("path");
 const FileStore = require("session-file-store")(session);
 const { logRequests } = require("./functions/logrequests.js");
@@ -82,10 +81,12 @@ app.get("/health", (req, res) => {
 //! Rutas de la API (se crea un router para toda la /api/)
 // Importaciones de los ficheros de las API
 const eventsApi = require("./routes/api/eventsApi.js");
+const configApi = require("./routes/api/configApi.js");
 
 // Creamos el router de nivel superior /api/
 const apiRouter = express.Router();
 //apiRouter.use("/events", eventsApi);
+apiRouter.use("/config", configApi);
 
 // Montamos el router en la aplicación
 app.use("/api", apiRouter);

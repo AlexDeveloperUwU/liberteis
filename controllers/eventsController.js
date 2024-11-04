@@ -1,5 +1,5 @@
 const db = require("./dbController.js");
-const idGen = require("../functions/idGenerator.js");
+const idGen = require("../functions/idGen.js");
 
 async function addEvent(event) {
   const requiredFields = ["title", "info", "duration", "thumbUrl", "qrUrl", "category", "creator"];
@@ -14,6 +14,7 @@ async function addEvent(event) {
   event.id = id;
 
   db.addEvent(event);
+  //TODO: Añadir un booking una vez se cree el bookingsController
 }
 
 module.exports = {
