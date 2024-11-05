@@ -13,7 +13,6 @@ async function addConfig(configObj) {
 }
 
 async function getConfig(keyObj) {
-  console.log(keyObj);
 
   if (typeof keyObj !== "object" || keyObj === null) {
     throw new Error("Invalid input: keyObj should be a non-null object");

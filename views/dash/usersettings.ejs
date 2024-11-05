@@ -86,7 +86,6 @@
       event.preventDefault();
 
       const selectedLanguage = document.getElementById('languageSelect').value;
-      console.log(selectedLanguage);
 
       try {
         const response = await fetch('/auth/updateLang', {

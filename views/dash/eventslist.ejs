@@ -225,7 +225,6 @@
 
                     $('#removeEventForm').submit(function() {
                       event.preventDefault();
-                      console.log(selectedEvents)
                       selectedEvents.forEach(function(eventId) {
                         $.ajax({
                           url: '/api/delete',
