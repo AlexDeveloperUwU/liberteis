@@ -26,7 +26,7 @@ router.get("/getAll", async (req, res) => {
   }
 });
 
-//! Rutas POST para añadir y modificar la configuración
+//! Rutas POST y PATCH para añadir y modificar la configuración
 
 router.post("/add", async (req, res) => {
   try {
@@ -47,10 +47,9 @@ router.patch("/update", async (req, res) => {
 });
 
 //! Rutas DELETE para eliminar la configuración
-
 router.delete("/delete", async (req, res) => {
   try {
-    await controller.deleteConfig(req.body);
+    await controller.deleteConfig(req.query);
     res.status(200).json({ message: "Configuración eliminada correctamente." });
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar la configuración.", error: error.message });

@@ -1,63 +1,46 @@
 const db = require("./dbController.js");
 
-async function addConfig(configObj) {
-  const requiredFields = ["key", "value"];
-
-  for (const field of requiredFields) {
-    if (!configObj.hasOwnProperty(field) || configObj[field] === null) {
-      throw new Error(`Missing or null required field: ${field}`);
-    }
+function validateConfigObj(configObj) {
+  if (typeof configObj !== "object" || configObj === null) {
+    throw new Error("Invalid input: Expected an object with 'key' and 'value' properties.");
   }
+  if (typeof configObj.key !== "string" || configObj.key.trim() === "") {
+    throw new Error("Invalid key: 'key' must be a non-empty string.");
+  }
+  if (typeof configObj.value !== "string" || configObj.value.trim() === "") {
+    throw new Error("Invalid value: 'value' must be a non-empty string.");
+  }
+}
 
-  db.setConfig(configObj.key, configObj.value);
+function validateKeyObj(keyObj) {
+  if (typeof keyObj !== "object" || keyObj === null || typeof keyObj.key !== "string" || keyObj.key.trim() === "") {
+    throw new Error("Invalid key: 'key' must be a non-empty string.");
+  }
+}
+
+async function addConfig(configObj) {
+  validateConfigObj(configObj);
+  await db.setConfig(configObj.key, configObj.value);
 }
 
 async function getConfig(keyObj) {
-
-  if (typeof keyObj !== "object" || keyObj === null) {
-    throw new Error("Invalid input: keyObj should be a non-null object");
-  }
-
-  keyObj = Object.assign({}, keyObj);
-
-  const requiredFields = ["key"];
-
-  for (const field of requiredFields) {
-    if (!keyObj.hasOwnProperty(field) || keyObj[field] === null) {
-      throw new Error(`Missing or null required field: ${field}`);
-    }
-  }
-
+  validateKeyObj(keyObj);
   const key = keyObj.key;
-  return db.getConfig(key);
+  return await db.getConfig(key);
 }
 
 async function getAllConfigs() {
-  return db.getAllConfig();
+  return await db.getAllConfig();
 }
 
 async function updateConfig(configObj) {
-  const requiredFields = ["key", "value"];
-
-  for (const field of requiredFields) {
-    if (!configObj.hasOwnProperty(field) || configObj[field] === null) {
-      throw new Error(`Missing or null required field: ${field}`);
-    }
-  }
-
-  db.updateConfig(configObj.key, configObj.value);
+  validateConfigObj(configObj);
+  await db.updateConfig(configObj.key, configObj.value);
 }
 
 async function deleteConfig(keyObj) {
-  const requiredFields = ["key"];
-
-  for (const field of requiredFields) {
-    if (!keyObj.hasOwnProperty(field) || keyObj[field] === null) {
-      throw new Error(`Missing or null required field: ${field}`);
-    }
-  }
-
-  db.deleteConfig(keyObj.key);
+  validateKeyObj(keyObj);
+  await db.deleteConfig(keyObj.key);
 }
 
 module.exports = {
