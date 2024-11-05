@@ -10,8 +10,7 @@ router.get("/", (req, res) => {
 
 router.get("/get", async (req, res) => {
   try {
-    const key = req.query.key;
-    const config = await controller.getConfig({ key });
+    const config = await controller.getConfig(req.query);
     res.status(200).json(config);
   } catch (error) {
     res.status(500).json({ message: "Error al obtener la configuración.", error: error.message });
@@ -31,7 +30,7 @@ router.get("/getAll", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   try {
-    controller.addConfig(req.body);
+    await controller.addConfig(req.body);
     res.status(200).json({ message: "Configuración añadida correctamente." });
   } catch (error) {
     res.status(500).json({ message: "Error al añadir la configuración.", error: error.message });
@@ -40,7 +39,7 @@ router.post("/add", async (req, res) => {
 
 router.patch("/update", async (req, res) => {
   try {
-    controller.updateConfig(req.body);
+    await controller.updateConfig(req.body);
     res.status(200).json({ message: "Configuración actualizada correctamente." });
   } catch (error) {
     res.status(500).json({ message: "Error al actualizar la configuración.", error: error.message });
@@ -51,7 +50,7 @@ router.patch("/update", async (req, res) => {
 
 router.delete("/delete", async (req, res) => {
   try {
-    controller.deleteConfig(req.body);
+    await controller.deleteConfig(req.body);
     res.status(200).json({ message: "Configuración eliminada correctamente." });
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar la configuración.", error: error.message });
