@@ -3,7 +3,9 @@
 ## Introduction
 
 All the functions listed here are boilerplate implementations, meaning they only include basic data validations.
+
 To improve organization, each table should have its own dedicated controller.
+
 These functions are defined here to avoid code duplication and redundancy.
 
 ## Functions avaliable
@@ -22,4 +24,4 @@ These functions are defined here to avoid code duplication and redundancy.
 
 ## See also
 
-- [configController](./configController.md)
+- [`configController`](./configController.md)
