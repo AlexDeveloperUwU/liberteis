@@ -71,7 +71,7 @@ export async function dbCreateTables() {
   await db.schema
     .createTable("config")
     .ifNotExists()
-    .addColumn("key", "varchar", (col) => col.primaryKey())
+    .addColumn("id", "varchar", (col) => col.primaryKey())
     .addColumn("value", "varchar", (col) => col.notNull())
     .execute();
 }
@@ -86,12 +86,12 @@ export async function dbCheckExistence(table, id) {
 
 // Returns data given a table and an id
 export async function dbGetOne(table, id) {
-  return await db.selectFrom(table).where("id", "=", id).execute();
+  return await db.selectFrom(table).selectAll().where("id", "=", id).execute();
 }
 
 // Returns all data from a given table
 export async function dbGetAll(table) {
-  return await db.selectFrom(table).execute();
+  return await db.selectFrom(table).selectAll().execute();
 }
 
 // Inserts the data into a given table
