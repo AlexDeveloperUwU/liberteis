@@ -4,7 +4,7 @@
   "description": "La aplicación oficial de gestión de eventos de Teis",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,8 @@
     "cookie-parser": "^1.4.7",
     "express": "^4.21.1",
     "kysely": "^0.27.4"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
