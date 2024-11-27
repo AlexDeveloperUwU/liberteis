@@ -10,6 +10,10 @@ import {
 
 beforeAll(async () => {
   await dbCreateTables();
+  const result = await checkConfigExistence("testKey");
+  if (result) {
+    await deleteConfig("testKey");
+  }
 });
 
 describe("Config Controller Tests", () => {
