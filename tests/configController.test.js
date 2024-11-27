@@ -1,5 +1,12 @@
 import { dbCreateTables } from "../db/dbController.js";
-import { setConfig, getConfig, getConfigs, updateConfig, deleteConfig } from "../db/configController.js";
+import {
+  setConfig,
+  getConfig,
+  getConfigs,
+  updateConfig,
+  deleteConfig,
+  checkConfigExistence,
+} from "../db/configController.js";
 
 beforeAll(async () => {
   await dbCreateTables();
@@ -43,5 +50,19 @@ describe("Config Controller Tests", () => {
     await deleteConfig(key);
     const result = await getConfig(key);
     expect(result.length).toBe(0);
+  });
+
+  test("checkConfigExistence should return true if config exists", async () => {
+    const key = "testKey";
+    const value = "testValue";
+    await setConfig(key, value);
+    const exists = await checkConfigExistence(key);
+    expect(exists).toBe(true);
+  });
+
+  test("checkConfigExistence should return false if config does not exist", async () => {
+    const key = "nonExistentKey";
+    const exists = await checkConfigExistence(key);
+    expect(exists).toBe(false);
   });
 });
