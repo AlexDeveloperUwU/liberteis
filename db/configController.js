@@ -19,3 +19,7 @@ export async function updateConfig(key, value) {
 export async function deleteConfig(key) {
   return await dbc.dbDeleteData("config", key);
 }
+
+export async function checkConfigExistence(key) {
+  return await dbc.dbCheckExistence("config", key);
+}
