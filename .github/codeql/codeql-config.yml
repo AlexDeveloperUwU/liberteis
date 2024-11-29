@@ -1,0 +1,5 @@
+name: "CodeQL config"
+paths-ignore:
+  - public/css/alt
+  - public/js/pages
+  - public/js/plugins

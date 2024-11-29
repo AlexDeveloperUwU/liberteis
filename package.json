@@ -4,7 +4,9 @@
   "description": "La aplicación oficial de gestión de eventos de Teis",
   "main": "index.js",
   "scripts": {
-    "test": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js",
+    "nvm": "nvm use 22",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
