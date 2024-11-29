@@ -1,7 +1,8 @@
 {
     "conventionalCommits.scopes": [
         "server",
-        "db"
+        "db",
+        "api"
     ],
     "jest.runMode": {
         "type": "on-demand",
