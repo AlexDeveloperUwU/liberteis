@@ -25,3 +25,4 @@ These functions are defined here to avoid code duplication and redundancy.
 ## See also
 
 - [`configController`](./configController.md)
+- [`usersController`](./usersController.md)
