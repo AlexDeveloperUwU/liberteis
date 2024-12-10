@@ -11,15 +11,16 @@ Additionally, the controller includes comprehensive validation to ensure that th
 
 - `addUser`: saves the given user data in the database (see the data structure below)
 
-## Data structure for the functions
+- `getUser`: retrieves the user data from the database based on the given user ID
 
-### `addUser`:
+- `getUsers`: retrieves all user data from the database
 
-```json
-{
-  "name": "name",
-  "email": "email",
-  "createdBy": "createdBy",
-  "userType": "userType"
-}
-```
+- `getUserByName`: retrieves the user data from the database based on the given user name
+
+- `updateUser`: updates the user data in the database based on the given user ID
+
+- `updateUserPassword`: updates the user password in the database based on the given user ID
+
+- `deleteUser`: deletes the user data from the database based on the given user ID
+
+- `checkUserExistence`: checks if the user exists in the database based on the given user ID

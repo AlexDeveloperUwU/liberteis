@@ -16,6 +16,10 @@ These functions are defined here to avoid code duplication and redundancy.
 
 `dbGetOne`: gets the entry that has the ID that is given in the given table
 
+`dbGetAll`: gets all the entries in the given table
+
+`dbGetWhere`: gets all the entries in the given table that match the given conditions
+
 `dbSaveData`: saves the given data in the given table
 
 `dbUpdateData`: updates the data of the entry that has the given ID in the given table
