@@ -40,15 +40,14 @@ export async function dbCreateTables() {
     .createTable("users")
     .ifNotExists()
     .addColumn("id", "varchar", (col) => col.primaryKey())
+    .addColumn("name", "varchar", (col) => col.notNull())
     .addColumn("email", "varchar", (col) => col.unique().notNull())
     .addColumn("hashedPassword", "varchar", (col) => col.notNull())
-    .addColumn("type", "varchar", (col) =>
-      col.defaultTo("normalUser").check(sql`type IN ('normalUser', 'managerUser', 'adminUser')`)
-    )
-    .addColumn("createdBy", "varchar", (col) => col.references("users.id"))
+    .addColumn("type", "varchar", (col) => col.defaultTo("normalUser"))
+    .addColumn("createdBy", "varchar", (col) => col.notNull())
     .addColumn("createdDate", "datetime", (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`))
     .addColumn("lastLogin", "datetime")
-    .addColumn("lang", "varchar", (col) => col.defaultTo("gl").check(sql`lang IN ('gl', 'es', 'en')`))
+    .addColumn("lang", "varchar", (col) => col.defaultTo("gl"))
     .execute();
 
   await db.schema
@@ -92,6 +91,11 @@ export async function dbGetOne(table, id) {
 // Returns all data from a given table
 export async function dbGetAll(table) {
   return await db.selectFrom(table).selectAll().execute();
+}
+
+// Return data with a given where
+export async function dbGetWhere(table, column, operation, data) {
+  return await db.selectFrom(table).selectAll().where(column, operation, data).execute();
 }
 
 // Inserts the data into a given table
