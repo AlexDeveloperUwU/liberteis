@@ -25,8 +25,8 @@ export async function getUsers() {
   return await dbc.dbGetAll("users");
 }
 
-export async function getUserByName(name) {
-  return await dbc.dbGetWhere("users", "name", "=", name);
+export async function getUserByEmail(name) {
+  return await dbc.dbGetWhere("users", "email", "=", name);
 }
 
 export async function updateUser(id, user) {
