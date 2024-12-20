@@ -15,7 +15,7 @@ Additionally, the controller includes comprehensive validation to ensure that th
 
 - `getUsers`: retrieves all user data from the database
 
-- `getUserByName`: retrieves the user data from the database based on the given user name
+- `getUserByEmail`: retrieves the user data from the database based on the given user email
 
 - `updateUser`: updates the user data in the database based on the given user ID
 
