@@ -3,7 +3,7 @@ import * as users from "../../db/usersController.js";
 
 beforeAll(async () => {
   await dbCreateTables();
-  const user = await users.getUserByName("Test user");
+  const user = await users.getUserByEmail("test@test.com");
   if (user !== undefined && user.length > 0) {
     await users.deleteUser(user[0].id);
   }
@@ -14,7 +14,7 @@ describe("Users Controller Tests", () => {
   test("addUser should insert a new user", async () => {
     const user = { name: "Test user", email: "test@test.com", createdBy: "System", type: "normalUser" };
     await users.addUser(user);
-    const result = await users.getUserByName("Test user");
+    const result = await users.getUserByEmail("test@test.com");
     expect(result).toBeDefined();
     userId = result[0].id;
   });
@@ -30,8 +30,8 @@ describe("Users Controller Tests", () => {
     expect(result).toBeDefined();
   });
 
-  test("getUserByName should return a user", async () => {
-    const result = await users.getUserByName("Test user");
+  test("getUserByEmail should return a user", async () => {
+    const result = await users.getUserByEmail("test@test.com");
     expect(result).toBeDefined();
     expect(result[0].name).toBe("Test user");
     expect(result[0].id).toBe(userId);
