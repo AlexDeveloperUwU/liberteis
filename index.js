@@ -2,6 +2,7 @@ import e from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
+import { dbCreateTables } from "./db/dbController.js";
 
 //! Definition of the __dirname and __filename constants that are not available in ES6 modules
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -20,6 +21,9 @@ app.set("/uploads", e.static(path.join(__dirname, "uploads")));
 app.set("/public", e.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//! Create the database tables if they don't exist
+dbCreateTables();
 
 //! Define the routes
 app.use("/api", apiRouter);
