@@ -12,7 +12,7 @@ export async function addUser(user) {
   user.id = await id.generateId("user");
   user.hashedPassword = ds.encryptPass(genPass);
   user.createdDate = new Date().toISOString();
-  user.lastLogin = null;
+  user.lastLogin = undefined;
   user.lang = "gl";
   return await dbc.dbSaveData("users", user);
 }
