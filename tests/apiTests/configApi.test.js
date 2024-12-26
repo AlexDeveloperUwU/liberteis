@@ -5,7 +5,7 @@ describe("Config API Tests", () => {
     // Eliminar la configuración si existe
     await fetch(`${baseUrl}?key=testKey`, { method: "DELETE" });
 
-    // Crear la configuración inicialx
+    // Crear la configuración inicial
     await fetch(baseUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
