@@ -53,7 +53,7 @@ api.post("/", async (req, res) => {
         createdBy: req.session?.userId || "system",
       };
       await users.addUser(user);
-      return res.status(201).json({ code: 201, data: "User created sucessfully" });
+      return res.status(201).json({ code: 201, message: "User created sucessfully" });
     }
   } catch (error) {
     console.error("Error creating user:", error);
@@ -104,7 +104,7 @@ api.put("/", async (req, res) => {
       }
 
       await users.updateUser(userId, user);
-      return res.json({ code: 200, data: "User updated successfully" });
+      return res.json({ code: 200, message: "User updated successfully" });
     } else {
       return res.status(404).json({ code: 404, message: "User not found" });
     }
@@ -137,7 +137,7 @@ api.delete("/", async (req, res) => {
     const exists = await users.checkUserExistence(userId);
     if (exists) {
       await users.deleteUser(userId);
-      return res.json({ code: 200, data: "User deleted sucessfully" });
+      return res.json({ code: 200, message: "User deleted sucessfully" });
     } else {
       return res.status(404).json({ code: 404, message: "User not found" });
     }
