@@ -1,3 +1,8 @@
+/**
+ * @jest-environment node
+ * @type {import('@jest/globals').Jest}
+ */
+
 import { dbCreateTables } from "../../db/dbController.js";
 import * as users from "../../db/usersController.js";
 

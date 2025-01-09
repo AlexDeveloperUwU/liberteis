@@ -1,3 +1,8 @@
+/**
+ * @jest-environment node
+ * @type {import('@jest/globals').Jest}
+ */
+
 import * as ds from "../../utils/dataSecurity.js";
 import fs from "fs";
 import path from "path";

@@ -1,3 +1,8 @@
+/**
+ * @jest-environment node
+ * @type {import('@jest/globals').Jest}
+ */
+
 const baseUrl = "http://localhost:3000/api/config/";
 
 describe("Config API Tests", () => {

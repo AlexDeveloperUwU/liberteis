@@ -1,3 +1,8 @@
+/**
+ * @jest-environment node
+ * @type {import('@jest/globals').Jest}
+ */
+
 import { generateId } from "../../utils/idGen";
 
 describe("generateId Tests", () => {

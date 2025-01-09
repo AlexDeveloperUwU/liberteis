@@ -1,3 +1,8 @@
+/**
+ * @jest-environment node
+ * @type {import('@jest/globals').Jest}
+ */
+
 import { generatePass } from "../../utils/password";
 
 describe("Password Tests", () => {
