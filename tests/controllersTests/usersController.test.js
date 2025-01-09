@@ -56,7 +56,7 @@ describe("Users Controller Tests", () => {
   });
 
   test("deleteUser should remove a user", async () => {
-    const result = await users.deleteUser(userId);
+    await users.deleteUser(userId);
     const user = await users.getUser(userId);
     expect(user).toHaveLength(0);
   });

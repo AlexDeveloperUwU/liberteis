@@ -4,6 +4,7 @@
         "api",
         "utils",
         "base",
+        "tests"
     ],
     "jest.runMode": {
         "type": "on-demand",
