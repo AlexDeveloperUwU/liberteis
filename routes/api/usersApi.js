@@ -95,7 +95,6 @@ api.put("/", async (req, res) => {
       if (type) user.type = type;
       if (lastLogin) user.lastLogin = lastLogin;
       if (lang) user.lang = lang;
-      user.updatedBy = req.session?.userId;
 
       // Validate user type
       const allowedTypes = ["normalUser", "managerUser", "adminUser"];
