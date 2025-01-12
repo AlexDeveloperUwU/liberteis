@@ -24,3 +24,14 @@
   "lang": "lang"
 }
 ```
+
+## Data structure for the spaces table
+
+```json
+{
+  "id": "id",
+  "name": "name",
+  "location": "location",
+  "info": "info"
+}
+```
