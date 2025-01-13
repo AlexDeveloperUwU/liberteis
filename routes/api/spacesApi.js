@@ -52,7 +52,7 @@ api.post("/", async (req, res) => {
         info,
       };
       await spaces.addSpace(space);
-      return res.status(201).json({ code: 201, message: "Space created sucessfully" });
+      return res.status(201).json({ code: 201, message: "Space created successfully" });
     }
   } catch (error) {
     console.error("Error creating space:", error);
@@ -86,7 +86,7 @@ api.put("/", async (req, res) => {
       if (info) space.info = info;
 
       await spaces.updateSpace(id, space);
-      return res.json({ code: 200, message: "Space updated sucessfully" });
+      return res.json({ code: 200, message: "Space updated successfully" });
     }
   } catch (error) {
     console.error("Error updating space:", error);
@@ -109,7 +109,7 @@ api.delete("/", async (req, res) => {
       return res.status(404).json({ code: 404, message: "Space not found" });
     } else {
       await spaces.deleteSpace(id);
-      return res.json({ code: 200, message: "Space deleted sucessfully" });
+      return res.json({ code: 200, message: "Space deleted successfully" });
     }
   } catch (error) {
     console.error("Error deleting space:", error);

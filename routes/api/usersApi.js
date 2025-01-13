@@ -53,7 +53,7 @@ api.post("/", async (req, res) => {
         createdBy: req.session?.userId || "system",
       };
       await users.addUser(user);
-      return res.status(201).json({ code: 201, message: "User created sucessfully" });
+      return res.status(201).json({ code: 201, message: "User created successfully" });
     }
   } catch (error) {
     console.error("Error creating user:", error);
@@ -136,7 +136,7 @@ api.delete("/", async (req, res) => {
     const exists = await users.checkUserExistence(userId);
     if (exists) {
       await users.deleteUser(userId);
-      return res.json({ code: 200, message: "User deleted sucessfully" });
+      return res.json({ code: 200, message: "User deleted successfully" });
     } else {
       return res.status(404).json({ code: 404, message: "User not found" });
     }

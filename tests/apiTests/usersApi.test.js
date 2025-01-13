@@ -20,7 +20,7 @@ describe("Users API Tests", () => {
     const data = await response.json();
     expect(response.status).toBe(201);
     expect(data.code).toBe(201);
-    expect(data.message).toBe("User created sucessfully");
+    expect(data.message).toBe("User created successfully");
   });
 
   test("GET /api/users - should return all users", async () => {
@@ -68,7 +68,7 @@ describe("Users API Tests", () => {
     const data = await response.json();
     expect(response.status).toBe(200);
     expect(data.code).toBe(200);
-    expect(data.message).toBe("User deleted sucessfully");
+    expect(data.message).toBe("User deleted successfully");
   });
 
   test("GET /api/users - should return an empty array", async () => {
