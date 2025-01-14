@@ -20,7 +20,7 @@ export async function dbCreateTables() {
     .addColumn("thumbUrl", "varchar")
     .addColumn("qrUrl", "varchar")
     .addColumn("category", "varchar", (col) => col.references("categories.id"))
-    .addColumn("creator", "varchar", (col) => col.references("users.id"))
+    .addColumn("createdBy", "varchar", (col) => col.references("users.id"))
     .execute();
 
   await db.schema
