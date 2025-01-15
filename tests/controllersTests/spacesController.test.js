@@ -13,8 +13,11 @@ beforeAll(async () => {
   await dbCreateTables();
 
   const user = { name: "Test user", email: "test@test.com", createdBy: "System", type: "normalUser" };
-  await users.addUser(user);
-  const result = await users.getUserByEmail("test@test.com");
+  let result = await users.getUserByEmail("test@test.com");
+  if (result.length === 0) {
+    await users.addUser(user);
+    result = await users.getUserByEmail("test@test.com");
+  }
   expect(result).toBeDefined();
   userId = result[0].id;
 

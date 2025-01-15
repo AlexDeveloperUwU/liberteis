@@ -7,8 +7,11 @@ const baseUrl = "http://localhost:3000/api/users";
 
 describe("Users API Tests", () => {
   beforeAll(async () => {
-    // Delete the testing user if exists
-    await fetch(`${baseUrl}?email=test@test.com`, { method: "DELETE" });
+    const response = await fetch(`${baseUrl}?email=test@test.com`);
+    const data = await response.json();
+    if (data.data.length > 0) {
+      await fetch(`${baseUrl}?email=test@test.com`, { method: "DELETE" });
+    }
   });
 
   test("POST /api/users - should create a new user", async () => {
