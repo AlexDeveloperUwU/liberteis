@@ -5,9 +5,19 @@
 
 import { dbCreateTables } from "../../db/dbController.js";
 import * as spaces from "../../db/spacesController.js";
+import * as users from "../../db/usersController.js";
+
+let userId = null;
 
 beforeAll(async () => {
   await dbCreateTables();
+
+  const user = { name: "Test user", email: "test@test.com", createdBy: "System", type: "normalUser" };
+  await users.addUser(user);
+  const result = await users.getUserByEmail("test@test.com");
+  expect(result).toBeDefined();
+  userId = result[0].id;
+
   const space = await spaces.getSpaceByName("testSpace");
   if (space !== undefined && space.length > 0) {
     await spaces.deleteSpace(space[0].id);
@@ -21,6 +31,7 @@ describe("Spaces Controller Tests", () => {
       name: "testSpace",
       location: "testLocation",
       info: "testInfo",
+      createdBy: userId,
     };
     await spaces.addSpace(space);
     const result = await spaces.getSpaceByName("testSpace");
