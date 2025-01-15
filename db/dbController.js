@@ -57,6 +57,7 @@ export async function dbCreateTables() {
     .addColumn("name", "varchar", (col) => col.notNull())
     .addColumn("location", "varchar", (col) => col.notNull())
     .addColumn("info", "varchar")
+    .addColumn("createdBy", "varchar", (col) => col.references("users.id"))
     .execute();
 
   await db.schema
@@ -65,6 +66,7 @@ export async function dbCreateTables() {
     .addColumn("id", "varchar", (col) => col.primaryKey())
     .addColumn("title", "varchar", (col) => col.notNull())
     .addColumn("spaces", "json")
+    .addColumn("createdBy", "varchar", (col) => col.references("users.id"))
     .execute();
 
   await db.schema
