@@ -32,6 +32,7 @@
   "id": "id",
   "name": "name",
   "location": "location",
-  "info": "info"
+  "info": "info",
+  "createdBy": "createdBy"
 }
 ```
