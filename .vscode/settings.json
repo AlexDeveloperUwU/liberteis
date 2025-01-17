@@ -1,13 +1,7 @@
 {
-    "conventionalCommits.scopes": [
-        "db",
-        "api",
-        "utils",
-        "base",
-        "tests"
-    ],
-    "jest.runMode": {
-        "type": "on-demand",
-        "coverage": false
-    }
+  "conventionalCommits.scopes": ["db", "api", "utils", "base", "tests"],
+  "jest.runMode": {
+    "type": "on-demand",
+    "coverage": false
+  }
 }

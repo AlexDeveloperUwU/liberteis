@@ -21,4 +21,3 @@ Also, the format of the data is {key: key, value: value}, but to use the defined
 - `deleteConfig`: deletes the configuration setting that has the given key (key)
 
 - `checkConfigExistence`: checks if a configuration setting with the given key exists (key)
-

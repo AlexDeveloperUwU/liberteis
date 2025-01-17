@@ -2,7 +2,6 @@
 
 Una pequeña aplicación web que permite la gestión de eventos de la biblioteca del IES de Teis.
 
-
 ## Características
 
 - Gestión de eventos mediante un calendario
