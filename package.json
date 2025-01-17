@@ -3,10 +3,12 @@
   "version": "2.0.0",
   "description": "La aplicación oficial de gestión de eventos de Teis",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js",
     "nvm": "nvm use 22",
     "start": "node index.js",
+    "format": "prettier --write .",
     "changelog": "auto-changelog --template keepachangelog --unreleased --commit-limit false --output docs/CHANGELOG.md"
   },
   "repository": {
@@ -19,7 +21,6 @@
     "url": "https://github.com/AlexDeveloperUwU/liberteis/issues"
   },
   "homepage": "https://github.com/AlexDeveloperUwU/liberteis#readme",
-  "type": "module",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "better-sqlite3": "^11.7.2",
@@ -31,6 +32,11 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "prettier": "^3.4.2"
+  },
+  "prettier": {
+    "bracketSameLine": true,
+    "printWidth": 120
   }
 }
