@@ -41,7 +41,7 @@ api.post("/", async (req, res) => {
     const exists = await config.checkConfigExistence(key);
     if (!exists) {
       await config.setConfig(key, value);
-      return res.status(201).json({ code: 201, message: "Config created correctly" });
+      return res.status(201).json({ code: 201, message: "Config created successfully" });
     } else {
       return res.status(409).json({ code: 409, message: "Config already exists" });
     }
@@ -63,7 +63,7 @@ api.put("/", async (req, res) => {
     const exists = await config.checkConfigExistence(key);
     if (exists) {
       await config.updateConfig(key, value);
-      return res.json({ code: 200, message: "Config updated correctly" });
+      return res.json({ code: 200, message: "Config updated successfully" });
     } else {
       return res.status(404).json({ code: 404, message: "Config not found" });
     }
@@ -85,7 +85,7 @@ api.delete("/", async (req, res) => {
     const exists = await config.checkConfigExistence(key);
     if (exists) {
       await config.deleteConfig(key);
-      return res.json({ code: 200, message: "Config deleted correctly" });
+      return res.json({ code: 200, message: "Config deleted successfully" });
     } else {
       return res.status(404).json({ code: 404, message: "Config not found" });
     }

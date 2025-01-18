@@ -37,7 +37,7 @@ api.post("/", async (req, res) => {
   const { name, location, info } = req.body;
 
   if (!name || !location || !info) {
-    return res.status(400).json({ code: 400, message: "Name, location and info are required" });
+    return res.status(400).json({ code: 400, message: "Name, location, and info are required" });
   }
 
   try {
