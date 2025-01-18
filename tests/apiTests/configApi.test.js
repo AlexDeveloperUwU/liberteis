@@ -43,7 +43,7 @@ describe("Config API Tests", () => {
     const data = await response.json();
     expect(response.status).toBe(201);
     expect(data.code).toBe(201);
-    expect(data.message).toBe("Config created correctly");
+    expect(data.message).toBe("Config created successfully");
   });
 
   test("PUT /api/config - should update an existing config", async () => {
@@ -55,7 +55,7 @@ describe("Config API Tests", () => {
     const data = await response.json();
     expect(response.status).toBe(200);
     expect(data.code).toBe(200);
-    expect(data.message).toBe("Config updated correctly");
+    expect(data.message).toBe("Config updated successfully");
   });
 
   test("DELETE /api/config?key=newKey - should delete a config", async () => {
@@ -63,6 +63,6 @@ describe("Config API Tests", () => {
     const data = await response.json();
     expect(response.status).toBe(200);
     expect(data.code).toBe(200);
-    expect(data.message).toBe("Config deleted correctly");
+    expect(data.message).toBe("Config deleted successfully");
   });
 });
