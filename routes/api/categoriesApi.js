@@ -14,12 +14,20 @@ api.get("/", async (req, res) => {
       const exists = id ? await categories.checkCategoryExistence(id) : await categories.getCategoryByName(name);
       if (exists) {
         const response = id ? await categories.getCategory(id) : await categories.getCategoryByName(name);
+        if (response.spaces) {
+          response.spaces = JSON.parse(response.spaces);
+        }
         return res.json({ code: 200, data: response });
       } else {
         return res.status(404).json({ code: 404, message: "Category not found" });
       }
     } else {
       const response = await categories.getCategories();
+      response.forEach((category) => {
+        if (category.spaces) {
+          category.spaces = JSON.parse(category.spaces);
+        }
+      });
       return res.json({ code: 200, data: response });
     }
   } catch (error) {
@@ -46,7 +54,7 @@ api.post("/", async (req, res) => {
     if (exists && exists.length > 0) {
       return res.status(409).json({ code: 409, message: "Category already exists" });
     } else {
-      const jsonSpaces = JSON.parse(spaces);
+      const jsonSpaces = JSON.stringify(spaces);
       const category = {
         name,
         spaces: jsonSpaces,
@@ -78,10 +86,11 @@ api.put("/", async (req, res) => {
     if (!exists) {
       return res.status(404).json({ code: 404, message: "Category not found" });
     } else {
-      const category = await categories.getCategory(id);
+      let category = await categories.getCategory(id);
+      category = category[0];
 
       if (name) category.name = name;
-      if (spaces) category.spaces = JSON.parse(spaces);
+      if (spaces) category.spaces = JSON.stringify(spaces);
 
       await categories.updateCategory(id, category);
       return res.json({ code: 200, message: "Category updated successfully" });
