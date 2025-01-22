@@ -1,8 +1,8 @@
 import router from "express";
-import configApi from "./configApi.js";
-import usersApi from "./usersApi.js";
-import spacesApi from "./spacesApi.js";
-import categoriesApi from "./categoriesApi.js";
+import configApi from "./api/configApi.js";
+import usersApi from "./api/usersApi.js";
+import spacesApi from "./api/spacesApi.js";
+import categoriesApi from "./api/categoriesApi.js";
 
 const apiRouter = router();
 export default apiRouter;

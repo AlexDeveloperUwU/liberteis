@@ -9,7 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const __filename = path.basename(fileURLToPath(import.meta.url));
 
 //! Import all the routers and routes
-import apiRouter from "./routes/api/api.js";
+import apiRouter from "./routes/api.js";
 
 //! Create an Express application
 const app = e();
