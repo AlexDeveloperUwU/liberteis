@@ -39,14 +39,13 @@ export function encryptPass(pass) {
   return hashedPassword;
 }
 
-// Pass is the plain password and hash is the hashed password from the database
 export function validatePass(pass, hash) {
   return encryptPass(pass) === hash;
 }
 
 //! Functions for encrypting and decrypting data
 export function encryptData(data) {
-  const key = Buffer.from(getKey(), "hex"); // Convertir la clave a Buffer usando 'hex'
+  const key = Buffer.from(getKey(), "hex"); 
   const iv = crypto.randomBytes(16);
 
   const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
@@ -57,7 +56,7 @@ export function encryptData(data) {
 }
 
 export function decryptData(encryptedData) {
-  const key = Buffer.from(getKey(), "hex"); // Convertir la clave a Buffer usando 'hex'
+  const key = Buffer.from(getKey(), "hex"); 
 
   const [ivStr, encrypted] = encryptedData.split(":");
   const iv = Buffer.from(ivStr, "base64");
