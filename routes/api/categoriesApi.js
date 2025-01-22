@@ -14,20 +14,12 @@ api.get("/", async (req, res) => {
       const exists = id ? await categories.checkCategoryExistence(id) : await categories.getCategoryByName(name);
       if (exists) {
         const response = id ? await categories.getCategory(id) : await categories.getCategoryByName(name);
-        if (response.spaces) {
-          response.spaces = JSON.parse(response.spaces);
-        }
         return res.json({ code: 200, data: response });
       } else {
         return res.status(404).json({ code: 404, message: "Category not found" });
       }
     } else {
       const response = await categories.getCategories();
-      response.forEach((category) => {
-        if (category.spaces) {
-          category.spaces = JSON.parse(category.spaces);
-        }
-      });
       return res.json({ code: 200, data: response });
     }
   } catch (error) {
