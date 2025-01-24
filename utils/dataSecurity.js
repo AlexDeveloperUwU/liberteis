@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 
 //! Constants
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const keyPath = path.join(__dirname, "../db/secret.key");
+const keyPath = path.join(__dirname, "../data/secret.key");
 
 //! Functions to handle the key file
 function getKey() {
