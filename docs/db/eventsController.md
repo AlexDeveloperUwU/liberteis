@@ -15,7 +15,7 @@ Additionally, the controller includes comprehensive validation to ensure that th
 
 - `getEvents`: retrieves all event data from the database
 
-- `getEventByName`: retrieves the event data from the database based on the given event name
+- `getEventByTitle`: retrieves the event data from the database based on the given event title
 
 - `updateEvent`: updates the event data in the database based on the given event ID
 
