@@ -14,8 +14,8 @@ export async function getEvents() {
   return await dbc.dbGetAll("events");
 }
 
-export async function getEventByName(name) {
-  return await dbc.dbGetWhere("events", "name", "=", name);
+export async function getEventByTitle(title) {
+  return await dbc.dbGetWhere("events", "title", "=", title);
 }
 
 export async function updateEvent(id, event) {
