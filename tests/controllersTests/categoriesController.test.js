@@ -12,9 +12,9 @@ let userId = null;
 beforeAll(async () => {
   await dbCreateTables();
 
-  const user = { name: "Test user", email: "test@test.com", createdBy: "System", type: "normalUser" };
   let result = await users.getUserByEmail("test@test.com");
   if (result.length === 0) {
+    const user = { name: "Test user", email: "test@test.com", createdBy: "System", type: "normalUser" };
     await users.addUser(user);
     result = await users.getUserByEmail("test@test.com");
   }
