@@ -15,7 +15,7 @@ export async function getCategories() {
 }
 
 export async function getCategoryByName(name) {
-  return await dbc.dbGetWhere("categories", "name", "=", name);
+  return await dbc.dbGetWhere("categories", { field: "name", operator: "=", value: name });
 }
 
 export async function updateCategory(id, category) {

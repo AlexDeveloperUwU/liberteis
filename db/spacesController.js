@@ -15,7 +15,7 @@ export async function getSpaces() {
 }
 
 export async function getSpaceByName(name) {
-  return await dbc.dbGetWhere("spaces", "name", "=", name);
+  return await dbc.dbGetWhere("spaces", { field: "name", operator: "=", value: name });
 }
 
 export async function updateSpace(id, space) {
