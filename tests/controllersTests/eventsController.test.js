@@ -46,7 +46,7 @@ describe("Events Controller Tests", () => {
       title: "testEvent",
       info: "Info sobre el evento",
       duration: 30,
-      thumbUrl: "https://www.google.com/image.png",
+      coverUrl: "https://www.google.com/image.png",
       qrUrl: "https://www.google.com/qr.png",
       category: categoryId,
       createdBy: userId,
@@ -63,7 +63,7 @@ describe("Events Controller Tests", () => {
     expect(result[0].title).toBe("testEvent");
     expect(result[0].info).toBe("Info sobre el evento");
     expect(result[0].duration).toBe(30);
-    expect(result[0].thumbUrl).toBe("https://www.google.com/image.png");
+    expect(result[0].coverUrl).toBe("https://www.google.com/image.png");
     expect(result[0].qrUrl).toBe("https://www.google.com/qr.png");
     expect(result[0].category).toBe(categoryId);
   });
@@ -79,7 +79,7 @@ describe("Events Controller Tests", () => {
     expect(result[0].title).toBe("testEvent");
     expect(result[0].info).toBe("Info sobre el evento");
     expect(result[0].duration).toBe(30);
-    expect(result[0].thumbUrl).toBe("https://www.google.com/image.png");
+    expect(result[0].coverUrl).toBe("https://www.google.com/image.png");
     expect(result[0].qrUrl).toBe("https://www.google.com/qr.png");
     expect(result[0].category).toBe(categoryId);
   });
@@ -89,7 +89,7 @@ describe("Events Controller Tests", () => {
       title: "testEvent updated",
       info: "Updated info",
       duration: 60,
-      thumbUrl: "https://www.google.com/image2.png",
+      coverUrl: "https://www.google.com/image2.png",
       qrUrl: "https://www.google.com/qr2.png",
       category: categoryId,
     };
@@ -99,7 +99,7 @@ describe("Events Controller Tests", () => {
     expect(result[0].title).toBe("testEvent updated");
     expect(result[0].info).toBe("Updated info");
     expect(result[0].duration).toBe(60);
-    expect(result[0].thumbUrl).toBe("https://www.google.com/image2.png");
+    expect(result[0].coverUrl).toBe("https://www.google.com/image2.png");
     expect(result[0].qrUrl).toBe("https://www.google.com/qr2.png");
     expect(result[0].category).toBe(categoryId);
   });

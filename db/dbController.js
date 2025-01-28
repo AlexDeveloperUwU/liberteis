@@ -17,7 +17,7 @@ export async function dbCreateTables() {
     .addColumn("title", "varchar", (col) => col.notNull())
     .addColumn("info", "varchar", (col) => col.notNull())
     .addColumn("duration", "integer", (col) => col.defaultTo(30).notNull())
-    .addColumn("thumbUrl", "varchar")
+    .addColumn("coverUrl", "varchar")
     .addColumn("qrUrl", "varchar")
     .addColumn("category", "varchar", (col) => col.references("categories.id"))
     .addColumn("createdBy", "varchar", (col) => col.references("users.id"))
