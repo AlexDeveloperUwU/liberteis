@@ -2,13 +2,28 @@ import e from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
-import { dbCreateTables } from "./db/dbController.js";
+import fs from "fs";
 
 //! Definition of the __dirname and __filename constants that are not available in ES6 modules
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const __filename = path.basename(fileURLToPath(import.meta.url));
 
+//! Create the required directories
+const directories = [
+  path.join(__dirname, "data"),
+  path.join(__dirname, "data", "keys"),
+  path.join(__dirname, "data", "db"),
+  path.join(__dirname, "data", "uploads"),
+];
+
+directories.forEach((dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
+
 //! Import all the routers and routes
+import { dbCreateTables } from "./db/dbController.js";
 import apiRouter from "./routes/api.js";
 
 //! Create an Express application

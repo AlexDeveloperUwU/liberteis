@@ -11,7 +11,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 //! Constants
-const keyPath = path.join(__dirname, "../../data/secret.key");
+const keyPath = path.join(__dirname, "../../data/keys/secret.key");
 
 describe("Data Security Tests - When secret.key does not exist", () => {
   let hashed = null;
