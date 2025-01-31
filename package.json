@@ -9,7 +9,7 @@
     "nvm": "nvm use 22",
     "start": "node index.js",
     "format": "prettier --write .",
-    "changelog": "auto-changelog --template keepachangelog --unreleased --commit-limit false --output docs/CHANGELOG.md"
+    "changelog": "auto-changelog --template keepachangelog --unreleased --commit-limit false --output docs/CHANGELOG.md --sort-commits date-desc"
   },
   "repository": {
     "type": "git",
