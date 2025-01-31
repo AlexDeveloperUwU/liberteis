@@ -1,5 +1,5 @@
 import router from "express";
-import * as config from "../../db/configController.js";
+import * as config from "../../db/configService.js";
 
 const api = router();
 export default api;
