@@ -36,4 +36,4 @@ export async function getSpaces(status) {}
 export async function checkSpaceStatus(id) {}
 
 // Function to check if a space exists
-export async function checkSpaceExists(id) {}
+export async function checkSpaceExists(name) {}

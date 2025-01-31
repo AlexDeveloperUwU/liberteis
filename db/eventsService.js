@@ -36,4 +36,4 @@ export async function getEvents(status) {}
 export async function checkEventStatus(id) {}
 
 // Function to check if an event exists
-export async function checkEventExists(id) {}
+export async function checkEventExists(title) {}

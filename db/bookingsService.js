@@ -34,6 +34,3 @@ export async function getBookings(status) {}
 
 // Function to check a booking's status
 export async function checkBookingStatus(id) {}
-
-// Function to check if a booking exists
-export async function checkBookingExists(id) {}

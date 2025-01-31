@@ -41,4 +41,4 @@ export async function getUsers(status) {}
 export async function checkUserStatus(id) {}
 
 // Function to check if an user exists
-export async function checkUserExists(id) {}
+export async function checkUserExists(email) {}
