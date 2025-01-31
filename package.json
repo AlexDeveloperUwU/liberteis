@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "@types/swagger-jsdoc": "^6.0.4",
     "jest": "^29.7.0",
     "prettier": "^3.4.2"
   },
