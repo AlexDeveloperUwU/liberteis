@@ -25,8 +25,3 @@ These functions are defined here to avoid code duplication and redundancy.
 `dbUpdateData`: updates the data of the entry that has the given ID in the given table
 
 `dbDeleteData`: deletes the entry that has the given ID in the given table
-
-## See also
-
-- [`configController`](./configController.md)
-- [`usersController`](./usersController.md)
