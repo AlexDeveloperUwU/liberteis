@@ -3,37 +3,37 @@ import * as id from "../utils/idGen.js";
 
 //! Basic CRUD operations
 
-// Function to add a space to the database
-export async function addSpace(space) {}
+// Function to add a category to the database
+export async function addCategory(category) {}
 
-// Function to update a space in the database
-export async function updateSpace(id, space) {}
+// Function to update a category in the database
+export async function updateCategory(id, category) {}
 
-// Function to enable or disable a space in the database
-export async function changeSpaceStatus(id) {}
+// Function to enable or disable a category in the database
+export async function changeCategoryStatus(id) {}
 
-// Function to enable a space in the database
-export async function enableSpace(id) {}
+// Function to enable an event in the database
+export async function enableCategory(id) {}
 
-// Function to disable a space in the database
-export async function disableSpace(id) {}
+// Function to disable an event in the database
+export async function disableCategory(id) {}
 
 //! Info retrieval operations
 
-// Function to get a space from the database
-// It includes the option to include inactive spaces
-export async function getSpace(id, includeInactive = false) {}
+// Function to get a category from the database
+// It includes the option to include inactive categories
+export async function getCategory(id, includeInactive = false) {}
 
-// Function to get a space by name from the database
-// It includes the option to include inactive spaces
-export async function getSpaceByName(name, includeInactive = false) {}
+// Function to get a category by name from the database
+// It includes the option to include inactive categories
+export async function getCategoryByName(name, includeInactive = false) {}
 
-// Function to get all spaces from the database
-// It can return: all, active (DEFAULT) or inactive spaces
-export async function getSpaces(status) {}
+// Function to get all categories from the database
+// It can return: all, active (DEFAULT) or inactive categories
+export async function getCategories(status) {}
 
-// Function to check a space's status
-export async function checkSpaceStatus(id) {}
+// Function to check a category's status
+export async function checkCategoryStatus(id) {}
 
-// Function to check if a space exists
-export async function checkSpaceExists(name) {}
+// Function to check if a category exists
+export async function checkCategoryExists(title) {}
