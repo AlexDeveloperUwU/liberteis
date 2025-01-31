@@ -148,8 +148,8 @@ export async function dbSwitchDeletionStatus(table, id) {
 }
 
 // Sets deletion status of the entry with the given id from a given table to the given value
-export async function dbSetDeleteStatus(table, id, status) {
-  return await dbUpdateData(table, id, { deleted: status });
+export async function dbSetDeleteStatus(table, id, deletionStatus) {
+  return await dbUpdateData(table, id, { deleted: deletionStatus });
 }
 
 // Deletes the entry with the given id from a given table
