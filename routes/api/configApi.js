@@ -4,12 +4,15 @@ import * as config from "../../db/configService.js";
 const api = router();
 export default api;
 
-// GET / - returns all configs
-// GET /?key - returns a specific config if exists
+//! Basic CRUD operations
+
+// GET /api/configs
+// Optionally receives a query string key
+// If a key is provided, returns a specific config if exists, else returns all configs
+// Uses the getConfig and getConfigs functions from configService
 api.get("/", async (req, res) => {
   const { key } = req.query;
 
-  // If a key is provided, return a specific config, else return all configs
   try {
     if (key) {
       const exists = await config.checkConfigExistence(key);
@@ -29,7 +32,9 @@ api.get("/", async (req, res) => {
   }
 });
 
-// POST / - creates a new config
+// POST /api/configs
+// Receives an object with the key and value of the config to add
+// Uses the setConfig function from configService
 api.post("/", async (req, res) => {
   const { key, value } = req.body;
 
@@ -51,7 +56,9 @@ api.post("/", async (req, res) => {
   }
 });
 
-// PUT / - update an existing config (if required)
+// PUT /api/configs
+// Receives an object with the key and value of the config to update
+// Uses the updateConfig function from configService
 api.put("/", async (req, res) => {
   const { key, value } = req.body;
 
@@ -73,7 +80,10 @@ api.put("/", async (req, res) => {
   }
 });
 
-// DELETE /?key - deletes a config
+// DELETE /api/configs
+// Optionally receives a query string key
+// If a key is provided, deletes the specific config
+// Uses the deleteConfig function from configService
 api.delete("/", async (req, res) => {
   const { key } = req.query;
 
