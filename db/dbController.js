@@ -5,15 +5,6 @@ import fs from "fs";
 
 const __dirname = path.resolve();
 
-//! Create the required directories
-const directories = [path.join(__dirname, "data"), path.join(__dirname, "data", "db")];
-
-directories.forEach((dir) => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-});
-
 //! Database connection
 const db = new Kysely({
   dialect: new SqliteDialect({
