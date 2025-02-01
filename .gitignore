@@ -2,6 +2,9 @@
 /data/liberteis.db
 /coverage
 data/secret.key
-data/keys/secret.key
+data/secrets/secret.key
 data/db/liberteis.db
 refs
+cambios.patch
+/data/secrets
+/data/init
