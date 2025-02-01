@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: mysql:lts
+    container_name: mysql-alpine-container
+    ports:
+      - "3306:3306"
+    env_file:
+      - ./data/secrets/dbcreds.env
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/my.cnf
+    command: ["mysqld", "--bind-address=0.0.0.0"]
+
+volumes:
+  mysql_data:
