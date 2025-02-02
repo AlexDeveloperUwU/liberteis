@@ -1,13 +1,13 @@
 services:
   mysql:
     image: mysql:lts
-    container_name: liberteis-app
+    container_name: liberteis-db
     ports:
       - "3306:3306"
     env_file:
       - ./data/secrets/dbcreds.env
     volumes:
-      - mysql_data:/var/lib/mysql
+      - liberteis-data:/var/lib/mysql
     command: ["mysqld", "--bind-address=0.0.0.0"]
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -27,4 +27,4 @@ services:
       - "3000:3000"
 
 volumes:
-  mysql_data:
+  liberteis-data:

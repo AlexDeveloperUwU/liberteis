@@ -46,7 +46,6 @@ create_directories() {
   directories=(
     "./data"
     "./data/secrets"
-    "./data/db"
     "./data/uploads"
     "./data/init"
   )

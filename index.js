@@ -1,4 +1,3 @@
-import { initialize } from "./init.js";
 import e from "express";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -6,8 +5,6 @@ import bodyParser from "body-parser";
 
 //! Init wrapper
 async function main() {
-  await initialize();
-
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const __filename = path.basename(fileURLToPath(import.meta.url));
 

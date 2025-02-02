@@ -1,14 +1,20 @@
-import { Kysely, SqliteDialect, sql } from "kysely";
-import Database from "better-sqlite3";
+import { Kysely, MysqlDialect, sql } from "kysely";
+import mysql from "mysql2";
 import path from "path";
-import fs from "fs";
+import dotenv from "dotenv";
 
-const __dirname = path.resolve();
+// Cargar las variables de entorno en un objeto específico
+const envConfig = dotenv.config({ path: path.resolve(__dirname, '../data/secrets/dbcreds.env') }).parsed;
 
 //! Database connection
 const db = new Kysely({
-  dialect: new SqliteDialect({
-    database: new Database("./data/db/liberteis.db"),
+  dialect: new MysqlDialect({
+    pool: mysql.createPool({
+      host: envConfig.DB_HOST,
+      user: envConfig.DB_USER,
+      password: envConfig.DB_PASSWORD,
+      database: envConfig.DB_NAME,
+    }),
   }),
 });
 
