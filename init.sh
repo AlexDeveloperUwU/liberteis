@@ -48,7 +48,8 @@ create_directories() {
     "./data"
     "./data/secrets"
     "./data/uploads"
-    "./data/init"
+    "./data/init",
+    "./data/logs"
   )
 
   for dir in "${directories[@]}"; do

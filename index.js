@@ -2,11 +2,15 @@ import e from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
+import * as logs from "./utils/logger.js";
 
 //! Init wrapper
 async function main() {
+  //! Define the __dirname and __filename variables
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const __filename = path.basename(fileURLToPath(import.meta.url));
+
+  logs.logger.info(`Initializing the application`);
 
   //! Import all the routers and routes
   const { dbCreateTables } = await import("./db/dbController.js");
@@ -17,6 +21,7 @@ async function main() {
 
   //! Configure the Express application
   const PORT = process.env.PORT || 3000;
+  app.use(logs.httpLogger);
   app.set("views", path.join(__dirname, "views"));
   app.set("/uploads", e.static(path.join(__dirname, "uploads")));
   app.set("/public", e.static(path.join(__dirname, "public")));
@@ -31,10 +36,10 @@ async function main() {
 
   //! Launch the Express application
   app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    logs.logger.info(`Server is running on port ${PORT}`);
   });
 }
 
 main().catch((err) => {
-  console.error("Failed to start the application:", err);
+  logs.logger.error("Failed to start the application:", err);
 });
