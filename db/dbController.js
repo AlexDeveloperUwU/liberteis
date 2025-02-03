@@ -3,17 +3,20 @@ import mysql from "mysql2";
 import path from "path";
 import dotenv from "dotenv";
 
-// Cargar las variables de entorno en un objeto específico
-const envConfig = dotenv.config({ path: path.resolve(__dirname, '../data/secrets/dbcreds.env') }).parsed;
+const __dirname = path.resolve();
+
+const envConfig = dotenv.config({
+  path: path.resolve(__dirname, "./data/secrets/dbcreds.env"),
+}).parsed;
 
 //! Database connection
 const db = new Kysely({
   dialect: new MysqlDialect({
     pool: mysql.createPool({
-      host: envConfig.DB_HOST,
-      user: envConfig.DB_USER,
-      password: envConfig.DB_PASSWORD,
-      database: envConfig.DB_NAME,
+      host: envConfig.MYSQL_HOST,
+      user: envConfig.MYSQL_USER,
+      password: envConfig.MYSQL_PASSWORD,
+      database: envConfig.MYSQL_DATABASE,
     }),
   }),
 });
@@ -21,74 +24,74 @@ const db = new Kysely({
 //! SQL function to create tables
 export async function dbCreateTables() {
   await db.schema
-    .createTable("events")
+    .createTable("config")
     .ifNotExists()
-    .addColumn("id", "varchar", (col) => col.primaryKey())
-    .addColumn("title", "varchar", (col) => col.notNull())
-    .addColumn("info", "varchar", (col) => col.notNull())
-    .addColumn("duration", "integer", (col) => col.defaultTo(30).notNull())
-    .addColumn("coverUrl", "varchar")
-    .addColumn("qrUrl", "varchar")
-    .addColumn("category", "varchar", (col) => col.references("categories.id"))
-    .addColumn("createdBy", "varchar", (col) => col.references("users.id"))
-    .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
-    .execute();
-
-  await db.schema
-    .createTable("bookings")
-    .ifNotExists()
-    .addColumn("id", "varchar", (col) => col.primaryKey())
-    .addColumn("eventId", "varchar", (col) => col.references("events.id"))
-    .addColumn("space", "varchar", (col) => col.references("spaces.id"))
-    .addColumn("bookingDate", "date", (col) => col.notNull())
-    .addColumn("bookedBy", "varchar", (col) => col.references("users.id"))
-    .addColumn("bookedDate", "date", (col) => col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`))
-    .addColumn("info", "varchar")
-    .addColumn("status", "varchar", (col) => col.defaultTo("active").check(sql`status IN ('active', 'cancelled')`))
-    .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
+    .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey()) 
+    .addColumn("value", "varchar(255)", (col) => col.notNull()) 
     .execute();
 
   await db.schema
     .createTable("users")
     .ifNotExists()
-    .addColumn("id", "varchar", (col) => col.primaryKey())
-    .addColumn("name", "varchar", (col) => col.notNull())
-    .addColumn("email", "varchar", (col) => col.unique().notNull())
-    .addColumn("hashedPassword", "varchar", (col) => col.notNull())
-    .addColumn("type", "varchar", (col) => col.defaultTo("normalUser"))
-    .addColumn("createdBy", "varchar", (col) => col.notNull())
+    .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey())
+    .addColumn("name", "varchar(100)", (col) => col.notNull()) 
+    .addColumn("email", "varchar(255)", (col) => col.unique().notNull()) 
+    .addColumn("hashedPassword", "varchar(255)", (col) => col.notNull()) 
+    .addColumn("type", "varchar(20)", (col) => col.defaultTo("normalUser")) 
+    .addColumn("createdBy", "varchar(50)", (col) => col.notNull()) 
     .addColumn("createdDate", "datetime", (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`))
     .addColumn("lastLogin", "datetime")
-    .addColumn("lang", "varchar", (col) => col.defaultTo("gl"))
+    .addColumn("lang", "varchar(2)", (col) => col.defaultTo("gl"))
     .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
     .execute();
 
   await db.schema
     .createTable("spaces")
     .ifNotExists()
-    .addColumn("id", "varchar", (col) => col.primaryKey())
-    .addColumn("name", "varchar", (col) => col.notNull())
-    .addColumn("location", "varchar", (col) => col.notNull())
-    .addColumn("info", "varchar")
-    .addColumn("createdBy", "varchar", (col) => col.references("users.id"))
+    .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey()) 
+    .addColumn("name", "varchar(100)", (col) => col.notNull()) 
+    .addColumn("location", "varchar(255)", (col) => col.notNull())
+    .addColumn("info", "varchar(500)") 
+    .addColumn("createdBy", "varchar(50)", (col) => col.references("users.id"))
     .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
     .execute();
 
   await db.schema
     .createTable("categories")
     .ifNotExists()
-    .addColumn("id", "varchar", (col) => col.primaryKey())
-    .addColumn("name", "varchar", (col) => col.notNull())
+    .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey()) 
+    .addColumn("name", "varchar(100)", (col) => col.notNull()) 
     .addColumn("spaces", "json")
-    .addColumn("createdBy", "varchar", (col) => col.references("users.id"))
+    .addColumn("createdBy", "varchar(50)", (col) => col.references("users.id"))
     .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
     .execute();
 
   await db.schema
-    .createTable("config")
+    .createTable("events")
     .ifNotExists()
-    .addColumn("id", "varchar", (col) => col.primaryKey())
-    .addColumn("value", "varchar", (col) => col.notNull())
+    .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey()) 
+    .addColumn("title", "varchar(200)", (col) => col.notNull()) 
+    .addColumn("info", "varchar(500)", (col) => col.notNull())
+    .addColumn("duration", "integer", (col) => col.defaultTo(30).notNull())
+    .addColumn("coverUrl", "varchar(500)")
+    .addColumn("qrUrl", "varchar(500)") 
+    .addColumn("category", "varchar(50)", (col) => col.references("categories.id"))
+    .addColumn("createdBy", "varchar(50)", (col) => col.references("users.id"))
+    .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
+    .execute();
+
+  await db.schema
+    .createTable("bookings")
+    .ifNotExists()
+    .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey()) 
+    .addColumn("eventId", "varchar(50)", (col) => col.references("events.id"))
+    .addColumn("space", "varchar(50)", (col) => col.references("spaces.id"))
+    .addColumn("bookingDate", "date", (col) => col.notNull())
+    .addColumn("bookedBy", "varchar(50)", (col) => col.references("users.id"))
+    .addColumn("bookedDate", "datetime", (col) => col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`))
+    .addColumn("info", "varchar(500)")
+    .addColumn("status", "varchar(20)", (col) => col.defaultTo("active").check(sql`status IN ('active', 'cancelled')`))
+    .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
     .execute();
 }
 

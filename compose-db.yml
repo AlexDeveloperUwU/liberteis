@@ -1,6 +1,6 @@
 services:
   mysql:
-    image: mysql:lts
+    image: mysql:9.2.0
     container_name: liberteis-db
     ports:
       - "3306:3306"
@@ -8,6 +8,11 @@ services:
       - ./data/secrets/dbcreds.env
     volumes:
       - liberteis-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     command: ["mysqld", "--bind-address=0.0.0.0"]
 
 volumes:
