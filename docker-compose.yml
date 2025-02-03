@@ -1,4 +1,5 @@
 services:
+  # Database service
   mysql:
     image: mysql:9.2.0
     container_name: liberteis-db
@@ -8,16 +9,17 @@ services:
       - ./data/secrets/dbcreds.env
     volumes:
       - liberteis-data:/var/lib/mysql
-    command: ["mysqld", "--bind-address=0.0.0.0"]
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
+    command: ["mysqld", "--bind-address=0.0.0.0"]
 
-  liberteis:
+  # Only dev service
+  liberteis-dev:
     image: alexdeveloperuwu/liberteis
-    container_name: liberteis-app
+    container_name: liberteis-dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -25,6 +27,26 @@ services:
       context: .
     ports:
       - "3000:3000"
+    profiles:
+      - dev
+
+  # Only prod service
+  liberteis-prod:
+    image: ghcr.io/alexdeveloperuwu/liberteis
+    container_name: liberteis-prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    profiles:
+      - prod
 
 volumes:
   liberteis-data:
+
+networks:
+  default:
+    name: liberteis-net

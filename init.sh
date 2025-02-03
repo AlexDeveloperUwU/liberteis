@@ -48,7 +48,7 @@ create_directories() {
     "./data"
     "./data/secrets"
     "./data/uploads"
-    "./data/init",
+    "./data/init"
     "./data/logs"
   )
 
@@ -58,6 +58,9 @@ create_directories() {
         echo -e "${RED}Error creating directory $dir${NC}"
         exit 1
       }
+      echo -e "${GREEN}Created directory: $dir${NC}"
+    else
+      echo -e "${YELLOW}Directory already exists: $dir${NC}"
     fi
   done
 }
@@ -71,6 +74,9 @@ set_key() {
       echo -e "${RED}Error creating key file${NC}"
       exit 1
     }
+    echo -e "${GREEN}Secret key created.${NC}"
+  else
+    echo -e "${YELLOW}Secret key already exists.${NC}"
   fi
 }
 
@@ -91,6 +97,9 @@ MYSQL_DATABASE=liberteis-db
 MYSQL_USER=liberteis-app
 MYSQL_PASSWORD=$user_password
 EOF
+    echo -e "${GREEN}Database credentials file created.${NC}"
+  else
+    echo -e "${YELLOW}Database credentials file already exists.${NC}"
   fi
 }
 
@@ -101,6 +110,7 @@ update_mysql_host_in_creds() {
     echo -e "${RED}Error updating MYSQL_HOST in credentials file${NC}"
     exit 1
   }
+  echo -e "${GREEN}Updated MYSQL_HOST in credentials file.${NC}"
 }
 
 # Create initialization indicator
@@ -111,13 +121,16 @@ create_init_indicator() {
       echo -e "${RED}Error creating initialization indicator file${NC}"
       exit 1
     }
+    echo -e "${GREEN}Initialization indicator file created.${NC}"
+  else
+    echo -e "${YELLOW}Initialization indicator file already exists.${NC}"
   fi
 }
 
 # Set MySQL host based on environment
 set_mysql_host() {
   if [ "$1" == "container" ]; then
-    MYSQL_HOST="liberteis-mysql"
+    MYSQL_HOST="liberteis-db"
   else
     MYSQL_HOST="localhost"
   fi
@@ -126,7 +139,7 @@ set_mysql_host() {
 # Stop and remove all containers
 stop_and_remove_containers() {
   echo -e "${BLUE}Stopping and removing all containers...${NC}"
-  docker compose -f docker-compose.dev.yml down || {
+  docker compose -f docker-compose.yml down || {
     echo -e "${RED}Error stopping and removing containers${NC}"
     exit 1
   }
@@ -147,6 +160,7 @@ initialize() {
 }
 
 initialize
+create_init_indicator
 
 # Environment-specific configuration
 if [ "$ENVIRONMENT" == "dev" ]; then
@@ -164,7 +178,7 @@ if [ "$ENVIRONMENT" == "dev" ]; then
       echo -e "${BLUE}Running outside container...${NC}"
       set_mysql_host "local"
       update_mysql_host_in_creds
-      docker compose -f compose-db.yml up -d mysql || {
+      docker compose -f docker-compose.yml --profile dev up -d mysql || {
         echo -e "${RED}Error starting MySQL with Docker Compose${NC}"
         exit 1
       }
@@ -180,7 +194,7 @@ if [ "$ENVIRONMENT" == "dev" ]; then
       echo -e "${BLUE}Running inside container...${NC}"
       set_mysql_host "container"
       update_mysql_host_in_creds
-      docker compose -f docker-compose.dev.yml up --build || {
+      docker compose -f docker-compose.yml --profile dev up --build || {
         echo -e "${RED}Error starting Docker Compose${NC}"
         exit 1
       }
@@ -198,11 +212,8 @@ if [ "$ENVIRONMENT" == "dev" ]; then
 elif [ "$ENVIRONMENT" == "prod" ]; then
   clear
   echo -e "${BLUE}Setting up production environment...${NC}"
-  docker compose -f docker-compose.prod.yml up || {
+  docker compose -f docker-compose.yml --profile prod up || {
     echo -e "${RED}Error starting Docker Compose${NC}"
     exit 1
   }
 fi
-
-# Create initialization indicator at the end
-create_init_indicator
