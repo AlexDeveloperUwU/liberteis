@@ -64,4 +64,3 @@ api.get("/:id/status", async (req, res) => {});
 // Receives a user email
 // Uses the checkUserExists function from userService
 api.get("/:email/exists", async (req, res) => {});
-
