@@ -8,3 +8,6 @@ refs
 cambios.patch
 /data/secrets
 /data/init
+data/logs
+data/logs/http.log
+data/uploads
