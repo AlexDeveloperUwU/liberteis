@@ -6,10 +6,39 @@ In this module, you will find functions related to data security, including pass
 
 ## Available functions
 
-**encryptPass(pass)**: Encrypts a password using HMAC-SHA256.
+### encryptPass(pass)
 
-**validatePass(pass, hash)**: Validates a password by comparing it with a stored hash.
+Encrypts a password using HMAC-SHA256.
 
-**encryptData(data)**: Encrypts data using AES-256-CBC.
+- **Parameters:**
+  - `pass` (string): The password to be encrypted.
+- **Returns:**
+  - (string): The encrypted password.
 
-**decryptData(encryptedData)**: Decrypts data encrypted with AES-256-CBC.
+### validatePass(pass, hash)
+
+Validates a password by comparing it with a stored hash.
+
+- **Parameters:**
+  - `pass` (string): The password to be validated.
+  - `hash` (string): The hash to compare against.
+- **Returns:**
+  - (boolean): `true` if the password matches the hash, `false` otherwise.
+
+### encryptData(data)
+
+Encrypts data using AES-256-CBC.
+
+- **Parameters:**
+  - `data` (string): The data to be encrypted.
+- **Returns:**
+  - (string): The encrypted data.
+
+### decryptData(encryptedData)
+
+Decrypts data encrypted with AES-256-CBC.
+
+- **Parameters:**
+  - `encryptedData` (string): The data to be decrypted.
+- **Returns:**
+  - (string): The decrypted data.
