@@ -2,6 +2,7 @@ import { Kysely, MysqlDialect, sql } from "kysely";
 import mysql from "mysql2";
 import path from "path";
 import dotenv from "dotenv";
+import { logger } from "../utils/logger.js";
 
 const __dirname = path.resolve();
 
@@ -10,14 +11,27 @@ const envConfig = dotenv.config({
 }).parsed;
 
 //! Database connection
+const dbPool = mysql.createPool({
+  host: envConfig.MYSQL_HOST,
+  user: envConfig.MYSQL_USER,
+  password: envConfig.MYSQL_PASSWORD,
+  database: envConfig.MYSQL_DATABASE,
+});
+
+// Log when a connection is created
+dbPool.on("connection", (connection) => {
+  logger.info(`Conexión establecida con la base de datos`);
+});
+
+// Log when an error occurs with the pool
+dbPool.on("error", (err) => {
+  logger.error(`Error en la conexión a la base de datos: ${err.message}`);
+});
+
+// Use the pool with Kysely
 const db = new Kysely({
   dialect: new MysqlDialect({
-    pool: mysql.createPool({
-      host: envConfig.MYSQL_HOST,
-      user: envConfig.MYSQL_USER,
-      password: envConfig.MYSQL_PASSWORD,
-      database: envConfig.MYSQL_DATABASE,
-    }),
+    pool: dbPool,
   }),
 });
 

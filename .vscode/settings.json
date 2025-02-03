@@ -3,5 +3,6 @@
   "jest.runMode": {
     "type": "on-demand",
     "coverage": false
-  }
+  },
+  "postman.settings.dotenv-detection-notification-visibility": false
 }
