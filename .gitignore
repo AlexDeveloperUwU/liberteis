@@ -11,3 +11,5 @@ cambios.patch
 data/logs
 data/logs/http.log
 data/uploads
+examples
+test.js
