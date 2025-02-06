@@ -21,11 +21,15 @@ export async function addUser(user) {
   user.lastLogin = undefined;
   user.lang = "gl";
   user.deleted = false;
-  return await dbc.dbSaveData("users", user);
+
+  try {
+    return await dbc.dbSaveData("users", user);
+  } catch (error) {
+    throw new Error("Error saving user to the database");
+  }
 }
 
 // Function to update an user in the database
-// TODO: Do not allow password update here, use the dedicated function
 export async function updateUser(id, user) {
   if (!id || !user) {
     throw new Error("Invalid parameters");
@@ -35,7 +39,11 @@ export async function updateUser(id, user) {
     throw new Error("Use the dedicated function to update the password");
   }
 
-  return await dbc.dbUpdateData("users", id, user);
+  try {
+    return await dbc.dbUpdateData("users", id, user);
+  } catch (error) {
+    throw new Error("Error updating user in the database");
+  }
 }
 
 // Function to update the password of an user in the database
@@ -45,7 +53,12 @@ export async function updateUserPassword(id, pass) {
   }
 
   const hashedPass = ds.encryptPass(pass);
-  return await dbc.dbUpdateData("users", id, { hashedPassword: hashedPass });
+
+  try {
+    return await dbc.dbUpdateData("users", id, { hashedPassword: hashedPass });
+  } catch (error) {
+    throw new Error("Error updating user password in the database");
+  }
 }
 
 // Function to enable or disable an user in the database
@@ -54,8 +67,12 @@ export async function changeUserStatus(id) {
     throw new Error("Invalid parameters");
   }
 
-  const newStatus = !(await checkUserStatus(id));
-  return await dbc.dbUpdateData("users", id, { deleted: newStatus });
+  try {
+    const newStatus = !(await checkUserStatus(id));
+    return await dbc.dbUpdateData("users", id, { deleted: newStatus });
+  } catch (error) {
+    throw new Error("Error changing user status in the database");
+  }
 }
 
 // Function to enable an user in the database
@@ -64,7 +81,11 @@ export async function enableUser(id) {
     throw new Error("Invalid parameters");
   }
 
-  return await dbc.dbUpdateData("users", id, { deleted: false });
+  try {
+    return await dbc.dbUpdateData("users", id, { deleted: false });
+  } catch (error) {
+    throw new Error("Error enabling user in the database");
+  }
 }
 
 // Function to disable an user in the database
@@ -73,7 +94,11 @@ export async function disableUser(id) {
     throw new Error("Invalid parameters");
   }
 
-  return await dbc.dbUpdateData("users", id, { deleted: true });
+  try {
+    return await dbc.dbUpdateData("users", id, { deleted: true });
+  } catch (error) {
+    throw new Error("Error disabling user in the database");
+  }
 }
 
 //! Info retrieval operations
@@ -87,25 +112,29 @@ export async function getUser(id, includeInactive = false) {
 
   let result;
 
-  switch (includeInactive) {
-    case true:
-      result = await dbc.dbGetOne("users", id);
-      break;
-    case false:
-      result = await dbc.dbGetWhere("users", [
-        { field: "id", operator: "=", value: id },
-        { field: "deleted", operator: "=", value: false },
-      ]);
-      break;
-    default:
-      throw new Error("Invalid includeInactive parameter");
-  }
+  try {
+    switch (includeInactive) {
+      case true:
+        result = await dbc.dbGetOne("users", id);
+        break;
+      case false:
+        result = await dbc.dbGetWhere("users", [
+          { field: "id", operator: "=", value: id },
+          { field: "deleted", operator: "=", value: false },
+        ]);
+        break;
+      default:
+        throw new Error("Invalid includeInactive parameter");
+    }
 
-  if (result.length === 0) {
-    throw new Error("User with the required criteria not found");
-  }
+    if (result.length === 0) {
+      throw new Error("User with the required criteria not found");
+    }
 
-  return result[0];
+    return result[0];
+  } catch (error) {
+    throw new Error("Error retrieving user from the database");
+  }
 }
 
 // Function to get an user by email from the database
@@ -117,25 +146,29 @@ export async function getUserByEmail(email, includeInactive = false) {
 
   let result;
 
-  switch (includeInactive) {
-    case true:
-      result = await dbc.dbGetWhere("users", { field: "email", operator: "=", value: email });
-      break;
-    case false:
-      result = await dbc.dbGetWhere("users", [
-        { field: "email", operator: "=", value: email },
-        { field: "deleted", operator: "=", value: false },
-      ]);
-      break;
-    default:
-      throw new Error("Invalid includeInactive parameter");
-  }
+  try {
+    switch (includeInactive) {
+      case true:
+        result = await dbc.dbGetWhere("users", { field: "email", operator: "=", value: email });
+        break;
+      case false:
+        result = await dbc.dbGetWhere("users", [
+          { field: "email", operator: "=", value: email },
+          { field: "deleted", operator: "=", value: false },
+        ]);
+        break;
+      default:
+        throw new Error("Invalid includeInactive parameter");
+    }
 
-  if (result.length === 0) {
-    throw new Error("User with the required criteria not found");
-  }
+    if (result.length === 0) {
+      throw new Error("User with the required criteria not found");
+    }
 
-  return result[0];
+    return result[0];
+  } catch (error) {
+    throw new Error("Error retrieving user by email from the database");
+  }
 }
 
 // Function to get all users from the database
@@ -147,33 +180,37 @@ export async function getUsers(status = "active") {
 
   let result;
 
-  switch (status) {
-    case "all":
-      result = await dbc.dbGetAll("users");
-      break;
-    case "active":
-      result = await dbc.dbGetWhere("users", {
-        field: "deleted",
-        operator: "=",
-        value: false,
-      });
-      break;
-    case "inactive":
-      result = await dbc.dbGetWhere("users", {
-        field: "deleted",
-        operator: "=",
-        value: true,
-      });
-      break;
-    default:
-      throw new Error("Invalid status parameter");
-  }
+  try {
+    switch (status) {
+      case "all":
+        result = await dbc.dbGetAll("users");
+        break;
+      case "active":
+        result = await dbc.dbGetWhere("users", {
+          field: "deleted",
+          operator: "=",
+          value: false,
+        });
+        break;
+      case "inactive":
+        result = await dbc.dbGetWhere("users", {
+          field: "deleted",
+          operator: "=",
+          value: true,
+        });
+        break;
+      default:
+        throw new Error("Invalid status parameter");
+    }
 
-  if (result.length === 0) {
-    throw new Error("User with the required criteria not found");
-  }
+    if (result.length === 0) {
+      throw new Error("User with the required criteria not found");
+    }
 
-  return result;
+    return result;
+  } catch (error) {
+    throw new Error("Error retrieving users from the database");
+  }
 }
 
 // Function to check an user's status
@@ -182,8 +219,12 @@ export async function checkUserStatus(id) {
     throw new Error("Invalid parameters");
   }
 
-  const user = await getUser(id);
-  return user.deleted;
+  try {
+    const user = await getUser(id);
+    return user.deleted;
+  } catch (error) {
+    throw new Error("Error checking user status in the database");
+  }
 }
 
 // Function to check if an user exists
