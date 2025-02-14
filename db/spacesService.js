@@ -94,7 +94,7 @@ export async function getSpace(id, includeInactive = false) {
         ]);
         break;
       default:
-        throw new Error("Invalid includeInactive parameters");
+        throw new Error("Invalid parameters");
     }
 
     if (result.length === 0) {
@@ -128,7 +128,7 @@ export async function getSpaceByName(name, includeInactive = false) {
         ]);
         break;
       default:
-        throw new Error("Invalid includeInactive parameters");
+        throw new Error("Invalid parameters");
     }
 
     if (result.length === 0) {
@@ -158,7 +158,7 @@ export async function getSpaces(status) {
         result = await dbc.dbGetWhere("spaces", { field: "deleted", operator: "=", value: true });
         break;
       default:
-        throw new Error("Invalid status parameter");
+        throw new Error("Invalid parameters");
     }
 
     if (result.length === 0) {

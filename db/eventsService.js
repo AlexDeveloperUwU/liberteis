@@ -75,18 +75,126 @@ export async function disableEvent(id) {
 
 // Function to get an event from the database
 // It includes the option to include inactive events
-export async function getEvent(id, includeInactive = false) {}
+export async function getEvent(id, includeInactive = false) {
+  if (!id) {
+    throw new Error("Invalid parameters");
+  }
 
-// Function to get an event by name from the database
+  let result;
+
+  try {
+    switch (includeInactive) {
+      case true:
+        result = await dbc.dbGetData("events", id);
+        break;
+      case false:
+        result = await dbc.dbGetWhere("events", [
+          { field: "id", operator: "=", value: id },
+          { field: "deleted", operator: "=", value: false },
+        ]);
+        break;
+      default:
+        throw new Error("Invalid parameters");
+    }
+
+    if (result.length === 0) {
+      throw new Error("Event with the required criteria not found");
+    }
+
+    return result[0];
+  } catch (error) {
+    throw new Error("Error getting event from the database");
+  }
+}
+
+// Function to get an event by title from the database
 // It includes the option to include inactive events
-export async function getEventByName(name, includeInactive = false) {}
+export async function getEventByTitle(title, includeInactive = false) {
+  if (!title) {
+    throw new Error("Invalid parameters");
+  }
+
+  let result;
+
+  try {
+    switch (includeInactive) {
+      case true:
+        result = await dbc.dbGetWhere("events", [{ field: "title", operator: "=", value: title }]);
+        break;
+      case false:
+        result = await dbc.dbGetWhere("events", [
+          { field: "title", operator: "=", value: title },
+          { field: "deleted", operator: "=", value: false },
+        ]);
+        break;
+      default:
+        throw new Error("Invalid parameters");
+    }
+
+    if (result.length === 0) {
+      throw new Error("Event with the required criteria not found");
+    }
+
+    return result[0];
+  } catch (error) {
+    throw new Error("Error getting event from the database");
+  }
+}
 
 // Function to get all events from the database
 // It can return: all, active (DEFAULT) or inactive events
-export async function getEvents(status) {}
+export async function getEvents(status) {
+  let result;
+
+  try {
+    switch (status) {
+      case "all":
+        result = await dbc.dbGetAll("events");
+        break;
+      case "active":
+        result = await dbc.dbGetWhere("events", [{ field: "deleted", operator: "=", value: false }]);
+        break;
+      case "inactive":
+        result = await dbc.dbGetWhere("events", [{ field: "deleted", operator: "=", value: true }]);
+        break;
+      default:
+        throw new Error("Invalid parameterss");
+    }
+
+    if (result.length === 0) {
+      throw new Error("Events with the required criteria not found");
+    }
+
+    return result;
+  } catch (error) {
+    throw new Error("Error getting events from the database");
+  }
+}
 
 // Function to check an event's status
-export async function checkEventStatus(id) {}
+export async function checkEventStatus(id) {
+  if (!id) {
+    throw new Error("Invalid parameters");
+  }
+
+  try {
+    const result = await getEvent(id, true);
+    return result.deleted;
+  } catch (error) {
+    throw new Error("Error checking event status in the database");
+  }
+}
 
 // Function to check if an event exists
-export async function checkEventExists(title) {}
+export async function checkEventExists(title) {
+  if (!title) {
+    throw new Error("Invalid parameters");
+  }
+
+  try {
+    await getEventByTitle(title, true);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}

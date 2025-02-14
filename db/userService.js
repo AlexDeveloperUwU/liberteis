@@ -200,7 +200,7 @@ export async function getUsers(status = "active") {
         });
         break;
       default:
-        throw new Error("Invalid status parameter");
+        throw new Error("Invalid parameters");
     }
 
     if (result.length === 0) {
