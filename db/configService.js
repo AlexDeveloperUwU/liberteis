@@ -1,4 +1,3 @@
-import { logger } from "../utils/logger.js";
 import * as dbc from "./dbController.js";
 
 //! Basic CRUD operations
@@ -74,7 +73,6 @@ export async function checkConfigExistence(key) {
   try {
     return await dbc.dbCheckExistence("config", key);
   } catch (error) {
-    logger.error(error);
     throw new Error("Error checking config in the database");
   }
 }
