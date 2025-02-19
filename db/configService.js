@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger.js";
 import * as dbc from "./dbController.js";
 
 //! Basic CRUD operations
@@ -48,7 +49,8 @@ export async function getConfig(key) {
   }
 
   try {
-    return await dbc.dbGetOne("config", key);
+    const result = await dbc.dbGetOne("config", key);
+    return result[0];
   } catch (error) {
     throw new Error("Error retrieving config from the database");
   }
@@ -56,10 +58,6 @@ export async function getConfig(key) {
 
 // Function to get all configs from the database
 export async function getConfigs() {
-  if (!key) {
-    throw new Error("Invalid parameters");
-  }
-
   try {
     return await dbc.dbGetAll("config");
   } catch (error) {
@@ -74,8 +72,9 @@ export async function checkConfigExistence(key) {
   }
 
   try {
-    return await dbc.dbExists("config", key);
+    return await dbc.dbCheckExistence("config", key);
   } catch (error) {
+    logger.error(error);
     throw new Error("Error checking config in the database");
   }
 }
