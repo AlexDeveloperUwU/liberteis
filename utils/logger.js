@@ -49,4 +49,13 @@ const httpLogger = pinoHttp({
   }),
 });
 
-export { logger, httpLogger };
+const testsLogger = pino({
+  level: "info",
+  transport: {
+    targets: [
+      createFileTransport("data/logs/tests.log", false, false),
+    ],
+  },
+});
+
+export { logger, httpLogger, testsLogger };
