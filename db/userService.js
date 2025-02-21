@@ -227,7 +227,7 @@ export async function checkUserStatus(id) {
   }
 
   try {
-    const user = await getUser(id);
+    const user = await getUser(id, true);
     return user.deleted;
   } catch (error) {
     logger.error(`Error checking user status in the database: ${error.message}`);
