@@ -52,9 +52,7 @@ const httpLogger = pinoHttp({
 const testsLogger = pino({
   level: "info",
   transport: {
-    targets: [
-      createFileTransport("data/logs/tests.log", false, false),
-    ],
+    targets: [createFileTransport("data/logs/tests.log", false, false)],
   },
 });
 

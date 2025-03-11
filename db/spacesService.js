@@ -1,6 +1,6 @@
 import * as dbc from "./dbController.js";
 import * as id from "../utils/idGen.js";
-import { logger } from "../utils/logger.js"; // Añadir el logger
+import { logger } from "../utils/logger.js";
 
 //! Basic CRUD operations
 
@@ -11,11 +11,12 @@ export async function addSpace(space) {
   }
 
   space.id = await id.generateId("space");
+  space.deleted = false;
 
   try {
     return await dbc.dbSaveData("spaces", space);
   } catch (error) {
-    logger.error(`Error saving space to the database: ${error.message}`); 
+    logger.error(`Error saving space to the database: ${error.message}`);
     throw new Error("Error saving space to the database");
   }
 }
@@ -27,9 +28,14 @@ export async function updateSpace(id, space) {
   }
 
   try {
+    const existingSpace = await getSpace(id, true);
+    if (!existingSpace) {
+      return { error: true, message: "Space not found" };
+    }
+
     return await dbc.dbUpdateData("spaces", id, space);
   } catch (error) {
-    logger.error(`Error updating space in the database: ${error.message}`); 
+    logger.error(`Error updating space in the database: ${error.message}`);
     throw new Error("Error updating space in the database");
   }
 }
@@ -44,7 +50,7 @@ export async function changeSpaceStatus(id) {
     const newStatus = !(await checkSpaceStatus(id));
     return await dbc.dbUpdateData("spaces", id, { deleted: newStatus });
   } catch (error) {
-    logger.error(`Error changing space status in the database: ${error.message}`); 
+    logger.error(`Error changing space status in the database: ${error.message}`);
     throw new Error("Error changing space status in the database");
   }
 }
@@ -58,7 +64,7 @@ export async function enableSpace(id) {
   try {
     return await dbc.dbUpdateData("spaces", id, { deleted: false });
   } catch (error) {
-    logger.error(`Error enabling space in the database: ${error.message}`); 
+    logger.error(`Error enabling space in the database: ${error.message}`);
     throw new Error("Error enabling space in the database");
   }
 }
@@ -72,7 +78,7 @@ export async function disableSpace(id) {
   try {
     return await dbc.dbUpdateData("spaces", id, { deleted: true });
   } catch (error) {
-    logger.error(`Error disabling space in the database: ${error.message}`); 
+    logger.error(`Error disabling space in the database: ${error.message}`);
     throw new Error("Error disabling space in the database");
   }
 }
@@ -109,7 +115,7 @@ export async function getSpace(id, includeInactive = false) {
 
     return result[0];
   } catch (error) {
-    logger.error(`Error retrieving space from the database: ${error.message}`); 
+    logger.error(`Error retrieving space from the database: ${error.message}`);
     throw new Error("Error retrieving space from the database");
   }
 }
@@ -144,7 +150,7 @@ export async function getSpaceByName(name, includeInactive = false) {
 
     return result[0];
   } catch (error) {
-    logger.error(`Error retrieving space by name from the database: ${error.message}`); 
+    logger.error(`Error retrieving space by name from the database: ${error.message}`);
     throw new Error("Error retrieving space by name from the database");
   }
 }
@@ -160,10 +166,10 @@ export async function getSpaces(status = "active") {
         result = await dbc.dbGetAll("spaces");
         break;
       case "active":
-        result = await dbc.dbGetWhere("spaces", { field: "deleted", operator: "=", value: false });
+        result = await dbc.dbGetWhere("spaces", [{ field: "deleted", operator: "=", value: false }]);
         break;
       case "inactive":
-        result = await dbc.dbGetWhere("spaces", { field: "deleted", operator: "=", value: true });
+        result = await dbc.dbGetWhere("spaces", [{ field: "deleted", operator: "=", value: true }]);
         break;
       default:
         return { error: true, message: "Invalid parameters" };
@@ -175,7 +181,7 @@ export async function getSpaces(status = "active") {
 
     return result;
   } catch (error) {
-    logger.error(`Error retrieving spaces from the database: ${error.message}`); 
+    logger.error(`Error retrieving spaces from the database: ${error.message}`);
     throw new Error("Error retrieving spaces from the database");
   }
 }
@@ -190,7 +196,7 @@ export async function checkSpaceStatus(id) {
     const space = await getSpace(id, true);
     return space.deleted;
   } catch (error) {
-    logger.error(`Error checking space status in the database: ${error.message}`); 
+    logger.error(`Error checking space status in the database: ${error.message}`);
     throw new Error("Error checking space status in the database");
   }
 }
@@ -205,7 +211,7 @@ export async function checkSpaceExists(name) {
     const space = await getSpaceByName(name, true);
     return space;
   } catch (error) {
-    logger.error(`Error checking space existence in the database: ${error.message}`); 
+    logger.error(`Error checking space existence in the database: ${error.message}`);
     throw new Error("Error checking space existence in the database");
   }
 }

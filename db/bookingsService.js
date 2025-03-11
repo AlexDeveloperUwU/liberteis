@@ -1,13 +1,13 @@
 import * as dbc from "./dbController.js";
 import * as id from "../utils/idGen.js";
-import { logger } from "../utils/logger.js"; 
+import { logger } from "../utils/logger.js";
 
 //! Basic CRUD operations
 
 // Function to add a booking to the database
 export async function addBooking(booking) {
   if (!booking) {
-    return { error: true, message: "Invalid parameters" }; 
+    return { error: true, message: "Invalid parameters" };
   }
 
   booking.id = await id.generateId("booking");
@@ -25,7 +25,7 @@ export async function addBooking(booking) {
 // Function to update a booking in the database
 export async function updateBooking(id, booking) {
   if (!id || !booking) {
-    return { error: true, message: "Invalid parameters" }; 
+    return { error: true, message: "Invalid parameters" };
   }
 
   try {
@@ -39,7 +39,7 @@ export async function updateBooking(id, booking) {
 // Function to enable or disable a booking in the database
 export async function changeBookingStatus(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" }; 
+    return { error: true, message: "Invalid parameters" };
   }
 
   try {
@@ -54,7 +54,7 @@ export async function changeBookingStatus(id) {
 // Function to enable a booking in the database
 export async function enableBooking(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" }; 
+    return { error: true, message: "Invalid parameters" };
   }
 
   try {
@@ -68,7 +68,7 @@ export async function enableBooking(id) {
 // Function to disable a booking in the database
 export async function disableBooking(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" }; 
+    return { error: true, message: "Invalid parameters" };
   }
 
   try {
@@ -85,7 +85,7 @@ export async function disableBooking(id) {
 // It includes the option to include inactive bookings
 export async function getBooking(id, includeInactive = false) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" }; 
+    return { error: true, message: "Invalid parameters" };
   }
 
   let result;
@@ -102,11 +102,11 @@ export async function getBooking(id, includeInactive = false) {
         ]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" }; 
+        return { error: true, message: "Invalid parameters" };
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Booking with the required criteria not found" }; 
+      return { error: true, message: "Booking with the required criteria not found" };
     }
 
     return result[0];
@@ -120,7 +120,7 @@ export async function getBooking(id, includeInactive = false) {
 // It includes the option to include inactive bookings
 export async function getBookingByName(name, includeInactive = false) {
   if (!name) {
-    return { error: true, message: "Invalid parameters" }; 
+    return { error: true, message: "Invalid parameters" };
   }
 
   let result;
@@ -137,11 +137,11 @@ export async function getBookingByName(name, includeInactive = false) {
         ]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" }; 
+        return { error: true, message: "Invalid parameters" };
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Booking with the required criteria not found" }; 
+      return { error: true, message: "Booking with the required criteria not found" };
     }
 
     return result[0];
@@ -168,11 +168,11 @@ export async function getBookings(status = "active") {
         result = await dbc.dbGetWhere("bookings", [{ field: "deleted", operator: "=", value: true }]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" }; 
+        return { error: true, message: "Invalid parameters" };
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Booking with the required criteria not found" }; 
+      return { error: true, message: "Booking with the required criteria not found" };
     }
 
     return result;
@@ -185,7 +185,7 @@ export async function getBookings(status = "active") {
 // Function to check a booking's status
 export async function checkBookingStatus(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" }; 
+    return { error: true, message: "Invalid parameters" };
   }
 
   try {
