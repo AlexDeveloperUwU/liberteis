@@ -31,16 +31,17 @@ function setKey() {
 }
 
 //! Functions for encrypting passwords (it doesn't decrypt)
+import bcrypt from "bcrypt";
+
 export function encryptPass(pass) {
-  const key = getKey();
-  const hmac = crypto.createHmac("sha256", key);
-  hmac.update(pass);
-  const hashedPassword = hmac.digest("hex");
+  const saltRounds = 10;
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hashedPassword = bcrypt.hashSync(pass, salt);
   return hashedPassword;
 }
 
 export function validatePass(pass, hash) {
-  return encryptPass(pass) === hash;
+  return bcrypt.compareSync(pass, hash);
 }
 
 //! Functions for encrypting and decrypting data
