@@ -135,7 +135,7 @@ describe("Spaces Service Tests", () => {
 
   test("Get all active spaces after disabling", async () => {
     const activeSpaces = await spacesSvc.getSpaces("active");
-    expect(activeUsers.error).toBe(true);
+    expect(activeSpaces.error).toBe(true);
   });
 
   test("Get all disabled spaces", async () => {
