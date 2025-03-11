@@ -27,13 +27,33 @@ const dbPool = mysql.createPool({
 });
 
 // Log when a connection is created
-dbPool.on("connection", (connection) => {
+dbPool.on("connection", () => {
   logger.info(`Conexión establecida con la base de datos`);
 });
 
 // Log when an error occurs with the pool
 dbPool.on("error", (err) => {
-  logger.error(`Error en la conexión a la base de datos: ${err}`);
+  if (err instanceof AggregateError) {
+    logger.error(`AggregateError en la conexión a la base de datos: ${err.errors}`);
+  } else {
+    logger.error(`Error en la conexión a la base de datos: ${err}`);
+  }
+});
+
+// Handle connection errors
+dbPool.getConnection((err, connection) => {
+  if (err) {
+    if (err.code === "ECONNREFUSED") {
+      logger.error(
+        "La conexión a la base de datos fue rechazada. Verifica que el servidor de MySQL esté en funcionamiento.",
+      );
+    } else {
+      logger.error(`Error al conectar con la base de datos: ${err.message}`);
+    }
+    // Close the application if there is a critical error
+    process.exit(1);
+  }
+  if (connection) connection.release();
 });
 
 // Use the pool with Kysely
