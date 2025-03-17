@@ -12,6 +12,12 @@ export async function addCategory(category) {
 
   category.id = await id.generateId("category");
 
+  // Validate and process spaces
+  if (!Array.isArray(category.spaces)) {
+    category.spaces = [];
+  }
+  category.spaces = JSON.stringify(category.spaces);
+
   try {
     return await dbc.dbSaveData("categories", category);
   } catch (error) {
@@ -24,6 +30,13 @@ export async function addCategory(category) {
 export async function updateCategory(id, category) {
   if (!id || !category) {
     return { error: true, message: "Invalid parameters" };
+  }
+
+  if (category.spaces) {
+    if (!Array.isArray(category.spaces)) {
+      category.spaces = [];
+    }
+    category.spaces = JSON.stringify(category.spaces);
   }
 
   try {
@@ -49,7 +62,7 @@ export async function changeCategoryStatus(id) {
   }
 }
 
-// Function to enable an event in the database
+// Function to enable a category in the database
 export async function enableCategory(id) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -63,7 +76,7 @@ export async function enableCategory(id) {
   }
 }
 
-// Function to disable an event in the database
+// Function to disable a category in the database
 export async function disableCategory(id) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -107,6 +120,15 @@ export async function getCategory(id, includeInactive = false) {
       return { error: true, message: "Category with the required criteria not found" };
     }
 
+    if (result[0].spaces) {
+      if (!Array.isArray(result[0].spaces)) {
+        logger.warn(`Spaces is not an array for category ${id}, setting to empty array`);
+        result[0].spaces = [];
+      }
+    } else {
+      result[0].spaces = [];
+    }
+
     return result[0];
   } catch (error) {
     logger.error(`Error retrieving category from the database: ${error.message}`);
@@ -115,7 +137,6 @@ export async function getCategory(id, includeInactive = false) {
 }
 
 // Function to get a category by name from the database
-// It includes the option to include inactive categories
 export async function getCategoryByName(name, includeInactive = false) {
   if (!name) {
     return { error: true, message: "Invalid parameters" };
@@ -142,6 +163,15 @@ export async function getCategoryByName(name, includeInactive = false) {
       return { error: true, message: "Category with the required criteria not found" };
     }
 
+    if (result[0].spaces) {
+      if (!Array.isArray(result[0].spaces)) {
+        logger.warn(`Spaces is not an array for category ${result[0].id}, setting to empty array`);
+        result[0].spaces = [];
+      }
+    } else {
+      result[0].spaces = [];
+    }
+
     return result[0];
   } catch (error) {
     logger.error(`Error retrieving category from the database: ${error.message}`);
@@ -150,7 +180,6 @@ export async function getCategoryByName(name, includeInactive = false) {
 }
 
 // Function to get all categories from the database
-// It can return: all, active (DEFAULT) or inactive categories
 export async function getCategories(status = "active") {
   let result;
 
@@ -180,6 +209,18 @@ export async function getCategories(status = "active") {
     if (result.length === 0) {
       return { error: true, message: "Category with the required criteria not found" };
     }
+
+    result = result.map((category) => {
+      if (category.spaces) {
+        if (!Array.isArray(category.spaces)) {
+          logger.warn(`Spaces is not an array for category ${category.id}, setting to empty array`);
+          category.spaces = [];
+        }
+      } else {
+        category.spaces = [];
+      }
+      return category;
+    });
 
     return result;
   } catch (error) {
