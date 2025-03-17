@@ -13,3 +13,4 @@ data/logs/http.log
 data/uploads
 examples
 test.js
+utils/cleanup.js
