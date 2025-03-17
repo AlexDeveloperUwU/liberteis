@@ -217,10 +217,23 @@ export async function dbSetDeleteStatus(table, id, deletionStatus) {
 }
 
 // Deletes the entry with the given id from a given table
-//* This function SHOULD NOT be used in the app, JUST in the configService
+//! This function SHOULD NOT be used in the app, JUST in the configService
 //* This is due to the fact that we don't have to keep a history of the deleted configurations
 export async function dbDeleteData(table, id) {
   return await db.transaction().execute(async (trx) => {
     return await trx.deleteFrom(table).where("id", "=", id).execute();
+  });
+}
+
+// Deletes all entries from all the tables of the database
+//! This function MUST NOT be used in the app, it's just for testing with a clean database
+export async function clearDb() {
+  await db.transaction().execute(async (trx) => {
+    await trx.deleteFrom("bookings").execute();
+    await trx.deleteFrom("events").execute();
+    await trx.deleteFrom("categories").execute();
+    await trx.deleteFrom("spaces").execute();
+    await trx.deleteFrom("users").execute();
+    await trx.deleteFrom("config").execute();
   });
 }
