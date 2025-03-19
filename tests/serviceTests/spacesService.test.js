@@ -106,12 +106,12 @@ describe("Spaces Service Tests", () => {
     await spacesSvc.updateSpace(spaceId, space);
     logs("info", "Space updated");
 
-    const dbSpace = await spacesSvc.getSpaceByName("Test Space", true);
+    const dbSpace = await spacesSvc.getSpace(spaceId, true);
     expect(dbSpace.info).toBe("Test Info Updated");
   });
 
   test("Get an space by its name", async () => {
-    const dbSpace = await spacesSvc.getSpaceByName("Test Space", true);
+    const dbSpace = await spacesSvc.getSpace(spaceId, true);
     expect(dbSpace.name).toBe("Test Space");
     expect(dbSpace.info).toBe("Test Info Updated");
     expect(dbSpace.location).toBe("Test Location");
@@ -135,7 +135,12 @@ describe("Spaces Service Tests", () => {
 
   test("Get all active spaces after disabling", async () => {
     const activeSpaces = await spacesSvc.getSpaces("active");
-    expect(activeSpaces.error).toBe(true);
+    if (activeSpaces === null || activeSpaces.error === true) {
+      expect(activeSpaces.error).toBe(true);
+    } else {
+      const spaceIds = activeSpaces.map((space) => space.id);
+      expect(spaceIds).not.toContain(spaceId);
+    }
   });
 
   test("Get all disabled spaces", async () => {

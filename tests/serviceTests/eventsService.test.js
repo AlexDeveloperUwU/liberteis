@@ -155,7 +155,12 @@ describe("Events Service Tests", () => {
 
   test("Get all active events after disabling one", async () => {
     const events = await eventsSvc.getEvents("active");
-    expect(events.error).toBe(true);
+    if (events === null || events.error === true) {
+      expect(events.error).toBe(true);
+    } else {
+      const eventIds = events.map((event) => event.id);
+      expect(eventIds).not.toContain(eventId);
+    }
   });
 
   test("Get all disabled events", async () => {

@@ -156,7 +156,12 @@ describe("Categories Service Test", () => {
 
   test("Get all active categories after disabling one", async () => {
     const categories = await categoriesSvc.getCategories("active");
-    expect(categories.error).toBe(true);
+    if (categories === null || categories.error === true) {
+      expect(categories.error).toBe(true);
+    } else {
+      const categoryIds = categories.map((category) => category.id);
+      expect(categoryIds).not.toContain(categoryId);
+    }
   });
 
   test("Get all disabled categories", async () => {

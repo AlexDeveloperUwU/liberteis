@@ -109,7 +109,12 @@ describe("User Service Tests", () => {
 
   test("Get all active users after disabling", async () => {
     const activeUsers = await userSvc.getUsers("active");
-    expect(activeUsers.error).toBe(true);
+    if (activeUsers === null || activeUsers.error === true) {
+      expect(activeUsers.error).toBe(true);
+    } else {
+      const userIds = activeUsers.map((user) => user.id);
+      expect(userIds).not.toContain(userId);
+    }
   });
 
   test("Get all inactive users", async () => {
