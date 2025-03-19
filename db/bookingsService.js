@@ -163,7 +163,7 @@ export async function getBookings(status = "active") {
   try {
     switch (status) {
       case "all":
-        result = await dbc.dbGetData("bookings");
+        result = await dbc.dbGetAll("bookings");
         break;
       case "active":
         result = await dbc.dbGetWhere("bookings", [{ field: "deleted", operator: "=", value: false }]);
