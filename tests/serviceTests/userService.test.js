@@ -29,8 +29,8 @@ function logs(type, msg) {
   }
 }
 
-let userStatus;
-let userId;
+let userStatus = false;
+let userId = null;
 
 beforeAll(async () => {
   await dbCreateTables();
@@ -41,6 +41,7 @@ beforeAll(async () => {
       await userSvc.disableUser(checkResult.id);
       userStatus = true;
     }
+    userId = checkResult.id;
   }
 });
 
@@ -55,6 +56,8 @@ describe("User Service Tests", () => {
       };
       await userSvc.addUser(user);
       logs("info", "User added");
+      userStatus = true;
+      userId = (await userSvc.getUserByEmail("test@mail.com")).id;
     } else {
       logs("warn", "User already exists");
     }
@@ -79,6 +82,7 @@ describe("User Service Tests", () => {
       createdBy: "System",
     };
     await userSvc.updateUser(userId, user);
+    logs("info", "User updated");
   });
 
   test("Get an user by its email", async () => {
@@ -90,6 +94,7 @@ describe("User Service Tests", () => {
   test("Edit an user password", async () => {
     const password = "abc123";
     await userSvc.updateUserPassword(userId, password);
+    logs("info", "User password updated");
   });
 
   test("Get all active users", async () => {
@@ -99,6 +104,7 @@ describe("User Service Tests", () => {
 
   test("Disable an existing user", async () => {
     await userSvc.disableUser(userId);
+    logs("info", "User disabled");
   });
 
   test("Get all active users after disabling", async () => {
