@@ -34,7 +34,7 @@ function logs(type, msg) {
 let userId;
 let spaceId;
 let categoryId;
-let categoryStatus;
+let categoryDisabled;
 
 beforeAll(async () => {
   await dbCreateTables();
@@ -76,10 +76,10 @@ beforeAll(async () => {
   const checkCategory = await categoriesSvc.getCategoryByName("Test Category Updated", true);
   if (checkCategory && !checkCategory.error) {
     categoryId = checkCategory.id;
-    categoryStatus = await categoriesSvc.checkCategoryStatus(categoryId);
-    if (!categoryStatus) {
+    categoryDisabled = await categoriesSvc.checkCategoryStatus(categoryId);
+    if (categoryDisabled) {
       await categoriesSvc.enableCategory(categoryId);
-      categoryStatus = true;
+      categoryDisabled = false;
     }
   } else {
     const category = {
@@ -90,13 +90,13 @@ beforeAll(async () => {
     await categoriesSvc.addCategory(category);
     const newCategory = await categoriesSvc.getCategoryByName("Test Category", true);
     categoryId = newCategory.id;
-    categoryStatus = true;
+    categoryDisabled = false;
   }
 });
 
 describe("Categories Service Test", () => {
   test("Insert a new category if it does not exist", async () => {
-    if (!categoryStatus) {
+    if (categoryDisabled) {
       const category = {
         name: "Test Category",
         createdBy: userId,
@@ -110,7 +110,7 @@ describe("Categories Service Test", () => {
   });
 
   test("Enable an existing category if it is disabled", async () => {
-    if (categoryStatus) {
+    if (categoryDisabled) {
       await categoriesSvc.enableCategory(categoryId);
       logs("info", "Category enabled");
     } else {
@@ -146,7 +146,7 @@ describe("Categories Service Test", () => {
   });
 
   test("Disable an existing category", async () => {
-    if (categoryStatus) {
+    if (!categoryDisabled) {
       await categoriesSvc.disableCategory(categoryId);
       logs("info", "Category disabled");
     } else {
