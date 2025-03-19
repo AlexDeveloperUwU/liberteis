@@ -32,7 +32,7 @@ function logs(type, msg) {
 
 let userId;
 let spaceId;
-let spaceStatus;
+let spaceDisabled;
 
 beforeAll(async () => {
   await dbCreateTables();
@@ -55,10 +55,10 @@ beforeAll(async () => {
   const checkResult2 = await spacesSvc.getSpaceByName("Test Space", true);
   if (checkResult2 && !checkResult2.error) {
     spaceId = checkResult2.id;
-    spaceStatus = await spacesSvc.checkSpaceStatus(spaceId);
-    if (!spaceStatus) {
+    spaceDisabled = !(await spacesSvc.checkSpaceStatus(spaceId));
+    if (!spaceDisabled) {
       await spacesSvc.enableSpace(spaceId);
-      spaceStatus = true;
+      spaceDisabled = false;
     }
   } else {
     const space = {
@@ -70,13 +70,13 @@ beforeAll(async () => {
     await spacesSvc.addSpace(space);
     const newSpace = await spacesSvc.getSpaceByName("Test Space", true);
     spaceId = newSpace.id;
-    spaceStatus = true;
+    spaceDisabled = false;
   }
 });
 
 describe("Spaces Service Tests", () => {
   test("Insert a new space if it does not exist", async () => {
-    if (!spaceStatus) {
+    if (spaceDisabled) {
       const space = {
         name: "Test Space",
         location: "Test Location",
@@ -91,7 +91,7 @@ describe("Spaces Service Tests", () => {
   });
 
   test("Enable an existing space if it is disabled", async () => {
-    if (spaceStatus) {
+    if (spaceDisabled) {
       await spacesSvc.enableSpace(spaceId);
       logs("info", "Space enabled");
     } else {
@@ -129,7 +129,7 @@ describe("Spaces Service Tests", () => {
 
   test("Disable an existing space", async () => {
     await spacesSvc.disableSpace(spaceId);
-    spaceStatus = false;
+    spaceDisabled = true;
     logs("info", "Space disabled");
   });
 

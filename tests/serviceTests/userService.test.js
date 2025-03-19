@@ -29,17 +29,17 @@ function logs(type, msg) {
   }
 }
 
-let userStatus = false;
+let userDisabled = false;
 let userId = null;
 
 beforeAll(async () => {
   await dbCreateTables();
   const checkResult = await userSvc.getUserByEmail("test@mail.com", true);
   if (checkResult && !checkResult.error) {
-    userStatus = await userSvc.checkUserStatus(checkResult.id);
-    if (!userStatus) {
+    userDisabled = !(await userSvc.checkUserStatus(checkResult.id));
+    if (!userDisabled) {
       await userSvc.disableUser(checkResult.id);
-      userStatus = true;
+      userDisabled = true;
     }
     userId = checkResult.id;
   }
@@ -47,7 +47,7 @@ beforeAll(async () => {
 
 describe("User Service Tests", () => {
   test("Insert a new user if it does not exist", async () => {
-    if (!userStatus) {
+    if (!userDisabled) {
       const user = {
         name: "John Doe",
         email: "test@mail.com",
@@ -56,7 +56,7 @@ describe("User Service Tests", () => {
       };
       await userSvc.addUser(user);
       logs("info", "User added");
-      userStatus = true;
+      userDisabled = true;
       userId = (await userSvc.getUserByEmail("test@mail.com")).id;
     } else {
       logs("warn", "User already exists");
@@ -64,7 +64,7 @@ describe("User Service Tests", () => {
   });
 
   test("Enable an existing user if it is disabled", async () => {
-    if (userStatus) {
+    if (userDisabled) {
       const dbUser = await userSvc.getUserByEmail("test@mail.com", true);
       userId = dbUser.id;
       await userSvc.enableUser(userId);
