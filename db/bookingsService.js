@@ -116,10 +116,10 @@ export async function getBooking(id, includeInactive = false) {
   }
 }
 
-// Function to get a booking by name from the database
+// Function to get a booking by event ID and date from the database
 // It includes the option to include inactive bookings
-export async function getBookingByName(name, includeInactive = false) {
-  if (!name) {
+export async function getBookingByEventAndDate(eventId, bookingDate, includeInactive = false) {
+  if (!eventId || !bookingDate) {
     return { error: true, message: "Invalid parameters" };
   }
 
@@ -128,11 +128,15 @@ export async function getBookingByName(name, includeInactive = false) {
   try {
     switch (includeInactive) {
       case true:
-        result = await dbc.dbGetWhere("bookings", [{ field: "name", operator: "=", value: name }]);
+        result = await dbc.dbGetWhere("bookings", [
+          { field: "eventId", operator: "=", value: eventId },
+          { field: "bookingDate", operator: "=", value: bookingDate },
+        ]);
         break;
       case false:
         result = await dbc.dbGetWhere("bookings", [
-          { field: "name", operator: "=", value: name },
+          { field: "eventId", operator: "=", value: eventId },
+          { field: "bookingDate", operator: "=", value: bookingDate },
           { field: "deleted", operator: "=", value: false },
         ]);
         break;
@@ -146,8 +150,8 @@ export async function getBookingByName(name, includeInactive = false) {
 
     return result[0];
   } catch (error) {
-    logger.error(`Error retrieving booking by name from the database: ${error.message}`);
-    throw new Error("Error retrieving booking by name from the database");
+    logger.error(`Error retrieving booking by event and date from the database: ${error.message}`);
+    throw new Error("Error retrieving booking by event and date from the database");
   }
 }
 
