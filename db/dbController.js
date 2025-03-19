@@ -129,7 +129,7 @@ export async function dbCreateTables() {
       .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey())
       .addColumn("eventId", "varchar(50)", (col) => col.references("events.id"))
       .addColumn("space", "varchar(50)", (col) => col.references("spaces.id"))
-      .addColumn("bookingDate", "date", (col) => col.notNull())
+      .addColumn("bookingDate", "datetime", (col) => col.notNull())
       .addColumn("bookedBy", "varchar(50)", (col) => col.references("users.id"))
       .addColumn("bookedDate", "datetime", (col) => col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`))
       .addColumn("info", "varchar(500)")
