@@ -34,7 +34,7 @@ function logs(type, msg) {
 let userId;
 let categoryId;
 let eventId;
-let eventStatus;
+let eventDisabled;
 
 beforeAll(async () => {
   await dbCreateTables();
@@ -71,31 +71,16 @@ beforeAll(async () => {
   const checkEvent = await eventsSvc.getEventByTitle("Test Event", true);
   if (checkEvent && !checkEvent.error) {
     eventId = checkEvent.id;
-    eventStatus = await eventsSvc.checkEventStatus(eventId);
-    if (!eventStatus) {
-      await eventsSvc.enableEvent(eventId);
-      eventStatus = true;
-    }
+    eventDisabled = checkEvent.status;
+    await eventsSvc.disableEvent(eventId);
   } else {
-    const event = {
-      title: "Test Event",
-      info: "Test Info",
-      duration: 60,
-      coverUrl: "http://example.com/cover.jpg",
-      qrUrl: "http://example.com/qr.jpg",
-      category: categoryId,
-      createdBy: userId,
-    };
-    await eventsSvc.addEvent(event);
-    const newEvent = await eventsSvc.getEventByTitle("Test Event", true);
-    eventId = newEvent.id;
-    eventStatus = true;
+    eventDisabled = false;
   }
 });
 
 describe("Events Service Tests", () => {
   test("Insert a new event if it does not exist", async () => {
-    if (!eventStatus) {
+    if (!eventDisabled) {
       const event = {
         title: "Test Event",
         info: "Test Info",
@@ -106,6 +91,8 @@ describe("Events Service Tests", () => {
         createdBy: userId,
       };
       await eventsSvc.addEvent(event);
+      const newEvent = await eventsSvc.getEventByTitle("Test Event", true);
+      eventId = newEvent.id;
       logs("info", "Event added");
     } else {
       logs("warn", "Event already exists");
@@ -113,7 +100,7 @@ describe("Events Service Tests", () => {
   });
 
   test("Enable an existing event if it is disabled", async () => {
-    if (eventStatus) {
+    if (eventDisabled) {
       await eventsSvc.enableEvent(eventId);
       logs("info", "Event enabled");
     } else {
@@ -158,7 +145,7 @@ describe("Events Service Tests", () => {
   });
 
   test("Disable an existing event", async () => {
-    if (eventStatus) {
+    if (!eventDisabled) {
       await eventsSvc.disableEvent(eventId);
       logs("info", "Event disabled");
     } else {
