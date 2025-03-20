@@ -1,0 +1,11 @@
+node_modules
+dist
+logs
+secrets
+uploads
+.git
+.github
+.vscode
+docker-compose.yml
+Dockerfile
+readme.md

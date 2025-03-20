@@ -29,6 +29,8 @@ services:
       - "3000:3000"
     profiles:
       - dev
+    volumes:
+      - ./data:/app/data
 
   # Only prod service
   liberteis-prod:
@@ -43,6 +45,8 @@ services:
       - "3000:3000"
     profiles:
       - prod
+    volumes:
+      - ./data:/app/data
 
 volumes:
   data:
