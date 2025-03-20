@@ -22,9 +22,8 @@ async function main() {
   //! Configure the Express application
   const PORT = process.env.PORT || 3000;
   app.use(logs.httpLogger);
-  app.set("views", path.join(__dirname, "views"));
-  app.set("/uploads", e.static(path.join(__dirname, "uploads")));
-  app.set("/public", e.static(path.join(__dirname, "public")));
+  app.use("/", e.static(path.join(__dirname, "views")));
+  app.use("/uploads", e.static(path.join(__dirname, "uploads")));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -32,6 +31,9 @@ async function main() {
   dbCreateTables();
 
   //! Define the routes
+  app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, "views") + "/index.html");
+  });
   app.use("/api", apiRouter);
 
   //! Launch the Express application
