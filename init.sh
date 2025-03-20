@@ -106,10 +106,17 @@ EOF
 # Add MySQL host to credentials
 update_mysql_host_in_creds() {
   creds_file="./data/secrets/dbcreds.env"
-  sed -i "s/^MYSQL_HOST=.*/MYSQL_HOST=$MYSQL_HOST/" "$creds_file" || {
-    echo -e "${RED}Error updating MYSQL_HOST in credentials file${NC}"
-    exit 1
-  }
+  if grep -q "^MYSQL_HOST=" "$creds_file"; then
+    sed -i "s/^MYSQL_HOST=.*/MYSQL_HOST=$MYSQL_HOST/" "$creds_file" || {
+      echo -e "${RED}Error updating MYSQL_HOST in credentials file${NC}"
+      exit 1
+    }
+  else
+    echo "MYSQL_HOST=$MYSQL_HOST" >>"$creds_file" || {
+      echo -e "${RED}Error adding MYSQL_HOST to credentials file${NC}"
+      exit 1
+    }
+  fi
   echo -e "${GREEN}Updated MYSQL_HOST in credentials file.${NC}"
 }
 
