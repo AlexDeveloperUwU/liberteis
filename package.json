@@ -9,7 +9,7 @@
     "nvm": "nvm use 22",
     "start": "node index.js",
     "format": "prettier --write .",
-    "run:dev": "concurrently \"npm run dev --prefix client\" \"npm start\""
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm start\""
   },
   "repository": {
     "type": "git",
