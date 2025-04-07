@@ -1,13 +1,17 @@
 <template>
   <div class="flex">
-    <aside :class="['bg-gray-800 text-white h-screen p-4 pt-4 transition-all duration-400 ease-in-out', isCollapsed ? 'w-18' : 'w-56']">
+    <aside :class="['bg-gray-800 text-white h-screen p-4 pt-4 transition-all duration-300 ease-in-out', isCollapsed ? 'w-18' : 'w-56']">
       <div class="flex mb-6 pl-2">
         <button @click="toggleSidebar" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200">
           <div class="min-w-6 flex justify-center">
             <LucideMenu v-if="isCollapsed" />
             <LucideChevronLeft v-else />
           </div>
-          <span v-if="!isCollapsed" class="whitespace-nowrap transition-opacity duration-300 text-sm">{{ t('components.sidebar.close') }}</span>
+          <div :class="['transition-all duration-300 ease-in-out', isCollapsed ? 'max-w-0' : 'max-w-full']" class="overflow-hidden">
+            <transition name="fade-delayed">
+              <span v-if="!isCollapsed" class="whitespace-nowrap transition-opacity duration-300 text-sm">{{ t('components.sidebar.close') }}</span>
+            </transition>
+          </div>
         </button>
       </div>
       <nav>
@@ -17,7 +21,11 @@
               <div class="min-w-6 flex justify-center">
                 <component :is="item.icon" />
               </div>
-              <span v-if="!isCollapsed" class="whitespace-nowrap transition-opacity duration-300 text-sm">{{ t(item.titleKey) }}</span>
+              <div :class="['transition-all duration-300 ease-in-out', isCollapsed ? 'max-w-0' : 'max-w-full']" class="overflow-hidden">
+                <transition name="fade-delayed">
+                  <span v-if="!isCollapsed" class="whitespace-nowrap transition-opacity duration-300 text-sm">{{ t(item.titleKey) }}</span>
+                </transition>
+              </div>
             </a>
           </li>
         </ul>
@@ -78,5 +86,16 @@ export default {
 <style scoped>
 .min-w-6 {
   min-width: 1.5rem;
+}
+
+.fade-delayed-enter-active,
+.fade-delayed-leave-active {
+  transition: opacity 0.3s ease;
+  transition-delay: 0.15s;
+}
+
+.fade-delayed-enter-from,
+.fade-delayed-leave-to {
+  opacity: 0;
 }
 </style>

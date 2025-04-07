@@ -2,7 +2,7 @@
   <nav class="bg-gray-800 text-white flex items-center justify-between px-6 py-3 shadow-md">
     <div class="flex items-center gap-3">
       <div class="text-xl font-semibold flex items-center gap-2">
-        <LayoutDashboard />
+        <CalendarClock />
         <span>{{ t('components.navbar.title') }}</span>
       </div>
     </div>
@@ -34,13 +34,13 @@
 </template>
 
 <script>
-import { LayoutDashboard, Languages, ChevronDown } from 'lucide-vue-next';
+import { CalendarClock, Languages, ChevronDown } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 
 export default {
   components: {
-    LayoutDashboard,
+    CalendarClock,
     Languages,
     ChevronDown
   },
@@ -54,6 +54,7 @@ export default {
 
     const setLocale = (lang) => {
       locale.value = lang;
+      localStorage.setItem("locale", lang);
       showLanguageMenu.value = false;
     };
 

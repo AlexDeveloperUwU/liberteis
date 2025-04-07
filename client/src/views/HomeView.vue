@@ -1,8 +1,8 @@
 <template>
   <div class="h-full w-full p-6 bg-gray-900 text-white">
     <!-- Título -->
-    <h1 class="text-3xl font-bold">Dashboard Overview</h1>
-    <p class="text-gray-400">Welcome back, here's what's happening today.</p>
+    <h1 class="text-3xl font-bold">{{ t('pages.home.title') }}</h1>
+    <p class="text-gray-400">{{ t('pages.home.description') }}</p>
 
     <!-- Tarjetas de métricas -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
@@ -62,6 +62,9 @@
 
 <script setup>
 import { User, ArrowUpRight, ShoppingCart, Star, BarChart, LineChart } from 'lucide-vue-next';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 </script>
 
 <style scoped>

@@ -24,10 +24,12 @@ function loadLocaleMessages() {
   return messages;
 }
 
+const savedLocale = localStorage.getItem("locale") || "gl";
+
 const i18n = createI18n({
-  legacy: false, 
-  locale: "en", 
-  fallbackLocale: "en", 
+  legacy: false,
+  locale: savedLocale,
+  fallbackLocale: "gl",
   messages: loadLocaleMessages(),
 });
 
