@@ -1,4 +1,8 @@
 {
   "title": "Inicio",
-  "description": "Échale un ojo a tus eventos o crea algunos nuevos."
+  "description": "Échale un vistazo a tus eventos o crea algunos nuevos.",
+  "totals": "Eventos totales",
+  "toBeDone": "Eventos pendientes",
+  "done": "Eventos completados",
+  "upcoming": "Próximo evento"
 }
