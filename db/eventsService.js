@@ -4,7 +4,11 @@ import { logger } from "../utils/logger.js";
 
 //! Basic CRUD operations
 
-// Function to add an event to the database
+/**
+ * Agrega un evento a la base de datos.
+ * @param {Object} event - Objeto que representa el evento a agregar.
+ * @returns {Promise<Object>} Resultado de la operación.
+ */
 export async function addEvent(event) {
   if (!event) {
     return { error: true, message: "Invalid parameters" };
@@ -20,7 +24,12 @@ export async function addEvent(event) {
   }
 }
 
-// Function to update an event in the database
+/**
+ * Actualiza un evento en la base de datos.
+ * @param {string} id - ID del evento a actualizar.
+ * @param {Object} event - Objeto con los datos actualizados del evento.
+ * @returns {Promise<Object>} Resultado de la operación.
+ */
 export async function updateEvent(id, event) {
   if (!id || !event) {
     return { error: true, message: "Invalid parameters" };
@@ -34,7 +43,11 @@ export async function updateEvent(id, event) {
   }
 }
 
-// Function to enable or disable an event in the database
+/**
+ * Cambia el estado de habilitado/deshabilitado de un evento en la base de datos.
+ * @param {string} id - ID del evento cuyo estado se cambiará.
+ * @returns {Promise<Object>} Resultado de la operación.
+ */
 export async function changeEventStatus(id) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -49,7 +62,11 @@ export async function changeEventStatus(id) {
   }
 }
 
-// Function to enable an event in the database
+/**
+ * Habilita un evento en la base de datos.
+ * @param {string} id - ID del evento a habilitar.
+ * @returns {Promise<Object>} Resultado de la operación.
+ */
 export async function enableEvent(id) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -63,7 +80,11 @@ export async function enableEvent(id) {
   }
 }
 
-// Function to disable an event in the database
+/**
+ * Deshabilita un evento en la base de datos.
+ * @param {string} id - ID del evento a deshabilitar.
+ * @returns {Promise<Object>} Resultado de la operación.
+ */
 export async function disableEvent(id) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -79,8 +100,12 @@ export async function disableEvent(id) {
 
 //! Info retrieval operations
 
-// Function to get an event from the database
-// It includes the option to include inactive events
+/**
+ * Obtiene un evento de la base de datos.
+ * @param {string} id - ID del evento a obtener.
+ * @param {boolean} [includeInactive=false] - Indica si se deben incluir eventos inactivos.
+ * @returns {Promise<Object>} Evento encontrado o un mensaje de error.
+ */
 export async function getEvent(id, includeInactive = false) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -114,8 +139,12 @@ export async function getEvent(id, includeInactive = false) {
   }
 }
 
-// Function to get an event by title from the database
-// It includes the option to include inactive events
+/**
+ * Obtiene un evento por título de la base de datos.
+ * @param {string} title - Título del evento a buscar.
+ * @param {boolean} [includeInactive=false] - Indica si se deben incluir eventos inactivos.
+ * @returns {Promise<Object>} Evento encontrado o un mensaje de error.
+ */
 export async function getEventByTitle(title, includeInactive = false) {
   if (!title) {
     return { error: true, message: "Invalid parameters" };
@@ -149,8 +178,11 @@ export async function getEventByTitle(title, includeInactive = false) {
   }
 }
 
-// Function to get all events from the database
-// It can return: all, active (DEFAULT) or inactive events
+/**
+ * Obtiene todos los eventos de la base de datos según el estado especificado.
+ * @param {string} [status="active"] - Estado de los eventos a obtener ("all", "active", "inactive").
+ * @returns {Promise<Array>} Lista de eventos encontrados o un mensaje de error.
+ */
 export async function getEvents(status = "active") {
   let result;
 
@@ -180,7 +212,11 @@ export async function getEvents(status = "active") {
   }
 }
 
-// Function to check an event's status
+/**
+ * Verifica el estado de un evento en la base de datos.
+ * @param {string} id - ID del evento a verificar.
+ * @returns {Promise<boolean>} Estado del evento (true si está eliminado, false si no lo está).
+ */
 export async function checkEventStatus(id) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -195,7 +231,11 @@ export async function checkEventStatus(id) {
   }
 }
 
-// Function to check if an event exists
+/**
+ * Verifica si un evento existe en la base de datos.
+ * @param {string} title - Título del evento a verificar.
+ * @returns {Promise<boolean>} True si el evento existe, false en caso contrario.
+ */
 export async function checkEventExists(title) {
   if (!title) {
     return { error: true, message: "Invalid parameters" };

@@ -1,9 +1,12 @@
 import * as dbc from "./dbController.js";
 import { logger } from "../utils/logger.js";
 
-//! Basic CRUD operations
-
-// Function to add a config to the database
+/**
+ * Adds a configuration to the database.
+ * @param {string} key - The key of the configuration.
+ * @param {any} value - The value of the configuration.
+ * @returns {Promise<object>} The result of the operation or an error object.
+ */
 export async function setConfig(key, value) {
   if (!key || !value) {
     return { error: true, message: "Invalid parameters" };
@@ -17,7 +20,12 @@ export async function setConfig(key, value) {
   }
 }
 
-// Function to update a config in the database
+/**
+ * Updates a configuration in the database.
+ * @param {string} key - The key of the configuration.
+ * @param {any} value - The new value of the configuration.
+ * @returns {Promise<object>} The result of the operation or an error object.
+ */
 export async function updateConfig(key, value) {
   if (!key || !value) {
     return { error: true, message: "Invalid parameters" };
@@ -31,7 +39,11 @@ export async function updateConfig(key, value) {
   }
 }
 
-// Function to delete a config from the database
+/**
+ * Deletes a configuration from the database.
+ * @param {string} key - The key of the configuration to delete.
+ * @returns {Promise<object>} The result of the operation or an error object.
+ */
 export async function deleteConfig(key) {
   if (!key) {
     return { error: true, message: "Invalid parameters" };
@@ -45,7 +57,11 @@ export async function deleteConfig(key) {
   }
 }
 
-// Function to get a config from the database
+/**
+ * Retrieves a configuration from the database.
+ * @param {string} key - The key of the configuration to retrieve.
+ * @returns {Promise<object>} The configuration object or an error object.
+ */
 export async function getConfig(key) {
   if (!key) {
     return { error: true, message: "Invalid parameters" };
@@ -60,7 +76,10 @@ export async function getConfig(key) {
   }
 }
 
-// Function to get all configs from the database
+/**
+ * Retrieves all configurations from the database.
+ * @returns {Promise<object[]>} An array of all configuration objects.
+ */
 export async function getConfigs() {
   try {
     return await dbc.dbGetAll("config");
@@ -70,7 +89,11 @@ export async function getConfigs() {
   }
 }
 
-// Function to check if a config exists in the database
+/**
+ * Checks if a configuration exists in the database.
+ * @param {string} key - The key of the configuration to check.
+ * @returns {Promise<boolean>} True if the configuration exists, false otherwise.
+ */
 export async function checkConfigExistence(key) {
   if (!key) {
     return { error: true, message: "Invalid parameters" };

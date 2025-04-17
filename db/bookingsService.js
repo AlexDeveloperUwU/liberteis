@@ -4,7 +4,11 @@ import { logger } from "../utils/logger.js";
 
 //! Basic CRUD operations
 
-// Function to add a booking to the database
+/**
+ * Adds a booking to the database.
+ * @param {object} booking - The booking object to add.
+ * @returns {Promise<object>} The result of the operation or an error message.
+ */
 export async function addBooking(booking) {
   if (!booking) {
     return { error: true, message: "Invalid parameters" };
@@ -22,7 +26,12 @@ export async function addBooking(booking) {
   }
 }
 
-// Function to update a booking in the database
+/**
+ * Updates a booking in the database.
+ * @param {string} id - The ID of the booking to update.
+ * @param {object} booking - The updated booking object.
+ * @returns {Promise<object>} The result of the operation or an error message.
+ */
 export async function updateBooking(id, booking) {
   if (!id || !booking) {
     return { error: true, message: "Invalid parameters" };
@@ -36,7 +45,11 @@ export async function updateBooking(id, booking) {
   }
 }
 
-// Function to enable or disable a booking in the database
+/**
+ * Toggles the status of a booking (enabled/disabled).
+ * @param {string} id - The ID of the booking to change status.
+ * @returns {Promise<object>} The result of the operation or an error message.
+ */
 export async function changeBookingStatus(id) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -51,7 +64,11 @@ export async function changeBookingStatus(id) {
   }
 }
 
-// Function to enable a booking in the database
+/**
+ * Enables a booking in the database.
+ * @param {string} id - The ID of the booking to enable.
+ * @returns {Promise<object>} The result of the operation or an error message.
+ */
 export async function enableBooking(id) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -65,7 +82,11 @@ export async function enableBooking(id) {
   }
 }
 
-// Function to disable a booking in the database
+/**
+ * Disables a booking in the database.
+ * @param {string} id - The ID of the booking to disable.
+ * @returns {Promise<object>} The result of the operation or an error message.
+ */
 export async function disableBooking(id) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -81,8 +102,12 @@ export async function disableBooking(id) {
 
 //! Info retrieval operations
 
-// Function to get a booking from the database
-// It includes the option to include inactive bookings
+/**
+ * Retrieves a booking from the database.
+ * @param {string} id - The ID of the booking to retrieve.
+ * @param {boolean} [includeInactive=false] - Whether to include inactive bookings.
+ * @returns {Promise<object>} The booking object or an error message.
+ */
 export async function getBooking(id, includeInactive = false) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -116,8 +141,13 @@ export async function getBooking(id, includeInactive = false) {
   }
 }
 
-// Function to get a booking by event ID and date from the database
-// It includes the option to include inactive bookings
+/**
+ * Retrieves a booking by event ID and date.
+ * @param {string} eventId - The event ID associated with the booking.
+ * @param {string} bookingDate - The date of the booking.
+ * @param {boolean} [includeInactive=false] - Whether to include inactive bookings.
+ * @returns {Promise<object>} The booking object or an error message.
+ */
 export async function getBookingByEventAndDate(eventId, bookingDate, includeInactive = false) {
   if (!eventId || !bookingDate) {
     return { error: true, message: "Invalid parameters" };
@@ -155,8 +185,11 @@ export async function getBookingByEventAndDate(eventId, bookingDate, includeInac
   }
 }
 
-// Function to get all bookings from the database
-// It can return: all, active (DEFAULT) or inactive bookings
+/**
+ * Retrieves bookings from the database based on their status.
+ * @param {string} [status="active"] - The status of bookings to retrieve ("all", "active", "inactive").
+ * @returns {Promise<object[]>} An array of bookings or an error message.
+ */
 export async function getBookings(status = "active") {
   let result;
 
@@ -186,7 +219,11 @@ export async function getBookings(status = "active") {
   }
 }
 
-// Function to check a booking's status
+/**
+ * Checks the status of a booking.
+ * @param {string} id - The ID of the booking to check.
+ * @returns {Promise<boolean>} The status of the booking (true if deleted, false otherwise).
+ */
 export async function checkBookingStatus(id) {
   if (!id) {
     return { error: true, message: "Invalid parameters" };
@@ -198,5 +235,69 @@ export async function checkBookingStatus(id) {
   } catch (error) {
     logger.error(`Error checking booking status in the database: ${error.message}`);
     throw new Error("Error checking booking status in the database");
+  }
+}
+
+/**
+ * Retrieves a summary of bookings.
+ * @param {string|null} [userId=null] - Optional user ID to filter bookings.
+ * @param {string|null} [type=null] - The type of bookings to retrieve ("all", "done", "pending", or null for all).
+ * @returns {Promise<object>} A summary of bookings or filtered bookings.
+ */
+export async function getBookingsCount(userId = null, type = null) {
+  const currentDate = new Date().toISOString();
+
+  try {
+    const filters = userId ? [{ field: "bookedBy", operator: "=", value: userId }] : [];
+
+    switch (type) {
+      case "all": {
+        const totalBookings = await dbc.dbGetWhere("bookings", filters);
+        return { totales: totalBookings.length };
+      }
+      case "done": {
+        const hechosFilters = [
+          ...filters,
+          { field: "bookingDate", operator: "<", value: currentDate },
+          { field: "deleted", operator: "=", value: false },
+        ];
+        const hechos = await dbc.dbGetWhere("bookings", hechosFilters);
+        return { hechos: hechos.length };
+      }
+      case "pending": {
+        const porHacerFilters = [
+          ...filters,
+          { field: "bookingDate", operator: ">", value: currentDate },
+          { field: "deleted", operator: "=", value: false },
+        ];
+        const porHacer = await dbc.dbGetWhere("bookings", porHacerFilters);
+        return { porHacer: porHacer.length };
+      }
+      case null: {
+        const totalBookings = await dbc.dbGetWhere("bookings", filters);
+        const hechosFilters = [
+          ...filters,
+          { field: "bookingDate", operator: "<", value: currentDate },
+          { field: "deleted", operator: "=", value: false },
+        ];
+        const hechos = await dbc.dbGetWhere("bookings", hechosFilters);
+        const porHacerFilters = [
+          ...filters,
+          { field: "bookingDate", operator: ">", value: currentDate },
+          { field: "deleted", operator: "=", value: false },
+        ];
+        const porHacer = await dbc.dbGetWhere("bookings", porHacerFilters);
+        return {
+          totales: totalBookings.length,
+          hechos: hechos.length,
+          porHacer: porHacer.length,
+        };
+      }
+      default:
+        return { error: true, message: "Invalid type parameter" };
+    }
+  } catch (error) {
+    logger.error(`Error retrieving bookings summary: ${error.message}`);
+    throw new Error("Error retrieving bookings summary");
   }
 }

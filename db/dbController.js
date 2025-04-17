@@ -10,14 +10,21 @@ const envConfig = dotenv.config({
   path: path.resolve(__dirname, "./data/secrets/dbcreds.env"),
 }).parsed;
 
-//! Database connection
+/**
+ * Configuración de la conexión a la base de datos MySQL.
+ */
 const dbPool = mysql.createPool({
   host: envConfig.MYSQL_HOST,
   user: envConfig.MYSQL_USER,
   password: envConfig.MYSQL_PASSWORD,
   database: envConfig.MYSQL_DATABASE,
 
-  // Map tinyint(1) to boolean
+  /**
+   * Mapea tinyint(1) a boolean.
+   * @param {Object} field - Campo de la base de datos.
+   * @param {Function} next - Función para continuar con el procesamiento.
+   * @returns {boolean|*} - Devuelve un booleano si el campo es tinyint(1), de lo contrario continúa.
+   */
   typeCast(field, next) {
     if (field.type === "TINY" && field.length === 1) {
       return field.string() === "1";
@@ -26,12 +33,17 @@ const dbPool = mysql.createPool({
   },
 });
 
-// Log when a connection is created
+/**
+ * Evento que se dispara cuando se establece una conexión con la base de datos.
+ */
 dbPool.on("connection", () => {
   logger.info(`Conexión establecida con la base de datos`);
 });
 
-// Log when an error occurs with the pool
+/**
+ * Evento que se dispara cuando ocurre un error en el pool de conexiones.
+ * @param {Error} err - Error ocurrido.
+ */
 dbPool.on("error", (err) => {
   if (err instanceof AggregateError) {
     logger.error(`AggregateError en la conexión a la base de datos: ${err.errors}`);
@@ -40,7 +52,11 @@ dbPool.on("error", (err) => {
   }
 });
 
-// Handle connection errors
+/**
+ * Maneja errores de conexión y cierra la aplicación si ocurre un error crítico.
+ * @param {Error} err - Error de conexión.
+ * @param {Object} connection - Conexión de la base de datos.
+ */
 dbPool.getConnection((err, connection) => {
   if (err) {
     if (err.code === "ECONNREFUSED") {
@@ -50,20 +66,24 @@ dbPool.getConnection((err, connection) => {
     } else {
       logger.error(`Error al conectar con la base de datos: ${err.message}`);
     }
-    // Close the application if there is a critical error
     process.exit(1);
   }
   if (connection) connection.release();
 });
 
-// Use the pool with Kysely
+/**
+ * Instancia de Kysely configurada para usar el pool de conexiones MySQL.
+ */
 const db = new Kysely({
   dialect: new MysqlDialect({
     pool: dbPool,
   }),
 });
 
-//! SQL function to create tables
+/**
+ * Crea las tablas necesarias en la base de datos si no existen.
+ * @async
+ */
 export async function dbCreateTables() {
   await db.transaction().execute(async (trx) => {
     await trx.schema
@@ -141,9 +161,13 @@ export async function dbCreateTables() {
   });
 }
 
-// SQL queries for utilities (no change here)
-
-// Check if a record exists in a table
+/**
+ * Verifica si un registro existe en una tabla.
+ * @async
+ * @param {string} table - Nombre de la tabla.
+ * @param {string} id - ID del registro.
+ * @returns {Promise<boolean>} - Devuelve true si el registro existe, de lo contrario false.
+ */
 export async function dbCheckExistence(table, id) {
   return await db.transaction().execute(async (trx) => {
     const result = await trx.selectFrom(table).select("id").where("id", "=", id).execute();
@@ -151,21 +175,38 @@ export async function dbCheckExistence(table, id) {
   });
 }
 
-// Returns data given a table and an id
+/**
+ * Obtiene un registro de una tabla dado su ID.
+ * @async
+ * @param {string} table - Nombre de la tabla.
+ * @param {string} id - ID del registro.
+ * @returns {Promise<Object>} - Devuelve el registro encontrado.
+ */
 export async function dbGetOne(table, id) {
   return await db.transaction().execute(async (trx) => {
     return await trx.selectFrom(table).selectAll().where("id", "=", id).execute();
   });
 }
 
-// Returns all data from a given table
+/**
+ * Obtiene todos los registros de una tabla.
+ * @async
+ * @param {string} table - Nombre de la tabla.
+ * @returns {Promise<Array>} - Devuelve todos los registros de la tabla.
+ */
 export async function dbGetAll(table) {
   return await db.transaction().execute(async (trx) => {
     return await trx.selectFrom(table).selectAll().execute();
   });
 }
 
-// Return data with a given where
+/**
+ * Obtiene registros de una tabla que cumplen con ciertas condiciones.
+ * @async
+ * @param {string} table - Nombre de la tabla.
+ * @param {Array|Object} conditions - Condiciones para filtrar los registros.
+ * @returns {Promise<Array>} - Devuelve los registros que cumplen con las condiciones.
+ */
 export async function dbGetWhere(table, conditions) {
   return await db.transaction().execute(async (trx) => {
     if (!Array.isArray(conditions)) {
@@ -179,21 +220,40 @@ export async function dbGetWhere(table, conditions) {
   });
 }
 
-// Inserts the data into a given table
+/**
+ * Inserta datos en una tabla.
+ * @async
+ * @param {string} table - Nombre de la tabla.
+ * @param {Object} data - Datos a insertar.
+ * @returns {Promise<Object>} - Devuelve el resultado de la inserción.
+ */
 export async function dbSaveData(table, data) {
   return await db.transaction().execute(async (trx) => {
     return await trx.insertInto(table).values(data).execute();
   });
 }
 
-// Updates the data of the entry with the given id in a given table
+/**
+ * Actualiza los datos de un registro en una tabla.
+ * @async
+ * @param {string} table - Nombre de la tabla.
+ * @param {string} id - ID del registro.
+ * @param {Object} data - Datos a actualizar.
+ * @returns {Promise<Object>} - Devuelve el resultado de la actualización.
+ */
 export async function dbUpdateData(table, id, data) {
   return await db.transaction().execute(async (trx) => {
     return await trx.updateTable(table).set(data).where("id", "=", id).execute();
   });
 }
 
-// Obtains the status of an entry with the given id from a given table
+/**
+ * Obtiene el estado de eliminación de un registro en una tabla.
+ * @async
+ * @param {string} table - Nombre de la tabla.
+ * @param {string} id - ID del registro.
+ * @returns {Promise<boolean>} - Devuelve el estado de eliminación del registro.
+ */
 export async function dbGetDeletionStatus(table, id) {
   return await db.transaction().execute(async (trx) => {
     const data = await dbGetOne(table, id);
@@ -201,7 +261,13 @@ export async function dbGetDeletionStatus(table, id) {
   });
 }
 
-// Switches deletion status of the entry with the given id from a given table
+/**
+ * Cambia el estado de eliminación de un registro en una tabla.
+ * @async
+ * @param {string} table - Nombre de la tabla.
+ * @param {string} id - ID del registro.
+ * @returns {Promise<Object>} - Devuelve el resultado de la actualización.
+ */
 export async function dbSwitchDeletionStatus(table, id) {
   return await db.transaction().execute(async (trx) => {
     const data = await dbGetOne(table, id);
@@ -209,24 +275,38 @@ export async function dbSwitchDeletionStatus(table, id) {
   });
 }
 
-// Sets deletion status of the entry with the given id from a given table to the given value
+/**
+ * Establece el estado de eliminación de un registro en una tabla.
+ * @async
+ * @param {string} table - Nombre de la tabla.
+ * @param {string} id - ID del registro.
+ * @param {boolean} deletionStatus - Estado de eliminación a establecer.
+ * @returns {Promise<Object>} - Devuelve el resultado de la actualización.
+ */
 export async function dbSetDeleteStatus(table, id, deletionStatus) {
   return await db.transaction().execute(async (trx) => {
     return await dbUpdateData(table, id, { deleted: deletionStatus });
   });
 }
 
-// Deletes the entry with the given id from a given table
-//! This function SHOULD NOT be used in the app, JUST in the configService
-//* This is due to the fact that we don't have to keep a history of the deleted configurations
+/**
+ * Elimina un registro de una tabla.
+ * @async
+ * @param {string} table - Nombre de la tabla.
+ * @param {string} id - ID del registro.
+ * @returns {Promise<Object>} - Devuelve el resultado de la eliminación.
+ */
 export async function dbDeleteData(table, id) {
   return await db.transaction().execute(async (trx) => {
     return await trx.deleteFrom(table).where("id", "=", id).execute();
   });
 }
 
-// Deletes all entries from all the tables of the database
-//! This function MUST NOT be used in the app, it's just for testing with a clean database
+/**
+ * Elimina todos los registros de todas las tablas de la base de datos.
+ * @async
+ * @description Esta función NO DEBE ser utilizada en la aplicación, solo para pruebas con una base de datos limpia.
+ */
 export async function clearDb() {
   await db.transaction().execute(async (trx) => {
     await trx.deleteFrom("bookings").execute();
