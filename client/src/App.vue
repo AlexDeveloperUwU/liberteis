@@ -20,8 +20,8 @@
 </template>
 
 <script setup>
-import NavBar from './components/NavBar.vue';
-import SideBar from './components/SideBar.vue';
+import NavBar from "./components/NavBar.vue";
+import SideBar from "./components/SideBar.vue";
 </script>
 
 <style scoped>
@@ -45,26 +45,38 @@ import SideBar from './components/SideBar.vue';
   display: block;
   margin: 15px auto;
   position: relative;
-  color: #FFF;
+  color: #fff;
   box-sizing: border-box;
   animation: animloader 1s linear infinite alternate;
 }
 
 @keyframes animloader {
   0% {
-    box-shadow: -38px -6px, -14px 6px, 14px -6px;
+    box-shadow:
+      -38px -6px,
+      -14px 6px,
+      14px -6px;
   }
 
   33% {
-    box-shadow: -38px 6px, -14px -6px, 14px 6px;
+    box-shadow:
+      -38px 6px,
+      -14px -6px,
+      14px 6px;
   }
 
   66% {
-    box-shadow: -38px -6px, -14px 6px, 14px -6px;
+    box-shadow:
+      -38px -6px,
+      -14px 6px,
+      14px -6px;
   }
 
   100% {
-    box-shadow: -38px 6px, -14px -6px, 14px 6px;
+    box-shadow:
+      -38px 6px,
+      -14px -6px,
+      14px 6px;
   }
 }
 </style>
