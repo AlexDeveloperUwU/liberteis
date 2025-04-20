@@ -13,6 +13,7 @@
     "@fullcalendar/core": "^6.1.17",
     "@fullcalendar/vue3": "^6.1.17",
     "@tailwindcss/vite": "^4.0.17",
+    "axios": "^1.8.4",
     "lucide-vue-next": "^0.485.0",
     "pinia": "^3.0.1",
     "tailwindcss": "^4.0.17",

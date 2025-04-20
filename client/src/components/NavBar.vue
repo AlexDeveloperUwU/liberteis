@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-700">
-        <img src="https://randomuser.me/api/portraits/women/60.jpg" alt="User Avatar" class="w-full h-full object-cover">
+        <img :src="getImageUrl('logopfp', 'png')" alt="User Avatar" class="w-full h-full object-cover">
       </div>
     </div>
   </nav>
@@ -37,6 +37,10 @@
 import { CalendarClock, Languages, ChevronDown } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+
+function getImageUrl(name, ext) {
+  return new URL(`../assets/img/${name}.${ext}`, import.meta.url).href;
+}
 
 export default {
   components: {
@@ -80,7 +84,8 @@ export default {
       setLocale,
       showLanguageMenu,
       toggleLanguageMenu,
-      currentLanguageLabel
+      currentLanguageLabel,
+      getImageUrl,
     };
   },
 };
