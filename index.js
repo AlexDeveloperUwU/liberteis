@@ -2,6 +2,7 @@ import e from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
+import helmet from "helmet";
 import * as logs from "./utils/logger.js";
 
 //! Init wrapper
@@ -21,20 +22,31 @@ async function main() {
 
   //! Configure the Express application
   const PORT = process.env.PORT || 3000;
+
+  app.use(helmet.xssFilter());
+  app.use(helmet.noSniff());
+  app.use(helmet.frameguard({ action: "deny" }));
+  app.use(helmet.hsts({ maxAge: 63072000, includeSubDomains: true, preload: true }));
+  app.disable("x-powered-by");
+  app.set("trust proxy", 1);
+  app.use(helmet.originAgentCluster());
+  app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
   app.use(logs.httpLogger);
-  app.use("/", e.static(path.join(__dirname, "views")));
-  app.use("/uploads", e.static(path.join(__dirname, "uploads")));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+
+  app.use("/", e.static(path.join(__dirname, "views")));
+  app.use("/uploads", e.static(path.join(__dirname, "uploads")));
 
   //! Create the database tables if they don't exist
   dbCreateTables();
 
   //! Define the routes
-  app.get("/", function (req, res) {
+  app.use("/api", apiRouter);
+
+  app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "views") + "/index.html");
   });
-  app.use("/api", apiRouter);
 
   //! Launch the Express application
   app.listen(PORT, () => {
