@@ -44,61 +44,42 @@
   </nav>
 </template>
 
-<script>
+<script setup>
 import { CalendarClock, Languages, ChevronDown } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 
-function getImageUrl(name, ext) {
+const { t, locale } = useI18n();
+const showLanguageMenu = ref(false);
+
+const toggleLanguageMenu = () => {
+  showLanguageMenu.value = !showLanguageMenu.value;
+};
+
+const setLocale = (lang) => {
+  locale.value = lang;
+  localStorage.setItem("locale", lang);
+  showLanguageMenu.value = false;
+};
+
+const currentLanguageLabel = computed(() => {
+  return locale.value.toUpperCase();
+});
+
+const closeOnOutsideClick = () => {
+  showLanguageMenu.value = false;
+};
+
+onMounted(() => {
+  document.addEventListener("click", closeOnOutsideClick);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", closeOnOutsideClick);
+});
+
+const getImageUrl = (name, ext) => {
   return new URL(`../assets/img/${name}.${ext}`, import.meta.url).href;
-}
-
-export default {
-  components: {
-    CalendarClock,
-    Languages,
-    ChevronDown,
-  },
-  setup() {
-    const { t, locale } = useI18n();
-    const showLanguageMenu = ref(false);
-
-    const toggleLanguageMenu = () => {
-      showLanguageMenu.value = !showLanguageMenu.value;
-    };
-
-    const setLocale = (lang) => {
-      locale.value = lang;
-      localStorage.setItem("locale", lang);
-      showLanguageMenu.value = false;
-    };
-
-    const currentLanguageLabel = computed(() => {
-      return locale.value.toUpperCase();
-    });
-
-    const closeOnOutsideClick = (event) => {
-      showLanguageMenu.value = false;
-    };
-
-    onMounted(() => {
-      document.addEventListener("click", closeOnOutsideClick);
-    });
-
-    onBeforeUnmount(() => {
-      document.removeEventListener("click", closeOnOutsideClick);
-    });
-
-    return {
-      t,
-      locale,
-      setLocale,
-      showLanguageMenu,
-      toggleLanguageMenu,
-      currentLanguageLabel,
-      getImageUrl,
-    };
-  },
 };
 </script>
 
