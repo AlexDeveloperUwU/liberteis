@@ -1,10 +1,8 @@
 <template>
   <div class="h-full w-full p-6 bg-gray-900 text-white">
-    <!-- Título -->
     <h1 class="text-3xl font-bold">{{ t("pages.home.title") }}</h1>
     <p class="text-gray-400">{{ t("pages.home.description") }}</p>
 
-    <!-- Tarjetas de métricas -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
       <div class="bg-gray-800 p-4 shadow rounded-lg flex flex-col">
         <div class="flex items-center gap-2 text-purple-400">
@@ -39,11 +37,10 @@
       </div>
     </div>
 
-    <!-- Gráficos Placeholder -->
     <div class="gap-6 mt-6">
       <div class="bg-gray-800 p-6 rounded-lg shadow">
         <div class="calendar-container">
-          <FullCalendar :options="calendarOptions" />
+          <FullCalendar ref="calendarRef" :options="calendarOptions" />
         </div>
       </div>
     </div>
@@ -54,21 +51,54 @@
 import { CalendarDays, CalendarCog, CalendarCheck2, Calendar1 } from "lucide-vue-next";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import listPlugin from "@fullcalendar/list";
+import iziToast from "izitoast";
 import { useI18n } from "vue-i18n";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 
 const { t } = useI18n();
 const metrics = ref({ totales: 0, hechos: 0, porHacer: 0, porRealizar: 0 });
 
+const calendarRef = ref(null);
+const isMobile = ref(window.innerWidth <= 768);
+
 const calendarOptions = ref({
-  plugins: [dayGridPlugin],
-  initialView: "dayGridMonth",
+  plugins: [dayGridPlugin, listPlugin],
+  initialView: isMobile.value ? "listMonth" : "dayGridMonth",
   height: "100%",
   contentHeight: "auto",
+  headerToolbar: {
+    start: 'title',
+    center: '',
+    end: 'prev,today,next'
+  },
+  handleWindowResize: true,
+  events: [
+    { title: "Evento 1", start: "2025-04-07" },
+    { title: "Evento 2", start: "2025-04-10", end: "2025-04-12" },
+    { title: "Evento 3", start: "2025-04-15T14:00:00" },
+    { title: "Evento 4", start: "2025-04-21", allDay: true },
+  ],
 });
 
+const updateCalendarView = () => {
+  const calendarApi = calendarRef.value?.getApi();
+  if (calendarApi) {
+    const newView = isMobile.value ? "listMonth" : "dayGridMonth";
+    calendarApi.changeView(newView);
+  }
+};
+
+watch(isMobile, updateCalendarView);
+
+const detectMobile = () => {
+  isMobile.value = window.innerWidth <= 768;
+};
+
 onMounted(async () => {
+  window.addEventListener("resize", detectMobile);
+
   try {
     const response = await axios.get("/api/bookings/count");
     if (response.data.code === 200) {
@@ -82,9 +112,15 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
+<style>
+:root {
+  --fc-neutral-bg-color: hsl(216deg 31% 17% / 90%);
+  --fc-list-event-hover-bg-color: #00000000;
+  --fc-today-bg-color: rgb(45 111 177 / 35%);
+}
+
 .shadow {
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 1);
 }
 
 .calendar-container {
