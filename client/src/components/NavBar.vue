@@ -1,6 +1,13 @@
 <template>
   <nav class="bg-gray-800 text-white flex items-center justify-between px-6 py-3 shadow-md">
     <div class="flex items-center gap-3">
+      <!-- Botón de abrir/cerrar sidebar -->
+      <button
+        @click="$emit('toggle-sidebar')"
+        class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200">
+        <LucideMenu v-if="isCollapsed" />
+        <LucideChevronLeft v-else />
+      </button>
       <div class="text-xl font-semibold flex items-center gap-2">
         <CalendarClock />
         <span>{{ t("components.navbar.title") }}</span>
@@ -16,7 +23,7 @@
           <ChevronDown class="h-4 w-4" :class="{ 'transform rotate-180': showLanguageMenu }" />
         </button>
 
-        <div v-if="showLanguageMenu" class="absolute right-0 mt-1 w-32 bg-gray-700 rounded shadow-lg py-1 z-10">
+        <div v-if="showLanguageMenu" class="absolute right-0 mt-4 w-32 bg-gray-700 rounded shadow-lg py-1 z-10">
           <button
             @click="setLocale('en')"
             class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-600 transition"
@@ -45,9 +52,22 @@
 </template>
 
 <script setup>
-import { CalendarClock, Languages, ChevronDown } from "lucide-vue-next";
+import {
+  CalendarClock,
+  Languages,
+  ChevronDown,
+  Menu as LucideMenu,
+  ChevronLeft as LucideChevronLeft,
+} from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+
+const props = defineProps({
+  isCollapsed: {
+    type: Boolean,
+    required: true,
+  },
+});
 
 const { t, locale } = useI18n();
 const showLanguageMenu = ref(false);

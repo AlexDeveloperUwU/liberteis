@@ -25,7 +25,7 @@
           <Calendar1 class="w-5 h-5" />
           <p>{{ t("pages.home.upcoming") }}</p>
         </div>
-        <h2 class="text-2xl font-bold"></h2>
+        <h2 class="text-2xl font-bold">1 de Enero de 1999</h2>
       </div>
 
       <div class="bg-gray-800 p-4 shadow rounded-lg flex flex-col">
@@ -69,9 +69,9 @@ const calendarOptions = ref({
   height: "100%",
   contentHeight: "auto",
   headerToolbar: {
-    start: 'title',
-    center: '',
-    end: 'prev,today,next'
+    start: "title",
+    center: "",
+    end: "prev,today,next",
   },
   handleWindowResize: true,
   events: [
@@ -80,6 +80,7 @@ const calendarOptions = ref({
     { title: "Evento 3", start: "2025-04-15T14:00:00" },
     { title: "Evento 4", start: "2025-04-21", allDay: true },
   ],
+  weekends: true,
 });
 
 const updateCalendarView = () => {
@@ -109,6 +110,14 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error fetching metrics:", error.message || error);
   }
+
+  try {
+    const configResponse = await axios.get("/api/config/", { params: { key: "enableWeekends" } });
+    const parsedData = { ...configResponse.data.data, value: Number(configResponse.data.data.value) === 1 };
+    calendarOptions.value.weekends = parsedData.value;
+  } catch (error) {
+    console.error("Error fetching config:", error.message || error);
+  }
 });
 </script>
 
@@ -116,7 +125,7 @@ onMounted(async () => {
 :root {
   --fc-neutral-bg-color: hsl(216deg 31% 17% / 90%);
   --fc-list-event-hover-bg-color: #00000000;
-  --fc-today-bg-color: rgb(45 111 177 / 35%);
+  --fc-today-bg-color: rgb(112 184 255 / 15%);
 }
 
 .shadow {

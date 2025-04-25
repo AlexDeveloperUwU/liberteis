@@ -1,44 +1,27 @@
 <template>
-  <div class="flex">
+  <div>
     <aside
       :class="[
-        'bg-gray-800 text-white h-screen p-4 pt-4 transition-all duration-300 ease-in-out',
-        isCollapsed ? 'w-18' : 'w-56',
-      ]">
-      <div class="flex mb-6 pl-2">
-        <button
-          @click="toggleSidebar"
-          class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200">
-          <div class="min-w-6 flex justify-center">
-            <LucideMenu v-if="isCollapsed" />
-            <LucideChevronLeft v-else />
-          </div>
-          <div
-            :class="['transition-all duration-300 ease-in-out', isCollapsed ? 'max-w-0' : 'max-w-full']"
-            class="overflow-hidden">
-            <transition name="fade-delayed">
-              <span v-if="!isCollapsed" class="whitespace-nowrap transition-opacity duration-300 text-sm">{{
-                t("components.sidebar.close")
-              }}</span>
-            </transition>
-          </div>
-        </button>
-      </div>
+        'bg-gray-800 text-white h-full p-4 pt-4 transition-transform duration-300 ease-in-out fixed top-0 left-0 z-40',
+        isCollapsed ? '-translate-x-full' : 'translate-x-0',
+      ]"
+      style="width: 12rem; top: 3rem">
       <nav>
-        <ul class="space-y-4">
-          <li v-for="(item, index) in menuItems" :key="index">
-            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+        <ul class="space-y-[0.75rem]">
+          <li
+            v-for="(item, index) in menuItems"
+            :key="index"
+            class="bg-gray-800 p-3 rounded-md border border-gray-700 hover:border-gray-500 transition-colors duration-200">
+            <a href="#" class="flex items-center gap-2">
               <div class="min-w-6 flex justify-center">
                 <component :is="item.icon" />
               </div>
               <div
-                :class="['transition-all duration-300 ease-in-out', isCollapsed ? 'max-w-0' : 'max-w-full']"
+                :class="['transition-all duration-300 ease-in-out', isCollapsed ? 'hidden' : 'block']"
                 class="overflow-hidden">
-                <transition name="fade-delayed">
-                  <span v-if="!isCollapsed" class="whitespace-nowrap transition-opacity duration-300 text-sm">{{
-                    t(item.titleKey)
-                  }}</span>
-                </transition>
+                <span class="whitespace-nowrap transition-opacity duration-300 text-sm font-bold">{{
+                  t(item.titleKey)
+                }}</span>
               </div>
             </a>
           </li>
@@ -58,7 +41,6 @@ import {
   FileText as LucideFileText,
   Settings as LucideSettings,
 } from "lucide-vue-next";
-import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 export default {
@@ -71,9 +53,14 @@ export default {
     LucideFileText,
     LucideSettings,
   },
-  setup() {
+  props: {
+    isCollapsed: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  setup(props) {
     const { t } = useI18n();
-    const isCollapsed = ref(true);
 
     const menuItems = [
       { titleKey: "components.sidebar.home", icon: "LucideHome" },
@@ -83,15 +70,9 @@ export default {
       { titleKey: "components.sidebar.settings", icon: "LucideSettings" },
     ];
 
-    const toggleSidebar = () => {
-      isCollapsed.value = !isCollapsed.value;
-    };
-
     return {
       t,
-      isCollapsed,
       menuItems,
-      toggleSidebar,
     };
   },
 };

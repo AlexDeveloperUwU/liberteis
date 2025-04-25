@@ -1,27 +1,36 @@
 <template>
-  <div class="flex h-screen bg-gray-900">
-    <SideBar />
-    <div class="flex flex-col flex-1">
-      <NavBar />
-      <Suspense>
-        <template #default>
-          <main class="flex-1 overflow-auto">
-            <router-view />
-          </main>
-        </template>
-        <template #fallback>
-          <div class="overlay">
-            <span class="loader"></span>
-          </div>
-        </template>
-      </Suspense>
+  <div class="h-screen bg-gray-900 flex flex-col">
+    <NavBar @toggle-sidebar="toggleSidebar" :isCollapsed="isSidebarCollapsed" />
+    <div class="flex flex-1">
+      <SideBar :isCollapsed="isSidebarCollapsed" />
+      <div class="flex-1 overflow-auto">
+        <Suspense>
+          <template #default>
+            <main class="flex-1">
+              <router-view />
+            </main>
+          </template>
+          <template #fallback>
+            <div class="overlay">
+              <span class="loader"></span>
+            </div>
+          </template>
+        </Suspense>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import NavBar from "./components/NavBar.vue";
 import SideBar from "./components/SideBar.vue";
+
+const isSidebarCollapsed = ref(true);
+
+const toggleSidebar = () => {
+  isSidebarCollapsed.value = !isSidebarCollapsed.value;
+};
 </script>
 
 <style scoped>

@@ -14,6 +14,7 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    allowedHosts: ["localhost", "linuxworkstation"],
   },
   resolve: {
     alias: {
