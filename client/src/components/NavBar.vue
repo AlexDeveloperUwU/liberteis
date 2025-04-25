@@ -1,7 +1,6 @@
 <template>
   <nav class="bg-gray-800 text-white flex items-center justify-between px-6 py-3 shadow-md">
     <div class="flex items-center gap-3">
-      <!-- Botón de abrir/cerrar sidebar -->
       <button
         @click="$emit('toggle-sidebar')"
         class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200">
