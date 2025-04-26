@@ -9,7 +9,7 @@
       <div
         class="flex-1 overflow-auto bg-gray-900"
         :style="{
-          marginLeft: isSidebarCollapsed ? '5rem' : '12rem',
+          marginLeft: isMobile ? '0' : isSidebarCollapsed ? '5rem' : '12rem',
           transition: 'margin-left 0.3s ease-in-out',
         }">
         <Suspense>
