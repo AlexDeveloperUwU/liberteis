@@ -54,7 +54,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
 import iziToast from "izitoast";
 import { useI18n } from "vue-i18n";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, onUnmounted } from "vue";
 import axios from "axios";
 
 const { t } = useI18n();
@@ -97,8 +97,16 @@ const detectMobile = () => {
   isMobile.value = window.innerWidth <= 768;
 };
 
+const forceCalendarRerender = () => {
+  const calendarApi = calendarRef.value?.getApi();
+  if (calendarApi) {
+    calendarApi.render();
+  }
+};
+
 onMounted(async () => {
   window.addEventListener("resize", detectMobile);
+  window.addEventListener("sidebar-toggled", forceCalendarRerender);
 
   try {
     const response = await axios.get("/api/bookings/count");
@@ -113,11 +121,18 @@ onMounted(async () => {
 
   try {
     const configResponse = await axios.get("/api/config/", { params: { key: "enableWeekends" } });
-    const parsedData = { ...configResponse.data.data, value: Number(configResponse.data.data.value) === 1 };
+    const parsedData = {
+      ...configResponse.data.data,
+      value: Number(configResponse.data.data.value) === 1,
+    };
     calendarOptions.value.weekends = parsedData.value;
   } catch (error) {
     console.error("Error fetching config:", error.message || error);
   }
+});
+
+onUnmounted(() => {
+  window.removeEventListener("sidebar-toggled", forceCalendarRerender);
 });
 </script>
 
