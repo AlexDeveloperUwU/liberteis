@@ -131,7 +131,10 @@ export async function getSpace(id, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Space with the required criteria not found" };
+      return {
+        error: true,
+        message: "Space with the required criteria not found",
+      };
     }
 
     return result[0];
@@ -170,7 +173,10 @@ export async function getSpaceByName(name, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Space with the required criteria not found" };
+      return {
+        error: true,
+        message: "Space with the required criteria not found",
+      };
     }
 
     return result[0];
@@ -204,7 +210,10 @@ export async function getSpaces(status = "active") {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Spaces with the required criteria not found" };
+      return {
+        error: true,
+        message: "Spaces with the required criteria not found",
+      };
     }
 
     return result;

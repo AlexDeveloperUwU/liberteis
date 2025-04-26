@@ -131,7 +131,10 @@ export async function getBooking(id, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Booking with the required criteria not found" };
+      return {
+        error: true,
+        message: "Booking with the required criteria not found",
+      };
     }
 
     return result[0];
@@ -175,7 +178,10 @@ export async function getBookingByEventAndDate(eventId, bookingDate, includeInac
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Booking with the required criteria not found" };
+      return {
+        error: true,
+        message: "Booking with the required criteria not found",
+      };
     }
 
     return result[0];
@@ -209,7 +215,10 @@ export async function getBookings(status = "active") {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Booking with the required criteria not found" };
+      return {
+        error: true,
+        message: "Booking with the required criteria not found",
+      };
     }
 
     return result;

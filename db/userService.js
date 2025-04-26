@@ -47,7 +47,10 @@ export async function updateUser(id, user) {
   }
 
   if (Object.keys(user).length === 1 && user.hasOwnProperty("password")) {
-    return { error: true, message: "Use the dedicated function to update the password" };
+    return {
+      error: true,
+      message: "Use the dedicated function to update the password",
+    };
   }
 
   try {
@@ -165,7 +168,10 @@ export async function getUser(id, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "User with the required criteria not found" };
+      return {
+        error: true,
+        message: "User with the required criteria not found",
+      };
     }
 
     return result[0];
@@ -191,7 +197,11 @@ export async function getUserByEmail(email, includeInactive = false) {
   try {
     switch (includeInactive) {
       case true:
-        result = await dbc.dbGetWhere("users", { field: "email", operator: "=", value: email });
+        result = await dbc.dbGetWhere("users", {
+          field: "email",
+          operator: "=",
+          value: email,
+        });
         break;
       case false:
         result = await dbc.dbGetWhere("users", [
@@ -204,7 +214,10 @@ export async function getUserByEmail(email, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "User with the required criteria not found" };
+      return {
+        error: true,
+        message: "User with the required criteria not found",
+      };
     }
 
     return result[0];
@@ -250,7 +263,10 @@ export async function getUsers(status = "active") {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "User with the required criteria not found" };
+      return {
+        error: true,
+        message: "User with the required criteria not found",
+      };
     }
 
     return result;
