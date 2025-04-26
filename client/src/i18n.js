@@ -24,13 +24,23 @@ function loadLocaleMessages() {
   return messages;
 }
 
-const savedLocale = localStorage.getItem("locale") || "gl";
+let i18n;
 
-const i18n = createI18n({
-  legacy: false,
-  locale: savedLocale,
-  fallbackLocale: "gl",
-  messages: loadLocaleMessages(),
-});
+function createI18nInstance(mainStore) {
+  i18n = createI18n({
+    legacy: false,
+    locale: mainStore.locale,
+    fallbackLocale: "gl",
+    messages: loadLocaleMessages(),
+  });
 
-export default i18n;
+  mainStore.$subscribe((mutation, state) => {
+    if (mutation.storeId === "main" && mutation.events.key === "locale") {
+      i18n.global.locale.value = state.locale;
+    }
+  });
+
+  return i18n;
+}
+
+export { createI18nInstance, i18n };

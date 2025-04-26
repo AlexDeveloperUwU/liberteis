@@ -44,6 +44,7 @@ import {
 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import { ref, onMounted } from "vue";
+import { useMainStore } from "../stores/mainStore";
 
 export default {
   components: {
@@ -64,6 +65,7 @@ export default {
   setup(props) {
     const { t } = useI18n();
     const isMobile = ref(window.innerWidth <= 768);
+    const mainStore = useMainStore();
 
     const menuItems = [
       { titleKey: "components.sidebar.home", icon: "LucideHome" },
@@ -85,6 +87,7 @@ export default {
       t,
       menuItems,
       isMobile,
+      locale: mainStore.locale,
     };
   },
 };

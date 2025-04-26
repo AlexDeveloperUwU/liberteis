@@ -5,11 +5,17 @@ import { createPinia } from "pinia";
 
 import App from "./App.vue";
 import router from "./router";
-import i18n from "./i18n";
+import { createI18nInstance } from "./i18n";
+import { useMainStore } from "./stores/mainStore";
 
 const app = createApp(App);
 
-app.use(createPinia());
+const pinia = createPinia();
+app.use(pinia);
+
+const mainStore = useMainStore();
+const i18n = createI18nInstance(mainStore);
+
 app.use(router);
 app.use(i18n);
 app.mount("#app");

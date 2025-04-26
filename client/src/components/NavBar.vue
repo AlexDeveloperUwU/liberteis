@@ -54,6 +54,8 @@
 import { CalendarClock, Languages, ChevronDown, Menu as LucideMenu, ChevronLeft as LucideChevronLeft } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { useMainStore } from "../stores/mainStore";
+import { i18n } from "../i18n";
 
 const props = defineProps({
   isCollapsed: {
@@ -64,14 +66,15 @@ const props = defineProps({
 
 const { t, locale } = useI18n();
 const showLanguageMenu = ref(false);
+const mainStore = useMainStore();
 
 const toggleLanguageMenu = () => {
   showLanguageMenu.value = !showLanguageMenu.value;
 };
 
 const setLocale = (lang) => {
-  locale.value = lang;
-  localStorage.setItem("locale", lang);
+  mainStore.setLocale(lang);
+  i18n.global.locale.value = lang; 
   showLanguageMenu.value = false;
 };
 

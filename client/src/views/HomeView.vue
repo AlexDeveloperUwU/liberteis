@@ -49,19 +49,30 @@
 
 <script setup>
 import { CalendarDays, CalendarCog, CalendarCheck2, Calendar1 } from "lucide-vue-next";
+
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
+import esLang from '../locales/es/fullcalendar/es'
+import glLang from '../locales/gl/fullcalendar/gl'
+import enLang from '../locales/en/fullcalendar/en'
+
 import iziToast from "izitoast";
 import { useI18n } from "vue-i18n";
 import { ref, onMounted, watch, onUnmounted } from "vue";
 import axios from "axios";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const metrics = ref({ totales: 0, hechos: 0, porHacer: 0, porRealizar: 0 });
 
 const calendarRef = ref(null);
 const isMobile = ref(window.innerWidth <= 768);
+
+const langMap = {
+  es: esLang,
+  gl: glLang,
+  en: enLang,
+};
 
 const calendarOptions = ref({
   plugins: [dayGridPlugin, listPlugin],
@@ -74,6 +85,7 @@ const calendarOptions = ref({
     end: "prev,today,next",
   },
   handleWindowResize: true,
+  locale: langMap[locale.value] || glLang,
   events: [
     { title: "Evento 1", start: "2025-04-07" },
     { title: "Evento 2", start: "2025-04-10", end: "2025-04-12" },
@@ -81,6 +93,13 @@ const calendarOptions = ref({
     { title: "Evento 4", start: "2025-04-21", allDay: true },
   ],
   weekends: true,
+});
+
+watch(locale, (newLocale) => {
+  const calendarApi = calendarRef.value?.getApi();
+  if (calendarApi) {
+    calendarApi.setOption("locale", langMap[newLocale] || glLang);
+  }
 });
 
 const updateCalendarView = () => {
