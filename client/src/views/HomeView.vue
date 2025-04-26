@@ -48,14 +48,15 @@
 </template>
 
 <script setup>
-import { CalendarDays, CalendarCog, CalendarCheck2, Calendar1 } from "lucide-vue-next";
+import { CalendarDays, CalendarCog, CalendarCheck2, Calendar1, Expand } from "lucide-vue-next";
 
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
-import esLang from '../locales/es/fullcalendar/es'
-import glLang from '../locales/gl/fullcalendar/gl'
-import enLang from '../locales/en/fullcalendar/en'
+import esLang from "../locales/es/fullcalendar/es";
+import glLang from "../locales/gl/fullcalendar/gl";
+import enLang from "../locales/en/fullcalendar/en";
+import luxonPlugin from "@fullcalendar/luxon3";
 
 import iziToast from "izitoast";
 import { useI18n } from "vue-i18n";
@@ -75,7 +76,7 @@ const langMap = {
 };
 
 const calendarOptions = ref({
-  plugins: [dayGridPlugin, listPlugin],
+  plugins: [dayGridPlugin, listPlugin, luxonPlugin],
   initialView: isMobile.value ? "listMonth" : "dayGridMonth",
   height: "100%",
   contentHeight: "auto",
@@ -88,11 +89,26 @@ const calendarOptions = ref({
   locale: langMap[locale.value] || glLang,
   events: [
     { title: "Evento 1", start: "2025-04-07" },
-    { title: "Evento 2", start: "2025-04-10", end: "2025-04-12" },
-    { title: "Evento 3", start: "2025-04-15T14:00:00" },
-    { title: "Evento 4", start: "2025-04-21", allDay: true },
+    { title: "Evento 2", start: "2025-04-10" },
+    { title: "Evento 3", start: "2025-04-15" },
+    { title: "Evento 4", start: "2025-04-21" },
+    { title: "Evento 5", start: "2025-04-25" },
+    { title: "Evento 6", start: "2025-04-02" },
+    { title: "Evento 7", start: "2025-04-03" },
+    { title: "Evento 8", start: "2025-04-05" },
+    { title: "Evento 9", start: "2025-04-08" },
+    { title: "Evento 10", start: "2025-04-12" },
+    { title: "Evento 11", start: "2025-04-14" },
+    { title: "Evento 12", start: "2025-04-18" },
+    { title: "Evento 13", start: "2025-04-20" },
+    { title: "Evento 14", start: "2025-04-22" },
+    { title: "Evento 15", start: "2025-04-24" },
+    { title: "Evento 16", start: "2025-04-26" },
+    { title: "Evento 17", start: "2025-04-28" },
+    { title: "Evento 18", start: "2025-04-30" },
   ],
   weekends: true,
+  expandRows: true,
 });
 
 watch(locale, (newLocale) => {
@@ -159,7 +175,7 @@ onUnmounted(() => {
 :root {
   --fc-neutral-bg-color: hsl(216deg 31% 17% / 90%);
   --fc-list-event-hover-bg-color: #00000000;
-  --fc-today-bg-color: rgb(112 184 255 / 15%);
+  --fc-today-bg-color: rgba(112, 183, 255, 0.928);
 }
 
 .shadow {

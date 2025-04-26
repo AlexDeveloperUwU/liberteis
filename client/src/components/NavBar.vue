@@ -1,5 +1,6 @@
 <template>
-  <nav class="bg-gray-800 text-white flex items-center justify-between px-6 py-3 shadow-md fixed top-0 left-0 w-full z-50">
+  <nav
+    class="bg-gray-800 text-white flex items-center justify-between px-6 py-3 shadow-md fixed top-0 left-0 w-full z-50">
     <div class="flex items-center gap-3">
       <button
         @click="$emit('toggle-sidebar')"
@@ -51,7 +52,13 @@
 </template>
 
 <script setup>
-import { CalendarClock, Languages, ChevronDown, Menu as LucideMenu, ChevronLeft as LucideChevronLeft } from "lucide-vue-next";
+import {
+  CalendarClock,
+  Languages,
+  ChevronDown,
+  Menu as LucideMenu,
+  ChevronLeft as LucideChevronLeft,
+} from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useMainStore } from "../stores/mainStore";
@@ -74,7 +81,7 @@ const toggleLanguageMenu = () => {
 
 const setLocale = (lang) => {
   mainStore.setLocale(lang);
-  i18n.global.locale.value = lang; 
+  i18n.global.locale.value = lang;
   showLanguageMenu.value = false;
 };
 
