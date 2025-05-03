@@ -2,8 +2,13 @@ import e from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import * as logs from "./utils/logger.js";
+import dotenv from "dotenv";
+import session from "express-session";
+import MySQLStoreFactory from "express-mysql-session";
+import { getKey } from "./utils/secretKey.js";
 
 //! Init wrapper
 async function main() {
@@ -12,6 +17,13 @@ async function main() {
   const __filename = path.basename(fileURLToPath(import.meta.url));
 
   logs.logger.info(`Initializing the application`);
+
+  //! Import things for the cookie session
+  const envConfig = dotenv.config({
+    path: path.resolve(__dirname, "./data/secrets/dbcreds.env"),
+  }).parsed;
+
+  const MySQLStore = MySQLStoreFactory(session);
 
   //! Import all the routers and routes
   const { dbCreateTables } = await import("./db/dbController.js");
@@ -32,8 +44,40 @@ async function main() {
   app.use(helmet.originAgentCluster());
   app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
   app.use(logs.httpLogger);
+  app.use(cookieParser());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+
+  const sessionOptions = {
+    host: envConfig.MYSQL_HOST,
+    port: "3306",
+    user: envConfig.MYSQL_USER,
+    password: envConfig.MYSQL_PASSWORD,
+    database: envConfig.MYSQL_DATABASE,
+    clearExpired: true,
+    checkExpirationInterval: 900000,
+    expiration: 604800000,
+    createDatabaseTable: true,
+  };
+
+  const sessionStore = new MySQLStore(sessionOptions);
+
+  app.use(
+    session({
+      key: "session_cookie_name",
+      secret: getKey(),
+      store: sessionStore,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 604800000,
+        secure: false,
+        httpOnly: true,
+        sameSite: "lax",
+      },
+      proxy: false,
+    }),
+  );
 
   app.use("/", e.static(path.join(__dirname, "views")));
   app.use("/uploads", e.static(path.join(__dirname, "uploads")));
@@ -55,5 +99,6 @@ async function main() {
 }
 
 main().catch((err) => {
+  console.error("Error starting the application:", err);
   logs.logger.error("Failed to start the application:", err);
 });

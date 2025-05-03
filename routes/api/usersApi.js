@@ -9,7 +9,22 @@ export default api;
 // POST /api/users
 // Receives an object with the user data to add
 // Uses the addUser function from userService
-api.post("/", async (req, res) => {});
+api.post("/", async (req, res) => {
+  const user = req.body;
+  if (!user) {
+    return res.status(400).json({ error: true, message: "Invalid parameters" });
+  }
+
+  try {
+    const result = await users.addUser(user);
+    if (result.error) {
+      return res.status(500).json(result);
+    }
+    return res.status(201).json({error: false, message: "User created" });
+  } catch (error) {
+    return res.status(500).json({ error: true, message: error.message });
+  }
+});
 
 // PUT /api/users/:id
 // Receives a user id and an object with the data to modify

@@ -1,6 +1,7 @@
 # Lista de configuraciones disponibles para la app
 
 ## Configuración de la app
+
 ### Parámetros disponibles
 
 - **enableWeekends** (`true`/`false`, que se traducen como `1`/`0`):  

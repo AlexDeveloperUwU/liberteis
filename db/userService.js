@@ -1,5 +1,4 @@
 import * as dbc from "./dbController.js";
-import { generatePass } from "../utils/password.js";
 import * as ds from "../utils/dataSecurity.js";
 import * as id from "../utils/idGen.js";
 import { logger } from "../utils/logger.js";
@@ -20,9 +19,9 @@ export async function addUser(user) {
   if (!allowedTypes.includes(user.type)) {
     user.type = "normalUser";
   }
-  const genPass = await generatePass();
   user.id = await id.generateId("user");
-  user.hashedPassword = ds.encryptPass(genPass);
+  user.hashedPassword = ds.encryptPass(user.password);
+  delete user.password; 
   user.lastLogin = undefined;
   user.lang = "gl";
   user.deleted = false;

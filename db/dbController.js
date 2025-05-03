@@ -60,7 +60,9 @@ dbPool.on("error", (err) => {
 dbPool.getConnection((err, connection) => {
   if (err) {
     if (err.code === "ECONNREFUSED") {
-      logger.error("La conexión a la base de datos fue rechazada. Verifica que el servidor de MySQL esté en funcionamiento.");
+      logger.error(
+        "La conexión a la base de datos fue rechazada. Verifica que el servidor de MySQL esté en funcionamiento.",
+      );
     } else {
       logger.error(`Error al conectar con la base de datos: ${err.message}`);
     }
@@ -151,7 +153,9 @@ export async function dbCreateTables() {
       .addColumn("bookedBy", "varchar(50)", (col) => col.references("users.id"))
       .addColumn("bookedDate", "datetime", (col) => col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`))
       .addColumn("info", "varchar(500)")
-      .addColumn("status", "varchar(20)", (col) => col.defaultTo("active").check(sql`status IN ('active', 'cancelled')`))
+      .addColumn("status", "varchar(20)", (col) =>
+        col.defaultTo("active").check(sql`status IN ('active', 'cancelled')`),
+      )
       .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
       .execute();
   });

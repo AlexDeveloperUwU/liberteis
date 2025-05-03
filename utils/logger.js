@@ -38,7 +38,7 @@ const logger = pino({
 
 const httpLogger = pinoHttp({
   logger: pino({
-    level: "info",
+    level: "warn",
     transport: {
       targets: [
         consoleTransport,

@@ -1,34 +1,5 @@
 import crypto from "crypto";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-//! Constants
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const keyPath = path.join(__dirname, "../data/secrets/secret.key");
-
-//! Functions to handle the key file
-function getKey() {
-  try {
-    return fs.readFileSync(keyPath, "utf8");
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      setKey();
-      return fs.readFileSync(keyPath, "utf8");
-    } else {
-      console.error(error);
-    }
-  }
-}
-
-function setKey() {
-  try {
-    const newKey = crypto.randomBytes(32).toString("hex");
-    fs.writeFileSync(keyPath, newKey);
-  } catch (error) {
-    console.error(error);
-  }
-}
+import { getKey } from "./secretKey.js";
 
 //! Functions for encrypting passwords (it doesn't decrypt)
 export function encryptPass(pass) {
