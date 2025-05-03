@@ -1,0 +1,10 @@
+{
+  "title": "Login",
+  "email": "Email",
+  "password": "Password",
+  "submit": "Sign In",
+  "successTitle": "Login successful",
+  "successMessage": "You have logged in successfully.",
+  "errorTitle": "Login failed",
+  "errorMessage": "Invalid email or password."
+}

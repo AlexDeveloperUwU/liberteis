@@ -1,0 +1,10 @@
+{
+  "title": "Iniciar sesión",
+  "email": "Correo electrónico",
+  "password": "Contrasinal",
+  "submit": "Entrar",
+  "successTitle": "Inicio de sesión correcto",
+  "successMessage": "Iniciaches sesión correctamente.",
+  "errorTitle": "Erro ao iniciar sesión",
+  "errorMessage": "Correo ou contrasinal incorrectos."
+}
