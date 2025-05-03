@@ -44,8 +44,20 @@
           </button>
         </div>
       </div>
-      <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-700">
-        <img :src="getImageUrl('logopfp', 'png')" alt="User Avatar" class="w-full h-full object-cover" />
+      <div class="relative" @click.stop>
+        <button
+          @click.stop="toggleUserMenu"
+          class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-700 hover:border-gray-500 transition-colors">
+          <img :src="getImageUrl('logopfp', 'png')" alt="User Avatar" class="w-full h-full object-cover" />
+        </button>
+
+        <div v-if="showUserMenu" class="absolute right-0 mt-4 w-48 bg-gray-700 rounded shadow-lg py-1 z-10">
+          <button
+            @click="handleLogout"
+            class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-600 transition">
+            {{ t("components.navbar.logout") }}
+          </button>
+        </div>
       </div>
     </div>
   </nav>
@@ -62,6 +74,7 @@ import {
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useMainStore } from "../stores/mainStore";
+import { useAuthStore } from "../stores/authStore";
 import { i18n } from "../i18n";
 
 const props = defineProps({
@@ -73,10 +86,16 @@ const props = defineProps({
 
 const { t, locale } = useI18n();
 const showLanguageMenu = ref(false);
+const showUserMenu = ref(false);
 const mainStore = useMainStore();
+const authStore = useAuthStore();
 
 const toggleLanguageMenu = () => {
   showLanguageMenu.value = !showLanguageMenu.value;
+};
+
+const toggleUserMenu = () => {
+  showUserMenu.value = !showUserMenu.value;
 };
 
 const setLocale = (lang) => {
@@ -85,12 +104,18 @@ const setLocale = (lang) => {
   showLanguageMenu.value = false;
 };
 
+const handleLogout = async () => {
+  await authStore.logout();
+  showUserMenu.value = false;
+};
+
 const currentLanguageLabel = computed(() => {
   return locale.value.toUpperCase();
 });
 
 const closeOnOutsideClick = () => {
   showLanguageMenu.value = false;
+  showUserMenu.value = false;
 };
 
 onMounted(() => {
