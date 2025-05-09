@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@config "../../tailwind.config.js"
 @layer base {
   :root {
     --text-50: #eef2f7;
