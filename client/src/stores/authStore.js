@@ -32,7 +32,7 @@ export const useAuthStore = defineStore("auth", {
     },
     async register(userData) {
       const response = await axios.post("/api/auth/register", userData);
-      return response.data.code === 200;
+      return response.data.code === 201;
     },
   },
 });
