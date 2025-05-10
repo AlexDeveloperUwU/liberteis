@@ -6,7 +6,6 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import * as logs from "./utils/logger.js";
 import dotenv from "dotenv";
-import lusca from "lusca";
 import session from "express-session";
 import MySQLStoreFactory from "express-mysql-session";
 import { getKey } from "./utils/secretKey.js";
@@ -74,7 +73,6 @@ async function main() {
     }),
   );
 
-  app.use(lusca.csrf());
   app.use(helmet.originAgentCluster());
   app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
   app.use(logs.httpLogger);
