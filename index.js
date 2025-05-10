@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import * as logs from "./utils/logger.js";
 import dotenv from "dotenv";
+import lusca from "lusca";
 import session from "express-session";
 import MySQLStoreFactory from "express-mysql-session";
 import { getKey } from "./utils/secretKey.js";
@@ -35,18 +36,12 @@ async function main() {
   //! Configure the Express application
   const PORT = process.env.PORT || 3000;
 
+  app.disable("x-powered-by");
+  app.set("trust proxy", 1);
   app.use(helmet.xssFilter());
   app.use(helmet.noSniff());
   app.use(helmet.frameguard({ action: "deny" }));
   app.use(helmet.hsts({ maxAge: 63072000, includeSubDomains: true, preload: true }));
-  app.disable("x-powered-by");
-  app.set("trust proxy", 1);
-  app.use(helmet.originAgentCluster());
-  app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
-  app.use(logs.httpLogger);
-  app.use(cookieParser());
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
 
   const sessionOptions = {
     host: envConfig.MYSQL_HOST,
@@ -78,6 +73,14 @@ async function main() {
       proxy: false,
     }),
   );
+
+  app.use(lusca.csrf());
+  app.use(helmet.originAgentCluster());
+  app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
+  app.use(logs.httpLogger);
+  app.use(cookieParser());
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use("/", e.static(path.join(__dirname, "views")));
   app.use("/uploads", e.static(path.join(__dirname, "uploads")));
