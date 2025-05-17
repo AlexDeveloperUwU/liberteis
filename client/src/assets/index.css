@@ -1,17 +1,3 @@
-:root {
-  --background-200: #b8cee0;
-  --background-800: #1f3547;
-  --preloader-bg: var(--background-200);
-  --loader-color: var(--background-800);
-}
-
-html.dark {
-  --background-200: #b8cee0;
-  --background-800: #1f3547;
-  --preloader-bg: var(--background-800);
-  --loader-color: var(--background-200);
-}
-
 #preloader {
   position: fixed;
   top: 0;

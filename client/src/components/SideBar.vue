@@ -1,28 +1,23 @@
 <template>
-  <div>
-    <aside
-      :class="[
-        'bg-gray-800 text-white h-full p-4 pt-4 transition-transform duration-300 ease-in-out fixed z-40',
-        isMobile ? (isCollapsed ? '-translate-x-full' : 'translate-x-0') : 'translate-x-0',
-        isMobile ? 'left-0' : 'left-0',
-      ]"
-      :style="{
+  <div class="shadow-[4px_0_15px_-3px_rgba(0,0,0,0.1)]">
+    <aside :class="[
+      'bg-background-100 h-full p-4 pt-4 transition-transform duration-300 ease-in-out fixed z-40 border-r-[1.5px] border-background-300',
+      isMobile ? (isCollapsed ? '-translate-x-full' : 'translate-x-0') : 'translate-x-0',
+      isMobile ? 'left-0' : 'left-0',
+    ]" :style="{
         width: isMobile ? '12rem' : isCollapsed ? '5rem' : '12rem',
         top: '3.5rem',
         transition: 'width 0.3s ease-in-out',
       }">
       <nav>
         <ul class="space-y-[0.75rem]">
-          <li
-            v-for="(item, index) in menuItems"
-            :key="index"
-            class="bg-gray-800 p-3 rounded-md border border-gray-700 hover:border-gray-500 transition-colors duration-200">
+          <li v-for="(item, index) in menuItems" :key="index" class="bg-background-200 p-3 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)] hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.1)]">
             <a href="#" class="flex items-center gap-2">
-              <div class="min-w-6 flex justify-center">
+              <div class="min-w-6 flex justify-center text-primary-600">
                 <component :is="item.icon" />
               </div>
               <div v-if="!isCollapsed || isMobile" class="overflow-hidden">
-                <span class="whitespace-nowrap text-sm font-bold">{{ t(item.titleKey) }}</span>
+                <span class="whitespace-nowrap text-base text-text-800">{{ t(item.titleKey) }}</span>
               </div>
             </a>
           </li>
@@ -100,7 +95,15 @@ export default {
 
 aside {
   flex-shrink: 0;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
   transition: transform 0.3s ease-in-out;
+  box-shadow:
+    4px 0 10px -1px rgba(0, 0, 0, 0.08),
+    2px 0 6px -1px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-lg {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 </style>

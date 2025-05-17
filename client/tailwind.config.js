@@ -1,5 +1,4 @@
 export default {
-  content: ["./src/**/*.{vue,js,ts,jsx,tsx,html}", "./public/index.html"],
   theme: {
     extend: {
       colors: {

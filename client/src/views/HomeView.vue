@@ -1,44 +1,44 @@
 <template>
-  <div class="h-full w-full p-6 bg-gray-900 text-white">
-    <h1 class="text-3xl font-bold">{{ t("pages.home.title") }}</h1>
-    <p class="text-gray-400">{{ t("pages.home.description") }}</p>
+  <div class="h-full w-full p-6">
+    <h1 class="text-3xl font-bold text-text-950 mb-2">{{ t("pages.home.title") }}</h1>
+    <p class="text-text-800 mb-6">{{ t("pages.home.description") }}</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-      <div class="bg-gray-800 p-4 shadow rounded-lg flex flex-col">
-        <div class="flex items-center gap-2 text-purple-400">
-          <CalendarDays class="w-5 h-5" />
-          <p>{{ t("pages.home.totals") }}</p>
+      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+        <div class="flex items-center gap-2 mb-2">
+          <CalendarDays class="w-5 h-5 text-primary-600" />
+          <p class="font-medium text-text-800">{{ t("pages.home.totals") }}</p>
         </div>
-        <h2 class="text-2xl font-bold">{{ metrics.totales }}</h2>
+        <h2 class="text-2xl font-bold text-text-950">{{ metrics.totales }}</h2>
       </div>
 
-      <div class="bg-gray-800 p-4 shadow rounded-lg flex flex-col">
-        <div class="flex items-center gap-2 text-green-400">
-          <CalendarCheck2 class="w-5 h-5" />
-          <p>{{ t("pages.home.done") }}</p>
+      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+        <div class="flex items-center gap-2 mb-2">
+          <CalendarCheck2 class="w-5 h-5 text-primary-600" />
+          <p class="font-medium text-text-800">{{ t("pages.home.done") }}</p>
         </div>
-        <h2 class="text-2xl font-bold">{{ metrics.hechos }}</h2>
+        <h2 class="text-2xl font-bold text-text-950">{{ metrics.hechos }}</h2>
       </div>
 
-      <div class="bg-gray-800 p-4 shadow rounded-lg flex flex-col">
-        <div class="flex items-center gap-2 text-yellow-400">
-          <Calendar1 class="w-5 h-5" />
-          <p>{{ t("pages.home.upcoming") }}</p>
+      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+        <div class="flex items-center gap-2 mb-2">
+          <Calendar1 class="w-5 h-5 text-primary-600" />
+          <p class="font-medium text-text-800">{{ t("pages.home.upcoming") }}</p>
         </div>
-        <h2 class="text-2xl font-bold">1 de Enero de 1999</h2>
+        <h2 class="text-2xl font-bold text-text-950">01/01/1999</h2>
       </div>
 
-      <div class="bg-gray-800 p-4 shadow rounded-lg flex flex-col">
-        <div class="flex items-center gap-2 text-red-400">
-          <CalendarCog class="w-5 h-5" />
-          <p>{{ t("pages.home.toBeDone") }}</p>
+      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+        <div class="flex items-center gap-2 mb-2">
+          <CalendarCog class="w-5 h-5 text-primary-600" />
+          <p class="font-medium text-text-800">{{ t("pages.home.toBeDone") }}</p>
         </div>
-        <h2 class="text-2xl font-bold">{{ metrics.porHacer }}</h2>
+        <h2 class="text-2xl font-bold text-text-950">{{ metrics.porHacer }}</h2>
       </div>
     </div>
 
     <div class="gap-6 mt-6">
-      <div class="bg-gray-800 p-6 rounded-lg shadow">
+      <div class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow duration-200">
         <div class="calendar-container">
           <FullCalendar ref="calendarRef" :options="calendarOptions" />
         </div>
@@ -57,8 +57,6 @@ import esLang from "../locales/es/fullcalendar/es";
 import glLang from "../locales/gl/fullcalendar/gl";
 import enLang from "../locales/en/fullcalendar/en";
 import luxonPlugin from "@fullcalendar/luxon3";
-
-import iziToast from "izitoast";
 import { useI18n } from "vue-i18n";
 import { ref, onMounted, watch, onUnmounted } from "vue";
 import axios from "axios";
@@ -88,24 +86,24 @@ const calendarOptions = ref({
   handleWindowResize: true,
   locale: langMap[locale.value] || glLang,
   events: [
-    { title: "Evento 1", start: "2025-04-07" },
-    { title: "Evento 2", start: "2025-04-10" },
-    { title: "Evento 3", start: "2025-04-15" },
-    { title: "Evento 4", start: "2025-04-21" },
-    { title: "Evento 5", start: "2025-04-25" },
-    { title: "Evento 6", start: "2025-04-02" },
-    { title: "Evento 7", start: "2025-04-03" },
-    { title: "Evento 8", start: "2025-04-05" },
-    { title: "Evento 9", start: "2025-04-08" },
-    { title: "Evento 10", start: "2025-04-12" },
-    { title: "Evento 11", start: "2025-04-14" },
-    { title: "Evento 12", start: "2025-04-18" },
-    { title: "Evento 13", start: "2025-04-20" },
-    { title: "Evento 14", start: "2025-04-22" },
-    { title: "Evento 15", start: "2025-04-24" },
-    { title: "Evento 16", start: "2025-04-26" },
-    { title: "Evento 17", start: "2025-04-28" },
-    { title: "Evento 18", start: "2025-04-30" },
+    { title: "Evento 1", start: "2025-05-07" },
+    { title: "Evento 2", start: "2025-05-10" },
+    { title: "Evento 3", start: "2025-05-15" },
+    { title: "Evento 4", start: "2025-05-21" },
+    { title: "Evento 5", start: "2025-05-25" },
+    { title: "Evento 6", start: "2025-05-02" },
+    { title: "Evento 7", start: "2025-05-03" },
+    { title: "Evento 8", start: "2025-05-05" },
+    { title: "Evento 9", start: "2025-05-08" },
+    { title: "Evento 10", start: "2025-05-12" },
+    { title: "Evento 11", start: "2025-05-14" },
+    { title: "Evento 12", start: "2025-05-18" },
+    { title: "Evento 13", start: "2025-05-20" },
+    { title: "Evento 14", start: "2025-05-22" },
+    { title: "Evento 15", start: "2025-05-24" },
+    { title: "Evento 16", start: "2025-05-26" },
+    { title: "Evento 17", start: "2025-05-28" },
+    { title: "Evento 18", start: "2025-05-30" },
   ],
   weekends: true,
   expandRows: true,
@@ -172,14 +170,22 @@ onUnmounted(() => {
 </script>
 
 <style>
-:root {
-  --fc-neutral-bg-color: hsl(216deg 31% 17% / 90%);
-  --fc-list-event-hover-bg-color: #00000000;
-  --fc-today-bg-color: rgba(112, 183, 255, 0.928);
+.shadow-md {
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.08),
+    0 2px 4px -1px rgba(0, 0, 0, 0.04);
 }
 
-.shadow {
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 1);
+.shadow-lg {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-xl {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .calendar-container {

@@ -1,66 +1,23 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" href="/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EvenTeis</title>
-  <script>
-    (function() {
-      function applyTheme() {
-        const theme = localStorage.getItem("theme");
-        if (
-          theme === "dark" ||
-          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EvenTeis</title>
+    <script>
+      // Aplicación inicial del tema para evitar flash
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark" || (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.documentElement.classList.add("dark");
       }
-      applyTheme();
-      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+    </script>
+    <link href="/src/assets/main.css" rel="stylesheet" />
+    <link href="/node_modules/izitoast/dist/css/iziToast.min.css" rel="stylesheet" />
+  </head>
 
-      window.setDarkTheme = function() {
-        localStorage.setItem("theme", "dark");
-        applyTheme();
-      }
-      window.setLightTheme = function() {
-        localStorage.setItem("theme", "light");
-        applyTheme();
-      }
-      window.setSystemTheme = function() {
-        localStorage.removeItem("theme");
-        applyTheme();
-      }
-    })();
-  </script>
-  <link rel="stylesheet" href="/src/assets/index.css">
-  <link href="/src/assets/main.css" rel="stylesheet" />
-  <link href="/node_modules/izitoast/dist/css/iziToast.min.css" rel="stylesheet" />
-</head>
-
-<body>
-  <div id="preloader">
-    <div class="loader"></div>
-  </div>
-  <div id="app"></div>
-  <script type="module" src="/src/main.js"></script>
-  <script>
-    window.addEventListener("load", () => {
-      const preloader = document.getElementById("preloader");
-      if (preloader) {
-        setTimeout(() => {
-          preloader.style.opacity = "0";
-          setTimeout(() => {
-            preloader.style.display = "none";
-          }, 500);
-        }, 1400);
-      }
-    });
-  </script>
-
-</body>
-
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>

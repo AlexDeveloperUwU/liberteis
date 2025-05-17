@@ -32,19 +32,19 @@ router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const requiredPermission = to.meta.allow;
 
-  if (!requiredPermission || requiredPermission === 'any') {
+  if (!requiredPermission || requiredPermission === "any") {
     return next();
   }
 
   if (!authStore.isAuthenticated) {
     return next({
-      name: 'login',
-      query: { redirect: to.fullPath }  
+      name: "login",
+      query: { redirect: to.fullPath },
     });
   }
 
   if (!hasPermission(authStore.userType, requiredPermission)) {
-    return next({ name: 'home' });
+    return next({ name: "home" });
   }
 
   next();
