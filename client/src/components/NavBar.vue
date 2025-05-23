@@ -8,7 +8,7 @@
         </button>
         <div class="text-xl font-semibold flex items-center gap-2 text-text-950">
           <CalendarClock class="text-primary-600" />
-          <span>{{ t("components.navbar.title") }}</span>
+          <span class="k2d">{{ t("components.navbar.title") }}</span>
         </div>
       </div>
 

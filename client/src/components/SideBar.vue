@@ -17,7 +17,7 @@
                 <component :is="item.icon" />
               </div>
               <div v-if="!isCollapsed || isMobile" class="overflow-hidden">
-                <span class="whitespace-nowrap text-base text-text-800">{{ t(item.titleKey) }}</span>
+                <span class="whitespace-nowrap text-base text-text-800 k2d">{{ t(item.titleKey) }}</span>
               </div>
             </a>
           </li>

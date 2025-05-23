@@ -14,7 +14,7 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-    allowedHosts: ["localhost", "linuxworkstation"],
+    allowedHosts: ["localhost", "linuxworkstation", "bebde4c402e382.lhr.life"],
   },
   resolve: {
     alias: {

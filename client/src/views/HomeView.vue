@@ -1,6 +1,6 @@
 <template>
   <div class="h-full w-full p-6">
-    <h1 class="text-3xl font-bold text-text-950 mb-2">{{ t("pages.home.title") }}</h1>
+    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.home.title") }}</h1>
     <p class="text-text-800 mb-6">{{ t("pages.home.description") }}</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
@@ -76,6 +76,7 @@ const langMap = {
 const calendarOptions = ref({
   plugins: [dayGridPlugin, listPlugin, luxonPlugin],
   initialView: isMobile.value ? "listMonth" : "dayGridMonth",
+  expandRows: true,
   height: "100%",
   contentHeight: "auto",
   headerToolbar: {
@@ -86,24 +87,24 @@ const calendarOptions = ref({
   handleWindowResize: true,
   locale: langMap[locale.value] || glLang,
   events: [
-    { title: "Evento 1", start: "2025-05-07" },
-    { title: "Evento 2", start: "2025-05-10" },
-    { title: "Evento 3", start: "2025-05-15" },
-    { title: "Evento 4", start: "2025-05-21" },
-    { title: "Evento 5", start: "2025-05-25" },
-    { title: "Evento 6", start: "2025-05-02" },
-    { title: "Evento 7", start: "2025-05-03" },
-    { title: "Evento 8", start: "2025-05-05" },
-    { title: "Evento 9", start: "2025-05-08" },
-    { title: "Evento 10", start: "2025-05-12" },
-    { title: "Evento 11", start: "2025-05-14" },
-    { title: "Evento 12", start: "2025-05-18" },
-    { title: "Evento 13", start: "2025-05-20" },
-    { title: "Evento 14", start: "2025-05-22" },
-    { title: "Evento 15", start: "2025-05-24" },
-    { title: "Evento 16", start: "2025-05-26" },
-    { title: "Evento 17", start: "2025-05-28" },
-    { title: "Evento 18", start: "2025-05-30" },
+    { title: "Evento 1", start: "2025-05-07T10:00:00" },
+    { title: "Evento 2", start: "2025-05-10T14:30:00" },
+    { title: "Evento 3", start: "2025-05-15T09:15:00" },
+    { title: "Evento 4", start: "2025-05-21T16:45:00" },
+    { title: "Evento 5", start: "2025-05-25T11:00:00" },
+    { title: "Evento 6", start: "2025-05-02T08:00:00" },
+    { title: "Evento 7", start: "2025-05-03T13:00:00" },
+    { title: "Evento 8", start: "2025-05-05T15:30:00" },
+    { title: "Evento 9", start: "2025-05-08T12:00:00" },
+    { title: "Evento 10", start: "2025-05-12T17:00:00" },
+    { title: "Evento 11", start: "2025-05-14T10:30:00" },
+    { title: "Evento 12", start: "2025-05-18T09:00:00" },
+    { title: "Evento 13", start: "2025-05-20T18:00:00" },
+    { title: "Evento 14", start: "2025-05-22T14:00:00" },
+    { title: "Evento 15", start: "2025-05-24T11:30:00" },
+    { title: "Evento 16", start: "2025-05-26T16:00:00" },
+    { title: "Evento 17", start: "2025-05-28T08:30:00" },
+    { title: "Evento 18", start: "2025-05-30T13:45:00" },
   ],
   weekends: true,
   expandRows: true,
@@ -171,7 +172,7 @@ onUnmounted(() => {
 
 <style>
 .shadow-md {
-  box-shadow: 
+  box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.08),
     0 2px 4px -1px rgba(0, 0, 0, 0.04);
 }
@@ -192,5 +193,121 @@ onUnmounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.fc {
+  color: var(--text-800);
+  background-color: var(--background-50);
+}
+
+.fc .fc-toolbar-title {
+  color: var(--text-900);
+  font-weight: bold;
+}
+
+.fc .fc-button-primary {
+  background-color: var(--primary-600);
+  border-color: var(--primary-600);
+  color: var(--text-950);
+}
+
+.fc .fc-button-primary:hover {
+  background-color: var(--primary-600);
+  border-color: var(--primary-600);
+}
+
+.fc .fc-button-primary:disabled {
+  color: var(--text-950);
+  background-color: var(--primary-600);
+  border-color: var(--primary-600);
+}
+
+.fc .fc-scrollgrid {
+  border: none !important;
+}
+
+.fc .fc-scrollgrid-section-header table,
+.fc .fc-scrollgrid-section-body table,
+.fc .fc-scrollgrid-section-footer table {
+  border: 0;
+}
+
+.fc td,
+.fc th {
+  border-color: var(--background-300);
+}
+
+.fc .fc-divider {
+  background-color: var(--background-300);
+  border-color: var(--background-300);
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: rgba(var(--accent-200), 0.15);
+}
+
+.fc .fc-event {
+  border-color: var(--primary-500);
+  color: var(--text-950);
+}
+
+.fc .fc-event:hover {
+  background-color: var(--background-300);
+}
+
+.fc .fc-event-selected {
+  box-shadow: 0 0 0 2px var(--primary-300);
+}
+
+.fc .fc-more-link {
+  background-color: var(--background-300);
+  color: var(--text-700);
+}
+
+.fc .fc-non-business {
+  background-color: var(--background-200);
+  opacity: 0.3;
+}
+
+.fc .fc-timegrid-now-indicator-line {
+  background-color: var(--accent-500);
+  border-color: var(--accent-500);
+}
+
+.fc .fc-timegrid-now-indicator-arrow {
+  border-color: var(--accent-500);
+  color: var(--accent-500);
+}
+
+.fc .fc-bg-event {
+  background-color: var(--secondary-400);
+  opacity: 0.3;
+}
+
+.fc .fc-list-day-cushion {
+  background-color: var(--background-200);
+}
+
+.fc .fc-list-event:hover td {
+  background-color: var(--primary-100);
+}
+
+.fc .fc-list-table th {
+  background-color: var(--background-200);
+  color: var(--text-800);
+}
+
+.fc .fc-daygrid-day-number {
+  color: var(--text-800);
+}
+
+.dark .fc {
+  color: var(--text-700);
+  background-color: var(--background-100);
+}
+
+.dark .fc td,
+.dark .fc th {
+  border-color: var(--background-400);
 }
 </style>

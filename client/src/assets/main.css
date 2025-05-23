@@ -2,8 +2,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @layer base {
   :root {
-    /* Tema claro - Suavizado para reducir fatiga visual */
-    /* Texto - Gris oscuro a negro para buena legibilidad */
     --text-50: #f8f9fa;
     --text-100: #f1f3f5;
     --text-200: #e9ecef;
@@ -16,7 +14,6 @@
     --text-900: #212529;
     --text-950: #121416;
 
-    /* Fondo - Grises muy suaves con tinte cálido para reducir fatiga visual */
     --background-50: #f9f9f7;
     --background-100: #f5f5f2;
     --background-200: #efefe9;
@@ -29,7 +26,6 @@
     --background-900: #64645c;
     --background-950: #323230;
 
-    /* Primario - Azul corporativo menos saturado */
     --primary-50: #e9f0fa;
     --primary-100: #d4e2f5;
     --primary-200: #a9c5eb;
@@ -42,7 +38,6 @@
     --primary-900: #081629;
     --primary-950: #040b14;
 
-    /* Secundario - Verde corporativo más suave */
     --secondary-50: #e8f5f0;
     --secondary-100: #d1ebe1;
     --secondary-200: #a3d7c3;
@@ -55,7 +50,6 @@
     --secondary-900: #081c15;
     --secondary-950: #040e0a;
 
-    /* Acento - Rojo menos brillante */
     --accent-50: #fdf0f0;
     --accent-100: #fce0e0;
     --accent-200: #f9c1c1;
@@ -69,8 +63,6 @@
     --accent-950: #3f1010;
   }
   .dark {
-    /* Tema oscuro - Negro clásico */
-    /* Texto - Blanco a gris claro para buena legibilidad */
     --text-50: #121416;
     --text-100: #212529;
     --text-200: #343a40;
@@ -83,7 +75,6 @@
     --text-900: #f1f3f5;
     --text-950: #f8f9fa;
 
-    /* Fondo - Negro puro a grises muy oscuros */
     --background-50: #121212;
     --background-100: #1a1a1a;
     --background-200: #222222;
@@ -96,7 +87,6 @@
     --background-900: #bbbbbb;
     --background-950: #dddddd;
 
-    /* Primario - Azul más brillante para destacar en fondo oscuro */
     --primary-50: #040b14;
     --primary-100: #081629;
     --primary-200: #102c52;
@@ -109,7 +99,6 @@
     --primary-900: #d4e2f5;
     --primary-950: #e9f0fa;
 
-    /* Secundario - Verde brillante para fondo oscuro */
     --secondary-50: #040e0a;
     --secondary-100: #081c15;
     --secondary-200: #10392b;
@@ -122,7 +111,6 @@
     --secondary-900: #d1ebe1;
     --secondary-950: #e8f5f0;
 
-    /* Acento - Rojo más brillante para alertas en fondo oscuro */
     --accent-50: #3f1010;
     --accent-100: #661a1a;
     --accent-200: #8c2424;
@@ -135,6 +123,50 @@
     --accent-900: #fce0e0;
     --accent-950: #fdf0f0;
   }
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--background-400);
+  border-radius: 12px;
+  border: 2px solid var(--background-100);
+  transition: background 0.2s ease;
+}
+::-webkit-scrollbar-corner {
+  background: var(--background-100);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--background-200);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--background-500);
+}
+
+.dark ::-webkit-scrollbar-corner {
+  background: var(--background-200);
+}
+
+.k2d {
+  font-family: "K2D", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+html {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
 }
 
 @config '../../tailwind.config.js';
