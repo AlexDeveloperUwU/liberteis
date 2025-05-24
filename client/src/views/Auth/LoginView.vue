@@ -4,12 +4,12 @@
       <div
         class="bg-background-100 p-8 shadow-md hover:shadow-xl rounded-lg border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <h1 class="text-3xl font-bold text-text-950 mb-6 k2d">
-          {{ t("pages.login.title") }}
+          {{ t("pages.auth.login.title") }}
         </h1>
 
         <form @submit.prevent="handleLogin" class="space-y-6">
           <div class="space-y-2">
-            <label class="block text-sm font-medium text-text-800">{{ t("pages.login.email") }}</label>
+            <label class="block text-sm font-medium text-text-800">{{ t("pages.auth.login.email") }}</label>
             <input
               type="email"
               v-model="credentials.email"
@@ -18,7 +18,7 @@
           </div>
 
           <div class="space-y-2">
-            <label class="block text-sm font-medium text-text-800">{{ t("pages.login.password") }}</label>
+            <label class="block text-sm font-medium text-text-800">{{ t("pages.auth.login.password") }}</label>
             <input
               type="password"
               v-model="credentials.password"
@@ -29,7 +29,7 @@
           <button
             type="submit"
             class="w-full bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white py-2 rounded-lg transition-colors font-medium">
-            {{ t("pages.login.submit") }}
+            {{ t("pages.auth.login.submit") }}
           </button>
         </form>
       </div>
@@ -57,8 +57,8 @@ const handleLogin = async () => {
     const success = await authStore.login(credentials.value.email, credentials.value.password);
     if (success) {
       iziToast.success({
-        title: t("pages.login.successTitle"),
-        message: t("pages.login.successMessage"),
+        title: t("pages.auth.login.successTitle"),
+        message: t("pages.auth.login.successMessage"),
         position: "topRight",
       });
       const redirectPath = router.currentRoute.value.query.redirect || "/";
@@ -68,8 +68,8 @@ const handleLogin = async () => {
     }
   } catch (error) {
     iziToast.error({
-      title: t("pages.login.errorTitle"),
-      message: t("pages.login.errorMessage"),
+      title: t("pages.auth.login.errorTitle"),
+      message: t("pages.auth.login.errorMessage"),
       position: "topRight",
     });
   }

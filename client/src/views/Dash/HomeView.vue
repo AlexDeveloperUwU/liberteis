@@ -1,49 +1,44 @@
 <template>
   <div class="h-full w-full p-6">
-    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.home.title") }}</h1>
-    <p class="text-text-800 mb-6">{{ t("pages.home.description") }}</p>
+    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.dash.home.title") }}</h1>
+    <p class="text-text-800 mb-6">{{ t("pages.dash.home.description") }}</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <CalendarDays class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.home.totals") }}</p>
+          <p class="font-medium text-text-800">{{ t("pages.dash.home.totals") }}</p>
         </div>
         <h2 class="text-2xl font-bold text-text-950">{{ metrics.totales }}</h2>
       </div>
 
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <CalendarCheck2 class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.home.done") }}</p>
+          <p class="font-medium text-text-800">{{ t("pages.dash.home.done") }}</p>
         </div>
         <h2 class="text-2xl font-bold text-text-950">{{ metrics.hechos }}</h2>
       </div>
 
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <Calendar1 class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.home.upcoming") }}</p>
+          <p class="font-medium text-text-800">{{ t("pages.dash.home.upcoming") }}</p>
         </div>
         <h2 class="text-2xl font-bold text-text-950">01/01/1999</h2>
       </div>
 
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <CalendarCog class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.home.toBeDone") }}</p>
+          <p class="font-medium text-text-800">{{ t("pages.dash.home.toBeDone") }}</p>
         </div>
         <h2 class="text-2xl font-bold text-text-950">{{ metrics.porHacer }}</h2>
       </div>
     </div>
 
     <div class="gap-6 mt-6">
-      <div
-        class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow duration-200">
+      <div class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow duration-200">
         <div class="calendar-container">
           <FullCalendar ref="calendarRef" :options="calendarOptions" />
         </div>
@@ -58,9 +53,9 @@ import { CalendarDays, CalendarCog, CalendarCheck2, Calendar1 } from "lucide-vue
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
-import esLang from "../locales/es/fullcalendar/es";
-import glLang from "../locales/gl/fullcalendar/gl";
-import enLang from "../locales/en/fullcalendar/en";
+import esLocale from "@fullcalendar/core/locales/es";
+import glLocale from "@fullcalendar/core/locales/gl";
+import enLocale from "@fullcalendar/core/locales/en-gb";
 import luxonPlugin from "@fullcalendar/luxon3";
 import { useI18n } from "vue-i18n";
 import { ref, onMounted, watch, onUnmounted } from "vue";
@@ -73,9 +68,9 @@ const calendarRef = ref(null);
 const isMobile = ref(window.innerWidth <= 768);
 
 const langMap = {
-  es: esLang,
-  gl: glLang,
-  en: enLang,
+  es: esLocale,
+  gl: glLocale,
+  en: enLocale,
 };
 
 const calendarOptions = ref({

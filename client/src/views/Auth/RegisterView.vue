@@ -4,13 +4,13 @@
       <div
         class="bg-background-100 dark:bg-background-200 p-8 shadow-md hover:shadow-xl rounded-lg border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <h1 class="text-3xl font-bold text-center mb-6 text-primary-700 dark:text-primary-400 k2d">
-          {{ t("pages.register.title") }}
+          {{ t("pages.auth.register.title") }}
         </h1>
 
         <form @submit.prevent="handleregister" class="space-y-6">
           <div class="space-y-2">
             <label class="block text-sm font-medium text-text-800 dark:text-text-300">{{
-              t("pages.register.name")
+              t("pages.auth.register.name")
             }}</label>
             <input
               type="text"
@@ -21,7 +21,7 @@
 
           <div class="space-y-2">
             <label class="block text-sm font-medium text-text-800 dark:text-text-300">{{
-              t("pages.register.email")
+              t("pages.auth.register.email")
             }}</label>
             <input
               type="email"
@@ -32,7 +32,7 @@
 
           <div class="space-y-2">
             <label class="block text-sm font-medium text-text-800 dark:text-text-300">{{
-              t("pages.register.password")
+              t("pages.auth.register.password")
             }}</label>
             <input
               type="password"
@@ -44,7 +44,7 @@
           <button
             type="submit"
             class="w-full bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white py-2 rounded-lg transition-colors font-medium">
-            {{ t("pages.register.submit") }}
+            {{ t("pages.auth.register.submit") }}
           </button>
         </form>
       </div>
@@ -79,16 +79,16 @@ const handleregister = async () => {
     const success = await authStore.register(dataToSend);
     if (success) {
       iziToast.success({
-        title: t("pages.register.successTitle"),
-        message: t("pages.register.successMessage"),
+        title: t("pages.auth.register.successTitle"),
+        message: t("pages.auth.register.successMessage"),
         position: "topRight",
       });
       router.push("/auth/login");
     }
   } catch (error) {
     iziToast.error({
-      title: t("pages.register.errorTitle"),
-      message: t("pages.register.errorMessage"),
+      title: t("pages.auth.register.errorTitle"),
+      message: t("pages.auth.register.errorMessage"),
       position: "topRight",
     });
   }
