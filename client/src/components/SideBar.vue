@@ -1,17 +1,22 @@
 <template>
   <div class="shadow-[4px_0_15px_-3px_rgba(0,0,0,0.1)]">
-    <aside :class="[
-      'bg-background-100 h-full p-4 pt-4 transition-transform duration-300 ease-in-out fixed z-40 border-r-[1.5px] border-background-300',
-      isMobile ? (isCollapsed ? '-translate-x-full' : 'translate-x-0') : 'translate-x-0',
-      isMobile ? 'left-0' : 'left-0',
-    ]" :style="{
+    <aside
+      :class="[
+        'bg-background-100 h-full p-4 pt-4 transition-transform duration-300 ease-in-out fixed z-40 border-r-[1.5px] border-background-300',
+        isMobile ? (isCollapsed ? '-translate-x-full' : 'translate-x-0') : 'translate-x-0',
+        isMobile ? 'left-0' : 'left-0',
+      ]"
+      :style="{
         width: isMobile ? '12rem' : isCollapsed ? '5rem' : '12rem',
         top: '3.5rem',
         transition: 'width 0.3s ease-in-out',
       }">
       <nav>
         <ul class="space-y-[0.75rem]">
-          <li v-for="(item, index) in menuItems" :key="index" class="bg-background-200 p-3 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)] hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.1)]">
+          <li
+            v-for="(item, index) in menuItems"
+            :key="index"
+            class="bg-background-200 p-3 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)] hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.1)]">
             <a href="#" class="flex items-center gap-2">
               <div class="min-w-6 flex justify-center text-primary-600">
                 <component :is="item.icon" />

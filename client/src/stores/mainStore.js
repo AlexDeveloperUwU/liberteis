@@ -1,31 +1,62 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 
+const getLocalStorageItem = (key, defaultValue) => {
+  try {
+    return localStorage.getItem(key) || defaultValue;
+  } catch (e) {
+    console.error(`Error accessing localStorage for ${key}:`, e);
+    return defaultValue;
+  }
+};
+
+const setLocalStorageItem = (key, value) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {
+    console.error(`Error setting localStorage for ${key}:`, e);
+  }
+};
+
+const removeLocalStorageItem = (key) => {
+  try {
+    localStorage.removeItem(key);
+  } catch (e) {
+    console.error(`Error removing localStorage for ${key}:`, e);
+  }
+};
+
 export const useMainStore = defineStore("main", () => {
-  const locale = ref(localStorage.getItem("locale") || "gl");
-  const theme = ref(localStorage.getItem("theme") || "system");
+  const locale = ref(getLocalStorageItem("locale", "gl"));
+  const theme = ref(getLocalStorageItem("theme", "system"));
 
   const setLocale = (lang) => {
     locale.value = lang;
-    localStorage.setItem("locale", lang);
+    setLocalStorageItem("locale", lang);
   };
 
   const setTheme = (newTheme) => {
     theme.value = newTheme;
     if (newTheme === "system") {
-      localStorage.removeItem("theme");
+      removeLocalStorageItem("theme");
     } else {
-      localStorage.setItem("theme", newTheme);
+      setLocalStorageItem("theme", newTheme);
     }
     applyTheme();
   };
 
   const applyTheme = () => {
-    if (theme.value === "dark" || 
-       (theme.value === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
+    try {
+      if (
+        theme.value === "dark" ||
+        (theme.value === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    } catch (e) {
+      console.error("Error applying theme:", e);
     }
   };
 
@@ -34,6 +65,6 @@ export const useMainStore = defineStore("main", () => {
     theme,
     setLocale,
     setTheme,
-    applyTheme
+    applyTheme,
   };
 });

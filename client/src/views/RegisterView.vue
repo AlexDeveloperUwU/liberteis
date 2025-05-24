@@ -1,10 +1,9 @@
 <template>
-  <div
-    class="h-full w-full p-6 text-text-950 dark:text-text-200 flex items-center justify-center">
-    <div class="w-full max-w-md">
+  <div class="min-h-screen w-full flex items-center justify-center bg-background-200 text-text-950 dark:text-text-200">
+    <div class="w-full max-w-md px-6">
       <div
-        class="bg-background-100 dark:bg-background-200 p-8 shadow-lg rounded-lg border border-background-300 dark:border-background-400">
-        <h1 class="text-3xl font-bold text-center mb-6 text-primary-700 dark:text-primary-400">
+        class="bg-background-100 dark:bg-background-200 p-8 shadow-md hover:shadow-xl rounded-lg border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+        <h1 class="text-3xl font-bold text-center mb-6 text-primary-700 dark:text-primary-400 k2d">
           {{ t("pages.register.title") }}
         </h1>
 
@@ -99,5 +98,17 @@ const handleregister = async () => {
 <style>
 .shadow-lg {
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-md {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.08),
+    0 2px 4px -1px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-xl {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 </style>
