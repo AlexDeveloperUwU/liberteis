@@ -9,7 +9,8 @@
     "nvm": "nvm use 22",
     "start": "nodemon index.js",
     "format": "prettier --write .",
-    "dev": "concurrently \"npm run dev --prefix client\" \"npm start\""
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm start\"",
+    "prod": "node index.js"
   },
   "repository": {
     "type": "git",
