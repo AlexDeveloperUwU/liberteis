@@ -1,0 +1,11 @@
+{
+  "title": "Registrarse",
+  "name": "Nombre",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "submit": "Enviar",
+  "successTitle": "Registro exitoso",
+  "successMessage": "Tu cuenta ha sido creada correctamente.",
+  "errorTitle": "Error de registro",
+  "errorMessage": "No se pudo crear la cuenta. Inténtalo de nuevo."
+}

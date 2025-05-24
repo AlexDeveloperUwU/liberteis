@@ -5,6 +5,7 @@ import configApi from "./api/configApi.js";
 import eventsApi from "./api/eventsApi.js";
 import spacesApi from "./api/spacesApi.js";
 import usersApi from "./api/usersApi.js";
+import authApi from "./api/authApi.js";
 
 const apiRouter = router();
 export default apiRouter;
@@ -15,3 +16,4 @@ apiRouter.use("/config", configApi);
 apiRouter.use("/events", eventsApi);
 apiRouter.use("/spaces", spacesApi);
 apiRouter.use("/users", usersApi);
+apiRouter.use("/auth", authApi);

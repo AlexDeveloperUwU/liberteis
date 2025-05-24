@@ -1,5 +1,4 @@
 import * as dbc from "./dbController.js";
-import { generatePass } from "../utils/password.js";
 import * as ds from "../utils/dataSecurity.js";
 import * as id from "../utils/idGen.js";
 import { logger } from "../utils/logger.js";
@@ -20,9 +19,9 @@ export async function addUser(user) {
   if (!allowedTypes.includes(user.type)) {
     user.type = "normalUser";
   }
-  const genPass = await generatePass();
   user.id = await id.generateId("user");
-  user.hashedPassword = ds.encryptPass(genPass);
+  user.hashedPassword = ds.encryptPass(user.password);
+  delete user.password; 
   user.lastLogin = undefined;
   user.lang = "gl";
   user.deleted = false;
@@ -47,7 +46,10 @@ export async function updateUser(id, user) {
   }
 
   if (Object.keys(user).length === 1 && user.hasOwnProperty("password")) {
-    return { error: true, message: "Use the dedicated function to update the password" };
+    return {
+      error: true,
+      message: "Use the dedicated function to update the password",
+    };
   }
 
   try {
@@ -165,7 +167,10 @@ export async function getUser(id, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "User with the required criteria not found" };
+      return {
+        error: true,
+        message: "User with the required criteria not found",
+      };
     }
 
     return result[0];
@@ -191,7 +196,11 @@ export async function getUserByEmail(email, includeInactive = false) {
   try {
     switch (includeInactive) {
       case true:
-        result = await dbc.dbGetWhere("users", { field: "email", operator: "=", value: email });
+        result = await dbc.dbGetWhere("users", {
+          field: "email",
+          operator: "=",
+          value: email,
+        });
         break;
       case false:
         result = await dbc.dbGetWhere("users", [
@@ -204,7 +213,10 @@ export async function getUserByEmail(email, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "User with the required criteria not found" };
+      return {
+        error: true,
+        message: "User with the required criteria not found",
+      };
     }
 
     return result[0];
@@ -250,7 +262,10 @@ export async function getUsers(status = "active") {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "User with the required criteria not found" };
+      return {
+        error: true,
+        message: "User with the required criteria not found",
+      };
     }
 
     return result;

@@ -1,0 +1,11 @@
+{
+  "title": "Register",
+  "name": "Name",
+  "email": "E-Mail",
+  "password": "Password",
+  "submit": "Send",
+  "successTitle": "Registration Successful",
+  "successMessage": "Your account has been created successfully.",
+  "errorTitle": "Registration Error",
+  "errorMessage": "Account could not be created. Please try again."
+}

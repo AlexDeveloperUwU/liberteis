@@ -129,7 +129,10 @@ export async function getEvent(id, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Event with the required criteria not found" };
+      return {
+        error: true,
+        message: "Event with the required criteria not found",
+      };
     }
 
     return result[0];
@@ -168,7 +171,10 @@ export async function getEventByTitle(title, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Event with the required criteria not found" };
+      return {
+        error: true,
+        message: "Event with the required criteria not found",
+      };
     }
 
     return result[0];
@@ -202,7 +208,10 @@ export async function getEvents(status = "active") {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Events with the required criteria not found" };
+      return {
+        error: true,
+        message: "Events with the required criteria not found",
+      };
     }
 
     return result;

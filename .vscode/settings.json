@@ -3,7 +3,7 @@
     "db",
     "api",
     "utils",
-    "base",
+    "server",
     "tests",
     "client"
   ],

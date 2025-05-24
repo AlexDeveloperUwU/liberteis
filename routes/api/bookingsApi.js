@@ -1,10 +1,23 @@
 import { Router } from "express";
 import bookingsApi from "./bookingsApi.js";
+import { getBookingsCount } from "../../db/bookingsService.js";
 
 const api = Router();
 export default api;
 
 //! Basic CRUD operations
+
+// Ruta count
+api.get("/count", async (req, res) => {
+  try {
+    const { userId, type } = req.query;
+    const result = await getBookingsCount(userId, type);
+    res.status(200).json({ code: 200, data: result });
+  } catch (error) {
+    console.error("Error in /api/bookings/count:", error.message);
+    res.status(500).json({ code: 500, message: "Internal server error" });
+  }
+});
 
 // POST /api/bookings
 // Receives an object with the booking data to add

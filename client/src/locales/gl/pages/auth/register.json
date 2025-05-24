@@ -1,0 +1,11 @@
+{
+  "title": "Rexistrarse",
+  "name": "Nome",
+  "email": "Correo electrónico",
+  "password": "Contrasinal",
+  "submit": "Enviar",
+  "successTitle": "Rexistro correcto",
+  "successMessage": "A túa conta foi creada correctamente.",
+  "errorTitle": "Erro no rexistro",
+  "errorMessage": "Non se puido crear a conta. Inténtao de novo."
+}

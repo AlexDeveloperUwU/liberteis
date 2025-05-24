@@ -1,49 +1,20 @@
 import crypto from "crypto";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { getKey } from "./secretKey.js";
 
-//! Constants
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const keyPath = path.join(__dirname, "../data/secrets/secret.key");
-
-//! Functions to handle the key file
-function getKey() {
-  try {
-    return fs.readFileSync(keyPath, "utf8");
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      setKey();
-      return fs.readFileSync(keyPath, "utf8");
-    } else {
-      console.error(error);
-    }
-  }
-}
-
-function setKey() {
-  try {
-    const newKey = crypto.randomBytes(32).toString("hex");
-    fs.writeFileSync(keyPath, newKey);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-//! Functions for encrypting passwords (it doesn't decrypt)
+//! Contraseñas
 export function encryptPass(pass) {
-  const key = getKey();
-  const hmac = crypto.createHmac("sha256", key);
-  hmac.update(pass);
-  const hashedPassword = hmac.digest("hex");
-  return hashedPassword;
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.pbkdf2Sync(pass, salt, 100000, 64, "sha512").toString("hex");
+  return `${salt}:${hash}`;
 }
 
-export function validatePass(pass, hash) {
-  return encryptPass(pass) === hash;
+export function validatePass(pass, storedHash) {
+  const [salt, originalHash] = storedHash.split(":");
+  const hash = crypto.pbkdf2Sync(pass, salt, 100000, 64, "sha512").toString("hex");
+  return hash === originalHash;
 }
 
-//! Functions for encrypting and decrypting data
+//! Datos Cifrados
 export function encryptData(data) {
   const key = Buffer.from(getKey(), "hex");
   const iv = crypto.randomBytes(16);
@@ -52,16 +23,16 @@ export function encryptData(data) {
   let encryptedData = cipher.update(data, "utf8", "base64");
   encryptedData += cipher.final("base64");
 
-  return iv.toString("base64") + ":" + encryptedData;
+  return `${iv.toString("base64")}:${encryptedData}`;
 }
 
 export function decryptData(encryptedData) {
   const key = Buffer.from(getKey(), "hex");
-
   const [ivStr, encrypted] = encryptedData.split(":");
-  const iv = Buffer.from(ivStr, "base64");
 
+  const iv = Buffer.from(ivStr, "base64");
   const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+
   let decryptedData = decipher.update(encrypted, "base64", "utf8");
   decryptedData += decipher.final("utf8");
 

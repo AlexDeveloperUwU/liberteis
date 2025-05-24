@@ -1,3 +1,6 @@
 {
-  "title": "EvenTeis"
+  "title": "EvenTeis",
+  "logout": "Pechar sesión",
+  "lightMode": "Modo claro",
+  "darkMode": "Modo escuro"
 }

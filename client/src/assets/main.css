@@ -1,1 +1,172 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@layer base {
+  :root {
+    --text-50: #f8f9fa;
+    --text-100: #f1f3f5;
+    --text-200: #e9ecef;
+    --text-300: #dee2e6;
+    --text-400: #ced4da;
+    --text-500: #adb5bd;
+    --text-600: #6c757d;
+    --text-700: #495057;
+    --text-800: #343a40;
+    --text-900: #212529;
+    --text-950: #121416;
+
+    --background-50: #f9f9f7;
+    --background-100: #f5f5f2;
+    --background-200: #efefe9;
+    --background-300: #e8e8e0;
+    --background-400: #e0e0d6;
+    --background-500: #d6d6ca;
+    --background-600: #bcbcad;
+    --background-700: #a0a090;
+    --background-800: #828275;
+    --background-900: #64645c;
+    --background-950: #323230;
+
+    --primary-50: #e9f0fa;
+    --primary-100: #d4e2f5;
+    --primary-200: #a9c5eb;
+    --primary-300: #7ea8e1;
+    --primary-400: #538bd6;
+    --primary-500: #296ecc;
+    --primary-600: #2159a3;
+    --primary-700: #19437a;
+    --primary-800: #102c52;
+    --primary-900: #081629;
+    --primary-950: #040b14;
+
+    --secondary-50: #e8f5f0;
+    --secondary-100: #d1ebe1;
+    --secondary-200: #a3d7c3;
+    --secondary-300: #75c3a5;
+    --secondary-400: #48af88;
+    --secondary-500: #2a906a;
+    --secondary-600: #217455;
+    --secondary-700: #195740;
+    --secondary-800: #10392b;
+    --secondary-900: #081c15;
+    --secondary-950: #040e0a;
+
+    --accent-50: #fdf0f0;
+    --accent-100: #fce0e0;
+    --accent-200: #f9c1c1;
+    --accent-300: #f5a2a2;
+    --accent-400: #f28484;
+    --accent-500: #e95c5c;
+    --accent-600: #d13e3e;
+    --accent-700: #b22e2e;
+    --accent-800: #8c2424;
+    --accent-900: #661a1a;
+    --accent-950: #3f1010;
+  }
+  .dark {
+    --text-50: #121416;
+    --text-100: #212529;
+    --text-200: #343a40;
+    --text-300: #495057;
+    --text-400: #6c757d;
+    --text-500: #adb5bd;
+    --text-600: #ced4da;
+    --text-700: #dee2e6;
+    --text-800: #e9ecef;
+    --text-900: #f1f3f5;
+    --text-950: #f8f9fa;
+
+    --background-50: #121212;
+    --background-100: #1a1a1a;
+    --background-200: #222222;
+    --background-300: #2a2a2a;
+    --background-400: #333333;
+    --background-500: #3d3d3d;
+    --background-600: #555555;
+    --background-700: #777777;
+    --background-800: #999999;
+    --background-900: #bbbbbb;
+    --background-950: #dddddd;
+
+    --primary-50: #040b14;
+    --primary-100: #081629;
+    --primary-200: #102c52;
+    --primary-300: #19437a;
+    --primary-400: #2159a3;
+    --primary-500: #296ecc;
+    --primary-600: #538bd6;
+    --primary-700: #7ea8e1;
+    --primary-800: #a9c5eb;
+    --primary-900: #d4e2f5;
+    --primary-950: #e9f0fa;
+
+    --secondary-50: #040e0a;
+    --secondary-100: #081c15;
+    --secondary-200: #10392b;
+    --secondary-300: #195740;
+    --secondary-400: #217455;
+    --secondary-500: #2a906a;
+    --secondary-600: #48af88;
+    --secondary-700: #75c3a5;
+    --secondary-800: #a3d7c3;
+    --secondary-900: #d1ebe1;
+    --secondary-950: #e8f5f0;
+
+    --accent-50: #3f1010;
+    --accent-100: #661a1a;
+    --accent-200: #8c2424;
+    --accent-300: #b22e2e;
+    --accent-400: #d13e3e;
+    --accent-500: #e95c5c;
+    --accent-600: #f28484;
+    --accent-700: #f5a2a2;
+    --accent-800: #f9c1c1;
+    --accent-900: #fce0e0;
+    --accent-950: #fdf0f0;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--background-400);
+  border-radius: 12px;
+  border: 2px solid var(--background-100);
+  transition: background 0.2s ease;
+}
+::-webkit-scrollbar-corner {
+  background: var(--background-100);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--background-200);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--background-500);
+}
+
+.dark ::-webkit-scrollbar-corner {
+  background: var(--background-200);
+}
+
+.k2d {
+  font-family: "K2D", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+html {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+@config '../../tailwind.config.js';

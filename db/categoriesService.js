@@ -146,7 +146,10 @@ export async function getCategory(id, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Category with the required criteria not found" };
+      return {
+        error: true,
+        message: "Category with the required criteria not found",
+      };
     }
 
     if (result[0].spaces) {
@@ -195,7 +198,10 @@ export async function getCategoryByName(name, includeInactive = false) {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Category with the required criteria not found" };
+      return {
+        error: true,
+        message: "Category with the required criteria not found",
+      };
     }
 
     if (result[0].spaces) {
@@ -247,7 +253,10 @@ export async function getCategories(status = "active") {
     }
 
     if (result.length === 0) {
-      return { error: true, message: "Category with the required criteria not found" };
+      return {
+        error: true,
+        message: "Category with the required criteria not found",
+      };
     }
 
     result = result.map((category) => {

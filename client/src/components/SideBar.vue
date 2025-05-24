@@ -1,44 +1,28 @@
 <template>
-  <div class="flex">
+  <div class="shadow-[4px_0_15px_-3px_rgba(0,0,0,0.1)]">
     <aside
       :class="[
-        'bg-gray-800 text-white h-screen p-4 pt-4 transition-all duration-300 ease-in-out',
-        isCollapsed ? 'w-18' : 'w-56',
-      ]">
-      <div class="flex mb-6 pl-2">
-        <button
-          @click="toggleSidebar"
-          class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200">
-          <div class="min-w-6 flex justify-center">
-            <LucideMenu v-if="isCollapsed" />
-            <LucideChevronLeft v-else />
-          </div>
-          <div
-            :class="['transition-all duration-300 ease-in-out', isCollapsed ? 'max-w-0' : 'max-w-full']"
-            class="overflow-hidden">
-            <transition name="fade-delayed">
-              <span v-if="!isCollapsed" class="whitespace-nowrap transition-opacity duration-300 text-sm">{{
-                t("components.sidebar.close")
-              }}</span>
-            </transition>
-          </div>
-        </button>
-      </div>
+        'bg-background-100 h-full p-4 pt-4 transition-transform duration-300 ease-in-out fixed z-40 border-r-[1.5px] border-background-300',
+        isMobile ? (isCollapsed ? '-translate-x-full' : 'translate-x-0') : 'translate-x-0',
+        isMobile ? 'left-0' : 'left-0',
+      ]"
+      :style="{
+        width: isMobile ? '12rem' : isCollapsed ? '5rem' : '12rem',
+        top: '3.5rem',
+        transition: 'width 0.3s ease-in-out',
+      }">
       <nav>
-        <ul class="space-y-4">
-          <li v-for="(item, index) in menuItems" :key="index">
-            <a href="#" class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700 transition-colors duration-200">
-              <div class="min-w-6 flex justify-center">
+        <ul class="space-y-[0.75rem]">
+          <li
+            v-for="(item, index) in menuItems"
+            :key="index"
+            class="bg-background-200 p-3 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)] hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.1)]">
+            <a href="#" class="flex items-center gap-2">
+              <div class="min-w-6 flex justify-center text-primary-600">
                 <component :is="item.icon" />
               </div>
-              <div
-                :class="['transition-all duration-300 ease-in-out', isCollapsed ? 'max-w-0' : 'max-w-full']"
-                class="overflow-hidden">
-                <transition name="fade-delayed">
-                  <span v-if="!isCollapsed" class="whitespace-nowrap transition-opacity duration-300 text-sm">{{
-                    t(item.titleKey)
-                  }}</span>
-                </transition>
+              <div v-if="!isCollapsed || isMobile" class="overflow-hidden">
+                <span class="whitespace-nowrap text-base text-text-800 k2d">{{ t(item.titleKey) }}</span>
               </div>
             </a>
           </li>
@@ -58,8 +42,9 @@ import {
   FileText as LucideFileText,
   Settings as LucideSettings,
 } from "lucide-vue-next";
-import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { ref, onMounted } from "vue";
+import { useMainStore } from "../stores/mainStore";
 
 export default {
   components: {
@@ -71,9 +56,16 @@ export default {
     LucideFileText,
     LucideSettings,
   },
-  setup() {
+  props: {
+    isCollapsed: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  setup(props) {
     const { t } = useI18n();
-    const isCollapsed = ref(true);
+    const isMobile = ref(window.innerWidth <= 768);
+    const mainStore = useMainStore();
 
     const menuItems = [
       { titleKey: "components.sidebar.home", icon: "LucideHome" },
@@ -83,15 +75,19 @@ export default {
       { titleKey: "components.sidebar.settings", icon: "LucideSettings" },
     ];
 
-    const toggleSidebar = () => {
-      isCollapsed.value = !isCollapsed.value;
+    const detectMobile = () => {
+      isMobile.value = window.innerWidth <= 768;
     };
+
+    onMounted(() => {
+      window.addEventListener("resize", detectMobile);
+    });
 
     return {
       t,
-      isCollapsed,
       menuItems,
-      toggleSidebar,
+      isMobile,
+      locale: mainStore.locale,
     };
   },
 };
@@ -102,14 +98,17 @@ export default {
   min-width: 1.5rem;
 }
 
-.fade-delayed-enter-active,
-.fade-delayed-leave-active {
-  transition: opacity 0.3s ease;
-  transition-delay: 0.15s;
+aside {
+  flex-shrink: 0;
+  transition: transform 0.3s ease-in-out;
+  box-shadow:
+    4px 0 10px -1px rgba(0, 0, 0, 0.08),
+    2px 0 6px -1px rgba(0, 0, 0, 0.04);
 }
 
-.fade-delayed-enter-from,
-.fade-delayed-leave-to {
-  opacity: 0;
+.shadow-lg {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 </style>
