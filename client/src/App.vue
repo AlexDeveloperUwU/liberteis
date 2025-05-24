@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen lt-gb flex flex-col bg-background-200">
-    <template v-if="authStore.isAuthenticated">
+    <template v-if="authStore.isAuthenticated && currentLayout === 'dashboard'">
       <NavBar
         class="fixed top-0 left-0 w-full z-50"
         @toggle-sidebar="toggleSidebar"
@@ -33,6 +33,7 @@
     </template>
 
     <template v-else>
+      <!-- Para layouts info, auth y default -->
       <Suspense>
         <template #default>
           <main class="min-h-screen bg-background-200">
@@ -50,14 +51,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useRoute } from "vue-router";
 import NavBar from "./components/NavBar.vue";
 import SideBar from "./components/SideBar.vue";
 import { useAuthStore } from "@/stores/authStore";
 
 const authStore = useAuthStore();
+const route = useRoute();
 const isSidebarCollapsed = ref(true);
 const isMobile = ref(false);
+
+const currentLayout = computed(() => {
+  return route.meta.layout || 'default';
+});
 
 const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value;
