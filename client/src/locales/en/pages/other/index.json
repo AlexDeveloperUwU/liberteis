@@ -1,0 +1,9 @@
+{
+  "welcome": "Welcome to ",
+  "description": "Organize, share, and stay updated with everything happening at your school. Your school events, always in sight!",
+  "selectUserType": "How would you like to access?",
+  "teacher": "Teacher",
+  "teacherDescription": "Manage and organize school events and activities",
+  "student": "Student",
+  "studentDescription": "View and participate in school events and activities"
+}

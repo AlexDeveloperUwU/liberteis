@@ -60,8 +60,10 @@ import luxonPlugin from "@fullcalendar/luxon3";
 import { useI18n } from "vue-i18n";
 import { ref, onMounted, watch, onUnmounted } from "vue";
 import axios from "axios";
+import { useConfigStore } from "@/stores/configStore";
 
 const { t, locale } = useI18n();
+const configStore = useConfigStore();
 const metrics = ref({ totales: 0, hechos: 0, porHacer: 0, porRealizar: 0 });
 
 const calendarRef = ref(null);
@@ -153,16 +155,10 @@ onMounted(async () => {
     console.error("Error fetching metrics:", error.message || error);
   }
 
-  try {
-    const configResponse = await axios.get("/api/config/", { params: { key: "enableWeekends" } });
-    const parsedData = {
-      ...configResponse.data.data,
-      value: Number(configResponse.data.data.value) === 1,
-    };
-    calendarOptions.value.weekends = parsedData.value;
-  } catch (error) {
-    console.error("Error fetching config:", error.message || error);
-  }
+  const enableWeekendsValue = configStore.getConfigValue('enableWeekends', 'true');
+  const enableWeekends = enableWeekendsValue === 'true' || enableWeekendsValue === true;
+  console.log("Enable weekends value:", enableWeekendsValue, "Parsed:", enableWeekends);
+  calendarOptions.value.weekends = enableWeekends;
 });
 
 onUnmounted(() => {

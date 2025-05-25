@@ -1,52 +1,21 @@
 <template>
-  <div class="h-screen lt-gb flex flex-col bg-background-200">
-    <template v-if="authStore.isAuthenticated && currentLayout === 'dashboard'">
-      <NavBar
-        class="fixed top-0 left-0 w-full z-50"
-        @toggle-sidebar="toggleSidebar"
-        :isCollapsed="isSidebarCollapsed" />
-      <div class="flex flex-1 pt-14">
-        <SideBar
-          class="fixed top-14 left-0 h-[calc(100vh-3.5rem)] z-40"
-          :isCollapsed="isSidebarCollapsed"
-          @transitionend="onSidebarToggled" />
-        <div
-          class="flex-1 overflow-auto"
-          :style="{
-            marginLeft: isMobile ? '0' : isSidebarCollapsed ? '5rem' : '12rem',
-            transition: 'margin-left 0.3s ease-in-out',
-          }">
-          <Suspense>
-            <template #default>
-              <main class="flex-1 min-h-screen bg-background-200">
-                <router-view />
-              </main>
-            </template>
-            <template #fallback>
-              <div class="overlay bg-background-200 flex items-center justify-center min-h-screen">
-                <span class="loader"></span>
-              </div>
-            </template>
-          </Suspense>
-        </div>
-      </div>
-    </template>
+  <div class="app-wrapper bg-background-200">
+    <NavBar v-if="currentLayout === 'dashboard' || route.path === '/'" @toggle-sidebar="toggleSidebar" :isCollapsed="isSidebarCollapsed" />
 
-    <template v-else>
-      <!-- Para layouts info, auth y default -->
-      <Suspense>
-        <template #default>
-          <main class="min-h-screen bg-background-200">
-            <router-view />
-          </main>
-        </template>
-        <template #fallback>
-          <div class="overlay bg-background-200 flex items-center justify-center min-h-screen">
-            <span class="loader"></span>
-          </div>
-        </template>
-      </Suspense>
-    </template>
+    <div v-if="currentLayout === 'dashboard'" class="dashboard-layout">
+      <SideBar :isCollapsed="isSidebarCollapsed" />
+      <main :class="contentClasses">
+        <router-view />
+      </main>
+    </div>
+
+    <main v-else-if="route.path === '/'" class="home-content">
+      <router-view />
+    </main>
+
+    <main v-else class="full-content">
+      <router-view />
+    </main>
   </div>
 </template>
 
@@ -55,9 +24,9 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import NavBar from "./components/NavBar.vue";
 import SideBar from "./components/SideBar.vue";
-import { useAuthStore } from "@/stores/authStore";
+import { useConfigStore } from "@/stores/configStore";
 
-const authStore = useAuthStore();
+const configStore = useConfigStore();
 const route = useRoute();
 const isSidebarCollapsed = ref(true);
 const isMobile = ref(false);
@@ -66,12 +35,21 @@ const currentLayout = computed(() => {
   return route.meta.layout || 'default';
 });
 
+const contentClasses = computed(() => {
+  if (isMobile.value) return 'dashboard-content';
+
+  return isSidebarCollapsed.value
+    ? 'dashboard-content dashboard-content-collapsed'
+    : 'dashboard-content dashboard-content-expanded';
+});
+
 const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value;
 };
 
 const detectMobile = () => {
   isMobile.value = window.innerWidth <= 768;
+  if (isMobile.value) isSidebarCollapsed.value = true;
 };
 
 const onSidebarToggled = () => {
@@ -79,8 +57,45 @@ const onSidebarToggled = () => {
   window.dispatchEvent(event);
 };
 
-onMounted(() => {
+onMounted(async () => {
   detectMobile();
   window.addEventListener("resize", detectMobile);
+  await configStore.loadAllConfigs();
 });
 </script>
+
+<style scoped>
+.app-wrapper {
+  min-height: 100vh;
+}
+
+.dashboard-layout {
+  padding-top: 3.5rem;
+  min-height: calc(100vh - 3.5rem);
+  display: flex;
+}
+
+.dashboard-content {
+  flex: 1;
+  transition: margin-left 0.3s ease;
+}
+
+@media (min-width: 769px) {
+  .dashboard-content-collapsed {
+    margin-left: 5rem;
+  }
+
+  .dashboard-content-expanded {
+    margin-left: 12rem;
+  }
+}
+
+.home-content {
+  padding-top: 3.5rem;
+  min-height: calc(100vh - 3.5rem);
+}
+
+.full-content {
+  min-height: 100vh;
+}
+</style>

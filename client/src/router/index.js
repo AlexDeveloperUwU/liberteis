@@ -10,7 +10,6 @@ const routes = [
     meta: { allow: "any", layout: "default" },
   },
   {
-    // Rutas de autenticación con layout Auth
     path: "/auth",
     meta: { allow: "any", layout: "auth" },
     children: [
@@ -29,7 +28,6 @@ const routes = [
     ],
   },
   {
-    // Rutas del dashboard con layout Dashboard
     path: "/dash",
     meta: { allow: "normalUser", layout: "dashboard" },
     children: [
@@ -53,28 +51,27 @@ const routes = [
     ],
   },
   {
-    // Rutas de información con layout Info
     path: "/info",
-    meta: { allow: "normalUser", layout: "info" },
+    meta: { allow: "any", layout: "info" },
     children: [
       /* 
       {
         path: "display",
         name: "infoDisplay",
         component: () => import("../views/Info/InfoDisplayView.vue"),
-        meta: { allow: "normalUser", layout: "info" },
+        meta: { allow: "any", layout: "info" },
       },
       {
         path: "planning",
         name: "infoPlanning",
         component: () => import("../views/Info/InfoPlanningView.vue"),
-        meta: { allow: "normalUser", layout: "info" },
+        meta: { allow: "any", layout: "info" },
       },
       {
         path: "event",
         name: "infoEvent",
         component: () => import("../views/Info/InfoEventView.vue"),
-        meta: { allow: "normalUser", layout: "info" },
+        meta: { allow: "any", layout: "info" },
       }
       */
     ],

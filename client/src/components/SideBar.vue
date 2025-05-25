@@ -1,35 +1,20 @@
 <template>
-  <div class="shadow-[4px_0_15px_-3px_rgba(0,0,0,0.1)]">
-    <aside
-      :class="[
-        'bg-background-100 h-full p-4 pt-4 transition-transform duration-300 ease-in-out fixed z-40 border-r-[1.5px] border-background-300',
-        isMobile ? (isCollapsed ? '-translate-x-full' : 'translate-x-0') : 'translate-x-0',
-        isMobile ? 'left-0' : 'left-0',
-      ]"
-      :style="{
-        width: isMobile ? '12rem' : isCollapsed ? '5rem' : '12rem',
-        top: '3.5rem',
-        transition: 'width 0.3s ease-in-out',
-      }">
-      <nav>
-        <ul class="space-y-[0.75rem]">
-          <li
-            v-for="(item, index) in menuItems"
-            :key="index"
-            class="bg-background-200 p-3 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)] hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.1)]">
-            <a href="#" class="flex items-center gap-2">
-              <div class="min-w-6 flex justify-center text-primary-600">
-                <component :is="item.icon" />
-              </div>
-              <div v-if="!isCollapsed || isMobile" class="overflow-hidden">
-                <span class="whitespace-nowrap text-base text-text-800 k2d">{{ t(item.titleKey) }}</span>
-              </div>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </aside>
-  </div>
+  <aside class="sidebar-container bg-background-100 border-r-[1.5px] border-background-300" :class="[isMobile && isCollapsed ? 'sidebar-hidden' : '']">
+    <nav class="sidebar-nav" :style="sidebarStyle">
+      <ul class="space-y-3">
+        <li v-for="(item, index) in menuItems" :key="index" class="bg-background-200 p-3 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)]">
+          <a href="#" class="flex items-center gap-2">
+            <div class="sidebar-icon text-primary-600">
+              <component :is="item.icon" />
+            </div>
+            <span v-if="!isCollapsed || isMobile" class="sidebar-text text-text-800">
+              {{ t(item.titleKey) }}
+            </span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
 </template>
 
 <script>
@@ -43,7 +28,7 @@ import {
   Settings as LucideSettings,
 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useMainStore } from "../stores/mainStore";
 
 export default {
@@ -75,6 +60,12 @@ export default {
       { titleKey: "components.sidebar.settings", icon: "LucideSettings" },
     ];
 
+    const sidebarStyle = computed(() => {
+      return {
+        width: isMobile.value ? '12rem' : props.isCollapsed ? '5rem' : '12rem'
+      };
+    });
+
     const detectMobile = () => {
       isMobile.value = window.innerWidth <= 768;
     };
@@ -88,27 +79,46 @@ export default {
       menuItems,
       isMobile,
       locale: mainStore.locale,
+      sidebarStyle
     };
   },
 };
 </script>
 
 <style scoped>
-.min-w-6 {
+.sidebar-container {
+  position: fixed;
+  height: calc(100vh - 3.5rem);
+  left: 0;
+  top: 3.5rem;
+  z-index: 40;
+  transition: transform 0.3s ease;
+  box-shadow: 4px 0 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .sidebar-hidden {
+    transform: translateX(-100%);
+  }
+}
+
+.sidebar-nav {
+  height: 100%;
+  padding: 1rem;
+  overflow-y: auto;
+  transition: width 0.3s ease;
+}
+
+.sidebar-icon {
   min-width: 1.5rem;
+  display: flex;
+  justify-content: center;
 }
 
-aside {
-  flex-shrink: 0;
-  transition: transform 0.3s ease-in-out;
-  box-shadow:
-    4px 0 10px -1px rgba(0, 0, 0, 0.08),
-    2px 0 6px -1px rgba(0, 0, 0, 0.04);
-}
-
-.shadow-lg {
-  box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+.sidebar-text {
+  white-space: nowrap;
+  font-size: 1rem;
+  font-family: 'K2D', sans-serif;
+  overflow: hidden;
 }
 </style>

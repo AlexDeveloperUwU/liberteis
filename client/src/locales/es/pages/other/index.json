@@ -1,0 +1,9 @@
+{
+  "welcome": "Bienvenido a ",
+  "description": "Organiza, comparte y entérate de todo lo que ocurre en tu centro. ¡Tus eventos escolares, siempre a la vista!",
+  "selectUserType": "¿Cómo quieres acceder?",
+  "teacher": "Docente",
+  "teacherDescription": "Gestiona y organiza eventos y actividades escolares",
+  "student": "Estudiante",
+  "studentDescription": "Visualiza y participa en eventos y actividades escolares"
+}
