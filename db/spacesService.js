@@ -3,9 +3,9 @@ import * as id from "../utils/idGen.js";
 import { logger } from "../utils/logger.js";
 
 /**
- * Agrega un espacio a la base de datos.
- * @param {Object} space - Objeto que representa el espacio a agregar.
- * @returns {Promise<Object>} Resultado de la operación.
+ * Adds a space to the database.
+ * @param {Object} space - Object representing the space to add.
+ * @returns {Promise<Object>} Operation result.
  */
 export async function addSpace(space) {
   if (!space) {
@@ -24,10 +24,10 @@ export async function addSpace(space) {
 }
 
 /**
- * Actualiza un espacio en la base de datos.
- * @param {string} id - ID del espacio a actualizar.
- * @param {Object} space - Objeto con los datos actualizados del espacio.
- * @returns {Promise<Object>} Resultado de la operación.
+ * Updates a space in the database.
+ * @param {string} id - ID of the space to update.
+ * @param {Object} space - Object with the updated space data.
+ * @returns {Promise<Object>} Operation result.
  */
 export async function updateSpace(id, space) {
   if (!id || !space) {
@@ -48,9 +48,9 @@ export async function updateSpace(id, space) {
 }
 
 /**
- * Cambia el estado de un espacio (habilitar/deshabilitar) en la base de datos.
- * @param {string} id - ID del espacio cuyo estado se cambiará.
- * @returns {Promise<Object>} Resultado de la operación.
+ * Changes the status of a space (enable/disable) in the database.
+ * @param {string} id - ID of the space whose status will be changed.
+ * @returns {Promise<Object>} Operation result.
  */
 export async function changeSpaceStatus(id) {
   if (!id) {
@@ -67,9 +67,9 @@ export async function changeSpaceStatus(id) {
 }
 
 /**
- * Habilita un espacio en la base de datos.
- * @param {string} id - ID del espacio a habilitar.
- * @returns {Promise<Object>} Resultado de la operación.
+ * Enables a space in the database.
+ * @param {string} id - ID of the space to enable.
+ * @returns {Promise<Object>} Operation result.
  */
 export async function enableSpace(id) {
   if (!id) {
@@ -85,9 +85,9 @@ export async function enableSpace(id) {
 }
 
 /**
- * Deshabilita un espacio en la base de datos.
- * @param {string} id - ID del espacio a deshabilitar.
- * @returns {Promise<Object>} Resultado de la operación.
+ * Disables a space in the database.
+ * @param {string} id - ID of the space to disable.
+ * @returns {Promise<Object>} Operation result.
  */
 export async function disableSpace(id) {
   if (!id) {
@@ -103,10 +103,10 @@ export async function disableSpace(id) {
 }
 
 /**
- * Obtiene un espacio de la base de datos.
- * @param {string} id - ID del espacio a obtener.
- * @param {boolean} [includeInactive=false] - Si se deben incluir espacios inactivos.
- * @returns {Promise<Object>} Espacio encontrado o un mensaje de error.
+ * Gets a space from the database.
+ * @param {string} id - ID of the space to retrieve.
+ * @param {boolean} [includeInactive=false] - Whether to include inactive spaces.
+ * @returns {Promise<Object>} Found space or error message.
  */
 export async function getSpace(id, includeInactive = false) {
   if (!id) {
@@ -145,10 +145,10 @@ export async function getSpace(id, includeInactive = false) {
 }
 
 /**
- * Obtiene un espacio por nombre de la base de datos.
- * @param {string} name - Nombre del espacio a obtener.
- * @param {boolean} [includeInactive=false] - Si se deben incluir espacios inactivos.
- * @returns {Promise<Object>} Espacio encontrado o un mensaje de error.
+ * Gets a space by name from the database.
+ * @param {string} name - Name of the space to retrieve.
+ * @param {boolean} [includeInactive=false] - Whether to include inactive spaces.
+ * @returns {Promise<Object>} Found space or error message.
  */
 export async function getSpaceByName(name, includeInactive = false) {
   if (!name) {
@@ -187,9 +187,9 @@ export async function getSpaceByName(name, includeInactive = false) {
 }
 
 /**
- * Obtiene todos los espacios de la base de datos según el estado.
- * @param {string} [status="active"] - Estado de los espacios a obtener ("all", "active", "inactive").
- * @returns {Promise<Object[]>} Lista de espacios encontrados o un mensaje de error.
+ * Gets all spaces from the database according to their status.
+ * @param {string} [status="active"] - Status of spaces to retrieve ("all", "active", "inactive").
+ * @returns {Promise<Object[]>} List of found spaces or error message.
  */
 export async function getSpaces(status = "active") {
   let result;
@@ -224,9 +224,9 @@ export async function getSpaces(status = "active") {
 }
 
 /**
- * Verifica el estado de un espacio en la base de datos.
- * @param {string} id - ID del espacio a verificar.
- * @returns {Promise<boolean>} Estado del espacio (true si está eliminado, false si está activo).
+ * Checks the status of a space in the database.
+ * @param {string} id - ID of the space to check.
+ * @returns {Promise<boolean>} Space status (true if deleted, false if active).
  */
 export async function checkSpaceStatus(id) {
   if (!id) {
@@ -243,9 +243,9 @@ export async function checkSpaceStatus(id) {
 }
 
 /**
- * Verifica si un espacio existe en la base de datos.
- * @param {string} name - Nombre del espacio a verificar.
- * @returns {Promise<Object>} Espacio encontrado o un mensaje de error.
+ * Checks if a space exists in the database.
+ * @param {string} name - Name of the space to check.
+ * @returns {Promise<Object>} Found space or error message.
  */
 export async function checkSpaceExists(name) {
   if (!name) {

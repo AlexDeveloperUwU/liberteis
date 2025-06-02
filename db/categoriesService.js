@@ -3,12 +3,12 @@ import * as id from "../utils/idGen.js";
 import { logger } from "../utils/logger.js";
 
 /**
- * Agrega una categoría a la base de datos.
+ * Adds a category to the database.
  * @async
- * @param {Object} category - Objeto que representa la categoría.
- * @param {string} category.name - Nombre de la categoría.
- * @param {Array} [category.spaces=[]] - Espacios asociados a la categoría.
- * @returns {Promise<Object>} Resultado de la operación.
+ * @param {Object} category - Object representing the category.
+ * @param {string} category.name - Name of the category.
+ * @param {Array} [category.spaces=[]] - Spaces associated with the category.
+ * @returns {Promise<Object>} Operation result.
  */
 export async function addCategory(category) {
   if (!category) {
@@ -32,11 +32,11 @@ export async function addCategory(category) {
 }
 
 /**
- * Actualiza una categoría en la base de datos.
+ * Updates a category in the database.
  * @async
- * @param {string} id - ID de la categoría a actualizar.
- * @param {Object} category - Objeto con los datos actualizados de la categoría.
- * @returns {Promise<Object>} Resultado de la operación.
+ * @param {string} id - ID of the category to update.
+ * @param {Object} category - Object with updated category data.
+ * @returns {Promise<Object>} Operation result.
  */
 export async function updateCategory(id, category) {
   if (!id || !category) {
@@ -59,10 +59,10 @@ export async function updateCategory(id, category) {
 }
 
 /**
- * Cambia el estado de una categoría (habilitar/deshabilitar) en la base de datos.
+ * Changes a category's status (enable/disable) in the database.
  * @async
- * @param {string} id - ID de la categoría.
- * @returns {Promise<Object>} Resultado de la operación.
+ * @param {string} id - Category ID.
+ * @returns {Promise<Object>} Operation result.
  */
 export async function changeCategoryStatus(id) {
   if (!id) {
@@ -79,10 +79,10 @@ export async function changeCategoryStatus(id) {
 }
 
 /**
- * Habilita una categoría en la base de datos.
+ * Enables a category in the database.
  * @async
- * @param {string} id - ID de la categoría.
- * @returns {Promise<Object>} Resultado de la operación.
+ * @param {string} id - Category ID.
+ * @returns {Promise<Object>} Operation result.
  */
 export async function enableCategory(id) {
   if (!id) {
@@ -98,10 +98,10 @@ export async function enableCategory(id) {
 }
 
 /**
- * Deshabilita una categoría en la base de datos.
+ * Disables a category in the database.
  * @async
- * @param {string} id - ID de la categoría.
- * @returns {Promise<Object>} Resultado de la operación.
+ * @param {string} id - Category ID.
+ * @returns {Promise<Object>} Operation result.
  */
 export async function disableCategory(id) {
   if (!id) {
@@ -117,11 +117,11 @@ export async function disableCategory(id) {
 }
 
 /**
- * Obtiene una categoría de la base de datos.
+ * Retrieves a category from the database.
  * @async
- * @param {string} id - ID de la categoría.
- * @param {boolean} [includeInactive=false] - Si se deben incluir categorías inactivas.
- * @returns {Promise<Object>} La categoría encontrada.
+ * @param {string} id - Category ID.
+ * @param {boolean} [includeInactive=false] - Whether to include inactive categories.
+ * @returns {Promise<Object>} The found category.
  */
 export async function getCategory(id, includeInactive = false) {
   if (!id) {
@@ -169,11 +169,11 @@ export async function getCategory(id, includeInactive = false) {
 }
 
 /**
- * Obtiene una categoría por su nombre de la base de datos.
+ * Retrieves a category by its name from the database.
  * @async
- * @param {string} name - Nombre de la categoría.
- * @param {boolean} [includeInactive=false] - Si se deben incluir categorías inactivas.
- * @returns {Promise<Object>} La categoría encontrada.
+ * @param {string} name - Category name.
+ * @param {boolean} [includeInactive=false] - Whether to include inactive categories.
+ * @returns {Promise<Object>} The found category.
  */
 export async function getCategoryByName(name, includeInactive = false) {
   if (!name) {
@@ -221,10 +221,10 @@ export async function getCategoryByName(name, includeInactive = false) {
 }
 
 /**
- * Obtiene todas las categorías de la base de datos.
+ * Retrieves all categories from the database.
  * @async
- * @param {string} [status="active"] - Estado de las categorías a obtener ("all", "active", "inactive").
- * @returns {Promise<Array>} Lista de categorías.
+ * @param {string} [status="active"] - Status of categories to retrieve ("all", "active", "inactive").
+ * @returns {Promise<Array>} List of categories.
  */
 export async function getCategories(status = "active") {
   let result;
@@ -279,10 +279,10 @@ export async function getCategories(status = "active") {
 }
 
 /**
- * Verifica el estado de una categoría en la base de datos.
+ * Checks the status of a category in the database.
  * @async
- * @param {string} id - ID de la categoría.
- * @returns {Promise<boolean>} Estado de la categoría (true si está deshabilitada).
+ * @param {string} id - Category ID.
+ * @returns {Promise<boolean>} Category status (true if disabled).
  */
 export async function checkCategoryStatus(id) {
   if (!id) {
@@ -299,10 +299,10 @@ export async function checkCategoryStatus(id) {
 }
 
 /**
- * Verifica si una categoría existe en la base de datos.
+ * Checks if a category exists in the database.
  * @async
- * @param {string} title - Título de la categoría.
- * @returns {Promise<boolean>} True si la categoría existe, de lo contrario lanza un error.
+ * @param {string} title - Category title.
+ * @returns {Promise<boolean>} True if the category exists, otherwise throws an error.
  */
 export async function checkCategoryExists(title) {
   if (!title) {
