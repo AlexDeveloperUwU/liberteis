@@ -11,7 +11,7 @@ const envConfig = dotenv.config({
 }).parsed;
 
 /**
- * Configuración de la conexión a la base de datos MySQL.
+ * MySQL database connection configuration.
  */
 const dbPool = mysql.createPool({
   host: envConfig.MYSQL_HOST,
@@ -20,10 +20,10 @@ const dbPool = mysql.createPool({
   database: envConfig.MYSQL_DATABASE,
 
   /**
-   * Mapea tinyint(1) a boolean.
-   * @param {Object} field - Campo de la base de datos.
-   * @param {Function} next - Función para continuar con el procesamiento.
-   * @returns {boolean|*} - Devuelve un booleano si el campo es tinyint(1), de lo contrario continúa.
+   * Maps tinyint(1) to boolean.
+   * @param {Object} field - Database field.
+   * @param {Function} next - Function to continue processing.
+   * @returns {boolean|*} - Returns a boolean if the field is tinyint(1), otherwise continues.
    */
   typeCast(field, next) {
     if (field.type === "TINY" && field.length === 1) {
@@ -34,15 +34,15 @@ const dbPool = mysql.createPool({
 });
 
 /**
- * Evento que se dispara cuando se establece una conexión con la base de datos.
+ * Event triggered when a connection is established with the database.
  */
 dbPool.on("connection", () => {
   logger.info(`Conexión establecida con la base de datos`);
 });
 
 /**
- * Evento que se dispara cuando ocurre un error en el pool de conexiones.
- * @param {Error} err - Error ocurrido.
+ * Event triggered when an error occurs in the connection pool.
+ * @param {Error} err - Error occurred.
  */
 dbPool.on("error", (err) => {
   if (err instanceof AggregateError) {
@@ -53,9 +53,9 @@ dbPool.on("error", (err) => {
 });
 
 /**
- * Maneja errores de conexión y cierra la aplicación si ocurre un error crítico.
- * @param {Error} err - Error de conexión.
- * @param {Object} connection - Conexión de la base de datos.
+ * Handles connection errors and closes the application if a critical error occurs.
+ * @param {Error} err - Connection error.
+ * @param {Object} connection - Database connection.
  */
 dbPool.getConnection((err, connection) => {
   if (err) {
@@ -102,9 +102,10 @@ export async function dbCreateTables() {
       .addColumn("hashedPassword", "varchar(255)", (col) => col.notNull())
       .addColumn("type", "varchar(20)", (col) => col.defaultTo("normalUser"))
       .addColumn("createdBy", "varchar(50)", (col) => col.notNull())
-      .addColumn("createdDate", "datetime", (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`))
-      .addColumn("lastLogin", "datetime")
+      .addColumn("createdDate", "timestamp", (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`))
+      .addColumn("lastLogin", "timestamp")
       .addColumn("lang", "varchar(2)", (col) => col.defaultTo("gl"))
+      .addColumn("theme", "varchar(5)", (col) => col.defaultTo("light"))
       .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
       .execute();
 
@@ -137,7 +138,6 @@ export async function dbCreateTables() {
       .addColumn("info", "varchar(500)", (col) => col.notNull())
       .addColumn("duration", "integer", (col) => col.defaultTo(30).notNull())
       .addColumn("coverUrl", "varchar(500)")
-      .addColumn("qrUrl", "varchar(500)")
       .addColumn("category", "varchar(50)", (col) => col.references("categories.id"))
       .addColumn("createdBy", "varchar(50)", (col) => col.references("users.id"))
       .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
@@ -149,24 +149,40 @@ export async function dbCreateTables() {
       .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey())
       .addColumn("eventId", "varchar(50)", (col) => col.references("events.id"))
       .addColumn("space", "varchar(50)", (col) => col.references("spaces.id"))
-      .addColumn("bookingDate", "datetime", (col) => col.notNull())
+      .addColumn("bookingDate", "timestamp", (col) => col.notNull())
       .addColumn("bookedBy", "varchar(50)", (col) => col.references("users.id"))
-      .addColumn("bookedDate", "datetime", (col) => col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`))
+      .addColumn("bookedDate", "timestamp", (col) => col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`))
       .addColumn("info", "varchar(500)")
       .addColumn("status", "varchar(20)", (col) =>
         col.defaultTo("active").check(sql`status IN ('active', 'cancelled')`),
       )
       .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
       .execute();
+
+    const configRows = await trx.selectFrom("config").selectAll().execute();
+
+    const hasEnableWeekends = configRows.some((row) => row.id === "enableWeekends");
+    const hasAppName = configRows.some((row) => row.id === "appName");
+    const domain = configRows.some((row) => row.id === "domain");
+
+    if (!hasEnableWeekends) {
+      await trx.insertInto("config").values({ id: "enableWeekends", value: "false" }).execute();
+    }
+    if (!hasAppName) {
+      await trx.insertInto("config").values({ id: "appName", value: "EvenTeis" }).execute();
+    }
+    if (!domain) {
+      await trx.insertInto("config").values({ id: "domain", value: "http://localhost:3000" }).execute();
+    }
   });
 }
 
 /**
- * Verifica si un registro existe en una tabla.
+ * Checks if a record exists in a table.
  * @async
- * @param {string} table - Nombre de la tabla.
- * @param {string} id - ID del registro.
- * @returns {Promise<boolean>} - Devuelve true si el registro existe, de lo contrario false.
+ * @param {string} table - Table name.
+ * @param {string} id - Record ID.
+ * @returns {Promise<boolean>} - Returns true if the record exists, false otherwise.
  */
 export async function dbCheckExistence(table, id) {
   return await db.transaction().execute(async (trx) => {
@@ -176,11 +192,11 @@ export async function dbCheckExistence(table, id) {
 }
 
 /**
- * Obtiene un registro de una tabla dado su ID.
+ * Gets a record from a table by its ID.
  * @async
- * @param {string} table - Nombre de la tabla.
- * @param {string} id - ID del registro.
- * @returns {Promise<Object>} - Devuelve el registro encontrado.
+ * @param {string} table - Table name.
+ * @param {string} id - Record ID.
+ * @returns {Promise<Object>} - Returns the found record.
  */
 export async function dbGetOne(table, id) {
   return await db.transaction().execute(async (trx) => {
@@ -189,10 +205,10 @@ export async function dbGetOne(table, id) {
 }
 
 /**
- * Obtiene todos los registros de una tabla.
+ * Gets all records from a table.
  * @async
- * @param {string} table - Nombre de la tabla.
- * @returns {Promise<Array>} - Devuelve todos los registros de la tabla.
+ * @param {string} table - Table name.
+ * @returns {Promise<Array>} - Returns all records from the table.
  */
 export async function dbGetAll(table) {
   return await db.transaction().execute(async (trx) => {
@@ -201,11 +217,11 @@ export async function dbGetAll(table) {
 }
 
 /**
- * Obtiene registros de una tabla que cumplen con ciertas condiciones.
+ * Gets records from a table that meet certain conditions.
  * @async
- * @param {string} table - Nombre de la tabla.
- * @param {Array|Object} conditions - Condiciones para filtrar los registros.
- * @returns {Promise<Array>} - Devuelve los registros que cumplen con las condiciones.
+ * @param {string} table - Table name.
+ * @param {Array|Object} conditions - Conditions to filter the records.
+ * @returns {Promise<Array>} - Returns the records that meet the conditions.
  */
 export async function dbGetWhere(table, conditions) {
   return await db.transaction().execute(async (trx) => {
@@ -221,11 +237,11 @@ export async function dbGetWhere(table, conditions) {
 }
 
 /**
- * Inserta datos en una tabla.
+ * Inserts data into a table.
  * @async
- * @param {string} table - Nombre de la tabla.
- * @param {Object} data - Datos a insertar.
- * @returns {Promise<Object>} - Devuelve el resultado de la inserción.
+ * @param {string} table - Table name.
+ * @param {Object} data - Data to insert.
+ * @returns {Promise<Object>} - Returns the result of the insertion.
  */
 export async function dbSaveData(table, data) {
   return await db.transaction().execute(async (trx) => {
@@ -234,12 +250,12 @@ export async function dbSaveData(table, data) {
 }
 
 /**
- * Actualiza los datos de un registro en una tabla.
+ * Updates the data of a record in a table.
  * @async
- * @param {string} table - Nombre de la tabla.
- * @param {string} id - ID del registro.
- * @param {Object} data - Datos a actualizar.
- * @returns {Promise<Object>} - Devuelve el resultado de la actualización.
+ * @param {string} table - Table name.
+ * @param {string} id - Record ID.
+ * @param {Object} data - Data to update.
+ * @returns {Promise<Object>} - Returns the result of the update.
  */
 export async function dbUpdateData(table, id, data) {
   return await db.transaction().execute(async (trx) => {
@@ -248,11 +264,11 @@ export async function dbUpdateData(table, id, data) {
 }
 
 /**
- * Obtiene el estado de eliminación de un registro en una tabla.
+ * Gets the deletion status of a record in a table.
  * @async
- * @param {string} table - Nombre de la tabla.
- * @param {string} id - ID del registro.
- * @returns {Promise<boolean>} - Devuelve el estado de eliminación del registro.
+ * @param {string} table - Table name.
+ * @param {string} id - Record ID.
+ * @returns {Promise<boolean>} - Returns the deletion status of the record.
  */
 export async function dbGetDeletionStatus(table, id) {
   return await db.transaction().execute(async (trx) => {
@@ -262,11 +278,11 @@ export async function dbGetDeletionStatus(table, id) {
 }
 
 /**
- * Cambia el estado de eliminación de un registro en una tabla.
+ * Switches the deletion status of a record in a table.
  * @async
- * @param {string} table - Nombre de la tabla.
- * @param {string} id - ID del registro.
- * @returns {Promise<Object>} - Devuelve el resultado de la actualización.
+ * @param {string} table - Table name.
+ * @param {string} id - Record ID.
+ * @returns {Promise<Object>} - Returns the result of the update.
  */
 export async function dbSwitchDeletionStatus(table, id) {
   return await db.transaction().execute(async (trx) => {
@@ -276,12 +292,12 @@ export async function dbSwitchDeletionStatus(table, id) {
 }
 
 /**
- * Establece el estado de eliminación de un registro en una tabla.
+ * Sets the deletion status of a record in a table.
  * @async
- * @param {string} table - Nombre de la tabla.
- * @param {string} id - ID del registro.
- * @param {boolean} deletionStatus - Estado de eliminación a establecer.
- * @returns {Promise<Object>} - Devuelve el resultado de la actualización.
+ * @param {string} table - Table name.
+ * @param {string} id - Record ID.
+ * @param {boolean} deletionStatus - Deletion status to set.
+ * @returns {Promise<Object>} - Returns the result of the update.
  */
 export async function dbSetDeleteStatus(table, id, deletionStatus) {
   return await db.transaction().execute(async (trx) => {
@@ -290,11 +306,11 @@ export async function dbSetDeleteStatus(table, id, deletionStatus) {
 }
 
 /**
- * Elimina un registro de una tabla.
+ * Deletes a record from a table.
  * @async
- * @param {string} table - Nombre de la tabla.
- * @param {string} id - ID del registro.
- * @returns {Promise<Object>} - Devuelve el resultado de la eliminación.
+ * @param {string} table - Table name.
+ * @param {string} id - Record ID.
+ * @returns {Promise<Object>} - Returns the result of the deletion.
  */
 export async function dbDeleteData(table, id) {
   return await db.transaction().execute(async (trx) => {
@@ -303,9 +319,9 @@ export async function dbDeleteData(table, id) {
 }
 
 /**
- * Elimina todos los registros de todas las tablas de la base de datos.
+ * Deletes all records from all tables in the database.
  * @async
- * @description Esta función NO DEBE ser utilizada en la aplicación, solo para pruebas con una base de datos limpia.
+ * @description This function SHOULD NOT be used in the application, only for testing with a clean database.
  */
 export async function clearDb() {
   await db.transaction().execute(async (trx) => {
