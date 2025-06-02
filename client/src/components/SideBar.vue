@@ -1,16 +1,21 @@
 <template>
-  <aside class="sidebar-container bg-background-100 border-r-[1.5px] border-background-300" :class="[isMobile && isCollapsed ? 'sidebar-hidden' : '']">
+  <aside
+    class="sidebar-container bg-background-100 border-r-[1.5px] border-background-300"
+    :class="[isMobile && isCollapsed ? 'sidebar-hidden' : '']">
     <nav class="sidebar-nav" :style="sidebarStyle">
       <ul class="space-y-3">
-        <li v-for="(item, index) in menuItems" :key="index" class="bg-background-200 p-3 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)]">
-          <a href="#" class="flex items-center gap-2">
+        <li v-for="(item, index) in menuItems" :key="index" class="rounded-md">
+          <router-link
+            :to="item.route"
+            class="flex items-center gap-2 p-3 bg-background-200 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)]"
+            active-class="bg-primary-100 border-primary-500 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
             <div class="sidebar-icon text-primary-600">
               <component :is="item.icon" />
             </div>
             <span v-if="!isCollapsed || isMobile" class="sidebar-text text-text-800">
               {{ t(item.titleKey) }}
             </span>
-          </a>
+          </router-link>
         </li>
       </ul>
     </nav>
@@ -47,22 +52,28 @@ export default {
       required: true,
     },
   },
-  setup(props) {
+  emits: ["update:isCollapsed"],
+  setup(props, { emit }) {
     const { t } = useI18n();
     const isMobile = ref(window.innerWidth <= 768);
     const mainStore = useMainStore();
 
+    onMounted(() => {
+      if (props.isCollapsed !== mainStore.sidebarCollapsed) {
+        emit("update:isCollapsed", mainStore.sidebarCollapsed);
+      }
+
+      window.addEventListener("resize", detectMobile);
+    });
+
     const menuItems = [
-      { titleKey: "components.sidebar.home", icon: "LucideHome" },
-      { titleKey: "components.sidebar.analytics", icon: "LucideBarChart" },
-      { titleKey: "components.sidebar.team", icon: "LucideUsers" },
-      { titleKey: "components.sidebar.reports", icon: "LucideFileText" },
-      { titleKey: "components.sidebar.settings", icon: "LucideSettings" },
+      { titleKey: "components.sidebar.home", icon: "LucideHome", route: "/dash/home" },
+      { titleKey: "components.sidebar.team", icon: "LucideUsers", route: "/dash/users" },
     ];
 
     const sidebarStyle = computed(() => {
       return {
-        width: isMobile.value ? '12rem' : props.isCollapsed ? '5rem' : '12rem'
+        width: isMobile.value ? "12rem" : props.isCollapsed ? "5rem" : "12rem",
       };
     });
 
@@ -70,16 +81,12 @@ export default {
       isMobile.value = window.innerWidth <= 768;
     };
 
-    onMounted(() => {
-      window.addEventListener("resize", detectMobile);
-    });
-
     return {
       t,
       menuItems,
       isMobile,
       locale: mainStore.locale,
-      sidebarStyle
+      sidebarStyle,
     };
   },
 };
@@ -118,7 +125,7 @@ export default {
 .sidebar-text {
   white-space: nowrap;
   font-size: 1rem;
-  font-family: 'K2D', sans-serif;
+  font-family: "K2D", sans-serif;
   overflow: hidden;
 }
 </style>
