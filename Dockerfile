@@ -24,8 +24,7 @@ RUN apk add --no-cache tzdata && \
 COPY package*.json ./
 
 # Instala dependencias, considerando entorno de producción
-RUN npm install --production && \
-  npm cache clean --force
+RUN npm install --production && npm cache clean --force
 
 # Copia el resto del código de la aplicación
 COPY . .
@@ -41,4 +40,4 @@ ENV PORT=$PORT
 EXPOSE $PORT
 
 # Comando para iniciar la aplicación
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "prod"]
