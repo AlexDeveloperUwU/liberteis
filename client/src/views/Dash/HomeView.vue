@@ -4,7 +4,8 @@
     <p class="text-text-800 mb-6">{{ t("pages.dash.home.description") }}</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+      <div
+        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <CalendarDays class="w-5 h-5 text-primary-600" />
           <p class="font-medium text-text-800">{{ t("pages.dash.home.totals") }}</p>
@@ -12,7 +13,8 @@
         <h2 class="text-2xl font-bold text-text-950">{{ metrics.totales }}</h2>
       </div>
 
-      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+      <div
+        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <CalendarCheck2 class="w-5 h-5 text-primary-600" />
           <p class="font-medium text-text-800">{{ t("pages.dash.home.done") }}</p>
@@ -20,7 +22,8 @@
         <h2 class="text-2xl font-bold text-text-950">{{ metrics.hechos }}</h2>
       </div>
 
-      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+      <div
+        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <Calendar1 class="w-5 h-5 text-primary-600" />
           <p class="font-medium text-text-800">{{ t("pages.dash.home.upcoming") }}</p>
@@ -28,7 +31,8 @@
         <h2 class="text-2xl font-bold text-text-950">01/01/1999</h2>
       </div>
 
-      <div class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+      <div
+        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <CalendarCog class="w-5 h-5 text-primary-600" />
           <p class="font-medium text-text-800">{{ t("pages.dash.home.toBeDone") }}</p>
@@ -38,7 +42,8 @@
     </div>
 
     <div class="gap-6 mt-6">
-      <div class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow duration-200">
+      <div
+        class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow duration-200">
         <div class="calendar-container">
           <FullCalendar ref="calendarRef" :options="calendarOptions" />
         </div>
@@ -88,26 +93,7 @@ const calendarOptions = ref({
   },
   handleWindowResize: true,
   locale: langMap[locale.value] || glLang,
-  events: [
-    { title: "Evento 1", start: "2025-05-07T10:00:00" },
-    { title: "Evento 2", start: "2025-05-10T14:30:00" },
-    { title: "Evento 3", start: "2025-05-15T09:15:00" },
-    { title: "Evento 4", start: "2025-05-21T16:45:00" },
-    { title: "Evento 5", start: "2025-05-25T11:00:00" },
-    { title: "Evento 6", start: "2025-05-02T08:00:00" },
-    { title: "Evento 7", start: "2025-05-03T13:00:00" },
-    { title: "Evento 8", start: "2025-05-05T15:30:00" },
-    { title: "Evento 9", start: "2025-05-08T12:00:00" },
-    { title: "Evento 10", start: "2025-05-12T17:00:00" },
-    { title: "Evento 11", start: "2025-05-14T10:30:00" },
-    { title: "Evento 12", start: "2025-05-18T09:00:00" },
-    { title: "Evento 13", start: "2025-05-20T18:00:00" },
-    { title: "Evento 14", start: "2025-05-22T14:00:00" },
-    { title: "Evento 15", start: "2025-05-24T11:30:00" },
-    { title: "Evento 16", start: "2025-05-26T16:00:00" },
-    { title: "Evento 17", start: "2025-05-28T08:30:00" },
-    { title: "Evento 18", start: "2025-05-30T13:45:00" },
-  ],
+  events: [],
   weekends: true,
   expandRows: true,
 });
@@ -155,9 +141,8 @@ onMounted(async () => {
     console.error("Error fetching metrics:", error.message || error);
   }
 
-  const enableWeekendsValue = configStore.getConfigValue('enableWeekends', 'true');
-  const enableWeekends = enableWeekendsValue === 'true' || enableWeekendsValue === true;
-  console.log("Enable weekends value:", enableWeekendsValue, "Parsed:", enableWeekends);
+  const enableWeekendsValue = configStore.getConfigValue("enableWeekends", "true");
+  const enableWeekends = enableWeekendsValue === "true" || enableWeekendsValue === true;
   calendarOptions.value.weekends = enableWeekends;
 });
 

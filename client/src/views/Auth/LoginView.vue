@@ -61,8 +61,7 @@ const handleLogin = async () => {
         message: t("pages.auth.login.successMessage"),
         position: "topRight",
       });
-      const redirectPath = router.currentRoute.value.query.redirect || "/";
-      await router.push(redirectPath);
+      await router.push("/dash/");
     } else {
       throw new Error("Login failed");
     }
