@@ -87,6 +87,10 @@ router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const requiredPermission = to.meta.allow;
 
+  if (to.path === "/" && authStore.isAuthenticated) {
+    return next({ name: "dashHome" });
+  }
+
   if (!requiredPermission || requiredPermission === "any") {
     return next();
   }
