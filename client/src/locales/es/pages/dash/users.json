@@ -1,0 +1,7 @@
+{
+  "title": "Gestión de Usuarios",
+  "description": "Administra usuarios y roles dentro del sistema.",
+  "totals": "Usuarios totales",
+  "active": "Usuarios activos",
+  "inactive": "Usuarios inactivos"
+}

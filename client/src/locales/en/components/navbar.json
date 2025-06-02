@@ -1,6 +1,7 @@
 {
   "title": "EvenTeis",
   "logout": "Logout",
+  "login": "Login",
   "lightMode": "Light Mode",
   "darkMode": "Dark Mode"
 }

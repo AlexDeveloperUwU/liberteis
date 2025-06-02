@@ -1,0 +1,7 @@
+{
+  "title": "User Management",
+  "description": "Manage users and roles within the system.",
+  "totals": "Total users",
+  "active": "Active users",
+  "inactive": "Inactive users"
+}
