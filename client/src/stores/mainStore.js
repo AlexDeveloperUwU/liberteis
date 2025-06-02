@@ -29,6 +29,7 @@ const removeLocalStorageItem = (key) => {
 export const useMainStore = defineStore("main", () => {
   const locale = ref(getLocalStorageItem("locale", "gl"));
   const theme = ref(getLocalStorageItem("theme", "system"));
+  const sidebarCollapsed = ref(getLocalStorageItem("sidebarCollapsed", "false") === "true");
 
   const setLocale = (lang) => {
     locale.value = lang;
@@ -43,6 +44,11 @@ export const useMainStore = defineStore("main", () => {
       setLocalStorageItem("theme", newTheme);
     }
     applyTheme();
+  };
+
+  const setSidebarCollapsed = (collapsed) => {
+    sidebarCollapsed.value = collapsed;
+    setLocalStorageItem("sidebarCollapsed", collapsed.toString());
   };
 
   const applyTheme = () => {
@@ -63,8 +69,10 @@ export const useMainStore = defineStore("main", () => {
   return {
     locale,
     theme,
+    sidebarCollapsed,
     setLocale,
     setTheme,
+    setSidebarCollapsed,
     applyTheme,
   };
 });
