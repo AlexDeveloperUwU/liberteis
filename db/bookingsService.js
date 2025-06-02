@@ -248,56 +248,40 @@ export async function checkBookingStatus(id) {
 }
 
 /**
- * Retrieves a summary of bookings.
- * @param {string|null} [userId=null] - Optional user ID to filter bookings.
- * @param {string|null} [type=null] - The type of bookings to retrieve ("all", "done", "pending", or null for all).
- * @returns {Promise<object>} A summary of bookings or filtered bookings.
+ * Gets a count or summary of bookings.
+ * @param {string|null} [userId=null] - Optional user ID to filter bookings by user.
+ * @param {string|null} [type=null] - Type of bookings to retrieve ("all", "done", "pending", or null for complete summary).
+ * @returns {Promise<object>} A summary object containing booking counts or filtered bookings count.
  */
 export async function getBookingsCount(userId = null, type = null) {
-  const currentDate = new Date().toISOString();
-
   try {
-    const filters = userId ? [{ field: "bookedBy", operator: "=", value: userId }] : [];
+    const currentDate = new Date().toISOString();
+    const baseFilters = [{ field: "deleted", operator: "=", value: false }];
+    if (userId) baseFilters.push({ field: "bookedBy", operator: "=", value: userId });
 
     switch (type) {
       case "all": {
-        const totalBookings = await dbc.dbGetWhere("bookings", filters);
-        return { totales: totalBookings.length };
+        const total = await dbc.dbGetWhere("bookings", baseFilters);
+        return { totales: total.length };
       }
       case "done": {
-        const hechosFilters = [
-          ...filters,
-          { field: "bookingDate", operator: "<", value: currentDate },
-          { field: "deleted", operator: "=", value: false },
-        ];
-        const hechos = await dbc.dbGetWhere("bookings", hechosFilters);
+        const doneFilters = [...baseFilters, { field: "bookingDate", operator: "<", value: currentDate }];
+        const hechos = await dbc.dbGetWhere("bookings", doneFilters);
         return { hechos: hechos.length };
       }
       case "pending": {
-        const porHacerFilters = [
-          ...filters,
-          { field: "bookingDate", operator: ">", value: currentDate },
-          { field: "deleted", operator: "=", value: false },
-        ];
-        const porHacer = await dbc.dbGetWhere("bookings", porHacerFilters);
+        const pendingFilters = [...baseFilters, { field: "bookingDate", operator: ">", value: currentDate }];
+        const porHacer = await dbc.dbGetWhere("bookings", pendingFilters);
         return { porHacer: porHacer.length };
       }
       case null: {
-        const totalBookings = await dbc.dbGetWhere("bookings", filters);
-        const hechosFilters = [
-          ...filters,
-          { field: "bookingDate", operator: "<", value: currentDate },
-          { field: "deleted", operator: "=", value: false },
-        ];
-        const hechos = await dbc.dbGetWhere("bookings", hechosFilters);
-        const porHacerFilters = [
-          ...filters,
-          { field: "bookingDate", operator: ">", value: currentDate },
-          { field: "deleted", operator: "=", value: false },
-        ];
-        const porHacer = await dbc.dbGetWhere("bookings", porHacerFilters);
+        const total = await dbc.dbGetWhere("bookings", baseFilters);
+        const doneFilters = [...baseFilters, { field: "bookingDate", operator: "<", value: currentDate }];
+        const hechos = await dbc.dbGetWhere("bookings", doneFilters);
+        const pendingFilters = [...baseFilters, { field: "bookingDate", operator: ">", value: currentDate }];
+        const porHacer = await dbc.dbGetWhere("bookings", pendingFilters);
         return {
-          totales: totalBookings.length,
+          totales: total.length,
           hechos: hechos.length,
           porHacer: porHacer.length,
         };
