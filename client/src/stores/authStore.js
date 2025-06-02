@@ -28,11 +28,11 @@ export const useAuthStore = defineStore("auth", {
       await axios.post("/api/auth/logout");
       this.user = null;
       localStorage.removeItem("auth_user");
-      window.location.href = "/auth/login";
+      window.location.href = "/";
     },
     async register(userData) {
       const response = await axios.post("/api/auth/register", userData);
-      return response.data.code === 201;
+      return response.status === 201;
     },
   },
 });
