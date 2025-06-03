@@ -1,14 +1,23 @@
 import { Router } from "express";
-import jwt from "jsonwebtoken";
 import * as users from "../../db/userService.js";
 import { validatePass } from "../../utils/dataSecurity.js";
 import { generatePass } from "../../utils/password.js";
-import { getKey } from "../../utils/secretKey.js";
 
+/**
+ * Express router for authentication related endpoints.
+ * @type {import('express').Router}
+ */
 const api = Router();
 export default api;
 
-// Used to register a new user with password
+/**
+ * @name POST /api/auth/register
+ * @description Registers a new user with a password.
+ * @param {object} req - Express request object.
+ * @param {object} req.body - The request body.
+ * @param {object} req.body.user - User object containing details for registration.
+ * @param {object} res - Express response object.
+ */
 api.post("/register", async (req, res) => {
   const user = req.body;
   if (!user) {
@@ -26,6 +35,14 @@ api.post("/register", async (req, res) => {
   }
 });
 
+/**
+ * @name POST /api/auth/createUser
+ * @description Creates a new user with an automatically generated password.
+ * @param {object} req - Express request object.
+ * @param {object} req.body - The request body.
+ * @param {object} req.body.user - User object containing details for creation.
+ * @param {object} res - Express response object.
+ */
 api.post("/createUser", async (req, res) => {
   const user = req.body;
   if (!user) {
@@ -44,6 +61,15 @@ api.post("/createUser", async (req, res) => {
   }
 });
 
+/**
+ * @name POST /api/auth/login
+ * @description Logs in an existing user.
+ * @param {object} req - Express request object.
+ * @param {object} req.body - The request body.
+ * @param {string} req.body.email - User's email.
+ * @param {string} req.body.password - User's password.
+ * @param {object} res - Express response object.
+ */
 api.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -63,6 +89,7 @@ api.post("/login", async (req, res) => {
     }
 
     req.session.userId = user.id;
+    await users.updateUserLastLogin(user.id);
 
     return res.status(200).json({
       error: false,
@@ -79,6 +106,12 @@ api.post("/login", async (req, res) => {
   }
 });
 
+/**
+ * @name POST /api/auth/logout
+ * @description Logs out the current user.
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
+ */
 api.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) return res.status(500).send("Error al cerrar sesión");

@@ -1,30 +1,66 @@
 import { Router } from "express";
 import * as users from "../../db/userService.js";
 
+/**
+ * Express router for authentication related endpoints.
+ * @type {import('express').Router}
+ */
 const api = Router();
 export default api;
 
 //! Basic CRUD operations
 
+//! Info retrieval operations
+
+/**
+ * @name GET /api/users/count
+ * @description Retrieves the count of users based on their status.
+ * @param {object} req - Express request object.
+ * @param {object} req.body - The request body.
+ * @param {object} req.body.user - User object containing details for registration.
+ * @param {object} res - Express response object.
+ * @returns {object} JSON object containing the users count.
+ */
+
+api.get("/count", async (req, res) => {
+  try {
+    const { type } = req.query;
+    const result = await users.getUsersCount(type);
+    res.status(200).json({ code: 200, data: result });
+  } catch (error) {
+    console.error("Error in /api/users/count:", error.message);
+    res.status(500).json({ code: 500, message: "Internal server error" });
+  }
+});
+
+/**
+ * @name GET /api/users/
+ * @description Gets the list of users filtered by status.
+ * @param {object} req - Express request object.
+ * @param {object} req.query - The query parameters.
+ * @param {('all'|'active'|'inactive')} [req.query.status='active'] - Status to filter users.
+ * @param {object} res - Express response object.
+ * @returns {object} JSON with status code and users array.
+ * @returns {number} response.code - HTTP status code.
+ * @returns {Array<object>} response.data - List of found users.
+ */
+
+api.get("/", async (req, res) => {
+  try {
+    const { status } = req.query;
+    const result = await users.getUsers(status);
+    res.status(200).json({ code: 200, data: result });
+  } catch (error) {
+    console.error("Error in /api/users/count:", error.message);
+    res.status(500).json({ code: 500, message: "Internal server error" });
+  }
+});
+
+/*
 // POST /api/users
 // Receives an object with the user data to add
 // Uses the addUser function from userService
-api.post("/", async (req, res) => {
-  const user = req.body;
-  if (!user) {
-    return res.status(400).json({ error: true, message: "Invalid parameters" });
-  }
-
-  try {
-    const result = await users.addUser(user);
-    if (result.error) {
-      return res.status(500).json(result);
-    }
-    return res.status(201).json({error: false, message: "User created" });
-  } catch (error) {
-    return res.status(500).json({ error: true, message: error.message });
-  }
-});
+api.post("/", async (req, res) => {});
 
 // PUT /api/users/:id
 // Receives a user id and an object with the data to modify
@@ -79,3 +115,4 @@ api.get("/:id/status", async (req, res) => {});
 // Receives a user email
 // Uses the checkUserExists function from userService
 api.get("/:email/exists", async (req, res) => {});
+*/

@@ -7,13 +7,58 @@ import spacesApi from "./api/spacesApi.js";
 import usersApi from "./api/usersApi.js";
 import authApi from "./api/authApi.js";
 
+/**
+ * Main router for all API routes.
+ * @type {import('express').Router}
+ */
 const apiRouter = router();
 export default apiRouter;
 
+/**
+ * @name /api/bookings
+ * @description Routes for managing bookings.
+ * @see {@link bookingsApi}
+ */
 apiRouter.use("/bookings", bookingsApi);
+
+/**
+ * @name /api/categories
+ * @description Routes for managing categories.
+ * @see {@link categoriesApi}
+ */
 apiRouter.use("/categories", categoriesApi);
+
+/**
+ * @name /api/config
+ * @description Routes for managing configuration.
+ * @see {@link configApi}
+ */
 apiRouter.use("/config", configApi);
+
+/**
+ * @name /api/events
+ * @description Routes for managing events.
+ * @see {@link eventsApi}
+ */
 apiRouter.use("/events", eventsApi);
+
+/**
+ * @name /api/spaces
+ * @description Routes for managing spaces.
+ * @see {@link spacesApi}
+ */
 apiRouter.use("/spaces", spacesApi);
+
+/**
+ * @name /api/users
+ * @description Routes for managing users.
+ * @see {@link usersApi}
+ */
 apiRouter.use("/users", usersApi);
+
+/**
+ * @name /api/auth
+ * @description Routes for managing authentication.
+ * @see {@link authApi}
+ */
 apiRouter.use("/auth", authApi);

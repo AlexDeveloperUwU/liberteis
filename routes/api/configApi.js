@@ -6,10 +6,15 @@ export default api;
 
 //! Basic CRUD operations
 
-// GET /api/configs
-// Optionally receives a query string key
-// If a key is provided, returns a specific config if exists, else returns all configs
-// Uses the getConfig and getConfigs functions from configService
+/**
+ * @name GET /api/configs
+ * @description Gets all configs or a specific config by key
+ * @param {object} req - Express request object
+ * @param {object} req.query - The query parameters
+ * @param {string} [req.query.key] - Optional key to fetch specific config
+ * @param {object} res - Express response object
+ * @returns {object} JSON response with configs or error message
+ */
 api.get("/", async (req, res) => {
   const { key } = req.query;
 
@@ -32,9 +37,16 @@ api.get("/", async (req, res) => {
   }
 });
 
-// POST /api/configs
-// Receives an object with the key and value of the config to add
-// Uses the setConfig function from configService
+/**
+ * @name POST /api/configs
+ * @description Creates a new config entry
+ * @param {object} req - Express request object
+ * @param {object} req.body - The request body
+ * @param {string} req.body.key - The config key
+ * @param {any} req.body.value - The config value
+ * @param {object} res - Express response object
+ * @returns {object} JSON response with success or error message
+ */
 api.post("/", async (req, res) => {
   const { key, value } = req.body;
 
@@ -56,9 +68,16 @@ api.post("/", async (req, res) => {
   }
 });
 
-// PUT /api/configs
-// Receives an object with the key and value of the config to update
-// Uses the updateConfig function from configService
+/**
+ * @name PUT /api/configs
+ * @description Updates an existing config entry
+ * @param {object} req - Express request object
+ * @param {object} req.body - The request body
+ * @param {string} req.body.key - The config key to update
+ * @param {any} req.body.value - The new config value
+ * @param {object} res - Express response object
+ * @returns {object} JSON response with success or error message
+ */
 api.put("/", async (req, res) => {
   const { key, value } = req.body;
 
@@ -80,10 +99,15 @@ api.put("/", async (req, res) => {
   }
 });
 
-// DELETE /api/configs
-// Optionally receives a query string key
-// If a key is provided, deletes the specific config
-// Uses the deleteConfig function from configService
+/**
+ * @name DELETE /api/configs
+ * @description Deletes a specific config entry
+ * @param {object} req - Express request object
+ * @param {object} req.query - The query parameters
+ * @param {string} req.query.key - The config key to delete
+ * @param {object} res - Express response object
+ * @returns {object} JSON response with success or error message
+ */
 api.delete("/", async (req, res) => {
   const { key } = req.query;
 

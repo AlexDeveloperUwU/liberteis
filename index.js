@@ -58,7 +58,7 @@ async function main() {
 
   app.use(
     session({
-      key: "session_cookie_name",
+      key: "session_cookie",
       secret: getKey(),
       store: sessionStore,
       resave: false,
@@ -89,8 +89,8 @@ async function main() {
   //! Define the routes
   app.use("/api", apiRouter);
 
-  app.get("*", function (req, res) {
-    res.sendFile(path.join(__dirname, "views") + "/index.html");
+  app.get("/*splat", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "index.html"));
   });
 
   //! Launch the Express application
