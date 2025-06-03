@@ -3,5 +3,28 @@
   "description": "Manage users and roles within the system.",
   "totals": "Total users",
   "active": "Active users",
-  "inactive": "Inactive users"
+  "inactive": "Inactive users",
+  "name": "Name",
+  "email": "Email",
+  "type": "Type",
+  "status": "Status",
+  "created": "Created",
+  "lastSeen": "Last seen",
+  "userType": "User Type",
+  "neverLogged": "Never logged in",
+  "createdBy": "Created by",
+  "types": {
+    "adminUser": "Administrator",
+    "user": "User"
+  },
+  "deleted": "Deleted",
+  "notDeleted": "Active",
+  "state": "User State",
+  "states": {
+    "enabled": "Enabled",
+    "disabled": "Disabled"
+  },
+  "actions": "Actions",
+  "edit": "Edit",
+  "delete": "Delete"
 }

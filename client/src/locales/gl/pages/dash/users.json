@@ -3,5 +3,28 @@
   "description": "Xestiona os usuarios e roles dentro do sistema.",
   "totals": "Usuarios totais",
   "active": "Usuarios activos",
-  "inactive": "Usuarios inactivos"
+  "inactive": "Usuarios inactivos",
+  "name": "Nome",
+  "email": "Correo",
+  "type": "Tipo",
+  "status": "Estado",
+  "created": "Creado",
+  "state": "Estado do Usuario",
+  "userType": "Tipo de Usuario",
+  "types": {
+    "adminUser": "Administrador",
+    "user": "Usuario"
+  },
+  "deleted": "Eliminado",
+  "notDeleted": "Activo",
+  "states": {
+    "enabled": "Habilitado",
+    "disabled": "Deshabilitado"
+  },
+  "lastSeen": "Último acceso",
+  "neverLogged": "Nunca accedeu",
+  "createdBy": "Creado por",
+  "actions": "Accións",
+  "edit": "Editar",
+  "delete": "Eliminar"
 }
