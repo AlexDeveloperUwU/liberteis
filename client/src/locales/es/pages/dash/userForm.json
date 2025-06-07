@@ -1,0 +1,61 @@
+{
+  "common": {
+    "create": "Crear Usuario",
+    "edit": "Editar Usuario",
+    "update": "Actualizar Usuario",
+    "cancel": "Cancelar"
+  },
+  "page": {
+    "createTitle": "Nuevo Usuario",
+    "editTitle": "Editar Usuario",
+    "createDescription": "Añadir un nuevo usuario al sistema con permisos específicos",
+    "editDescription": "Modificar información y permisos de un usuario existente"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Información básica del usuario",
+      "accessInfo": "Información de acceso"
+    },
+    "labels": {
+      "name": "Nombre de usuario",
+      "email": "Correo electrónico",
+      "userType": "Tipo de usuario"
+    },
+    "placeholders": {
+      "name": "Usuario",
+      "selectType": "Seleccionar tipo de usuario",
+      "noRoleSelected": "Ningún rol seleccionado",
+      "noEmail": "No se proporcionó correo electrónico"
+    },
+    "actions": {
+      "submitting": "Creando...",
+      "updating": "Actualizando..."
+    }
+  },
+  "profile": {
+    "preview": "Vista previa del perfil",
+    "creationDate": "Fecha de creación",
+    "permissions": "Permisos",
+    "selectRoleForPermissions": "Seleccione un rol para ver sus permisos",
+    "userPermissions": "Permisos de usuario"
+  },
+  "permissions": {
+    "viewContent": "Ver contenido",
+    "editOwnProfile": "Editar perfil propio",
+    "manageUsers": "Gestionar usuarios",
+    "manageContent": "Gestionar contenido",
+    "manageSystem": "Gestionar sistema",
+    "fullAccess": "Acceso completo al sistema"
+  },
+  "errors": {
+    "nameLength": "El nombre debe tener al menos 3 caracteres",
+    "emailRequired": "El correo electrónico es obligatorio",
+    "emailInvalid": "Por favor, introduce un correo electrónico válido",
+    "typeRequired": "El tipo de usuario es obligatorio",
+    "emailExists": "El correo electrónico ya existe en el sistema"
+  },
+  "notifications": {
+    "createSuccess": "¡Usuario creado con éxito!",
+    "updateSuccess": "¡Usuario actualizado con éxito!"
+  }
+}

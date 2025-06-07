@@ -1,0 +1,61 @@
+{
+  "common": {
+    "create": "Create User",
+    "edit": "Edit User",
+    "update": "Update User",
+    "cancel": "Cancel"
+  },
+  "page": {
+    "createTitle": "New User",
+    "editTitle": "Edit User",
+    "createDescription": "Add a new user to the system with specific permissions",
+    "editDescription": "Modify existing user information and permissions"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Basic user information",
+      "accessInfo": "Access information"
+    },
+    "labels": {
+      "name": "User name",
+      "email": "Email",
+      "userType": "User type"
+    },
+    "placeholders": {
+      "name": "User",
+      "selectType": "Select user type",
+      "noRoleSelected": "No role selected",
+      "noEmail": "No email provided"
+    },
+    "actions": {
+      "submitting": "Creating...",
+      "updating": "Updating..."
+    }
+  },
+  "profile": {
+    "preview": "Preview of the profile",
+    "creationDate": "Creation date",
+    "permissions": "Permissions",
+    "selectRoleForPermissions": "Select a role to view its permissions",
+    "userPermissions": "User permissions"
+  },
+  "permissions": {
+    "viewContent": "View content",
+    "editOwnProfile": "Edit own profile",
+    "manageUsers": "Manage users",
+    "manageContent": "Manage content",
+    "manageSystem": "Manage system",
+    "fullAccess": "Full system access"
+  },
+  "errors": {
+    "nameLength": "Name must be at least 3 characters",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email",
+    "typeRequired": "User type is required",
+    "emailExists": "Email already exists in the system"
+  },
+  "notifications": {
+    "createSuccess": "User created successfully!",
+    "updateSuccess": "User updated successfully!"
+  }
+}

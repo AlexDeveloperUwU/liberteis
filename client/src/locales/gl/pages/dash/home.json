@@ -1,8 +1,12 @@
 {
-  "title": "Inicio",
-  "description": "Bótalle unha ollada aos teus eventos ou crea algúns novos.",
-  "totals": "Eventos totais",
-  "toBeDone": "Eventos pendentes",
-  "done": "Eventos completados",
-  "upcoming": "Próximo evento"
+  "page": {
+    "title": "Inicio",
+    "description": "Bótalle unha ollada aos teus eventos ou crea algúns novos."
+  },
+  "metrics": {
+    "totals": "Eventos totais",
+    "toBeDone": "Eventos pendentes",
+    "done": "Eventos completados",
+    "upcoming": "Próximo evento"
+  }
 }

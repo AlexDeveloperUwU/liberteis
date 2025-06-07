@@ -1,8 +1,12 @@
 {
-  "title": "Home",
-  "description": "Take a peek at your events or create some new ones.",
-  "totals": "Total events",
-  "toBeDone": "Pending events",
-  "done": "Finished events",
-  "upcoming": "Upcoming event"
+  "page": {
+    "title": "Home",
+    "description": "Take a peek at your events or create some new ones."
+  },
+  "metrics": {
+    "totals": "Total events",
+    "toBeDone": "Pending events",
+    "done": "Finished events",
+    "upcoming": "Upcoming event"
+  }
 }

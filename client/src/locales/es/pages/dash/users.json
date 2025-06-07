@@ -1,30 +1,29 @@
 {
-  "title": "Gestión de Usuarios",
-  "description": "Administra usuarios y roles dentro del sistema.",
-  "totals": "Usuarios totales",
-  "active": "Usuarios activos",
-  "inactive": "Usuarios inactivos",
-  "name": "Nombre",
-  "email": "Correo",
-  "type": "Tipo",
-  "status": "Estado",
-  "created": "Creado",
-  "state": "Estado del Usuario",
-  "userType": "Tipo de Usuario",
+  "page": {
+    "title": "Gestión de Usuarios",
+    "description": "Administra usuarios y roles dentro del sistema."
+  },
+  "metrics": {
+    "totals": "Usuarios totales",
+    "active": "Usuarios activos",
+    "inactive": "Usuarios inactivos"
+  },
+  "table": {
+    "name": "Nombre",
+    "email": "Correo",
+    "userType": "Tipo de Usuario",
+    "lastSeen": "Último acceso",
+    "neverLogged": "Nunca ha accedido",
+    "createdBy": "Creado por",
+    "actions": "Acciones"
+  },
   "types": {
     "adminUser": "Administrador",
-    "user": "Usuario"
+    "normalUser": "Usuario Normal",
+    "managerUser": "Usuario Gestor"
   },
-  "deleted": "Eliminado",
-  "notDeleted": "Activo",
-  "states": {
-    "enabled": "Habilitado",
-    "disabled": "Deshabilitado"
-  },
-  "lastSeen": "Último acceso",
-  "neverLogged": "Nunca ha accedido",
-  "createdBy": "Creado por",
-  "actions": "Acciones",
-  "edit": "Editar",
-  "delete": "Eliminar"
+  "actions": {
+    "edit": "Editar",
+    "delete": "Eliminar"
+  }
 }
