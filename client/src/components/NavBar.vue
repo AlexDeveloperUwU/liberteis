@@ -86,11 +86,13 @@
         <Menu as="div" class="relative inline-block text-left">
           <div>
             <MenuButton
-              class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary-400 hover:border-primary-500 transition-colors flex items-center justify-center bg-white p-0">
-              <img
-                :src="getImageUrl('default', 'png')"
-                alt="User Avatar"
-                class="block w-full h-full object-cover object-center m-0 p-0" />
+              class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary-400 hover:border-primary-500 transition-colors flex items-center justify-center bg-primary-100 p-0">
+              <div class="w-full h-full flex items-center justify-center text-primary-700 font-bold k2d">
+                <template v-if="authStore.isAuthenticated">
+                  {{ getUserInitial() }}
+                </template>
+                <User v-else class="h-4 w-4 text-primary-700" />
+              </div>
             </MenuButton>
           </div>
           <transition
@@ -162,6 +164,7 @@ import {
   LogOut,
   Moon,
   Sun,
+  User,
 } from "lucide-vue-next";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
@@ -245,8 +248,15 @@ onBeforeUnmount(() => {
   window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", mainStore.applyTheme);
 });
 
-const getImageUrl = (name, ext) => {
-  return new URL(`../assets/img/${name}.${ext}`, import.meta.url).href;
+const getUserInitial = () => {
+  if (authStore.user?.name) {
+    const nameParts = authStore.user.name.split(" ").filter((part) => part.length > 0);
+    if (nameParts.length > 1) {
+      return (nameParts[0].charAt(0) + nameParts[1].charAt(0)).toUpperCase();
+    }
+    return nameParts[0].charAt(0).toUpperCase();
+  }
+  return "U";
 };
 </script>
 
