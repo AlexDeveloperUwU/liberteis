@@ -19,13 +19,15 @@
     "labels": {
       "name": "Nombre de usuario",
       "email": "Correo electrónico",
-      "userType": "Tipo de usuario"
+      "userType": "Tipo de usuario",
+      "password": "Contraseña"
     },
     "placeholders": {
       "name": "Usuario",
       "selectType": "Seleccionar tipo de usuario",
       "noRoleSelected": "Ningún rol seleccionado",
-      "noEmail": "No se proporcionó correo electrónico"
+      "noEmail": "No se proporcionó correo electrónico",
+      "password": "Dejar en blanco para mantener la contraseña actual"
     },
     "actions": {
       "submitting": "Creando...",
@@ -45,7 +47,9 @@
     "manageUsers": "Gestionar usuarios",
     "manageContent": "Gestionar contenido",
     "manageSystem": "Gestionar sistema",
-    "fullAccess": "Acceso completo al sistema"
+    "fullAccess": "Acceso completo al sistema",
+    "createdBy": "Creado por",
+    "lastAccess": "Último acceso"
   },
   "errors": {
     "nameLength": "El nombre debe tener al menos 3 caracteres",

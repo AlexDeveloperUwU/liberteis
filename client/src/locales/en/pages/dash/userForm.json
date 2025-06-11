@@ -19,13 +19,15 @@
     "labels": {
       "name": "User name",
       "email": "Email",
-      "userType": "User type"
+      "userType": "User type",
+      "password": "Password"
     },
     "placeholders": {
       "name": "User",
       "selectType": "Select user type",
       "noRoleSelected": "No role selected",
-      "noEmail": "No email provided"
+      "noEmail": "No email provided",
+      "password": "Leave blank to keep the current password"
     },
     "actions": {
       "submitting": "Creating...",
@@ -37,7 +39,9 @@
     "creationDate": "Creation date",
     "permissions": "Permissions",
     "selectRoleForPermissions": "Select a role to view its permissions",
-    "userPermissions": "User permissions"
+    "userPermissions": "User permissions",
+    "createdBy": "Created by",
+    "lastAccess": "Last access"
   },
   "permissions": {
     "viewContent": "View content",

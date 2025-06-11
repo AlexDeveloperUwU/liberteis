@@ -19,13 +19,15 @@
     "labels": {
       "name": "Nome de usuario",
       "email": "Correo electrónico",
-      "userType": "Tipo de usuario"
+      "userType": "Tipo de usuario",
+      "password": "Contrasinal"
     },
     "placeholders": {
       "name": "Usuario",
       "selectType": "Seleccionar tipo de usuario",
       "noRoleSelected": "Ningún rol seleccionado",
-      "noEmail": "Non se proporcionou correo electrónico"
+      "noEmail": "Non se proporcionou correo electrónico",
+      "password": "Deixar en branco para manter o contrasinal actual"
     },
     "actions": {
       "submitting": "Creando...",
@@ -37,7 +39,9 @@
     "creationDate": "Data de creación",
     "permissions": "Permisos",
     "selectRoleForPermissions": "Seleccione un rol para ver os seus permisos",
-    "userPermissions": "Permisos de usuario"
+    "userPermissions": "Permisos de usuario",
+    "createdBy": "Creado por",
+    "lastAccess": "Último acceso"
   },
   "permissions": {
     "viewContent": "Ver contido",
