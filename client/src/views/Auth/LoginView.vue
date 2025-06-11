@@ -2,7 +2,7 @@
   <div class="min-h-screen w-full flex items-center justify-center bg-background-200">
     <div class="w-full max-w-md px-6">
       <div
-        class="bg-background-100 p-8 shadow-md hover:shadow-xl rounded-lg border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
+        class="bg-background-100 p-8 shadow-md hover:shadow-xl rounded-lg border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
         <h1 class="text-3xl font-bold text-text-950 mb-6 k2d">
           {{ t("pages.auth.login.title") }}
         </h1>

@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper bg-background-200">
-    <NavBar v-if="currentLayout === 'dashboard' || route.path === '/'" @toggle-sidebar="toggleSidebar" :isCollapsed="isSidebarCollapsed" />
+    <NavBar @toggle-sidebar="toggleSidebar" :isCollapsed="isSidebarCollapsed" />
 
     <div v-if="currentLayout === 'dashboard'" class="dashboard-layout">
       <SideBar :isCollapsed="isSidebarCollapsed" />
@@ -20,36 +20,43 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import NavBar from "./components/NavBar.vue";
 import SideBar from "./components/SideBar.vue";
 import { useConfigStore } from "@/stores/configStore";
+import { useMainStore } from "@/stores/mainStore";
 
 const configStore = useConfigStore();
+const mainStore = useMainStore();
 const route = useRoute();
-const isSidebarCollapsed = ref(true);
+const isSidebarCollapsed = ref(mainStore.sidebarCollapsed);
 const isMobile = ref(false);
 
 const currentLayout = computed(() => {
-  return route.meta.layout || 'default';
+  return route.meta.layout || "default";
 });
 
 const contentClasses = computed(() => {
-  if (isMobile.value) return 'dashboard-content';
+  if (isMobile.value) return "dashboard-content";
 
   return isSidebarCollapsed.value
-    ? 'dashboard-content dashboard-content-collapsed'
-    : 'dashboard-content dashboard-content-expanded';
+    ? "dashboard-content dashboard-content-collapsed"
+    : "dashboard-content dashboard-content-expanded";
 });
 
 const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value;
+  mainStore.setSidebarCollapsed(isSidebarCollapsed.value);
+  onSidebarToggled();
 };
 
 const detectMobile = () => {
   isMobile.value = window.innerWidth <= 768;
-  if (isMobile.value) isSidebarCollapsed.value = true;
+  if (isMobile.value && !isSidebarCollapsed.value) {
+    isSidebarCollapsed.value = true;
+    mainStore.setSidebarCollapsed(true);
+  }
 };
 
 const onSidebarToggled = () => {
@@ -57,7 +64,18 @@ const onSidebarToggled = () => {
   window.dispatchEvent(event);
 };
 
+watch(
+  () => mainStore.sidebarCollapsed,
+  (newValue) => {
+    if (isSidebarCollapsed.value !== newValue) {
+      isSidebarCollapsed.value = newValue;
+    }
+  },
+);
+
 onMounted(async () => {
+  isSidebarCollapsed.value = mainStore.sidebarCollapsed;
+
   detectMobile();
   window.addEventListener("resize", detectMobile);
   await configStore.loadAllConfigs();

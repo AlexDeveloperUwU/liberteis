@@ -16,11 +16,12 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div
             @click="selectUserType('teacher')"
-            class="bg-background-100 p-8 rounded-lg border-[1.5px] border-background-300 hover:border-primary-300 hover:shadow-xl transition-all duration-200 cursor-pointer group"
+            class="bg-background-100 p-8 rounded-lg border-[1.5px] border-background-300 hover:border-primary-400 hover:shadow-xl transition-all duration-200 cursor-pointer group"
             :class="{ 'border-primary-500 bg-primary-50': selectedUserType === 'teacher' }">
             <div class="flex flex-col items-center text-center">
               <GraduationCap
-                class="w-16 h-16 text-primary-600 mb-6 group-hover:scale-110 transition-transform duration-200" />
+                class="w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-200"
+                :class="selectedUserType === 'teacher' ? 'text-primary-700' : 'text-primary-600'" />
               <h4 class="text-2xl font-semibold text-text-950 mb-3">{{ t("pages.other.index.teacher") }}</h4>
               <p class="text-lg text-text-700">{{ t("pages.other.index.teacherDescription") }}</p>
             </div>
@@ -28,11 +29,12 @@
 
           <div
             @click="selectUserType('student')"
-            class="bg-background-100 p-8 rounded-lg border-[1.5px] border-background-300 hover:border-primary-300 hover:shadow-xl transition-all duration-200 cursor-pointer group"
+            class="bg-background-100 p-8 rounded-lg border-[1.5px] border-background-300 hover:border-primary-400 hover:shadow-xl transition-all duration-200 cursor-pointer group"
             :class="{ 'border-primary-500 bg-primary-50': selectedUserType === 'student' }">
             <div class="flex flex-col items-center text-center">
               <BookOpen
-                class="w-16 h-16 text-primary-600 mb-6 group-hover:scale-110 transition-transform duration-200" />
+                class="w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-200"
+                :class="selectedUserType === 'student' ? 'text-primary-700' : 'text-primary-600'" />
               <h4 class="text-2xl font-semibold text-text-950 mb-3">{{ t("pages.other.index.student") }}</h4>
               <p class="text-lg text-text-700">{{ t("pages.other.index.studentDescription") }}</p>
             </div>
