@@ -14,7 +14,7 @@
       </div>
 
       <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-success-400 transition-all duration-200">
+        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <UserCheck class="w-5 h-5 text-primary-600" />
           <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.active") }}</p>
@@ -23,7 +23,7 @@
       </div>
 
       <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-accent-400 transition-all duration-200">
+        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <UserX class="w-5 h-5 text-primary-600" />
           <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.inactive") }}</p>
@@ -35,6 +35,23 @@
     <div class="gap-6 mt-6">
       <div
         class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow duration-200">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 border-b border-background-400">
+          <div class="flex items-center mb-4 sm:mb-0">
+            <div class="p-2 bg-primary-100 rounded-lg border border-primary-500 mr-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
+              <Users class="w-5 h-5 text-primary-600" />
+            </div>
+            <h2 class="text-xl font-bold text-text-900 k2d">
+              {{ t("pages.dash.users.page.title") }}
+            </h2>
+          </div>
+          <button
+            @click="$router.push({ name: 'dashUsersCreate' })"
+            class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm border transition-colors duration-150 flex items-center justify-center bg-primary-600 hover:bg-primary-700 text-white border-primary-600"
+            style="min-width: 2.5rem">
+            <UserPlus class="w-4 h-4 mr-2" />
+            {{ t("pages.dash.users.actions.add") || "Añadir usuario" }}
+          </button>
+        </div>
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-background-300">
             <thead>
@@ -111,13 +128,7 @@
                   <div class="text-sm text-text-800">{{ user.email }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div
-                    class="text-sm font-semibold"
-                    :class="{
-                      'text-primary-700': user.type === 'normalUser',
-                      'text-secondary-700': user.type === 'managerUser',
-                      'text-accent-700': user.type === 'adminUser',
-                    }">
+                  <div class="text-sm text-text-800">
                     {{ t(`pages.dash.users.types.${user.type}`) }}
                   </div>
                 </td>
@@ -150,7 +161,7 @@
                     </button>
                     <button
                       class="px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full bg-accent-100 text-accent-800 border border-accent-200 hover:bg-accent-200 transition-colors duration-150">
-                      <Trash class="w-3 h-3 text-primary-600" />
+                      <Trash class="w-3 h-3 text-red-600" />
                       {{ t("pages.dash.users.actions.delete") }}
                     </button>
                   </div>
@@ -165,7 +176,20 @@
 </template>
 
 <script setup>
-import { Users, UserCheck, UserX, Hash, User, Mail, Activity, UserCog, Settings, Pencil, Trash } from "lucide-vue-next";
+import {
+  Users,
+  UserCheck,
+  UserX,
+  Hash,
+  User,
+  Mail,
+  Activity,
+  UserCog,
+  Settings,
+  Pencil,
+  Trash,
+  UserPlus,
+} from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";

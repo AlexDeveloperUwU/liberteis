@@ -65,9 +65,33 @@
                   <Calendar class="w-5 h-5 text-primary-600 mr-3" />
                   <div>
                     <p class="text-xs text-text-600">{{ t("pages.dash.userForm.profile.creationDate") }}</p>
-                    <p class="text-text-800 font-medium">{{ currentDate }}</p>
+                    <p class="text-text-800 font-medium">
+                      {{ isEditMode && initialUserData ? formatDate(initialUserData.createdDate) : currentDate }}
+                    </p>
                   </div>
                 </div>
+                <template v-if="isEditMode && initialUserData">
+                  <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
+                    <Calendar class="w-5 h-5 text-primary-600 mr-3" />
+                    <div>
+                      <p class="text-xs text-text-600">{{ t("pages.dash.userForm.profile.lastAccess") }}</p>
+                      <p class="text-text-800 font-medium">
+                        {{
+                          initialUserData.lastLogin
+                            ? formatDate(initialUserData.lastLogin)
+                            : t("pages.dash.userForm.profile.neverLoggedIn") || "Nunca"
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
+                    <Mail class="w-5 h-5 text-primary-600 mr-3" />
+                    <div>
+                      <p class="text-xs text-text-600">{{ t("pages.dash.userForm.profile.createdBy") }}</p>
+                      <p class="text-text-800 font-medium">{{ initialUserData.createdBy }}</p>
+                    </div>
+                  </div>
+                </template>
 
                 <div
                   v-if="formData.type"
@@ -149,7 +173,7 @@
                   </div>
                 </div>
 
-                <div>
+                <div class="mb-4">
                   <label class="block text-text-700 text-sm font-medium mb-2" for="email">
                     {{ t("pages.dash.userForm.form.labels.email") }}
                   </label>
@@ -173,6 +197,34 @@
                       <XCircle
                         v-else-if="formData.email || touchedFields.email"
                         class="w-5 h-5 text-accent-500 animate-fadeIn" />
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="isEditMode" class="mb-4">
+                  <label class="block text-text-700 text-sm font-medium mb-2" for="password">
+                    {{ t("pages.dash.userForm.form.labels.password") || "Contraseña" }}
+                  </label>
+                  <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Shield
+                        class="w-5 h-5 text-primary-600 group-hover:text-primary-600 transition-colors duration-200" />
+                    </div>
+                    <input
+                      v-model="formData.password"
+                      id="password"
+                      type="password"
+                      autocomplete="new-password"
+                      class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
+                      :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.password }"
+                      :placeholder="
+                        t('pages.dash.userForm.form.placeholders.password') || 'Dejar vacío para no cambiar'
+                      " />
+                    <div class="absolute inset-y-0 right-3 flex items-center">
+                      <CheckCircle2
+                        v-if="formData.password && formData.password.length >= 6"
+                        class="w-5 h-5 text-primary-500 animate-fadeIn" />
+                      <XCircle v-else-if="formData.password" class="w-5 h-5 text-accent-500 animate-fadeIn" />
                     </div>
                   </div>
                 </div>
@@ -362,12 +414,60 @@ const formData = reactive({
   name: "",
   email: "",
   type: "",
+  password: "", // Añadido para edición
 });
+
+const validateName = (value) => {
+  if (!value || value.trim().length < 3) {
+    errors.name = t("pages.dash.userForm.errors.nameLength");
+    return false;
+  }
+  errors.name = "";
+  return true;
+};
+
+const validateEmail = (value) => {
+  if (!value) {
+    errors.email = t("pages.dash.userForm.errors.emailRequired");
+    return false;
+  }
+  if (!isValidEmail(value)) {
+    errors.email = t("pages.dash.userForm.errors.emailInvalid");
+    return false;
+  }
+  errors.email = "";
+  return true;
+};
+
+const validateType = (value) => {
+  if (!value) {
+    errors.type = t("pages.dash.userForm.errors.typeRequired");
+    return false;
+  }
+  errors.type = "";
+  return true;
+};
+
+// Opcional: Validación de contraseña solo si se escribe algo
+const validatePassword = (value) => {
+  if (!value) {
+    errors.password = "";
+    return true;
+  }
+  if (value.length < 6) {
+    errors.password =
+      t("pages.dash.userForm.errors.passwordLength") || "La contraseña debe tener al menos 6 caracteres.";
+    return false;
+  }
+  errors.password = "";
+  return true;
+};
 
 const errors = reactive({
   name: "",
   email: "",
   type: "",
+  password: "",
 });
 
 const touchedFields = reactive({
@@ -422,39 +522,13 @@ const getInitials = (name) => {
   return nameParts[0].charAt(0).toUpperCase();
 };
 
-const validateName = (value) => {
-  if (!value || value.trim().length < 3) {
-    errors.name = t("pages.dash.userForm.errors.nameLength");
-    return false;
-  }
-  errors.name = "";
-  return true;
-};
-
-const validateEmail = (value) => {
-  if (!value) {
-    errors.email = t("pages.dash.userForm.errors.emailRequired");
-    return false;
-  }
-  if (!isValidEmail(value)) {
-    errors.email = t("pages.dash.userForm.errors.emailInvalid");
-    return false;
-  }
-  errors.email = "";
-  return true;
-};
-
-const validateType = (value) => {
-  if (!value) {
-    errors.type = t("pages.dash.userForm.errors.typeRequired");
-    return false;
-  }
-  errors.type = "";
-  return true;
-};
-
 const isFormValid = computed(() => {
-  return validateName(formData.name) && validateEmail(formData.email) && validateType(formData.type);
+  return (
+    validateName(formData.name) &&
+    validateEmail(formData.email) &&
+    validateType(formData.type) &&
+    validatePassword(formData.password)
+  );
 });
 
 watch(
@@ -486,14 +560,15 @@ watch(
 
 const validateForm = () => {
   let isValid = true;
-
   errors.name = "";
   errors.email = "";
   errors.type = "";
+  errors.password = "";
 
   isValid = validateName(formData.name) && isValid;
   isValid = validateEmail(formData.email) && isValid;
   isValid = validateType(formData.type) && isValid;
+  isValid = validatePassword(formData.password) && isValid;
 
   return isValid;
 };
@@ -512,11 +587,14 @@ const handleSubmit = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     if (isEditMode.value) {
-      console.log("Usuario simulado actualizado:", {
+      // Solo incluir password si se ha escrito algo
+      const userUpdate = {
         id: userId.value,
         ...formData,
         updatedAt: new Date().toISOString(),
-      });
+      };
+      if (!formData.password) delete userUpdate.password;
+      console.log("Usuario simulado actualizado:", userUpdate);
       alert(t("pages.dash.userForm.notifications.updateSuccess"));
     } else {
       console.log("Usuario simulado creado:", {
@@ -538,6 +616,14 @@ const handleSubmit = async () => {
     isSubmitting.value = false;
   }
 };
+
+// Añadir función para formatear fechas
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+  return d.toLocaleString();
+}
 </script>
 
 <style scoped>

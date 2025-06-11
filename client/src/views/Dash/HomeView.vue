@@ -47,9 +47,9 @@
           <div class="custom-calendar">
             <!-- Cabecera del Calendario -->
             <div
-              class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 border-b border-background-200">
+              class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 border-b border-background-400">
               <div class="flex items-center mb-4 sm:mb-0">
-                <div class="p-2 bg-primary-50 rounded-lg border border-primary-100 mr-3">
+                <div class="p-2 bg-primary-100 rounded-lg border border-primary-500 mr-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
                   <Calendar class="w-5 h-5 text-primary-600" />
                 </div>
                 <h2 class="text-xl font-bold text-text-900 k2d">
@@ -573,13 +573,13 @@ onUnmounted(() => {
 .today-cell {
   position: relative;
   z-index: 0;
-  box-shadow: inset 0 0 0 3px var(--primary-500) !important;
+  box-shadow: inset 0 0 0 1px var(--primary-500) !important;
   border-color: var(--primary-600) !important;
 }
 
 .dark .today-cell {
   background-color: var(--primary-500/30) !important;
-  box-shadow: inset 0 0 0 3px var(--primary-400) !important;
+  box-shadow: inset 0 0 0 1px var(--primary-400) !important;
 }
 
 .weekend {
