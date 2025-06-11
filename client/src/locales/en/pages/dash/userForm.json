@@ -1,13 +1,13 @@
 {
   "common": {
-    "create": "Create User",
-    "edit": "Edit User",
-    "update": "Update User",
+    "create": "Create user",
+    "edit": "Edit user",
+    "update": "Update user",
     "cancel": "Cancel"
   },
   "page": {
-    "createTitle": "New User",
-    "editTitle": "Edit User",
+    "createTitle": "New user",
+    "editTitle": "Edit user",
     "createDescription": "Add a new user to the system with specific permissions",
     "editDescription": "Modify existing user information and permissions"
   },
