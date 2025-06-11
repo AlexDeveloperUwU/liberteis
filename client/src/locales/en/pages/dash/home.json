@@ -8,5 +8,8 @@
     "toBeDone": "Pending events",
     "done": "Finished events",
     "upcoming": "Upcoming event"
+  },
+  "calendar": {
+    "today": "Today"
   }
 }

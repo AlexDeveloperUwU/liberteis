@@ -1,0 +1,37 @@
+{
+  "weekdays": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "months": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  },
+  "time": {
+    "am": "AM",
+    "pm": "PM",
+    "hour": "Hour",
+    "minute": "Minute",
+    "second": "Second"
+  },
+  "date": {
+    "day": "Day",
+    "month": "Month",
+    "year": "Year"
+  }
+}
