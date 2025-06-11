@@ -1,13 +1,13 @@
 {
   "common": {
-    "create": "Crear Usuario",
-    "edit": "Editar Usuario",
-    "update": "Actualizar Usuario",
+    "create": "Crear usuario",
+    "edit": "Editar usuario",
+    "update": "Actualizar usuario",
     "cancel": "Cancelar"
   },
   "page": {
-    "createTitle": "Novo Usuario",
-    "editTitle": "Editar Usuario",
+    "createTitle": "Novo usuario",
+    "editTitle": "Editar usuario",
     "createDescription": "Engadir un novo usuario ao sistema con permisos específicos",
     "editDescription": "Modificar información e permisos dun usuario existente"
   },

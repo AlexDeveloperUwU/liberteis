@@ -1,6 +1,6 @@
 {
   "page": {
-    "title": "User Management",
+    "title": "User management",
     "description": "Manage users and roles within the system."
   },
   "metrics": {
@@ -11,7 +11,7 @@
   "table": {
     "name": "Name",
     "email": "Email",
-    "userType": "User Type",
+    "userType": "User type",
     "lastSeen": "Last seen",
     "neverLogged": "Never logged in",
     "createdBy": "Created by",
@@ -19,11 +19,12 @@
   },
   "types": {
     "adminUser": "Administrator",
-    "normalUser": "Normal User",
-    "managerUser": "Manager User"
+    "normalUser": "Normal user",
+    "managerUser": "Manager user"
   },
   "actions": {
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "add": "Add user"
   }
 }

@@ -1,6 +1,6 @@
 {
   "page": {
-    "title": "Gestión de Usuarios",
+    "title": "Gestión de usuarios",
     "description": "Administra usuarios y roles dentro del sistema."
   },
   "metrics": {
@@ -11,7 +11,7 @@
   "table": {
     "name": "Nombre",
     "email": "Correo",
-    "userType": "Tipo de Usuario",
+    "userType": "Tipo de usuario",
     "lastSeen": "Último acceso",
     "neverLogged": "Nunca ha accedido",
     "createdBy": "Creado por",
@@ -19,11 +19,12 @@
   },
   "types": {
     "adminUser": "Administrador",
-    "normalUser": "Usuario Normal",
-    "managerUser": "Usuario Gestor"
+    "normalUser": "Usuario normal",
+    "managerUser": "Usuario gestor"
   },
   "actions": {
     "edit": "Editar",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "add": "Añadir usuario"
   }
 }

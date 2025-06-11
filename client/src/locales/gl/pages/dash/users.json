@@ -11,7 +11,7 @@
   "table": {
     "name": "Nome",
     "email": "Correo",
-    "userType": "Tipo de Usuario",
+    "userType": "Tipo de usuario",
     "lastSeen": "Último acceso",
     "neverLogged": "Nunca accedeu",
     "createdBy": "Creado por",
@@ -19,11 +19,12 @@
   },
   "types": {
     "adminUser": "Administrador",
-    "normalUser": "Usuario Normal",
-    "managerUser": "Usuario Xestor"
+    "normalUser": "Usuario normal",
+    "managerUser": "Usuario xestor"
   },
   "actions": {
     "edit": "Editar",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "add": "Engadir usuario"
   }
 }
