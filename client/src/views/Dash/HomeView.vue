@@ -49,7 +49,8 @@
             <div
               class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 border-b border-background-400">
               <div class="flex items-center mb-4 sm:mb-0">
-                <div class="p-2 bg-primary-100 rounded-lg border border-primary-500 mr-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
+                <div
+                  class="p-2 bg-primary-100 rounded-lg border border-primary-500 mr-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
                   <Calendar class="w-5 h-5 text-primary-600" />
                 </div>
                 <h2 class="text-xl font-bold text-text-900 k2d">
@@ -265,7 +266,6 @@ import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useConfigStore } from "@/stores/configStore";
 import { useRoute } from "vue-router";
-import calendarize from "calendarize";
 
 const route = useRoute();
 const { t, locale } = useI18n();
@@ -339,55 +339,81 @@ const calendarData = computed(() => {
   const year = currentDate.value.getFullYear();
   const month = currentDate.value.getMonth();
 
-  const calendar = calendarize(new Date(year, month), 1);
+  const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
 
-  const processedCalendar = calendar.map((week, weekIndex) =>
-    week.map((day, dayIndex) => {
-      if (day === 0) {
-        let actualDate;
-        if (weekIndex === 0) {
-          const prevMonth = month === 0 ? 11 : month - 1;
-          const prevYear = month === 0 ? year - 1 : year;
-          const lastDayPrevMonth = new Date(prevYear, month, 0).getDate();
-          const firstDayCurrentMonth = new Date(year, month, 1).getDay() || 7;
-          const dayOfPrevMonth = lastDayPrevMonth - (firstDayCurrentMonth - dayIndex - 1);
-          actualDate = new Date(prevYear, prevMonth, dayOfPrevMonth);
-        } else {
-          const nextMonth = month === 11 ? 0 : month + 1;
-          const nextYear = month === 11 ? year + 1 : year;
-          const dayOfNextMonth = dayIndex + 1 - ((7 - new Date(year, month + 1, 0).getDay() || 7) % 7);
-          actualDate = new Date(nextYear, nextMonth, dayOfNextMonth);
-        }
+  let firstDayOfWeek = firstDayOfMonth.getDay();
+  firstDayOfWeek = firstDayOfWeek === 0 ? 7 : firstDayOfWeek;
 
-        const actualDayOfWeek = actualDate.getDay();
-        const isWeekend = actualDayOfWeek === 0 || actualDayOfWeek === 6;
+  const daysFromPrevMonth = firstDayOfWeek - 1;
 
-        return {
-          day: actualDate.getDate(),
-          date: actualDate,
+  const prevMonth = month === 0 ? 11 : month - 1;
+  const prevYear = month === 0 ? year - 1 : year;
+
+  const lastDayOfPrevMonth = new Date(prevYear, prevMonth + 1, 0).getDate();
+
+  const nextMonth = month === 11 ? 0 : month + 1;
+  const nextYear = month === 11 ? year + 1 : year;
+
+  const weeks = [];
+  let currentWeek = [];
+
+  for (let i = 0; i < daysFromPrevMonth; i++) {
+    const day = lastDayOfPrevMonth - daysFromPrevMonth + i + 1;
+    const date = new Date(prevYear, prevMonth, day);
+    const dayOfWeek = date.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+    currentWeek.push({
+      day,
+      date,
+      isCurrentMonth: false,
+      isWeekend,
+      isToday: isToday(date),
+      weekday: dayOfWeek === 0 ? 7 : dayOfWeek,
+    });
+  }
+
+  for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
+    const date = new Date(year, month, day);
+    const dayOfWeek = date.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+    currentWeek.push({
+      day,
+      date,
+      isCurrentMonth: true,
+      isWeekend,
+      isToday: isToday(date),
+      weekday: dayOfWeek === 0 ? 7 : dayOfWeek,
+    });
+
+    if (currentWeek.length === 7 || day === lastDayOfMonth.getDate()) {
+      let nextDayCounter = 1;
+
+      while (currentWeek.length < 7) {
+        const date = new Date(nextYear, nextMonth, nextDayCounter);
+        const dayOfWeek = date.getDay();
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+        currentWeek.push({
+          day: nextDayCounter,
+          date,
           isCurrentMonth: false,
-          isWeekend: isWeekend,
-          isToday: isToday(actualDate),
-          weekday: actualDayOfWeek,
-        };
+          isWeekend,
+          isToday: isToday(date),
+          weekday: dayOfWeek === 0 ? 7 : dayOfWeek,
+        });
+
+        nextDayCounter++;
       }
 
-      const date = new Date(year, month, day);
-      const dayOfWeek = date.getDay();
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      weeks.push([...currentWeek]);
+      currentWeek = [];
+    }
+  }
 
-      return {
-        day,
-        date,
-        isCurrentMonth: true,
-        isWeekend,
-        isToday: isToday(date),
-        weekday: dayOfWeek,
-      };
-    }),
-  );
-
-  return processedCalendar;
+  return weeks;
 });
 
 const groupedEvents = computed(() => {
