@@ -10,6 +10,8 @@
     "upcoming": "Próximo evento"
   },
   "calendar": {
-    "today": "Hoxe"
+    "today": "Hoxe",
+    "noEventsMonth": "Non hai eventos para este mes",
+    "tryAnotherMonth": "Tenta ver outro mes"
   }
 }
