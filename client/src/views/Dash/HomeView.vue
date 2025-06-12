@@ -68,7 +68,7 @@
                     'h-10 px-4 rounded-lg text-sm font-medium shadow-sm border transition-colors duration-150 flex items-center justify-center',
                     isCurrentMonth()
                       ? 'bg-primary-100 text-primary-700 border-primary-200 hover:bg-primary-200'
-                      : 'bg-primary-600 hover:bg-primary-700 text-white border-primary-600',
+                      : 'bg-primary-400 hover:bg-primary-500 text-white border-primary-600',
                   ]"
                   style="min-width: 2.5rem">
                   {{ t("pages.dash.home.calendar.today") }}
