@@ -39,7 +39,10 @@
     "creationDate": "Fecha de creación",
     "permissions": "Permisos",
     "selectRoleForPermissions": "Seleccione un rol para ver sus permisos",
-    "userPermissions": "Permisos de usuario"
+    "userPermissions": "Permisos de usuario",
+    "createdBy": "Creado por",
+    "lastAccess": "Último acceso",
+    "neverLoggedIn": "El usuario nunca ha iniciado sesión"
   },
   "permissions": {
     "viewContent": "Ver contenido",

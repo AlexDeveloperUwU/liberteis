@@ -41,7 +41,8 @@
     "selectRoleForPermissions": "Seleccione un rol para ver os seus permisos",
     "userPermissions": "Permisos de usuario",
     "createdBy": "Creado por",
-    "lastAccess": "Último acceso"
+    "lastAccess": "Último acceso",
+    "neverLoggedIn": "O usuario nunca iniciou sesión"
   },
   "permissions": {
     "viewContent": "Ver contido",
@@ -49,7 +50,9 @@
     "manageUsers": "Xestionar usuarios",
     "manageContent": "Xestionar contido",
     "manageSystem": "Xestionar sistema",
-    "fullAccess": "Acceso completo ao sistema"
+    "fullAccess": "Acceso completo ao sistema",
+    "createdBy": "Creado por",
+    "lastAccess": "Último acceso"
   },
   "errors": {
     "nameLength": "O nome debe ter polo menos 3 caracteres",

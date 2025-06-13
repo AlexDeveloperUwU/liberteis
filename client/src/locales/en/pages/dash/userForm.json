@@ -41,7 +41,8 @@
     "selectRoleForPermissions": "Select a role to view its permissions",
     "userPermissions": "User permissions",
     "createdBy": "Created by",
-    "lastAccess": "Last access"
+    "lastAccess": "Last access",
+    "neverLoggedIn": "User has never logged in"
   },
   "permissions": {
     "viewContent": "View content",
@@ -49,7 +50,9 @@
     "manageUsers": "Manage users",
     "manageContent": "Manage content",
     "manageSystem": "Manage system",
-    "fullAccess": "Full system access"
+    "fullAccess": "Full system access",
+    "createdBy": "Created by",
+    "lastAccess": "Last access"
   },
   "errors": {
     "nameLength": "Name must be at least 3 characters",
