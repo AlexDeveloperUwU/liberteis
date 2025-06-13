@@ -1,6 +1,7 @@
 import * as dbc from "./dbController.js";
 import * as id from "../utils/idGen.js";
 import { logger } from "../utils/logger.js";
+import ErrorManager from "../errors/errorManager.js";
 
 /**
  * Adds a space to the database.
@@ -9,17 +10,18 @@ import { logger } from "../utils/logger.js";
  */
 export async function addSpace(space) {
   if (!space) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   space.id = await id.generateId("space");
   space.deleted = false;
 
   try {
-    return await dbc.dbSaveData("spaces", space);
+    const result = await dbc.dbSaveData("spaces", space);
+    return ErrorManager.returnSuccess(201, "Space created successfully", result);
   } catch (error) {
     logger.error(`Error saving space to the database: ${error.message}`);
-    throw new Error("Error saving space to the database");
+    return ErrorManager.returnError("spaceSaveError");
   }
 }
 
@@ -31,19 +33,20 @@ export async function addSpace(space) {
  */
 export async function updateSpace(id, space) {
   if (!id || !space) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
     const existingSpace = await getSpace(id, true);
-    if (!existingSpace) {
-      return { error: true, message: "Space not found" };
+    if (!existingSpace.success) {
+      return ErrorManager.returnError("spaceNotFound");
     }
 
-    return await dbc.dbUpdateData("spaces", id, space);
+    const result = await dbc.dbUpdateData("spaces", id, space);
+    return ErrorManager.returnSuccess(200, "Space updated successfully", result);
   } catch (error) {
     logger.error(`Error updating space in the database: ${error.message}`);
-    throw new Error("Error updating space in the database");
+    return ErrorManager.returnError("spaceUpdateError");
   }
 }
 
@@ -54,15 +57,16 @@ export async function updateSpace(id, space) {
  */
 export async function changeSpaceStatus(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
     const newStatus = !(await checkSpaceStatus(id));
-    return await dbc.dbUpdateData("spaces", id, { deleted: newStatus });
+    const result = await dbc.dbUpdateData("spaces", id, { deleted: newStatus });
+    return ErrorManager.returnSuccess(200, "Space status changed successfully", result);
   } catch (error) {
     logger.error(`Error changing space status in the database: ${error.message}`);
-    throw new Error("Error changing space status in the database");
+    return ErrorManager.returnError("spaceStatusChangeError");
   }
 }
 
@@ -73,14 +77,15 @@ export async function changeSpaceStatus(id) {
  */
 export async function enableSpace(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("spaces", id, { deleted: false });
+    const result = await dbc.dbUpdateData("spaces", id, { deleted: false });
+    return ErrorManager.returnSuccess(200, "Space enabled successfully", result);
   } catch (error) {
     logger.error(`Error enabling space in the database: ${error.message}`);
-    throw new Error("Error enabling space in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -91,14 +96,15 @@ export async function enableSpace(id) {
  */
 export async function disableSpace(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("spaces", id, { deleted: true });
+    const result = await dbc.dbUpdateData("spaces", id, { deleted: true });
+    return ErrorManager.returnSuccess(200, "Space disabled successfully", result);
   } catch (error) {
     logger.error(`Error disabling space in the database: ${error.message}`);
-    throw new Error("Error disabling space in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -110,7 +116,7 @@ export async function disableSpace(id) {
  */
 export async function getSpace(id, includeInactive = false) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   let result;
@@ -127,20 +133,17 @@ export async function getSpace(id, includeInactive = false) {
         ]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Space with the required criteria not found",
-      };
+      return ErrorManager.returnError("spaceNotFound");
     }
 
-    return result[0];
+    return ErrorManager.returnSuccess(200, "Space retrieved successfully", result[0]);
   } catch (error) {
     logger.error(`Error retrieving space from the database: ${error.message}`);
-    throw new Error("Error retrieving space from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -152,7 +155,7 @@ export async function getSpace(id, includeInactive = false) {
  */
 export async function getSpaceByName(name, includeInactive = false) {
   if (!name) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   let result;
@@ -169,20 +172,17 @@ export async function getSpaceByName(name, includeInactive = false) {
         ]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Space with the required criteria not found",
-      };
+      return ErrorManager.returnError("spaceNotFound");
     }
 
-    return result[0];
+    return ErrorManager.returnSuccess(200, "Space retrieved successfully", result[0]);
   } catch (error) {
     logger.error(`Error retrieving space by name from the database: ${error.message}`);
-    throw new Error("Error retrieving space by name from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -206,20 +206,17 @@ export async function getSpaces(status = "active") {
         result = await dbc.dbGetWhere("spaces", [{ field: "deleted", operator: "=", value: true }]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Spaces with the required criteria not found",
-      };
+      return ErrorManager.returnError("spaceNotFound");
     }
 
-    return result;
+    return ErrorManager.returnSuccess(200, "Spaces retrieved successfully", result);
   } catch (error) {
     logger.error(`Error retrieving spaces from the database: ${error.message}`);
-    throw new Error("Error retrieving spaces from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -230,15 +227,18 @@ export async function getSpaces(status = "active") {
  */
 export async function checkSpaceStatus(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
     const space = await getSpace(id, true);
-    return space.deleted;
+    if (space.success === false) {
+      return false;
+    }
+    return space.data.deleted;
   } catch (error) {
     logger.error(`Error checking space status in the database: ${error.message}`);
-    throw new Error("Error checking space status in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -249,14 +249,14 @@ export async function checkSpaceStatus(id) {
  */
 export async function checkSpaceExists(name) {
   if (!name) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    const space = await getSpaceByName(name, true);
-    return space;
+    return await getSpaceByName(name, true);
   } catch (error) {
     logger.error(`Error checking space existence in the database: ${error.message}`);
-    throw new Error("Error checking space existence in the database");
+    return ErrorManager.handleError(error);
   }
 }
+

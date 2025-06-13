@@ -1,6 +1,7 @@
 import * as dbc from "./dbController.js";
 import * as id from "../utils/idGen.js";
 import { logger } from "../utils/logger.js";
+import ErrorManager from "../errors/errorManager.js";
 
 //! Basic CRUD operations
 
@@ -11,16 +12,17 @@ import { logger } from "../utils/logger.js";
  */
 export async function addEvent(event) {
   if (!event) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   event.id = await id.generateId("event");
 
   try {
-    return await dbc.dbSaveData("events", event);
+    const result = await dbc.dbSaveData("events", event);
+    return ErrorManager.returnSuccess(201, "Event created successfully", result);
   } catch (error) {
     logger.error(`Error saving event to the database: ${error.message}`);
-    throw new Error("Error saving event to the database");
+    return ErrorManager.returnError("eventSaveError");
   }
 }
 
@@ -32,14 +34,15 @@ export async function addEvent(event) {
  */
 export async function updateEvent(id, event) {
   if (!id || !event) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("events", id, event);
+    const result = await dbc.dbUpdateData("events", id, event);
+    return ErrorManager.returnSuccess(200, "Event updated successfully", result);
   } catch (error) {
     logger.error(`Error updating event in the database: ${error.message}`);
-    throw new Error("Error updating event in the database");
+    return ErrorManager.returnError("eventUpdateError");
   }
 }
 
@@ -50,15 +53,16 @@ export async function updateEvent(id, event) {
  */
 export async function changeEventStatus(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
     const newStatus = !(await checkEventStatus(id));
-    return await dbc.dbUpdateData("events", id, { deleted: newStatus });
+    const result = await dbc.dbUpdateData("events", id, { deleted: newStatus });
+    return ErrorManager.returnSuccess(200, "Event status changed successfully", result);
   } catch (error) {
     logger.error(`Error changing event status in the database: ${error.message}`);
-    throw new Error("Error changing event status in the database");
+    return ErrorManager.returnError("eventStatusChangeError");
   }
 }
 
@@ -69,14 +73,15 @@ export async function changeEventStatus(id) {
  */
 export async function enableEvent(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("events", id, { deleted: false });
+    const result = await dbc.dbUpdateData("events", id, { deleted: false });
+    return ErrorManager.returnSuccess(200, "Event enabled successfully", result);
   } catch (error) {
     logger.error(`Error enabling event in the database: ${error.message}`);
-    throw new Error("Error enabling event in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -87,14 +92,15 @@ export async function enableEvent(id) {
  */
 export async function disableEvent(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("events", id, { deleted: true });
+    const result = await dbc.dbUpdateData("events", id, { deleted: true });
+    return ErrorManager.returnSuccess(200, "Event disabled successfully", result);
   } catch (error) {
     logger.error(`Error disabling event in the database: ${error.message}`);
-    throw new Error("Error disabling event in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -108,7 +114,7 @@ export async function disableEvent(id) {
  */
 export async function getEvent(id, includeInactive = false) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   let result;
@@ -125,20 +131,17 @@ export async function getEvent(id, includeInactive = false) {
         ]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Event with the required criteria not found",
-      };
+      return ErrorManager.returnError("eventNotFound");
     }
 
-    return result[0];
+    return ErrorManager.returnSuccess(200, "Event retrieved successfully", result[0]);
   } catch (error) {
     logger.error(`Error getting event from the database: ${error.message}`);
-    throw new Error("Error getting event from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -150,7 +153,7 @@ export async function getEvent(id, includeInactive = false) {
  */
 export async function getEventByTitle(title, includeInactive = false) {
   if (!title) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   let result;
@@ -167,20 +170,17 @@ export async function getEventByTitle(title, includeInactive = false) {
         ]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Event with the required criteria not found",
-      };
+      return ErrorManager.returnError("eventNotFound");
     }
 
-    return result[0];
+    return ErrorManager.returnSuccess(200, "Event retrieved successfully", result[0]);
   } catch (error) {
     logger.error(`Error getting event by title from the database: ${error.message}`);
-    throw new Error("Error getting event by title from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -204,20 +204,17 @@ export async function getEvents(status = "active") {
         result = await dbc.dbGetWhere("events", [{ field: "deleted", operator: "=", value: true }]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Events with the required criteria not found",
-      };
+      return ErrorManager.returnError("eventNotFound");
     }
 
-    return result;
+    return ErrorManager.returnSuccess(200, "Events retrieved successfully", result);
   } catch (error) {
     logger.error(`Error getting events from the database: ${error.message}`);
-    throw new Error("Error getting events from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -228,15 +225,18 @@ export async function getEvents(status = "active") {
  */
 export async function checkEventStatus(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
     const result = await getEvent(id, true);
-    return result.deleted;
+    if (result.success === false) {
+      return false;
+    }
+    return result.data.deleted;
   } catch (error) {
     logger.error(`Error checking event status in the database: ${error.message}`);
-    throw new Error("Error checking event status in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -247,12 +247,12 @@ export async function checkEventStatus(id) {
  */
 export async function checkEventExists(title) {
   if (!title) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    await getEventByTitle(title, true);
-    return true;
+    const result = await getEventByTitle(title, true);
+    return result.success;
   } catch (error) {
     logger.error(`Error checking event existence in the database: ${error.message}`);
     return false;

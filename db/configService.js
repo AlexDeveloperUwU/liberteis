@@ -1,5 +1,6 @@
 import * as dbc from "./dbController.js";
 import { logger } from "../utils/logger.js";
+import ErrorManager from "../errors/errorManager.js";
 
 /**
  * Adds a configuration to the database.
@@ -8,15 +9,16 @@ import { logger } from "../utils/logger.js";
  * @returns {Promise<object>} The result of the operation or an error object.
  */
 export async function setConfig(key, value) {
-  if (!key || !value) {
-    return { error: true, message: "Invalid parameters" };
+  if (!key || value === undefined) {
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbSaveData("config", { id: key, value: value });
+    const result = await dbc.dbSaveData("config", { id: key, value: value });
+    return ErrorManager.returnSuccess(201, "Configuration created successfully", result);
   } catch (error) {
     logger.error(`Error saving config to the database: ${error.message}`);
-    throw new Error("Error saving config to the database");
+    return ErrorManager.returnError("configSaveError");
   }
 }
 
@@ -27,15 +29,16 @@ export async function setConfig(key, value) {
  * @returns {Promise<object>} The result of the operation or an error object.
  */
 export async function updateConfig(key, value) {
-  if (!key || !value) {
-    return { error: true, message: "Invalid parameters" };
+  if (!key || value === undefined) {
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("config", key, { value: value });
+    const result = await dbc.dbUpdateData("config", key, { value: value });
+    return ErrorManager.returnSuccess(200, "Configuration updated successfully", result);
   } catch (error) {
     logger.error(`Error updating config in the database: ${error.message}`);
-    throw new Error("Error updating config in the database");
+    return ErrorManager.returnError("configUpdateError");
   }
 }
 
@@ -46,14 +49,15 @@ export async function updateConfig(key, value) {
  */
 export async function deleteConfig(key) {
   if (!key) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbDeleteData("config", key);
+    const result = await dbc.dbDeleteData("config", key);
+    return ErrorManager.returnSuccess(200, "Configuration deleted successfully", result);
   } catch (error) {
     logger.error(`Error deleting config from the database: ${error.message}`);
-    throw new Error("Error deleting config from the database");
+    return ErrorManager.returnError("configDeleteError");
   }
 }
 
@@ -64,15 +68,18 @@ export async function deleteConfig(key) {
  */
 export async function getConfig(key) {
   if (!key) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
     const result = await dbc.dbGetOne("config", key);
-    return result[0];
+    if (result.length === 0) {
+      return ErrorManager.returnError("configNotFound");
+    }
+    return ErrorManager.returnSuccess(200, "Configuration retrieved successfully", result[0]);
   } catch (error) {
     logger.error(`Error retrieving config from the database: ${error.message}`);
-    throw new Error("Error retrieving config from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -82,10 +89,14 @@ export async function getConfig(key) {
  */
 export async function getConfigs() {
   try {
-    return await dbc.dbGetAll("config");
+    const result = await dbc.dbGetAll("config");
+    if (result.length === 0) {
+      return ErrorManager.returnError("configNotFound");
+    }
+    return ErrorManager.returnSuccess(200, "Configurations retrieved successfully", result);
   } catch (error) {
     logger.error(`Error retrieving configs from the database: ${error.message}`);
-    throw new Error("Error retrieving configs from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -96,13 +107,14 @@ export async function getConfigs() {
  */
 export async function checkConfigExistence(key) {
   if (!key) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbCheckExistence("config", key);
+    const exists = await dbc.dbCheckExistence("config", key);
+    return ErrorManager.returnSuccess(200, "Configuration existence checked", { exists });
   } catch (error) {
     logger.error(`Error checking config in the database: ${error.message}`);
-    throw new Error("Error checking config in the database");
+    return ErrorManager.handleError(error);
   }
 }

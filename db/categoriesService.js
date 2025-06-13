@@ -1,6 +1,7 @@
 import * as dbc from "./dbController.js";
 import * as id from "../utils/idGen.js";
 import { logger } from "../utils/logger.js";
+import ErrorManager from "../errors/errorManager.js";
 
 /**
  * Adds a category to the database.
@@ -12,22 +13,22 @@ import { logger } from "../utils/logger.js";
  */
 export async function addCategory(category) {
   if (!category) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   category.id = await id.generateId("category");
 
-  // Validate and process spaces
   if (!Array.isArray(category.spaces)) {
     category.spaces = [];
   }
   category.spaces = JSON.stringify(category.spaces);
 
   try {
-    return await dbc.dbSaveData("categories", category);
+    const result = await dbc.dbSaveData("categories", category);
+    return ErrorManager.returnSuccess(201, "Category created successfully", result);
   } catch (error) {
     logger.error(`Error saving category to the database: ${error.message}`);
-    throw new Error("Error saving category to the database");
+    return ErrorManager.returnError("categorySaveError");
   }
 }
 
@@ -40,7 +41,7 @@ export async function addCategory(category) {
  */
 export async function updateCategory(id, category) {
   if (!id || !category) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   if (category.spaces) {
@@ -51,10 +52,11 @@ export async function updateCategory(id, category) {
   }
 
   try {
-    return await dbc.dbUpdateData("categories", id, category);
+    const result = await dbc.dbUpdateData("categories", id, category);
+    return ErrorManager.returnSuccess(200, "Category updated successfully", result);
   } catch (error) {
     logger.error(`Error updating category in the database: ${error.message}`);
-    throw new Error("Error updating category in the database");
+    return ErrorManager.returnError("categoryUpdateError");
   }
 }
 
@@ -66,15 +68,16 @@ export async function updateCategory(id, category) {
  */
 export async function changeCategoryStatus(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
     const newStatus = !(await checkCategoryStatus(id));
-    return await dbc.dbUpdateData("categories", id, { deleted: newStatus });
+    const result = await dbc.dbUpdateData("categories", id, { deleted: newStatus });
+    return ErrorManager.returnSuccess(200, "Category status changed successfully", result);
   } catch (error) {
     logger.error(`Error changing category status in the database: ${error.message}`);
-    throw new Error("Error changing category status in the database");
+    return ErrorManager.returnError("categoryStatusChangeError");
   }
 }
 
@@ -86,14 +89,15 @@ export async function changeCategoryStatus(id) {
  */
 export async function enableCategory(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("categories", id, { deleted: false });
+    const result = await dbc.dbUpdateData("categories", id, { deleted: false });
+    return ErrorManager.returnSuccess(200, "Category enabled successfully", result);
   } catch (error) {
     logger.error(`Error enabling category in the database: ${error.message}`);
-    throw new Error("Error enabling category in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -105,14 +109,15 @@ export async function enableCategory(id) {
  */
 export async function disableCategory(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("categories", id, { deleted: true });
+    const result = await dbc.dbUpdateData("categories", id, { deleted: true });
+    return ErrorManager.returnSuccess(200, "Category disabled successfully", result);
   } catch (error) {
     logger.error(`Error disabling category in the database: ${error.message}`);
-    throw new Error("Error disabling category in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -125,7 +130,7 @@ export async function disableCategory(id) {
  */
 export async function getCategory(id, includeInactive = false) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   let result;
@@ -142,29 +147,35 @@ export async function getCategory(id, includeInactive = false) {
         ]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Category with the required criteria not found",
-      };
+      return ErrorManager.returnError("categoryNotFound");
     }
 
-    if (result[0].spaces) {
-      if (!Array.isArray(result[0].spaces)) {
-        logger.warn(`Spaces is not an array for category ${id}, setting to empty array`);
-        result[0].spaces = [];
+    // Process spaces
+    let category = result[0];
+    
+    if (category.spaces) {
+      try {
+        category.spaces = JSON.parse(category.spaces);
+        if (!Array.isArray(category.spaces)) {
+          logger.warn(`Spaces is not an array for category ${id}, setting to empty array`);
+          category.spaces = [];
+        }
+      } catch (e) {
+        logger.warn(`Could not parse spaces for category ${id}: ${e.message}`);
+        category.spaces = [];
       }
     } else {
-      result[0].spaces = [];
+      category.spaces = [];
     }
 
-    return result[0];
+    return ErrorManager.returnSuccess(200, "Category retrieved successfully", category);
   } catch (error) {
     logger.error(`Error retrieving category from the database: ${error.message}`);
-    throw new Error("Error retrieving category from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -177,7 +188,7 @@ export async function getCategory(id, includeInactive = false) {
  */
 export async function getCategoryByName(name, includeInactive = false) {
   if (!name) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   let result;
@@ -194,29 +205,35 @@ export async function getCategoryByName(name, includeInactive = false) {
         ]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Category with the required criteria not found",
-      };
+      return ErrorManager.returnError("categoryNotFound");
     }
 
-    if (result[0].spaces) {
-      if (!Array.isArray(result[0].spaces)) {
-        logger.warn(`Spaces is not an array for category ${result[0].id}, setting to empty array`);
-        result[0].spaces = [];
+    // Process spaces
+    let category = result[0];
+    
+    if (category.spaces) {
+      try {
+        category.spaces = JSON.parse(category.spaces);
+        if (!Array.isArray(category.spaces)) {
+          logger.warn(`Spaces is not an array for category ${category.id}, setting to empty array`);
+          category.spaces = [];
+        }
+      } catch (e) {
+        logger.warn(`Could not parse spaces for category ${category.id}: ${e.message}`);
+        category.spaces = [];
       }
     } else {
-      result[0].spaces = [];
+      category.spaces = [];
     }
 
-    return result[0];
+    return ErrorManager.returnSuccess(200, "Category retrieved successfully", category);
   } catch (error) {
     logger.error(`Error retrieving category from the database: ${error.message}`);
-    throw new Error("Error retrieving category from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -249,20 +266,24 @@ export async function getCategories(status = "active") {
         });
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Category with the required criteria not found",
-      };
+      return ErrorManager.returnError("categoryNotFound");
     }
 
+    // Process spaces for each category
     result = result.map((category) => {
       if (category.spaces) {
-        if (!Array.isArray(category.spaces)) {
-          logger.warn(`Spaces is not an array for category ${category.id}, setting to empty array`);
+        try {
+          category.spaces = JSON.parse(category.spaces);
+          if (!Array.isArray(category.spaces)) {
+            logger.warn(`Spaces is not an array for category ${category.id}, setting to empty array`);
+            category.spaces = [];
+          }
+        } catch (e) {
+          logger.warn(`Could not parse spaces for category ${category.id}: ${e.message}`);
           category.spaces = [];
         }
       } else {
@@ -271,10 +292,10 @@ export async function getCategories(status = "active") {
       return category;
     });
 
-    return result;
+    return ErrorManager.returnSuccess(200, "Categories retrieved successfully", result);
   } catch (error) {
     logger.error(`Error retrieving categories from the database: ${error.message}`);
-    throw new Error("Error retrieving categories from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -286,15 +307,18 @@ export async function getCategories(status = "active") {
  */
 export async function checkCategoryStatus(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    const category = await getCategory(id);
-    return category.deleted;
+    const category = await getCategory(id, true);
+    if (category.success === false) {
+      return false;
+    }
+    return category.data.deleted;
   } catch (error) {
     logger.error(`Error checking category status in the database: ${error.message}`);
-    throw new Error("Error checking category status in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -306,14 +330,14 @@ export async function checkCategoryStatus(id) {
  */
 export async function checkCategoryExists(title) {
   if (!title) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    await getCategoryByName(title, true);
-    return true;
+    const result = await getCategoryByName(title, true);
+    return result.success;
   } catch (error) {
     logger.error(`Error checking if category exists in the database: ${error.message}`);
-    throw new Error("Error checking if category exists in the database");
+    return ErrorManager.handleError(error);
   }
 }

@@ -1,6 +1,7 @@
 import * as dbc from "./dbController.js";
 import * as id from "../utils/idGen.js";
 import { logger } from "../utils/logger.js";
+import ErrorManager from "../errors/errorManager.js";
 
 //! Basic CRUD operations
 
@@ -11,7 +12,7 @@ import { logger } from "../utils/logger.js";
  */
 export async function addBooking(booking) {
   if (!booking) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   booking.id = await id.generateId("booking");
@@ -19,10 +20,11 @@ export async function addBooking(booking) {
   booking.deleted = false;
 
   try {
-    return await dbc.dbSaveData("bookings", booking);
+    const result = await dbc.dbSaveData("bookings", booking);
+    return ErrorManager.returnSuccess(201, "Booking created successfully", result);
   } catch (error) {
     logger.error(`Error saving booking to the database: ${error.message}`);
-    throw new Error("Error saving booking to the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -34,14 +36,15 @@ export async function addBooking(booking) {
  */
 export async function updateBooking(id, booking) {
   if (!id || !booking) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("bookings", id, booking);
+    const result = await dbc.dbUpdateData("bookings", id, booking);
+    return ErrorManager.returnSuccess(200, "Booking updated successfully", result);
   } catch (error) {
     logger.error(`Error updating booking in the database: ${error.message}`);
-    throw new Error("Error updating booking in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -52,15 +55,16 @@ export async function updateBooking(id, booking) {
  */
 export async function changeBookingStatus(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
     const newStatus = !(await checkBookingStatus(id));
-    return await dbc.dbUpdateData("bookings", id, { deleted: newStatus });
+    const result = await dbc.dbUpdateData("bookings", id, { deleted: newStatus });
+    return ErrorManager.returnSuccess(200, "Booking status changed successfully", result);
   } catch (error) {
     logger.error(`Error changing booking status in the database: ${error.message}`);
-    throw new Error("Error changing booking status in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -71,14 +75,15 @@ export async function changeBookingStatus(id) {
  */
 export async function enableBooking(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("bookings", id, { deleted: false });
+    const result = await dbc.dbUpdateData("bookings", id, { deleted: false });
+    return ErrorManager.returnSuccess(200, "Booking enabled successfully", result);
   } catch (error) {
     logger.error(`Error enabling booking in the database: ${error.message}`);
-    throw new Error("Error enabling booking in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -89,14 +94,15 @@ export async function enableBooking(id) {
  */
 export async function disableBooking(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    return await dbc.dbUpdateData("bookings", id, { deleted: true });
+    const result = await dbc.dbUpdateData("bookings", id, { deleted: true });
+    return ErrorManager.returnSuccess(200, "Booking disabled successfully", result);
   } catch (error) {
     logger.error(`Error disabling booking in the database: ${error.message}`);
-    throw new Error("Error disabling booking in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -110,7 +116,7 @@ export async function disableBooking(id) {
  */
 export async function getBooking(id, includeInactive = false) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   let result;
@@ -127,20 +133,17 @@ export async function getBooking(id, includeInactive = false) {
         ]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Booking with the required criteria not found",
-      };
+      return ErrorManager.returnError("bookingNotFound");
     }
 
-    return result[0];
+    return ErrorManager.returnSuccess(200, "Booking retrieved successfully", result[0]);
   } catch (error) {
     logger.error(`Error retrieving booking from the database: ${error.message}`);
-    throw new Error("Error retrieving booking from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -153,7 +156,7 @@ export async function getBooking(id, includeInactive = false) {
  */
 export async function getBookingByEventAndDate(eventId, bookingDate, includeInactive = false) {
   if (!eventId || !bookingDate) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   let result;
@@ -174,20 +177,17 @@ export async function getBookingByEventAndDate(eventId, bookingDate, includeInac
         ]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Booking with the required criteria not found",
-      };
+      return ErrorManager.returnError("bookingNotFound");
     }
 
-    return result[0];
+    return ErrorManager.returnSuccess(200, "Booking retrieved successfully", result[0]);
   } catch (error) {
     logger.error(`Error retrieving booking by event and date from the database: ${error.message}`);
-    throw new Error("Error retrieving booking by event and date from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -211,20 +211,17 @@ export async function getBookings(status = "active") {
         result = await dbc.dbGetWhere("bookings", [{ field: "deleted", operator: "=", value: true }]);
         break;
       default:
-        return { error: true, message: "Invalid parameters" };
+        return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return {
-        error: true,
-        message: "Booking with the required criteria not found",
-      };
+      return ErrorManager.returnError("bookingNotFound");
     }
 
-    return result;
+    return ErrorManager.returnSuccess(200, "Bookings retrieved successfully", result);
   } catch (error) {
     logger.error(`Error retrieving bookings from the database: ${error.message}`);
-    throw new Error("Error retrieving bookings from the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -235,7 +232,7 @@ export async function getBookings(status = "active") {
  */
 export async function checkBookingStatus(id) {
   if (!id) {
-    return { error: true, message: "Invalid parameters" };
+    return ErrorManager.returnError("invalidParameters");
   }
 
   try {
@@ -243,7 +240,7 @@ export async function checkBookingStatus(id) {
     return result.deleted;
   } catch (error) {
     logger.error(`Error checking booking status in the database: ${error.message}`);
-    throw new Error("Error checking booking status in the database");
+    return ErrorManager.handleError(error);
   }
 }
 
@@ -259,20 +256,25 @@ export async function getBookingsCount(userId = null, type = null) {
     const baseFilters = [{ field: "deleted", operator: "=", value: false }];
     if (userId) baseFilters.push({ field: "bookedBy", operator: "=", value: userId });
 
+    let resultData;
+    
     switch (type) {
       case "all": {
         const total = await dbc.dbGetWhere("bookings", baseFilters);
-        return { totales: total.length };
+        resultData = { totales: total.length };
+        break;
       }
       case "done": {
         const doneFilters = [...baseFilters, { field: "bookingDate", operator: "<", value: currentDate }];
         const hechos = await dbc.dbGetWhere("bookings", doneFilters);
-        return { hechos: hechos.length };
+        resultData = { hechos: hechos.length };
+        break;
       }
       case "pending": {
         const pendingFilters = [...baseFilters, { field: "bookingDate", operator: ">", value: currentDate }];
         const porHacer = await dbc.dbGetWhere("bookings", pendingFilters);
-        return { porHacer: porHacer.length };
+        resultData = { porHacer: porHacer.length };
+        break;
       }
       case null: {
         const total = await dbc.dbGetWhere("bookings", baseFilters);
@@ -280,17 +282,20 @@ export async function getBookingsCount(userId = null, type = null) {
         const hechos = await dbc.dbGetWhere("bookings", doneFilters);
         const pendingFilters = [...baseFilters, { field: "bookingDate", operator: ">", value: currentDate }];
         const porHacer = await dbc.dbGetWhere("bookings", pendingFilters);
-        return {
+        resultData = {
           totales: total.length,
           hechos: hechos.length,
           porHacer: porHacer.length,
         };
+        break;
       }
       default:
-        return { error: true, message: "Invalid type parameter" };
+        return ErrorManager.returnError("invalidBookingType");
     }
+    
+    return ErrorManager.returnSuccess(200, "Bookings summary retrieved successfully", resultData);
   } catch (error) {
     logger.error(`Error retrieving bookings summary: ${error.message}`);
-    throw new Error("Error retrieving bookings summary");
+    return ErrorManager.handleError(error);
   }
 }
