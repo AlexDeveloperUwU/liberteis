@@ -45,8 +45,8 @@
             </h2>
           </div>
           <button
-            @click="$router.push({ name: 'dashUsersCreate' })"
-            class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm border transition-colors duration-150 flex items-center justify-center bg-primary-600 hover:bg-primary-700 text-white border-primary-600"
+            @click="$router.push({ name: 'dashUsersNew' })"
+            class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm border transition-colors duration-150 flex items-center justify-center bg-primary-600 hover:bg-primary-700 text-white border-primary-600 cursor-pointer"
             style="min-width: 2.5rem">
             <UserPlus class="w-4 h-4 mr-2" />
             {{ t("pages.dash.users.actions.add") || "Añadir usuario" }}
@@ -155,12 +155,12 @@
                   <div class="flex items-center gap-2">
                     <button
                       @click="$router.push({ name: 'dashUsersEdit', params: { id: user.id } })"
-                      class="px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150">
+                      class="px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer">
                       <Pencil class="w-3 h-3 text-primary-600" />
                       {{ t("pages.dash.users.actions.edit") }}
                     </button>
                     <button
-                      class="px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full bg-accent-100 text-accent-800 border border-accent-200 hover:bg-accent-200 transition-colors duration-150">
+                      class="px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full bg-accent-100 text-accent-800 border border-accent-200 hover:bg-accent-200 transition-colors duration-150 cursor-pointer">
                       <Trash class="w-3 h-3 text-red-600" />
                       {{ t("pages.dash.users.actions.delete") }}
                     </button>

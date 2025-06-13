@@ -60,13 +60,13 @@
               <div class="flex items-center space-x-2">
                 <button
                   @click="previousMonth"
-                  class="h-10 w-10 p-0 rounded-lg border transition-colors duration-150 flex items-center justify-center bg-background-200 border-primary-400 hover:border-primary-500 hover:bg-background-300 text-primary-700 shadow-sm">
+                  class="h-10 w-10 p-0 rounded-lg border transition-colors duration-150 flex items-center justify-center bg-background-200 border-primary-400 hover:border-primary-500 hover:bg-background-300 text-primary-700 shadow-sm cursor-pointer">
                   <ChevronLeft class="w-5 h-5" />
                 </button>
                 <button
                   @click="goToToday"
                   :class="[
-                    'h-10 px-4 rounded-lg text-sm font-medium shadow-sm border transition-colors duration-150 flex items-center justify-center',
+                    'h-10 px-4 rounded-lg text-sm font-medium shadow-sm border transition-colors duration-150 flex items-center justify-center cursor-pointer',
                     isCurrentMonth()
                       ? 'bg-primary-100 text-primary-700 border-primary-200 hover:bg-primary-200'
                       : 'bg-primary-400 hover:bg-primary-500 text-white border-primary-600',
@@ -76,7 +76,7 @@
                 </button>
                 <button
                   @click="nextMonth"
-                  class="h-10 w-10 p-0 rounded-lg border transition-colors duration-150 flex items-center justify-center bg-background-200 border-primary-400 hover:border-primary-500 hover:bg-background-300 text-primary-700 shadow-sm">
+                  class="h-10 w-10 p-0 rounded-lg border transition-colors duration-150 flex items-center justify-center bg-background-200 border-primary-400 hover:border-primary-500 hover:bg-background-300 text-primary-700 shadow-sm cursor-pointer">
                   <ChevronRight class="w-5 h-5" />
                 </button>
                 <div class="ml-2">

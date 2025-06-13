@@ -317,7 +317,7 @@
             <div class="flex justify-between items-center mt-6">
               <button
                 type="button"
-                class="px-4 py-2 border border-background-300 text-text-700 rounded-md hover:bg-background-200 focus:outline-none focus:ring-2 focus:ring-background-400 transition-colors duration-150 flex items-center"
+                class="px-4 py-2 border border-background-300 text-text-700 rounded-md hover:bg-background-200 focus:outline-none focus:ring-2 focus:ring-background-400 transition-colors duration-150 flex items-center cursor-pointer"
                 @click="$router.push({ name: 'dashUsers' })">
                 <X class="w-4 h-4 mr-2" />
                 {{ t("pages.dash.userForm.common.cancel") }}
@@ -325,7 +325,7 @@
 
               <button
                 type="submit"
-                class="px-5 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md flex items-center disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-background-400 disabled:hover:bg-background-400"
+                class="px-5 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md flex items-center disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-background-400 disabled:hover:bg-background-400 cursor-pointer"
                 :disabled="isSubmitting || !isFormValid">
                 <div v-if="isSubmitting" class="flex items-center">
                   <Loader2 class="w-4 h-4 mr-2 animate-spin" />
