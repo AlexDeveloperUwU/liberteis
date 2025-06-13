@@ -1,0 +1,130 @@
+{
+  "unknownError": {
+    "code": 500,
+    "message": "t.pages.other.errors.unknownError"
+  },
+  "dbDuplicateEntry": {
+    "code": 409,
+    "message": "t.pages.other.errors.dbDuplicateEntry"
+  },
+  "invalidParameters": {
+    "code": 400,
+    "message": "t.pages.other.errors.invalidParameters"
+  },
+  "bookingNotFound": {
+    "code": 404,
+    "message": "t.pages.other.errors.bookingNotFound"
+  },
+  "bookingSaveError": {
+    "code": 500,
+    "message": "t.pages.other.errors.bookingSaveError"
+  },
+  "bookingUpdateError": {
+    "code": 500,
+    "message": "t.pages.other.errors.bookingUpdateError"
+  },
+  "bookingStatusChangeError": {
+    "code": 500,
+    "message": "t.pages.other.errors.bookingStatusChangeError"
+  },
+  "bookingRetrievalError": {
+    "code": 500,
+    "message": "t.pages.other.errors.bookingRetrievalError"
+  },
+  "invalidBookingType": {
+    "code": 400,
+    "message": "t.pages.other.errors.invalidBookingType"
+  },
+  "userNotFound": {
+    "code": 404,
+    "message": "t.pages.other.errors.userNotFound"
+  },
+  "userSaveError": {
+    "code": 500,
+    "message": "t.pages.other.errors.userSaveError"
+  },
+  "userUpdateError": {
+    "code": 500,
+    "message": "t.pages.other.errors.userUpdateError"
+  },
+  "userStatusChangeError": {
+    "code": 500,
+    "message": "t.pages.other.errors.userStatusChangeError"
+  },
+  "userRetrievalError": {
+    "code": 500,
+    "message": "t.pages.other.errors.userRetrievalError"
+  },
+  "emailAlreadyExists": {
+    "code": 409,
+    "message": "t.pages.other.errors.emailAlreadyExists"
+  },
+  "spaceNotFound": {
+    "code": 404,
+    "message": "t.pages.other.errors.spaceNotFound"
+  },
+  "spaceSaveError": {
+    "code": 500,
+    "message": "t.pages.other.errors.spaceSaveError"
+  },
+  "spaceUpdateError": {
+    "code": 500,
+    "message": "t.pages.other.errors.spaceUpdateError"
+  },
+  "spaceStatusChangeError": {
+    "code": 500,
+    "message": "t.pages.other.errors.spaceStatusChangeError"
+  },
+  "eventNotFound": {
+    "code": 404,
+    "message": "t.pages.other.errors.eventNotFound"
+  },
+  "eventSaveError": {
+    "code": 500,
+    "message": "t.pages.other.errors.eventSaveError"
+  },
+  "eventUpdateError": {
+    "code": 500,
+    "message": "t.pages.other.errors.eventUpdateError"
+  },
+  "eventStatusChangeError": {
+    "code": 500,
+    "message": "t.pages.other.errors.eventStatusChangeError"
+  },
+  "configNotFound": {
+    "code": 404,
+    "message": "t.pages.other.errors.configNotFound"
+  },
+  "configSaveError": {
+    "code": 500,
+    "message": "t.pages.other.errors.configSaveError"
+  },
+  "configUpdateError": {
+    "code": 500,
+    "message": "t.pages.other.errors.configUpdateError"
+  },
+  "configDeleteError": {
+    "code": 500,
+    "message": "t.pages.other.errors.configDeleteError"
+  },
+  "categoryNotFound": {
+    "code": 404,
+    "message": "t.pages.other.errors.categoryNotFound"
+  },
+  "categorySaveError": {
+    "code": 500,
+    "message": "t.pages.other.errors.categorySaveError"
+  },
+  "categoryUpdateError": {
+    "code": 500,
+    "message": "t.pages.other.errors.categoryUpdateError"
+  },
+  "categoryStatusChangeError": {
+    "code": 500,
+    "message": "t.pages.other.errors.categoryStatusChangeError"
+  },
+  "passwordUpdateError": {
+    "code": 500,
+    "message": "t.pages.other.errors.passwordUpdateError"
+  }
+}
