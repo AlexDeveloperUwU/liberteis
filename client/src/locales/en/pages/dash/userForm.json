@@ -59,7 +59,12 @@
     "emailRequired": "Email is required",
     "emailInvalid": "Please enter a valid email",
     "typeRequired": "User type is required",
-    "emailExists": "Email already exists in the system"
+    "emailExists": "Email already exists in the system",
+    "passwordLength": "Password must be at least 6 characters long",
+    "loadingUser": "Error loading user data",
+    "noResponse": "No response from server. Please check your connection",
+    "requestSetup": "Error setting up request. Please try again",
+    "bigIntError": "Server error: Cannot process large numeric values"
   },
   "notifications": {
     "createSuccess": "User created successfully!",

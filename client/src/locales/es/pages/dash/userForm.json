@@ -59,7 +59,12 @@
     "emailRequired": "El correo electrónico es obligatorio",
     "emailInvalid": "Por favor, introduce un correo electrónico válido",
     "typeRequired": "El tipo de usuario es obligatorio",
-    "emailExists": "El correo electrónico ya existe en el sistema"
+    "emailExists": "El correo electrónico ya existe en el sistema",
+    "passwordLength": "La contraseña debe tener al menos 6 caracteres",
+    "loadingUser": "Error al cargar los datos del usuario",
+    "noResponse": "No hay respuesta del servidor. Por favor, compruebe su conexión",
+    "requestSetup": "Error al configurar la solicitud. Por favor, inténtelo de nuevo",
+    "bigIntError": "Error del servidor: No se pueden procesar valores numéricos grandes"
   },
   "notifications": {
     "createSuccess": "¡Usuario creado con éxito!",

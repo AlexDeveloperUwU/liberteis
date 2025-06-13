@@ -59,7 +59,12 @@
     "emailRequired": "O correo electrónico é obrigatorio",
     "emailInvalid": "Por favor, introduce un correo electrónico válido",
     "typeRequired": "O tipo de usuario é obrigatorio",
-    "emailExists": "O correo electrónico xa existe no sistema"
+    "emailExists": "O correo electrónico xa existe no sistema",
+    "passwordLength": "O contrasinal debe ter polo menos 6 caracteres",
+    "loadingUser": "Erro ao cargar os datos do usuario",
+    "noResponse": "Non hai resposta do servidor. Por favor, comprobe a súa conexión",
+    "requestSetup": "Erro ao configurar a solicitude. Por favor, inténteo de novo",
+    "bigIntError": "Erro do servidor: Non se poden procesar valores numéricos grandes"
   },
   "notifications": {
     "createSuccess": "Usuario creado con éxito!",
