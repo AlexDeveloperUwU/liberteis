@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "../stores/authStore";
 import { hasPermission } from "../utils/permissions";
-import axios from "axios";
+import { loadDashboardHomeData, loadUsersData, loadUserEditData } from "./fetchers";
 
 const routes = [
   {
@@ -10,6 +10,7 @@ const routes = [
     component: () => import("../views/IndexView.vue"),
     meta: { allow: "any", layout: "default" },
   },
+
   {
     path: "/auth",
     meta: { allow: "any", layout: "auth" },
@@ -28,6 +29,7 @@ const routes = [
       },
     ],
   },
+
   {
     path: "/dash",
     meta: { allow: "normalUser", layout: "dashboard" },
@@ -42,67 +44,33 @@ const routes = [
         name: "dashHome",
         component: () => import("../views/Dash/HomeView.vue"),
         meta: { allow: "normalUser", layout: "dashboard" },
-        beforeEnter: async (to) => {
-          try {
-            const metricsResponse = await axios.get("/api/bookings/count");
-
-            to.meta.initialData = {
-              metrics: metricsResponse.data.code === 200 ? metricsResponse.data.data : {},
-            };
-          } catch (error) {
-            console.error("Error fetching data:", error.message || error);
-          }
-        },
+        beforeEnter: loadDashboardHomeData,
       },
+
       {
         path: "users",
         name: "dashUsers",
         component: () => import("../views/Dash/UserTableView.vue"),
-        meta: { allow: "normalUser", layout: "dashboard" },
-        beforeEnter: async (to) => {
-          try {
-            const [metricsResponse, usersResponse] = await Promise.all([
-              axios.get("/api/users/count"),
-              axios.get("/api/users"),
-            ]);
-
-            to.meta.initialData = {
-              metrics: metricsResponse.data.code === 200 ? metricsResponse.data.data : {},
-              users: usersResponse.data.code === 200 ? usersResponse.data.data : [],
-            };
-          } catch (error) {
-            console.error("Error fetching data:", error.message || error);
-          }
-        },
+        meta: { allow: "managerUser", layout: "dashboard" },
+        beforeEnter: loadUsersData,
       },
       {
         path: "users/new",
         name: "dashUsersNew",
         component: () => import("../views/Dash/UserFormView.vue"),
-        meta: { allow: "normalUser", layout: "dashboard" },
+        meta: { allow: "managerUser", layout: "dashboard" },
       },
       {
         path: "users/edit/:id",
         name: "dashUsersEdit",
         component: () => import("../views/Dash/UserFormView.vue"),
-        meta: { allow: "normalUser", layout: "dashboard" },
+        meta: { allow: "managerUser", layout: "dashboard" },
         props: true,
-        beforeEnter: async (to) => {
-          try {
-            const userId = to.params.id;
-            const userResponse = await axios.get(`/api/users?id=${userId}`);
-
-            to.meta.initialData = {
-              user: userResponse.data.code === 200 ? userResponse.data.data : null,
-            };
-          } catch (error) {
-            console.error("Error fetching user data:", error.message || error);
-            to.meta.initialData = { user: null, error: true };
-          }
-        },
+        beforeEnter: loadUserEditData,
       },
     ],
   },
+
   {
     path: "/info",
     meta: { allow: "any", layout: "info" },
@@ -135,7 +103,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (!hasPermission(authStore.userType, requiredPermission)) {
-    return next({ name: "home" });
+    return next({ name: "index" });
   }
 
   next();
