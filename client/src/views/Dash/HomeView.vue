@@ -4,14 +4,13 @@
     <p class="text-text-800 mb-6">{{ t("pages.dash.home.page.description") }}</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-      <!-- Métricas: Unificación de colores -->
       <div
         class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <CalendarDays class="w-5 h-5 text-primary-600" />
           <p class="font-medium text-text-800">{{ t("pages.dash.home.metrics.totals") }}</p>
         </div>
-        <h2 class="text-2xl font-bold text-text-950">{{ metrics.totales }}</h2>
+        <h2 class="text-2xl font-bold text-text-950">{{ metrics.totales || 0 }}</h2>
       </div>
       <div
         class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
@@ -19,7 +18,7 @@
           <CalendarCheck2 class="w-5 h-5 text-primary-600" />
           <p class="font-medium text-text-800">{{ t("pages.dash.home.metrics.done") }}</p>
         </div>
-        <h2 class="text-2xl font-bold text-text-950">{{ metrics.hechos }}</h2>
+        <h2 class="text-2xl font-bold text-text-950">{{ metrics.hechos || 0 }}</h2>
       </div>
       <div
         class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
@@ -27,7 +26,7 @@
           <CalendarCog class="w-5 h-5 text-primary-600" />
           <p class="font-medium text-text-800">{{ t("pages.dash.home.metrics.toBeDone") }}</p>
         </div>
-        <h2 class="text-2xl font-bold text-text-950">{{ metrics.porHacer }}</h2>
+        <h2 class="text-2xl font-bold text-text-950">{{ metrics.porHacer || 0 }}</h2>
       </div>
       <div
         class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
@@ -271,8 +270,12 @@ const route = useRoute();
 const { t, locale } = useI18n();
 const configStore = useConfigStore();
 
-const initialData = route.meta.initialData || { metrics: {}, events: [] };
-const metrics = ref(initialData.metrics);
+// Obtener datos iniciales con la estructura del ErrorManager
+const initialData = route.meta.initialData || { metrics: {}, error: false, errorMessage: "" };
+const metrics = ref(initialData.metrics || {});
+const error = ref(initialData.error || false);
+const errorMessage = ref(initialData.errorMessage || "");
+
 const events = ref([
   {
     id: 1,

@@ -6,12 +6,27 @@ import axios from "axios";
 export const loadDashboardHomeData = async (to) => {
   try {
     const metricsResponse = await axios.get("/api/bookings/count");
-    to.meta.initialData = {
-      metrics: metricsResponse.data.code === 200 ? metricsResponse.data.data : {},
-    };
+
+    if (metricsResponse.data && metricsResponse.data.success) {
+      to.meta.initialData = {
+        metrics: metricsResponse.data.data || {},
+        error: false,
+      };
+    } else {
+      console.error("Error fetching dashboard metrics:", metricsResponse.data?.message || "Unknown error");
+      to.meta.initialData = {
+        metrics: {},
+        error: true,
+        errorMessage: metricsResponse.data?.message || "Error desconocido al cargar métricas",
+      };
+    }
   } catch (error) {
     console.error("Error fetching dashboard metrics:", error.message || error);
-    to.meta.initialData = { metrics: {} };
+    to.meta.initialData = {
+      metrics: {},
+      error: true,
+      errorMessage: "Error de conexión al cargar métricas",
+    };
   }
 };
 
@@ -26,12 +41,20 @@ export const loadUsersData = async (to) => {
     ]);
 
     to.meta.initialData = {
-      metrics: metricsResponse.data.code === 200 ? metricsResponse.data.data : {},
-      users: usersResponse.data.code === 200 ? usersResponse.data.data : [],
+      metrics: metricsResponse.data.success ? metricsResponse.data.data : {},
+      users: usersResponse.data.success ? usersResponse.data.data : [],
+      error: !metricsResponse.data.success || !usersResponse.data.success,
+      errorMessage: !metricsResponse.data.success ? metricsResponse.data.message : 
+                   !usersResponse.data.success ? usersResponse.data.message : null,
     };
   } catch (error) {
     console.error("Error fetching users data:", error.message || error);
-    to.meta.initialData = { metrics: {}, users: [] };
+    to.meta.initialData = { 
+      metrics: {}, 
+      users: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar datos de usuarios",
+    };
   }
 };
 
@@ -44,10 +67,16 @@ export const loadUserEditData = async (to) => {
     const userResponse = await axios.get(`/api/users?id=${userId}`);
 
     to.meta.initialData = {
-      user: userResponse.data.code === 200 ? userResponse.data.data : null,
+      user: userResponse.data.success ? userResponse.data.data : null,
+      error: !userResponse.data.success,
+      errorMessage: !userResponse.data.success ? userResponse.data.message : null,
     };
   } catch (error) {
     console.error("Error fetching user data:", error.message || error);
-    to.meta.initialData = { user: null, error: true };
+    to.meta.initialData = { 
+      user: null, 
+      error: true,
+      errorMessage: "Error de conexión al cargar datos del usuario",
+    };
   }
 };

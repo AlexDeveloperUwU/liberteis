@@ -314,18 +314,17 @@
               </div>
             </div>
 
-            <div class="flex justify-between items-center mt-6">
+            <div class="flex justify-end items-center mt-6 gap-2">
               <button
                 type="button"
-                class="px-4 py-2 border border-background-300 text-text-700 rounded-md hover:bg-background-200 focus:outline-none focus:ring-2 focus:ring-background-400 transition-colors duration-150 flex items-center cursor-pointer"
+                class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-background-100 text-text-700 border border-background-300 hover:bg-background-200 transition-colors duration-150 cursor-pointer"
                 @click="$router.push({ name: 'dashUsers' })">
                 <X class="w-4 h-4 mr-2" />
                 {{ t("pages.dash.userForm.common.cancel") }}
               </button>
-
               <button
                 type="submit"
-                class="px-5 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md flex items-center disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-background-400 disabled:hover:bg-background-400 cursor-pointer"
+                class="h-10 px-5 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 :disabled="isSubmitting || !isFormValid">
                 <div v-if="isSubmitting" class="flex items-center">
                   <Loader2 class="w-4 h-4 mr-2 animate-spin" />
@@ -371,6 +370,7 @@ import {
   XCircle,
 } from "lucide-vue-next";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
+import axios from "axios";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -414,7 +414,7 @@ const formData = reactive({
   name: "",
   email: "",
   type: "",
-  password: "", // Añadido para edición
+  password: "",
 });
 
 const validateName = (value) => {
@@ -448,7 +448,6 @@ const validateType = (value) => {
   return true;
 };
 
-// Opcional: Validación de contraseña solo si se escribe algo
 const validatePassword = (value) => {
   if (!value) {
     errors.password = "";
@@ -484,11 +483,6 @@ const roleIcons = {
   normalUser: Users,
   managerUser: ShieldCheck,
   adminUser: ShieldAlert,
-};
-const roleColorClasses = {
-  normalUser: { bg: "bg-primary-100", text: "text-primary-600" },
-  managerUser: { bg: "bg-primary-100", text: "text-primary-600" },
-  adminUser: { bg: "bg-primary-100", text: "text-primary-600" },
 };
 
 const permissions = computed(() => ({
@@ -584,40 +578,50 @@ const handleSubmit = async () => {
   isSubmitting.value = true;
 
   try {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
     if (isEditMode.value) {
-      // Solo incluir password si se ha escrito algo
       const userUpdate = {
-        id: userId.value,
         ...formData,
-        updatedAt: new Date().toISOString(),
       };
+      
       if (!formData.password) delete userUpdate.password;
-      console.log("Usuario simulado actualizado:", userUpdate);
-      alert(t("pages.dash.userForm.notifications.updateSuccess"));
+      
+      const response = await axios.put(`/api/users?id=${userId.value}`, userUpdate);
+      
+      if (response.status === 200) {
+        alert(t("pages.dash.userForm.notifications.updateSuccess"));
+        router.push({ name: "dashUsers" });
+      }
     } else {
-      console.log("Usuario simulado creado:", {
-        id: Math.floor(Math.random() * 1000),
-        ...formData,
-        createdAt: new Date().toISOString(),
-      });
-      alert(t("pages.dash.userForm.notifications.createSuccess"));
+      const response = await axios.post("/api/users", formData);
+      
+      if (response.status === 201) {
+        alert(t("pages.dash.userForm.notifications.createSuccess"));
+        router.push({ name: "dashUsers" });
+      }
     }
-
-    router.push({ name: "dashUsers" });
   } catch (error) {
-    console.error("Error simulado:", error);
-
-    if (Math.random() > 0.8) {
-      errors.email = t("pages.dash.userForm.errors.emailExists");
+    console.error("Error al procesar la solicitud:", error);
+    
+    if (error.message && error.message.includes("BigInt")) {
+      console.error("Error de serialización BigInt:", error);
+      alert(t("pages.dash.userForm.errors.bigIntError") || "Error interno: Problema con valores numéricos grandes");
+    } 
+    else if (error.response) {
+      if (error.response.status === 400 && error.response.data?.message?.includes("email")) {
+        errors.email = t("pages.dash.userForm.errors.emailExists");
+      } else {
+        alert(`Error: ${error.response.data?.message || "Error desconocido"}`);
+      }
+    } else if (error.request) {
+      alert(t("pages.dash.userForm.errors.noResponse"));
+    } else {
+      alert(t("pages.dash.userForm.errors.requestSetup"));
     }
   } finally {
     isSubmitting.value = false;
   }
 };
 
-// Añadir función para formatear fechas
 function formatDate(dateStr) {
   if (!dateStr) return "";
   const d = new Date(dateStr);

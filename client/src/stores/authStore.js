@@ -13,8 +13,8 @@ export const useAuthStore = defineStore("auth", {
     async login(email, password) {
       try {
         const response = await axios.post("/api/auth/login", { email, password });
-        if (!response.data.error) {
-          this.user = response.data.user;
+        if (response.data.success) {
+          this.user = response.data.data.user;
           localStorage.setItem("auth_user", JSON.stringify(this.user));
           return true;
         }
@@ -31,8 +31,13 @@ export const useAuthStore = defineStore("auth", {
       window.location.href = "/";
     },
     async register(userData) {
-      const response = await axios.post("/api/auth/register", userData);
-      return response.status === 201;
+      try {
+        const response = await axios.post("/api/auth/register", userData);
+        return response.data.success;
+      } catch (error) {
+        console.error("Register error:", error);
+        return false;
+      }
     },
   },
 });
