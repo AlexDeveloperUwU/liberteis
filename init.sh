@@ -153,6 +153,21 @@ stop_and_remove_containers() {
   echo -e "${GREEN}All containers stopped and removed.${NC}"
 }
 
+# Generar contraseña aleatoria para la cuenta admin y crear el archivo adminaccount.key
+create_admin_account_key() {
+  admin_key_file="./data/secrets/adminaccount.key"
+  if [ ! -f "$admin_key_file" ]; then
+    admin_password=$(generate_random_password)
+    echo "$admin_password" >"$admin_key_file" || {
+      echo -e "${RED}Error creating admin account key file${NC}"
+      exit 1
+    }
+    echo -e "${GREEN}Admin account key file created.${NC}"
+  else
+    echo -e "${YELLOW}Admin account key file already exists.${NC}"
+  fi
+}
+
 # Main initialization logic
 initialize() {
   if [ ! -f "./data/init/initialized.txt" ]; then
@@ -160,6 +175,7 @@ initialize() {
     create_directories
     set_key
     create_db_creds_file
+    create_admin_account_key
     echo -e "${GREEN}Initialization complete.${NC}"
   else
     echo -e "${YELLOW}Initialization already completed. Skipping.${NC}"
