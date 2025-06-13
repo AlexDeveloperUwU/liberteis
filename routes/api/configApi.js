@@ -1,7 +1,8 @@
-import router from "express";
+import { Router } from "express";
 import * as config from "../../db/configService.js";
+import ErrorManager from "../../errors/errorManager.js";
 
-const api = router();
+const api = Router();
 export default api;
 
 //! Basic CRUD operations
@@ -16,24 +17,29 @@ export default api;
  * @returns {object} JSON response with configs or error message
  */
 api.get("/", async (req, res) => {
-  const { key } = req.query;
-
   try {
+    const { key } = req.query;
+
     if (key) {
-      const exists = await config.checkConfigExistence(key);
-      if (exists) {
-        const response = await config.getConfig(key);
-        return res.json({ code: 200, data: response });
-      } else {
-        return res.status(404).json({ code: 404, message: "Config not found" });
+      const existsResult = await config.checkConfigExistence(key);
+      if (!existsResult.success) {
+        return res.status(existsResult.code).json(existsResult);
       }
+      
+      if (!existsResult.data.exists) {
+        return res.status(404).json(ErrorManager.returnError("configNotFound"));
+      }
+      
+      const result = await config.getConfig(key);
+      return res.status(result.code).json(result);
     } else {
-      const response = await config.getConfigs();
-      return res.json({ code: 200, data: response });
+      const result = await config.getConfigs();
+      return res.status(result.code).json(result);
     }
   } catch (error) {
     console.error("Error fetching config:", error);
-    return res.status(500).json({ code: 500, error: error.message || error });
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
   }
 });
 
@@ -48,23 +54,28 @@ api.get("/", async (req, res) => {
  * @returns {object} JSON response with success or error message
  */
 api.post("/", async (req, res) => {
-  const { key, value } = req.body;
-
-  if (!key || !value) {
-    return res.status(400).json({ code: 400, message: "Key and value are required" });
-  }
-
   try {
-    const exists = await config.checkConfigExistence(key);
-    if (!exists) {
-      await config.setConfig(key, value);
-      return res.status(201).json({ code: 201, message: "Config created successfully" });
-    } else {
-      return res.status(409).json({ code: 409, message: "Config already exists" });
+    const { key, value } = req.body;
+
+    if (!key || value === undefined) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+
+    const existsResult = await config.checkConfigExistence(key);
+    if (!existsResult.success) {
+      return res.status(existsResult.code).json(existsResult);
+    }
+    
+    if (existsResult.data.exists) {
+      return res.status(409).json(ErrorManager.returnError("dbDuplicateEntry"));
+    }
+    
+    const result = await config.setConfig(key, value);
+    return res.status(result.code).json(result);
   } catch (error) {
     console.error("Error creating config:", error);
-    return res.status(500).json({ code: 500, error: error.message || error });
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
   }
 });
 
@@ -79,23 +90,28 @@ api.post("/", async (req, res) => {
  * @returns {object} JSON response with success or error message
  */
 api.put("/", async (req, res) => {
-  const { key, value } = req.body;
-
-  if (!key || !value) {
-    return res.status(400).json({ code: 400, message: "Key and value are required" });
-  }
-
   try {
-    const exists = await config.checkConfigExistence(key);
-    if (exists) {
-      await config.updateConfig(key, value);
-      return res.json({ code: 200, message: "Config updated successfully" });
-    } else {
-      return res.status(404).json({ code: 404, message: "Config not found" });
+    const { key, value } = req.body;
+
+    if (!key || value === undefined) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+
+    const existsResult = await config.checkConfigExistence(key);
+    if (!existsResult.success) {
+      return res.status(existsResult.code).json(existsResult);
+    }
+    
+    if (!existsResult.data.exists) {
+      return res.status(404).json(ErrorManager.returnError("configNotFound"));
+    }
+    
+    const result = await config.updateConfig(key, value);
+    return res.status(result.code).json(result);
   } catch (error) {
     console.error("Error updating config:", error);
-    return res.status(500).json({ code: 500, error: error.message || error });
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
   }
 });
 
@@ -109,22 +125,27 @@ api.put("/", async (req, res) => {
  * @returns {object} JSON response with success or error message
  */
 api.delete("/", async (req, res) => {
-  const { key } = req.query;
-
-  if (!key) {
-    return res.status(400).json({ code: 400, message: "Key is required" });
-  }
-
   try {
-    const exists = await config.checkConfigExistence(key);
-    if (exists) {
-      await config.deleteConfig(key);
-      return res.json({ code: 200, message: "Config deleted successfully" });
-    } else {
-      return res.status(404).json({ code: 404, message: "Config not found" });
+    const { key } = req.query;
+
+    if (!key) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+
+    const existsResult = await config.checkConfigExistence(key);
+    if (!existsResult.success) {
+      return res.status(existsResult.code).json(existsResult);
+    }
+    
+    if (!existsResult.data.exists) {
+      return res.status(404).json(ErrorManager.returnError("configNotFound"));
+    }
+    
+    const result = await config.deleteConfig(key);
+    return res.status(result.code).json(result);
   } catch (error) {
     console.error("Error deleting config:", error);
-    return res.status(500).json({ code: 500, error: error.message || error });
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
   }
 });

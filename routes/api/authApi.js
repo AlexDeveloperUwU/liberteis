@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as users from "../../db/userService.js";
 import { validatePass } from "../../utils/dataSecurity.js";
 import { generatePass } from "../../utils/password.js";
+import ErrorManager from "../../errors/errorManager.js";
 
 /**
  * Express router for authentication related endpoints.
@@ -19,19 +20,18 @@ export default api;
  * @param {object} res - Express response object.
  */
 api.post("/register", async (req, res) => {
-  const user = req.body;
-  if (!user) {
-    return res.status(400).json({ error: true, message: "Invalid parameters" });
-  }
-
   try {
-    const result = await users.addUser(user);
-    if (result.error) {
-      return res.status(500).json(result);
+    const user = req.body;
+    if (!user) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
-    return res.status(201).json({ error: false, message: "User created" });
+
+    const result = await users.addUser(user);
+    return res.status(result.code).json(result);
   } catch (error) {
-    return res.status(500).json({ error: true, message: error.message });
+    console.error("Error in /api/auth/register:", error);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
   }
 });
 
@@ -44,20 +44,19 @@ api.post("/register", async (req, res) => {
  * @param {object} res - Express response object.
  */
 api.post("/createUser", async (req, res) => {
-  const user = req.body;
-  if (!user) {
-    return res.status(400).json({ error: true, message: "Invalid parameters" });
-  }
-
   try {
+    const user = req.body;
+    if (!user) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
     user.password = generatePass();
     const result = await users.addUser(user);
-    if (result.error) {
-      return res.status(500).json(result);
-    }
-    return res.status(201).json({ error: false, message: "User created" });
+    return res.status(result.code).json(result);
   } catch (error) {
-    return res.status(500).json({ error: true, message: error.message });
+    console.error("Error in /api/auth/createUser:", error);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
   }
 });
 
@@ -71,38 +70,43 @@ api.post("/createUser", async (req, res) => {
  * @param {object} res - Express response object.
  */
 api.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ error: true, message: "Email and password are required" });
-  }
-
   try {
-    const user = await users.getUserByEmail(email);
-    if (!user) {
-      return res.status(404).json({ error: true, message: "User not found" });
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
+    const userResult = await users.getUserByEmail(email);
+    if (!userResult.success) {
+      return res.status(userResult.code).json(userResult);
+    }
+
+    const user = userResult.data;
     const isPasswordValid = validatePass(password, user.hashedPassword);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: true, message: "Invalid password" });
+      return res.status(401).json(ErrorManager.returnError("invalidParameters"));
     }
 
     req.session.userId = user.id;
-    await users.updateUserLastLogin(user.id);
+    const loginUpdate = await users.updateUserLastLogin(user.id);
+    if (!loginUpdate.success) {
+      console.warn("Failed to update last login time:", loginUpdate.message);
+    }
 
-    return res.status(200).json({
-      error: false,
-      message: "Login successful",
-      user: {
-        name: user.name,
-        email: user.email,
-        type: user.type,
-        lang: user.lang,
-      },
-    });
+    const responseUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      type: user.type,
+      lang: user.lang,
+    };
+
+    return res.status(200).json(ErrorManager.returnSuccess(200, "Login successful", { user: responseUser }));
   } catch (error) {
-    return res.status(500).json({ error: true, message: error.message });
+    console.error("Error in /api/auth/login:", error);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
   }
 });
 
@@ -113,9 +117,17 @@ api.post("/login", async (req, res) => {
  * @param {object} res - Express response object.
  */
 api.post("/logout", (req, res) => {
+  if (!req.session) {
+    return res.status(200).json(ErrorManager.returnSuccess(200, "No active session to logout"));
+  }
+  
   req.session.destroy((err) => {
-    if (err) return res.status(500).send("Error al cerrar sesión");
+    if (err) {
+      console.error("Error destroying session:", err);
+      return res.status(500).json(ErrorManager.returnError("unknownError"));
+    }
+    
     res.clearCookie("session_id");
-    return res.status(200).json({ error: false, message: "Logout successful" });
+    return res.status(200).json(ErrorManager.returnSuccess(200, "Logout successful"));
   });
 });
