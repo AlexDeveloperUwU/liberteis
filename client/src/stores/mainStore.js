@@ -29,7 +29,7 @@ const removeLocalStorageItem = (key) => {
 export const useMainStore = defineStore("main", () => {
   const locale = ref(getLocalStorageItem("locale", "gl"));
   const theme = ref(getLocalStorageItem("theme", "system"));
-  const sidebarCollapsed = ref(getLocalStorageItem("sidebarCollapsed", "false") === "true");
+  const sidebarCollapsed = ref(getLocalStorageItem("sidebarCollapsed", "true") === "true");
 
   const setLocale = (lang) => {
     locale.value = lang;
