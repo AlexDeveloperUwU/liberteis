@@ -1,6 +1,7 @@
 {
   "unknownError": "An unknown error has occurred. Please try again later.",
   "dbDuplicateEntry": "A record with this information already exists.",
+  "dbMissingValue": "Required value is missing in the database.",
   "invalidParameters": "Invalid parameters provided.",
   "bookingNotFound": "Booking not found.",
   "bookingSaveError": "Error saving the booking.",

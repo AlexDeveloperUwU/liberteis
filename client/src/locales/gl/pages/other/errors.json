@@ -1,6 +1,7 @@
 {
   "unknownError": "Produciuse un erro descoñecido. Por favor, ténteo de novo máis tarde.",
   "dbDuplicateEntry": "Xa existe un rexistro con esta información.",
+  "dbMissingValue": "Falta un valor requirido na base de datos.",
   "invalidParameters": "Parámetros proporcionados non válidos.",
   "bookingNotFound": "Reserva non atopada.",
   "bookingSaveError": "Erro ao gardar a reserva.",

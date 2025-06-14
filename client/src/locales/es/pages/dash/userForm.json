@@ -50,14 +50,12 @@
     "neverLoggedIn": "El usuario nunca ha iniciado sesión"
   },
   "permissions": {
-    "viewContent": "Ver contenido",
-    "editOwnProfile": "Editar perfil propio",
+    "manageOwnEvents": "Gestionar sus propios eventos",
+    "manageAllEvents": "Gestionar todos los eventos (incluidos los de otros)",
+    "manageCategories": "Gestionar categorías",
+    "manageSpaces": "Gestionar espacios",
     "manageUsers": "Gestionar usuarios",
-    "manageContent": "Gestionar contenido",
-    "manageSystem": "Gestionar sistema",
-    "fullAccess": "Acceso completo al sistema",
-    "createdBy": "Creado por",
-    "lastAccess": "Último acceso"
+    "manageAppSettings": "Gestionar configuración de la aplicación"
   },
   "errors": {
     "nameLength": "El nombre debe tener al menos 3 caracteres",
@@ -69,7 +67,9 @@
     "loadingUser": "Error al cargar los datos del usuario",
     "noResponse": "No hay respuesta del servidor. Por favor, compruebe su conexión",
     "requestSetup": "Error al configurar la solicitud. Por favor, inténtelo de nuevo",
-    "bigIntError": "Error del servidor: No se pueden procesar valores numéricos grandes"
+    "bigIntError": "Error del servidor: No se pueden procesar valores numéricos grandes",
+    "cantChangeName": "No se puede cambiar el nombre del usuario",
+    "cantChangeRole": "No se puede cambiar el rol del usuario"
   },
   "notifications": {
     "createSuccess": "¡Usuario creado con éxito!",

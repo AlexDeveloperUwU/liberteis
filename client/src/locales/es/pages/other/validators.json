@@ -1,0 +1,8 @@
+{
+  "password": {
+    "pwned": "Esta contraseña ha sido comprometida en una filtración de datos. Por favor, elige una contraseña diferente.",
+    "singular": "vez",
+    "plural": "{{count}} veces",
+    "checkError": "Ocurrió un error al verificar la contraseña."
+  }
+}

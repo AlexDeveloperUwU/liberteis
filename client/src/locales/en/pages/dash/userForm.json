@@ -50,14 +50,12 @@
     "neverLoggedIn": "User has never logged in"
   },
   "permissions": {
-    "viewContent": "View content",
-    "editOwnProfile": "Edit own profile",
+    "manageOwnEvents": "Manage it's own events",
+    "manageAllEvents": "Manage all events (other's events too)",
+    "manageCategories": "Manage categories",
+    "manageSpaces": "Manage spaces",
     "manageUsers": "Manage users",
-    "manageContent": "Manage content",
-    "manageSystem": "Manage system",
-    "fullAccess": "Full system access",
-    "createdBy": "Created by",
-    "lastAccess": "Last access"
+    "manageAppSettings": "Manage application settings"
   },
   "errors": {
     "nameLength": "Name must be at least 3 characters",
@@ -69,7 +67,9 @@
     "loadingUser": "Error loading user data",
     "noResponse": "No response from server. Please check your connection",
     "requestSetup": "Error setting up request. Please try again",
-    "bigIntError": "Server error: Cannot process large numeric values"
+    "bigIntError": "Server error: Cannot process large numeric values",
+    "cantChangeName": "The user name cannot be changed",
+    "cantChangeRole": "The user role cannot be changed"
   },
   "notifications": {
     "createSuccess": "User created successfully!",
