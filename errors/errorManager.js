@@ -62,6 +62,10 @@ class ErrorManager {
       return this.returnError("dbDuplicateEntry");
     }
 
+    if (error.message.includes("doesn't have a default value")) {
+      return this.returnError("dbMissingValue");
+    }
+
     return this.returnError("unknownError");
   }
 }
