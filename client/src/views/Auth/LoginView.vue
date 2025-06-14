@@ -19,11 +19,21 @@
 
           <div class="space-y-2">
             <label class="block text-sm font-medium text-text-800">{{ t("pages.auth.login.password") }}</label>
-            <input
-              type="password"
-              v-model="credentials.password"
-              class="w-full px-3 py-2 bg-background-50 dark:bg-background-300 border border-background-400 dark:border-background-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-950"
-              required />
+            <div class="relative">
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                v-model="credentials.password"
+                class="w-full px-3 py-2 pr-10 bg-background-50 dark:bg-background-300 border border-background-400 dark:border-background-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-950"
+                :class="{ 'border-accent-500': errors.password }"
+                required />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <component :is="showPassword ? EyeOff : Eye" class="h-5 w-5 text-text-400 hover:text-text-600" />
+              </button>
+            </div>
+            <p v-if="errors.password" class="text-sm text-accent-600">{{ errors.password }}</p>
           </div>
 
           <button
@@ -41,6 +51,7 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/authStore";
+import { Eye, EyeOff } from "lucide-vue-next";
 import iziToast from "izitoast";
 import { useRouter } from "vue-router";
 
@@ -51,8 +62,39 @@ const credentials = ref({
   email: "",
   password: "",
 });
+const showPassword = ref(false);
+const errors = ref({
+  email: "",
+  password: "",
+});
+
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email) {
+    errors.value.email = t("pages.auth.login.errors.emailRequired");
+    return false;
+  }
+  if (!emailRegex.test(email)) {
+    errors.value.email = t("pages.auth.login.errors.emailInvalid");
+    return false;
+  }
+  errors.value.email = "";
+  return true;
+};
+
+const validatePassword = (password) => {
+  if (!password) {
+    errors.value.password = t("pages.auth.login.errors.passwordRequired");
+    return false;
+  }
+  errors.value.password = "";
+  return true;
+};
 
 const handleLogin = async () => {
+  if (!validateEmail(credentials.value.email) || !validatePassword(credentials.value.password)) {
+    return;
+  }
   try {
     const success = await authStore.login(credentials.value.email, credentials.value.password);
     if (success) {

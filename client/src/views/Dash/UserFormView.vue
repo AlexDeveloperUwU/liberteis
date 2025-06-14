@@ -160,7 +160,7 @@
                       type="text"
                       class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
                       :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.name }"
-                      placeholder="Ej: Juan Pérez"
+                      :placeholder="t('pages.dash.userForm.form.placeholders.name') || 'Nombre de la cuenta'"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
                       <CheckCircle2
@@ -188,7 +188,7 @@
                       type="email"
                       class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
                       :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.email }"
-                      placeholder="Ej: usuario@ejemplo.com"
+                      :placeholder="t('pages.dash.userForm.form.placeholders.email') || 'E-Mail de la cuenta'"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
                       <CheckCircle2
@@ -213,14 +213,21 @@
                     <input
                       v-model="formData.password"
                       id="password"
-                      type="password"
+                      :type="showPassword ? 'text' : 'password'"
                       autocomplete="new-password"
-                      class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
+                      class="block w-full pl-10 pr-20 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
                       :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.password }"
                       :placeholder="
                         t('pages.dash.userForm.form.placeholders.password') || 'Dejar vacío para no cambiar'
                       " />
-                    <div class="absolute inset-y-0 right-3 flex items-center">
+                    <div class="absolute inset-y-0 right-3 flex items-center gap-2">
+                      <button
+                        type="button"
+                        @click="showPassword = !showPassword"
+                        class="p-1 hover:bg-background-100 rounded-md transition-colors duration-150"
+                        :title="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                        <component :is="showPassword ? EyeOff : Eye" class="w-4 h-4 text-text-500" />
+                      </button>
                       <CheckCircle2
                         v-if="formData.password && formData.password.length >= 6"
                         class="w-5 h-5 text-primary-500 animate-fadeIn" />
@@ -324,15 +331,30 @@
               </button>
               <button
                 type="submit"
-                class="h-10 px-5 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                class="h-10 px-5 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center transition-colors duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                :class="{
+                  'bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200':
+                    buttonState === 'default',
+                  'bg-background-200 text-text-500': buttonState === 'processing',
+                  'bg-secondary-100 text-secondary-800 border border-secondary-200': buttonState === 'success',
+                  'bg-accent-100 text-accent-800 border border-accent-200': buttonState === 'error',
+                }"
                 :disabled="isSubmitting || !isFormValid">
-                <div v-if="isSubmitting" class="flex items-center">
+                <div v-if="buttonState === 'processing'" class="flex items-center">
                   <Loader2 class="w-4 h-4 mr-2 animate-spin" />
                   {{
                     isEditMode
                       ? t("pages.dash.userForm.form.actions.updating")
                       : t("pages.dash.userForm.form.actions.submitting")
                   }}
+                </div>
+                <div v-else-if="buttonState === 'success'" class="flex items-center">
+                  <CheckCircle2 class="w-4 h-4 mr-2 animate-fadeIn" />
+                  {{ t("pages.dash.userForm.common.status.success") }}
+                </div>
+                <div v-else-if="buttonState === 'error'" class="flex items-center">
+                  <XCircle class="w-4 h-4 mr-2 animate-fadeIn" />
+                  {{ t("pages.dash.userForm.common.status.error") }}
                 </div>
                 <div v-else class="flex items-center">
                   <Save class="w-4 h-4 mr-2" />
@@ -368,9 +390,12 @@ import {
   Calendar,
   CheckCircle,
   XCircle,
+  Eye,
+  EyeOff,
 } from "lucide-vue-next";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import axios from "axios";
+import iziToast from "izitoast";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -379,8 +404,12 @@ const route = useRoute();
 const isEditMode = computed(() => !!route.params.id);
 const userId = computed(() => route.params.id);
 const initialUserData = ref(null);
+const initialEmail = ref("");
 const isLoading = ref(isEditMode.value);
 const loadError = ref(null);
+const showPassword = ref(false);
+import { useAuthStore } from "@/stores/authStore";
+const authStore = useAuthStore();
 
 onMounted(() => {
   if (isEditMode.value && route.meta.initialData) {
@@ -399,6 +428,16 @@ onMounted(() => {
     isLoading.value = false;
   }
 });
+
+watch(
+  () => initialUserData.value,
+  (newVal) => {
+    if (newVal) {
+      initialEmail.value = newVal.email || "";
+    }
+  },
+  { immediate: true },
+);
 
 const pageTitle = computed(() => {
   return isEditMode.value ? t("pages.dash.userForm.page.editTitle") : t("pages.dash.userForm.page.createTitle");
@@ -476,6 +515,7 @@ const touchedFields = reactive({
 });
 
 const isSubmitting = ref(false);
+const buttonState = ref("default");
 
 const userTypes = ["normalUser", "managerUser", "adminUser"];
 
@@ -572,51 +612,95 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
+const checkEmailAvailability = async (email) => {
+  try {
+    const response = await axios.get(`/api/users/emailCheck?email=${email}`);
+    return !response.data.data.exists;
+  } catch (error) {
+    console.error("Error checking email:", error);
+    return false;
+  }
+};
+
 const handleSubmit = async () => {
   if (!validateForm()) return;
 
   isSubmitting.value = true;
+  buttonState.value = "processing";
 
   try {
+    if (!isEditMode.value || (isEditMode.value && formData.email !== initialEmail.value)) {
+      const isEmailAvailable = await checkEmailAvailability(formData.email);
+      if (!isEmailAvailable) {
+        errors.email = t("pages.dash.userForm.errors.emailExists");
+        iziToast.error({
+          message: t("pages.dash.userForm.errors.emailExists"),
+          position: "topRight",
+        });
+        buttonState.value = "error";
+        setTimeout(() => {
+          buttonState.value = "default";
+        }, 2000);
+        isSubmitting.value = false;
+        return;
+      }
+    }
+
     if (isEditMode.value) {
-      const userUpdate = {
-        ...formData,
-      };
-      
+      const userUpdate = { ...formData };
       if (!formData.password) delete userUpdate.password;
-      
+
       const response = await axios.put(`/api/users?id=${userId.value}`, userUpdate);
-      
+
       if (response.status === 200) {
-        alert(t("pages.dash.userForm.notifications.updateSuccess"));
-        router.push({ name: "dashUsers" });
+        buttonState.value = "success";
+        iziToast.success({
+          message: t("pages.dash.userForm.notifications.updateSuccess"),
+          position: "topRight",
+        });
+        setTimeout(() => router.push({ name: "dashUsers" }), 2000);
       }
     } else {
+      formData.createdBy = authStore.userId;
       const response = await axios.post("/api/users", formData);
-      
+
       if (response.status === 201) {
-        alert(t("pages.dash.userForm.notifications.createSuccess"));
-        router.push({ name: "dashUsers" });
+        buttonState.value = "success";
+        iziToast.success({
+          message: t("pages.dash.userForm.notifications.createSuccess"),
+          position: "topRight",
+        });
+        setTimeout(() => router.push({ name: "dashUsers" }), 2000);
       }
     }
   } catch (error) {
     console.error("Error al procesar la solicitud:", error);
-    
+    buttonState.value = "error";
+
     if (error.message && error.message.includes("BigInt")) {
-      console.error("Error de serialización BigInt:", error);
-      alert(t("pages.dash.userForm.errors.bigIntError") || "Error interno: Problema con valores numéricos grandes");
-    } 
-    else if (error.response) {
-      if (error.response.status === 400 && error.response.data?.message?.includes("email")) {
-        errors.email = t("pages.dash.userForm.errors.emailExists");
-      } else {
-        alert(`Error: ${error.response.data?.message || "Error desconocido"}`);
-      }
+      iziToast.error({
+        message: t("pages.dash.userForm.errors.bigIntError"),
+        position: "topRight",
+      });
+    } else if (error.response) {
+      iziToast.error({
+        message: error.response.data?.message || t("pages.dash.userForm.errors.unknown"),
+        position: "topRight",
+      });
     } else if (error.request) {
-      alert(t("pages.dash.userForm.errors.noResponse"));
+      iziToast.error({
+        message: t("pages.dash.userForm.errors.noResponse"),
+        position: "topRight",
+      });
     } else {
-      alert(t("pages.dash.userForm.errors.requestSetup"));
+      iziToast.error({
+        message: t("pages.dash.userForm.errors.requestSetup"),
+        position: "topRight",
+      });
     }
+    setTimeout(() => {
+      buttonState.value = "default";
+    }, 2000);
   } finally {
     isSubmitting.value = false;
   }

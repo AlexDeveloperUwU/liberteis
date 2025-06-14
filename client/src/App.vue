@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper bg-background-200">
-    <NavBar @toggle-sidebar="toggleSidebar" :isCollapsed="isSidebarCollapsed"/>
+    <NavBar @toggle-sidebar="toggleSidebar" :isCollapsed="isSidebarCollapsed" />
 
     <div v-if="currentLayout === 'dashboard'" class="dashboard-layout">
       <SideBar :isCollapsed="isSidebarCollapsed" />
