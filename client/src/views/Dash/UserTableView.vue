@@ -3,32 +3,35 @@
     <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.dash.users.page.title") }}</h1>
     <p class="text-text-800 mb-6">{{ t("pages.dash.users.page.description") }}</p>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
-        <div class="flex items-center gap-2 mb-2">
-          <Users class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.totals") }}</p>
+    <!-- Contenedor responsive para las estadísticas -->
+    <div class="responsive-container mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+        <div
+          class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <Users class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.totals") }}</p>
+          </div>
+          <h2 class="text-2xl font-bold text-text-950">{{ metrics.total || 0 }}</h2>
         </div>
-        <h2 class="text-2xl font-bold text-text-950">{{ metrics.total || 0 }}</h2>
-      </div>
 
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
-        <div class="flex items-center gap-2 mb-2">
-          <UserCheck class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.active") }}</p>
+        <div
+          class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <UserCheck class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.active") }}</p>
+          </div>
+          <h2 class="text-2xl font-bold text-text-950">{{ metrics.active || 0 }}</h2>
         </div>
-        <h2 class="text-2xl font-bold text-text-950">{{ metrics.active || 0 }}</h2>
-      </div>
 
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
-        <div class="flex items-center gap-2 mb-2">
-          <UserX class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.inactive") }}</p>
+        <div
+          class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
+          <div class="flex items-center gap-2 mb-2">
+            <UserX class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.inactive") }}</p>
+          </div>
+          <h2 class="text-2xl font-bold text-text-950">{{ metrics.inactive || 0 }}</h2>
         </div>
-        <h2 class="text-2xl font-bold text-text-950">{{ metrics.inactive || 0 }}</h2>
       </div>
     </div>
 
@@ -53,11 +56,13 @@
             {{ t("pages.dash.users.actions.add") || "Añadir usuario" }}
           </button>
         </div>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-background-300">
-            <thead>
+
+        <!-- Tabla responsive con scroll horizontal -->
+        <div class="responsive-table-container overflow-x-auto">
+          <table class="responsive-table w-full divide-y divide-background-300">
+            <thead class="bg-background-50">
               <tr class="border-b border-background-300">
-                <th scope="col" class="px-6 py-4 text-left">
+                <th scope="col" class="px-6 py-4 text-left sticky-column sticky left-0 bg-background-50 z-10">
                   <div class="flex items-center gap-2">
                     <Hash class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">ID</span>
@@ -114,29 +119,30 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-background-200">
-              <tr v-for="user in users" :key="user.id" class="hover:bg-primary-50/60 transition-colors duration-150">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm font-medium text-text-900 bg-background-200/50 px-2 py-1 rounded">
+              <tr v-for="user in users" :key="user.id" class="group">
+                <td
+                  class="px-6 py-4 whitespace-nowrap sticky-column sticky left-0 bg-background-100 group-hover:bg-primary-50 transition-colors duration-150 z-20">
+                  <span class="text-sm text-text-800">
                     {{ user.id }}
                   </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="ml-4">
                     <div class="text-sm text-text-800">{{ user.name }}</div>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="text-sm text-text-800">{{ user.email }}</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="text-sm text-text-800">
                     {{ t(`pages.dash.users.types.${user.type}`) }}
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="text-sm text-text-800">{{ user.createdBy }}</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="flex items-center gap-2">
                     <span
                       :class="[
@@ -152,7 +158,7 @@
                     </span>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="flex items-center gap-2">
                     <button
                       @click="$router.push({ name: 'dashUsersEdit', params: { id: user.id } })"
@@ -161,8 +167,14 @@
                       {{ t("pages.dash.users.actions.edit") }}
                     </button>
                     <button
-                      class="px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full bg-accent-100 text-accent-800 border border-accent-200 hover:bg-accent-200 transition-colors duration-150 cursor-pointer">
-                      <Trash class="w-3 h-3 text-red-600" />
+                      :disabled="isAdminAccount(user)"
+                      :class="[
+                        'px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full border transition-colors duration-150',
+                        isAdminAccount(user) 
+                          ? 'bg-background-200 text-text-500 border-background-300 cursor-not-allowed' 
+                          : 'bg-accent-100 text-accent-800 border-accent-200 hover:bg-accent-200 cursor-pointer'
+                      ]">
+                      <Trash class="w-3 h-3" :class="isAdminAccount(user) ? 'text-text-500' : 'text-red-600'" />
                       {{ t("pages.dash.users.actions.delete") }}
                     </button>
                   </div>
@@ -197,7 +209,6 @@ import { useRoute, useRouter } from "vue-router";
 
 const { t } = useI18n();
 const route = useRoute();
-const router = useRouter();
 
 const metrics = ref(
   route.meta.initialData?.metrics || {
@@ -214,6 +225,10 @@ const isUserActive = (lastLogin) => {
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
   return new Date(lastLogin) > thirtyDaysAgo;
+};
+
+const isAdminAccount = (user) => {
+  return user.createdBy === "System" && user.name === "Administrador";
 };
 </script>
 
