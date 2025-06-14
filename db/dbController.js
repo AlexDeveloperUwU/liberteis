@@ -3,6 +3,7 @@ import mysql from "mysql2";
 import path from "path";
 import dotenv from "dotenv";
 import { logger } from "../utils/logger.js";
+import fs from "fs/promises";
 
 const __dirname = path.resolve();
 
@@ -174,6 +175,9 @@ export async function dbCreateTables() {
     if (!domain) {
       await trx.insertInto("config").values({ id: "domain", value: "http://localhost:3000" }).execute();
     }
+
+    // Después de crear todas las tablas y configuraciones, añadir el admin
+    await createAdminUser();
   });
 }
 
@@ -332,4 +336,38 @@ export async function clearDb() {
     await trx.deleteFrom("users").execute();
     await trx.deleteFrom("config").execute();
   });
+}
+
+/**
+ * Creates the initial admin user if it doesn't exist.
+ * @async
+ */
+async function createAdminUser() {
+  const adminEmail = "admin@lolcat.host";
+  const adminExists = await dbGetWhere("users", {
+    field: "email",
+    operator: "=",
+    value: adminEmail,
+  });
+
+  if (adminExists.length === 0) {
+    try {
+      const adminPassPath = path.resolve(__dirname, "./data/secrets/adminaccount.key");
+      const adminPass = await fs.readFile(adminPassPath, "utf8");
+
+      const adminUser = {
+        name: "Administrador",
+        email: adminEmail,
+        type: "adminUser",
+        password: adminPass.trim(),
+        createdBy: "System",
+      };
+
+      await import("./userService.js").then((userService) => {
+        userService.addUser(adminUser);
+      });
+    } catch (error) {
+      logger.error(`Error creando usuario admin: ${error.message}`);
+    }
+  }
 }
