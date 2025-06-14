@@ -35,6 +35,8 @@ import {
 import { useI18n } from "vue-i18n";
 import { ref, onMounted, computed } from "vue";
 import { useMainStore } from "../stores/mainStore";
+import { useAuthStore } from "../stores/authStore";
+import { hasPermission } from "../utils/permissions";
 
 export default {
   components: {
@@ -57,6 +59,7 @@ export default {
     const { t } = useI18n();
     const isMobile = ref(window.innerWidth <= 768);
     const mainStore = useMainStore();
+    const authStore = useAuthStore();
 
     onMounted(() => {
       if (props.isCollapsed !== mainStore.sidebarCollapsed) {
@@ -66,10 +69,24 @@ export default {
       window.addEventListener("resize", detectMobile);
     });
 
-    const menuItems = [
-      { titleKey: "components.sidebar.home", icon: "LucideHome", route: "/dash/home" },
-      { titleKey: "components.sidebar.team", icon: "LucideUsers", route: "/dash/users" },
-    ];
+    const menuItems = computed(() => {
+      const items = [
+        {
+          titleKey: "components.sidebar.home",
+          icon: "LucideHome",
+          route: "/dash/home",
+          permission: "normalUser",
+        },
+        {
+          titleKey: "components.sidebar.users",
+          icon: "LucideUsers",
+          route: "/dash/users",
+          permission: "managerUser",
+        },
+      ];
+
+      return items.filter((item) => hasPermission(authStore.userType, item.permission));
+    });
 
     const sidebarStyle = computed(() => {
       return {
