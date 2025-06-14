@@ -1,7 +1,6 @@
 import { Router } from "express";
 import * as users from "../../db/userService.js";
 import { validatePass } from "../../utils/dataSecurity.js";
-import { generatePass } from "../../utils/password.js";
 import ErrorManager from "../../errors/errorManager.js";
 
 /**
@@ -10,55 +9,6 @@ import ErrorManager from "../../errors/errorManager.js";
  */
 const api = Router();
 export default api;
-
-/**
- * @name POST /api/auth/register
- * @description Registers a new user with a password.
- * @param {object} req - Express request object.
- * @param {object} req.body - The request body.
- * @param {object} req.body.user - User object containing details for registration.
- * @param {object} res - Express response object.
- */
-api.post("/register", async (req, res) => {
-  try {
-    const user = req.body;
-    if (!user) {
-      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
-    }
-
-    const result = await users.addUser(user);
-    return res.status(result.code).json(result);
-  } catch (error) {
-    console.error("Error in /api/auth/register:", error);
-    const errorResponse = ErrorManager.handleError(error);
-    return res.status(errorResponse.code).json(errorResponse);
-  }
-});
-
-/**
- * @name POST /api/auth/createUser
- * @description Creates a new user with an automatically generated password.
- * @param {object} req - Express request object.
- * @param {object} req.body - The request body.
- * @param {object} req.body.user - User object containing details for creation.
- * @param {object} res - Express response object.
- */
-api.post("/createUser", async (req, res) => {
-  try {
-    const user = req.body;
-    if (!user) {
-      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
-    }
-
-    user.password = generatePass();
-    const result = await users.addUser(user);
-    return res.status(result.code).json(result);
-  } catch (error) {
-    console.error("Error in /api/auth/createUser:", error);
-    const errorResponse = ErrorManager.handleError(error);
-    return res.status(errorResponse.code).json(errorResponse);
-  }
-});
 
 /**
  * @name POST /api/auth/login
@@ -120,13 +70,13 @@ api.post("/logout", (req, res) => {
   if (!req.session) {
     return res.status(200).json(ErrorManager.returnSuccess(200, "No active session to logout"));
   }
-  
+
   req.session.destroy((err) => {
     if (err) {
       console.error("Error destroying session:", err);
       return res.status(500).json(ErrorManager.returnError("unknownError"));
     }
-    
+
     res.clearCookie("session_id");
     return res.status(200).json(ErrorManager.returnSuccess(200, "Logout successful"));
   });
