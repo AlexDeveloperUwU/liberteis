@@ -1,5 +1,6 @@
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { defineStore } from "pinia";
+import { useAuthStore } from "./authStore";
 
 const getLocalStorageItem = (key, defaultValue) => {
   try {
@@ -27,22 +28,33 @@ const removeLocalStorageItem = (key) => {
 };
 
 export const useMainStore = defineStore("main", () => {
-  const locale = ref(getLocalStorageItem("locale", "gl"));
-  const theme = ref(getLocalStorageItem("theme", "system"));
+  const authStore = useAuthStore();
+
+  const locale = ref(authStore.user?.lang || getLocalStorageItem("locale", "gl"));
+  const theme = ref(authStore.user?.theme || getLocalStorageItem("theme", "system"));
   const sidebarCollapsed = ref(getLocalStorageItem("sidebarCollapsed", "true") === "true");
 
-  const setLocale = (lang) => {
+  const setLocale = async (lang) => {
     locale.value = lang;
     setLocalStorageItem("locale", lang);
+
+    if (authStore.isAuthenticated) {
+      await authStore.updateUserProfile({ lang });
+    }
   };
 
-  const setTheme = (newTheme) => {
+  const setTheme = async (newTheme) => {
     theme.value = newTheme;
     if (newTheme === "system") {
       removeLocalStorageItem("theme");
     } else {
       setLocalStorageItem("theme", newTheme);
     }
+
+    if (authStore.isAuthenticated) {
+      await authStore.updateUserProfile({ theme: newTheme });
+    }
+
     applyTheme();
   };
 
@@ -65,6 +77,20 @@ export const useMainStore = defineStore("main", () => {
       console.error("Error applying theme:", e);
     }
   };
+
+  applyTheme();
+
+  watch(
+    () => authStore.user,
+    (newUser) => {
+      if (newUser) {
+        if (newUser.lang) locale.value = newUser.lang;
+        if (newUser.theme) theme.value = newUser.theme;
+        applyTheme();
+      }
+    },
+    { immediate: true },
+  );
 
   return {
     locale,
