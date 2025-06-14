@@ -210,6 +210,10 @@ if [ "$ENVIRONMENT" == "dev" ]; then
         sleep 5
       done
       echo -e "${GREEN}MySQL is healthy.${NC}"
+      npm run dev || {
+        echo -e "${RED}Error running development environment${NC}"
+        exit 1
+      }
       break
       ;;
     2)
