@@ -156,7 +156,7 @@ export async function getCategory(id, includeInactive = false) {
 
     // Process spaces
     let category = result[0];
-    
+
     if (category.spaces) {
       try {
         category.spaces = JSON.parse(category.spaces);
@@ -214,7 +214,7 @@ export async function getCategoryByName(name, includeInactive = false) {
 
     // Process spaces
     let category = result[0];
-    
+
     if (category.spaces) {
       try {
         category.spaces = JSON.parse(category.spaces);

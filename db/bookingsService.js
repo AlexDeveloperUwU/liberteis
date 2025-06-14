@@ -257,7 +257,7 @@ export async function getBookingsCount(userId = null, type = null) {
     if (userId) baseFilters.push({ field: "bookedBy", operator: "=", value: userId });
 
     let resultData;
-    
+
     switch (type) {
       case "all": {
         const total = await dbc.dbGetWhere("bookings", baseFilters);
@@ -292,7 +292,7 @@ export async function getBookingsCount(userId = null, type = null) {
       default:
         return ErrorManager.returnError("invalidBookingType");
     }
-    
+
     return ErrorManager.returnSuccess(200, "Bookings summary retrieved successfully", resultData);
   } catch (error) {
     logger.error(`Error retrieving bookings summary: ${error.message}`);

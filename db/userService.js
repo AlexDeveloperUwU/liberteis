@@ -28,8 +28,8 @@ export async function addUser(user) {
   user.deleted = false;
 
   try {
-    const result = await dbc.dbSaveData("users", user);
-    return ErrorManager.returnSuccess(201, "User created successfully", result);
+    await dbc.dbSaveData("users", user);
+    return ErrorManager.returnSuccess(201, "User created successfully", { code: 201 });
   } catch (error) {
     if (error.message && error.message.includes("Duplicate entry") && error.message.includes("for key 'users.email'")) {
       logger.error(`Duplicate email error: ${error.message}`);
@@ -57,8 +57,8 @@ export async function updateUser(id, user) {
   }
 
   try {
-    const result = await dbc.dbUpdateData("users", id, user);
-    return ErrorManager.returnSuccess(200, "User updated successfully", result);
+    await dbc.dbUpdateData("users", id, user);
+    return ErrorManager.returnSuccess(200, "User updated successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error updating user in the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -108,64 +108,6 @@ export async function updateUserPassword(id, pass) {
   }
 }
 
-/**
- * Changes a user's status (enabled/disabled) in the database.
- * @param {string} id - User ID.
- * @returns {Promise<Object>} Operation result.
- */
-export async function changeUserStatus(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const newStatus = !(await checkUserStatus(id));
-    const result = await dbc.dbUpdateData("users", id, { deleted: newStatus });
-    return ErrorManager.returnSuccess(200, "User status changed successfully", result);
-  } catch (error) {
-    logger.error(`Error changing user status in the database: ${error.message}`);
-    return ErrorManager.returnError("userStatusChangeError");
-  }
-}
-
-/**
- * Enables a user in the database.
- * @param {string} id - User ID.
- * @returns {Promise<Object>} Operation result.
- */
-export async function enableUser(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const result = await dbc.dbUpdateData("users", id, { deleted: false });
-    return ErrorManager.returnSuccess(200, "User enabled successfully", result);
-  } catch (error) {
-    logger.error(`Error enabling user in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Disables a user in the database.
- * @param {string} id - User ID.
- * @returns {Promise<Object>} Operation result.
- */
-export async function disableUser(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const result = await dbc.dbUpdateData("users", id, { deleted: true });
-    return ErrorManager.returnSuccess(200, "User disabled successfully", result);
-  } catch (error) {
-    logger.error(`Error disabling user in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
 //! Operaciones de recuperación de información
 
 /**
@@ -196,11 +138,15 @@ export async function getUser(id, includeInactive = false) {
         return ErrorManager.returnError("invalidParameters");
     }
 
-    if (result.length === 0) {
+    const user = Array.isArray(result) ? result[0] : result;
+
+    if (!user) {
       return ErrorManager.returnError("userNotFound");
     }
 
-    return ErrorManager.returnSuccess(200, "User retrieved successfully", result[0]);
+    const { hashedPassword, ...userWithoutPassword } = user;
+
+    return ErrorManager.returnSuccess(200, "User retrieved successfully", userWithoutPassword);
   } catch (error) {
     logger.error(`Error retrieving user from the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -298,47 +244,6 @@ export async function getUsers(status = "active") {
 }
 
 /**
- * Checks a user's status (enabled/disabled).
- * @param {string} id - User ID.
- * @returns {Promise<boolean>} User status.
- */
-export async function checkUserStatus(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const user = await getUser(id, true);
-    if (user.success === false) {
-      return false;
-    }
-    return user.data.deleted;
-  } catch (error) {
-    logger.error(`Error checking user status in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Checks if a user exists in the database.
- * @param {string} email - User's email.
- * @returns {Promise<boolean>} `true` if user exists, otherwise throws an error.
- */
-export async function checkUserExists(email) {
-  if (!email) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const result = await getUserByEmail(email, true);
-    return result.success;
-  } catch (error) {
-    logger.error(`Error checking if user exists in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
  * Gets a user count summary.
  * @param {string} [type=null] - Type of users to count ("all", "active", "inactive", or null for all).
  * @returns {Promise<object>} User count summary.
@@ -382,10 +287,39 @@ export async function getUsersCount(type = null) {
       default:
         return ErrorManager.returnError("invalidParameters");
     }
-    
+
     return ErrorManager.returnSuccess(200, "Users summary retrieved successfully", resultData);
   } catch (error) {
     logger.error(`Error retrieving users summary: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Checks if an email is already registered in the database.
+ * @param {string} email - Email to check.
+ * @returns {Promise<Object>} Result indicating if the email exists.
+ */
+
+export async function checkUserExists(email) {
+  if (!email) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  try {
+    const result = await dbc.dbGetWhere("users", {
+      field: "email",
+      operator: "=",
+      value: email,
+    });
+
+    if (result.length > 0) {
+      return ErrorManager.returnSuccess(200, "Email is already registered", { exists: true });
+    } else {
+      return ErrorManager.returnSuccess(200, "Email is available", { exists: false });
+    }
+  } catch (error) {
+    logger.error(`Error checking email registration: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }

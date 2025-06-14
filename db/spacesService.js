@@ -259,4 +259,3 @@ export async function checkSpaceExists(name) {
     return ErrorManager.handleError(error);
   }
 }
-
