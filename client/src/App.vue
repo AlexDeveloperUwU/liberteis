@@ -90,7 +90,6 @@ onMounted(async () => {
 .dashboard-layout {
   padding-top: 3.5rem;
   min-height: calc(100vh - 3.5rem);
-  display: flex;
 }
 
 .dashboard-content {
