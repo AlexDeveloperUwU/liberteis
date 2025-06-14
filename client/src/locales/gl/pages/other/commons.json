@@ -33,5 +33,9 @@
     "day": "Día",
     "month": "Mes",
     "year": "Ano"
+  },
+  "status": {
+    "success": "Operación exitosa",
+    "error": "Erro"
   }
 }

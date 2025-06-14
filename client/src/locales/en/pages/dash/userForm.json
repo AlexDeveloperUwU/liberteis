@@ -3,7 +3,11 @@
     "create": "Create user",
     "edit": "Edit user",
     "update": "Update user",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "status": {
+      "success": "Operation successful",
+      "error": "Error"
+    }
   },
   "page": {
     "createTitle": "New user",
@@ -24,6 +28,7 @@
     },
     "placeholders": {
       "name": "User",
+      "email": "E-Mail",
       "selectType": "Select user type",
       "noRoleSelected": "No role selected",
       "noEmail": "No email provided",

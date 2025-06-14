@@ -3,7 +3,11 @@
     "create": "Crear usuario",
     "edit": "Editar usuario",
     "update": "Actualizar usuario",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "status": {
+      "success": "Operación exitosa",
+      "error": "Erro"
+    }
   },
   "page": {
     "createTitle": "Novo usuario",
@@ -24,6 +28,7 @@
     },
     "placeholders": {
       "name": "Usuario",
+      "email": "Correo electrónico",
       "selectType": "Seleccionar tipo de usuario",
       "noRoleSelected": "Ningún rol seleccionado",
       "noEmail": "Non se proporcionou correo electrónico",
