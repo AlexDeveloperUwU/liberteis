@@ -88,7 +88,13 @@
                     <Mail class="w-5 h-5 text-primary-600 mr-3" />
                     <div>
                       <p class="text-xs text-text-600">{{ t("pages.dash.userForm.profile.createdBy") }}</p>
-                      <p class="text-text-800 font-medium">{{ initialUserData.createdBy }}</p>
+                      <p class="text-text-800 font-medium">
+                        <span v-if="initialUserData.createdBy === 'System'">System</span>
+                        <span v-else-if="isLoadingCreator">{{ t("pages.dash.userForm.profile.loading") }}</span>
+                        <span v-else-if="creatorError">{{ t("pages.dash.userForm.profile.errorLoading") }}</span>
+                        <span v-else-if="creatorData">{{ creatorData.name }}</span>
+                        <span v-else>{{ initialUserData.createdBy }}</span>
+                      </p>
                     </div>
                   </div>
                 </template>
@@ -158,8 +164,12 @@
                       v-model="formData.name"
                       id="name"
                       type="text"
+                      :disabled="isAdminAccount"
                       class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
-                      :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.name }"
+                      :class="{
+                        'border-accent-500 ring-1 ring-accent-300': errors.name,
+                        'bg-background-100 cursor-not-allowed': isAdminAccount,
+                      }"
                       :placeholder="t('pages.dash.userForm.form.placeholders.name') || 'Nombre de la cuenta'"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
@@ -167,10 +177,18 @@
                         v-if="!errors.name && formData.name && formData.name.length >= 3"
                         class="w-5 h-5 text-primary-500 animate-fadeIn" />
                       <XCircle
-                        v-else-if="formData.name || touchedFields.name"
+                        v-else-if="(formData.name || touchedFields.name) && !isAdminAccount"
                         class="w-5 h-5 text-accent-500 animate-fadeIn" />
+                      <Shield v-else-if="isAdminAccount" class="w-5 h-5 text-secondary-500 animate-fadeIn" />
                     </div>
                   </div>
+                  <p v-if="isAdminAccount" class="mt-1.5 text-xs text-secondary-600 flex items-center">
+                    <InfoIcon class="w-3 h-3 mr-1" />
+                    {{
+                      t("pages.dash.userForm.errors.cantChangeName") ||
+                      "El nombre del administrador no puede ser modificado"
+                    }}
+                  </p>
                 </div>
 
                 <div class="mb-4">
@@ -228,12 +246,16 @@
                         :title="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
                         <component :is="showPassword ? EyeOff : Eye" class="w-4 h-4 text-text-500" />
                       </button>
+                      <div v-if="isValidatingPassword" class="w-5 h-5">
+                        <Loader2 class="w-5 h-5 text-primary-600 animate-spin" />
+                      </div>
                       <CheckCircle2
-                        v-if="formData.password && formData.password.length >= 6"
+                        v-else-if="!errors.password && formData.password && formData.password.length >= 6"
                         class="w-5 h-5 text-primary-500 animate-fadeIn" />
                       <XCircle v-else-if="formData.password" class="w-5 h-5 text-accent-500 animate-fadeIn" />
                     </div>
                   </div>
+                  <p v-if="passwordErrorMessage" class="mt-1.5 text-xs text-accent-600">{{ passwordErrorMessage }}</p>
                 </div>
               </div>
 
@@ -248,13 +270,17 @@
                     {{ t("pages.dash.userForm.form.labels.userType") }}
                   </label>
                   <div class="relative">
-                    <Listbox v-model="formData.type" @update:modelValue="touchedFields.type = true">
+                    <Listbox
+                      v-model="formData.type"
+                      @update:modelValue="touchedFields.type = true"
+                      :disabled="isAdminAccount">
                       <div class="relative">
                         <ListboxButton
                           class="relative w-full pl-10 pr-10 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 bg-background-50 text-left"
                           :class="[
                             { 'border-accent-500 ring-1 ring-accent-300': errors.type },
                             !formData.type ? 'text-text-400' : 'text-text-950 font-medium',
+                            isAdminAccount ? 'bg-background-100 cursor-not-allowed' : '',
                           ]">
                           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <component
@@ -271,6 +297,7 @@
                           <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                             <div class="flex items-center">
                               <XCircle v-if="errors.type" class="w-5 h-5 text-accent-500 mr-2 animate-fadeIn" />
+                              <Shield v-if="isAdminAccount" class="w-5 h-5 text-secondary-500 mr-2 animate-fadeIn" />
                               <ChevronDown class="w-5 h-5 text-text-400" />
                             </div>
                           </span>
@@ -392,10 +419,12 @@ import {
   XCircle,
   Eye,
   EyeOff,
+  Info as InfoIcon,
 } from "lucide-vue-next";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import axios from "axios";
 import iziToast from "izitoast";
+import { isValidEmail, validateName, validateEmail, validateType, validatePassword } from "@/utils/validators";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -410,6 +439,13 @@ const loadError = ref(null);
 const showPassword = ref(false);
 import { useAuthStore } from "@/stores/authStore";
 const authStore = useAuthStore();
+
+const isAdminAccount = computed(() => {
+  if (initialUserData.value) {
+    return initialUserData.value.createdBy === "System" && initialUserData.value.name === "Administrador";
+  }
+  return false;
+});
 
 onMounted(() => {
   if (isEditMode.value && route.meta.initialData) {
@@ -434,6 +470,10 @@ watch(
   (newVal) => {
     if (newVal) {
       initialEmail.value = newVal.email || "";
+
+      if (newVal.createdBy) {
+        loadCreatorData(newVal.createdBy);
+      }
     }
   },
   { immediate: true },
@@ -455,51 +495,6 @@ const formData = reactive({
   type: "",
   password: "",
 });
-
-const validateName = (value) => {
-  if (!value || value.trim().length < 3) {
-    errors.name = t("pages.dash.userForm.errors.nameLength");
-    return false;
-  }
-  errors.name = "";
-  return true;
-};
-
-const validateEmail = (value) => {
-  if (!value) {
-    errors.email = t("pages.dash.userForm.errors.emailRequired");
-    return false;
-  }
-  if (!isValidEmail(value)) {
-    errors.email = t("pages.dash.userForm.errors.emailInvalid");
-    return false;
-  }
-  errors.email = "";
-  return true;
-};
-
-const validateType = (value) => {
-  if (!value) {
-    errors.type = t("pages.dash.userForm.errors.typeRequired");
-    return false;
-  }
-  errors.type = "";
-  return true;
-};
-
-const validatePassword = (value) => {
-  if (!value) {
-    errors.password = "";
-    return true;
-  }
-  if (value.length < 6) {
-    errors.password =
-      t("pages.dash.userForm.errors.passwordLength") || "La contraseña debe tener al menos 6 caracteres.";
-    return false;
-  }
-  errors.password = "";
-  return true;
-};
 
 const errors = reactive({
   name: "",
@@ -526,20 +521,21 @@ const roleIcons = {
 };
 
 const permissions = computed(() => ({
-  normalUser: [t("pages.dash.userForm.permissions.viewContent"), t("pages.dash.userForm.permissions.editOwnProfile")],
+  normalUser: [t("pages.dash.userForm.permissions.manageOwnEvents")],
   managerUser: [
-    t("pages.dash.userForm.permissions.viewContent"),
-    t("pages.dash.userForm.permissions.editOwnProfile"),
+    t("pages.dash.userForm.permissions.manageOwnEvents"),
+    t("pages.dash.userForm.permissions.manageAllEvents"),
+    t("pages.dash.userForm.permissions.manageCategories"),
+    t("pages.dash.userForm.permissions.manageSpaces"),
     t("pages.dash.userForm.permissions.manageUsers"),
-    t("pages.dash.userForm.permissions.manageContent"),
   ],
   adminUser: [
-    t("pages.dash.userForm.permissions.viewContent"),
-    t("pages.dash.userForm.permissions.editOwnProfile"),
+    t("pages.dash.userForm.permissions.manageOwnEvents"),
+    t("pages.dash.userForm.permissions.manageAllEvents"),
+    t("pages.dash.userForm.permissions.manageCategories"),
+    t("pages.dash.userForm.permissions.manageSpaces"),
     t("pages.dash.userForm.permissions.manageUsers"),
-    t("pages.dash.userForm.permissions.manageContent"),
-    t("pages.dash.userForm.permissions.manageSystem"),
-    t("pages.dash.userForm.permissions.fullAccess"),
+    t("pages.dash.userForm.permissions.manageAppSettings"),
   ],
 }));
 
@@ -556,60 +552,122 @@ const getInitials = (name) => {
   return nameParts[0].charAt(0).toUpperCase();
 };
 
-const isFormValid = computed(() => {
-  return (
-    validateName(formData.name) &&
-    validateEmail(formData.email) &&
-    validateType(formData.type) &&
-    validatePassword(formData.password)
-  );
+const passwordValidationResult = reactive({
+  isValid: true,
+  isPwned: false,
+  count: 0,
+  error: false,
+  minLengthError: false,
 });
 
-watch(
-  () => formData.name,
-  (newVal) => {
-    touchedFields.name = true;
-    validateName(newVal);
-  },
-  { immediate: true },
-);
+const passwordErrorMessage = computed(() => {
+  if (!passwordValidationResult.isValid) {
+    if (passwordValidationResult.isPwned) {
+      const countText =
+        passwordValidationResult.count === 1
+          ? t("pages.other.validators.password.singular")
+          : t("pages.other.validators.password.plural", { count: passwordValidationResult.count.toLocaleString() });
+
+      return t("pages.other.validators.password.pwned", { count: countText });
+    } else if (passwordValidationResult.minLengthError) {
+      return t("pages.dash.userForm.errors.passwordLength");
+    }
+  } else if (passwordValidationResult.error) {
+    return t("pages.other.validators.password.checkError");
+  }
+
+  return "";
+});
+
+const validateFormField = async (field, value) => {
+  let result;
+
+  switch (field) {
+    case "name":
+      result = validateName(value);
+      errors.name = result.message || t("pages.dash.userForm.errors.nameLength");
+      return result.isValid;
+    case "email":
+      result = validateEmail(value);
+      errors.email = result.message || (result.isValid ? "" : t("pages.dash.userForm.errors.emailInvalid"));
+      return result.isValid;
+    case "type":
+      result = validateType(value);
+      errors.type = result.message || t("pages.dash.userForm.errors.typeRequired");
+      return result.isValid;
+    case "password":
+      result = await validatePassword(value);
+
+      passwordValidationResult.isValid = result.isValid;
+      passwordValidationResult.isPwned = result.isPwned;
+      passwordValidationResult.count = result.count;
+      passwordValidationResult.error = result.error || false;
+      passwordValidationResult.minLengthError = !result.isValid && !result.isPwned;
+
+      errors.password = passwordErrorMessage.value;
+      return result.isValid;
+    default:
+      return true;
+  }
+};
+
+const isValidatingPassword = ref(false);
+
+let passwordDebounceTimeout;
 
 watch(
-  () => formData.email,
-  (newVal) => {
-    touchedFields.email = true;
-    validateEmail(newVal);
+  () => formData.password,
+  async (newVal) => {
+    clearTimeout(passwordDebounceTimeout);
+
+    if (newVal) {
+      isValidatingPassword.value = true;
+      errors.password = "";
+
+      passwordDebounceTimeout = setTimeout(async () => {
+        await validateFormField("password", newVal);
+        isValidatingPassword.value = false;
+      }, 500);
+    } else {
+      errors.password = "";
+      isValidatingPassword.value = false;
+
+      Object.assign(passwordValidationResult, {
+        isValid: true,
+        isPwned: false,
+        count: 0,
+        error: false,
+        minLengthError: false,
+      });
+    }
   },
-  { immediate: true },
 );
 
-watch(
-  () => formData.type,
-  (newVal) => {
-    touchedFields.type = true;
-    validateType(newVal);
-  },
-  { immediate: true },
-);
+const isFormValid = computed(() => {
+  if (isValidatingPassword.value) return false;
 
-const validateForm = () => {
+  const mandatoryFieldsValid = !errors.name && !errors.email && !errors.type;
+
+  const passwordValid = !errors.password;
+
+  return mandatoryFieldsValid && passwordValid;
+});
+
+const validateForm = async () => {
   let isValid = true;
   errors.name = "";
   errors.email = "";
   errors.type = "";
   errors.password = "";
 
-  isValid = validateName(formData.name) && isValid;
-  isValid = validateEmail(formData.email) && isValid;
-  isValid = validateType(formData.type) && isValid;
-  isValid = validatePassword(formData.password) && isValid;
+  if (!isAdminAccount.value) {
+    isValid = (await validateFormField("name", formData.name)) && isValid;
+    isValid = (await validateFormField("type", formData.type)) && isValid;
+  }
+  isValid = (await validateFormField("email", formData.email)) && isValid;
+  isValid = (await validateFormField("password", formData.password)) && isValid;
 
   return isValid;
-};
-
-const isValidEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
 };
 
 const checkEmailAvailability = async (email) => {
@@ -623,7 +681,8 @@ const checkEmailAvailability = async (email) => {
 };
 
 const handleSubmit = async () => {
-  if (!validateForm()) return;
+  const formValid = await validateForm();
+  if (!formValid) return;
 
   isSubmitting.value = true;
   buttonState.value = "processing";
@@ -649,6 +708,11 @@ const handleSubmit = async () => {
     if (isEditMode.value) {
       const userUpdate = { ...formData };
       if (!formData.password) delete userUpdate.password;
+
+      if (isAdminAccount.value) {
+        userUpdate.name = initialUserData.value.name;
+        userUpdate.type = initialUserData.value.type;
+      }
 
       const response = await axios.put(`/api/users?id=${userId.value}`, userUpdate);
 
@@ -703,6 +767,31 @@ const handleSubmit = async () => {
     }, 2000);
   } finally {
     isSubmitting.value = false;
+  }
+};
+
+const creatorData = ref(null);
+const isLoadingCreator = ref(false);
+const creatorError = ref(false);
+
+const loadCreatorData = async (creatorId) => {
+  if (!creatorId || creatorId === "System") return;
+
+  isLoadingCreator.value = true;
+  creatorError.value = false;
+
+  try {
+    const response = await axios.get(`/api/users?id=${creatorId}`);
+    if (response.status === 200 && response.data.data) {
+      creatorData.value = response.data.data;
+    } else {
+      creatorError.value = true;
+    }
+  } catch (error) {
+    console.error("Error al obtener datos del usuario creador:", error);
+    creatorError.value = true;
+  } finally {
+    isLoadingCreator.value = false;
   }
 };
 

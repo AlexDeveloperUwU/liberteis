@@ -58,6 +58,12 @@ api.put("/", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
+    const currentUser = await users.getUser(id);
+    if (currentUser.success && currentUser.data.createdBy === "System" && currentUser.data.name === "Administrador") {
+      delete userData.name;
+      delete userData.type;
+    }
+
     let passwordResult;
     if (userData.password) {
       passwordResult = await users.updateUserPassword(id, userData.password);
