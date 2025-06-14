@@ -8,7 +8,7 @@
     "message": "t.pages.other.errors.dbDuplicateEntry"
   },
   "dbMissingValue": {
-    "code": 400,
+    "code": 409,
     "message": "t.pages.other.errors.dbMissingValue"
   },
   "invalidParameters": {
