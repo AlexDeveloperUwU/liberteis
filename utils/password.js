@@ -1,6 +1,6 @@
 import { generate } from "generate-password";
 
-export async function generatePass() {
+export function generatePass() {
   return generate({
     length: 12,
     numbers: true,

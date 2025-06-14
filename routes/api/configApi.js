@@ -25,11 +25,11 @@ api.get("/", async (req, res) => {
       if (!existsResult.success) {
         return res.status(existsResult.code).json(existsResult);
       }
-      
+
       if (!existsResult.data.exists) {
         return res.status(404).json(ErrorManager.returnError("configNotFound"));
       }
-      
+
       const result = await config.getConfig(key);
       return res.status(result.code).json(result);
     } else {
@@ -65,11 +65,11 @@ api.post("/", async (req, res) => {
     if (!existsResult.success) {
       return res.status(existsResult.code).json(existsResult);
     }
-    
+
     if (existsResult.data.exists) {
       return res.status(409).json(ErrorManager.returnError("dbDuplicateEntry"));
     }
-    
+
     const result = await config.setConfig(key, value);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -101,11 +101,11 @@ api.put("/", async (req, res) => {
     if (!existsResult.success) {
       return res.status(existsResult.code).json(existsResult);
     }
-    
+
     if (!existsResult.data.exists) {
       return res.status(404).json(ErrorManager.returnError("configNotFound"));
     }
-    
+
     const result = await config.updateConfig(key, value);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -136,11 +136,11 @@ api.delete("/", async (req, res) => {
     if (!existsResult.success) {
       return res.status(existsResult.code).json(existsResult);
     }
-    
+
     if (!existsResult.data.exists) {
       return res.status(404).json(ErrorManager.returnError("configNotFound"));
     }
-    
+
     const result = await config.deleteConfig(key);
     return res.status(result.code).json(result);
   } catch (error) {

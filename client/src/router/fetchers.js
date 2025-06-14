@@ -44,13 +44,16 @@ export const loadUsersData = async (to) => {
       metrics: metricsResponse.data.success ? metricsResponse.data.data : {},
       users: usersResponse.data.success ? usersResponse.data.data : [],
       error: !metricsResponse.data.success || !usersResponse.data.success,
-      errorMessage: !metricsResponse.data.success ? metricsResponse.data.message : 
-                   !usersResponse.data.success ? usersResponse.data.message : null,
+      errorMessage: !metricsResponse.data.success
+        ? metricsResponse.data.message
+        : !usersResponse.data.success
+          ? usersResponse.data.message
+          : null,
     };
   } catch (error) {
     console.error("Error fetching users data:", error.message || error);
-    to.meta.initialData = { 
-      metrics: {}, 
+    to.meta.initialData = {
+      metrics: {},
       users: [],
       error: true,
       errorMessage: "Error de conexión al cargar datos de usuarios",
@@ -73,8 +76,8 @@ export const loadUserEditData = async (to) => {
     };
   } catch (error) {
     console.error("Error fetching user data:", error.message || error);
-    to.meta.initialData = { 
-      user: null, 
+    to.meta.initialData = {
+      user: null,
       error: true,
       errorMessage: "Error de conexión al cargar datos del usuario",
     };

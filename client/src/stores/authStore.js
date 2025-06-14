@@ -8,6 +8,7 @@ export const useAuthStore = defineStore("auth", {
   getters: {
     userType: (state) => state.user?.type || null,
     isAuthenticated: (state) => !!state.user,
+    userId: (state) => state.user?.id || null,
   },
   actions: {
     async login(email, password) {
@@ -29,15 +30,6 @@ export const useAuthStore = defineStore("auth", {
       this.user = null;
       localStorage.removeItem("auth_user");
       window.location.href = "/";
-    },
-    async register(userData) {
-      try {
-        const response = await axios.post("/api/auth/register", userData);
-        return response.data.success;
-      } catch (error) {
-        console.error("Register error:", error);
-        return false;
-      }
     },
   },
 });
