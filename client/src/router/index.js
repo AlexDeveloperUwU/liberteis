@@ -77,9 +77,19 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   const requiredPermission = to.meta.allow;
+
+  if (authStore.isAuthenticated) {
+    const userExists = await authStore.verifyUserExists();
+    if (!userExists) {
+      return next({
+        name: "authLogin",
+        query: { message: "Tu sesión ha expirado porque el usuario ya no existe" },
+      });
+    }
+  }
 
   if (to.path === "/" && authStore.isAuthenticated) {
     return next({ name: "dashHome" });

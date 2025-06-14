@@ -31,5 +31,24 @@ export const useAuthStore = defineStore("auth", {
       localStorage.removeItem("auth_user");
       window.location.href = "/";
     },
+    async verifyUserExists() {
+      if (!this.isAuthenticated || !this.userId) return true;
+
+      try {
+        const response = await axios.get(`/api/users?id=${this.userId}`);
+        if (!response.data.success || !response.data.data) {
+          await this.logout();
+          return false;
+        }
+        return true;
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          await this.logout();
+          return false;
+        }
+        console.error("Error verificando existencia del usuario:", error);
+        return true; 
+      }
+    },
   },
 });
