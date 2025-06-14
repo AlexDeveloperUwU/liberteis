@@ -21,12 +21,6 @@ const routes = [
         component: () => import("../views/Auth/LoginView.vue"),
         meta: { allow: "any", layout: "auth" },
       },
-      {
-        path: "register",
-        name: "authRegister",
-        component: () => import("../views/Auth/RegisterView.vue"),
-        meta: { allow: "any", layout: "auth" },
-      },
     ],
   },
 
