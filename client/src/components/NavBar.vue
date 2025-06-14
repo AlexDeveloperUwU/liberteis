@@ -9,10 +9,12 @@
           <LucideMenu v-if="mainStore.sidebarCollapsed" />
           <LucideChevronLeft v-else />
         </button>
-        <div class="text-xl font-semibold flex items-center gap-2 text-text-950">
+        <router-link
+          to="/"
+          class="text-xl font-semibold flex items-center gap-2 text-text-950 hover:text-primary-600 transition-colors">
           <CalendarClock class="text-primary-600" />
           <span class="k2d">{{ configStore.getConfigValue("appName", "EvenTeis") }}</span>
-        </div>
+        </router-link>
       </div>
 
       <div class="flex items-center gap-4">
