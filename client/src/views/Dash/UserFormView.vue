@@ -167,17 +167,17 @@
                       :disabled="isAdminAccount"
                       class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
                       :class="{
-                        'border-accent-500 ring-1 ring-accent-300': errors.name,
+                        'border-accent-500 ring-1 ring-accent-300': errors.name && !formSubmitted,
                         'bg-background-100 cursor-not-allowed': isAdminAccount,
                       }"
                       :placeholder="t('pages.dash.userForm.form.placeholders.name') || 'Nombre de la cuenta'"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
                       <CheckCircle2
-                        v-if="!errors.name && formData.name && formData.name.length >= 3"
+                        v-if="(!errors.name || formSubmitted) && formData.name && formData.name.length >= 3"
                         class="w-5 h-5 text-primary-500 animate-fadeIn" />
                       <XCircle
-                        v-else-if="(formData.name || touchedFields.name) && !isAdminAccount"
+                        v-else-if="(formData.name || touchedFields.name) && !isAdminAccount && !formSubmitted"
                         class="w-5 h-5 text-accent-500 animate-fadeIn" />
                       <Shield v-else-if="isAdminAccount" class="w-5 h-5 text-secondary-500 animate-fadeIn" />
                     </div>
@@ -205,15 +205,15 @@
                       id="email"
                       type="email"
                       class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
-                      :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.email }"
+                      :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.email && !formSubmitted }"
                       :placeholder="t('pages.dash.userForm.form.placeholders.email') || 'E-Mail de la cuenta'"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
                       <CheckCircle2
-                        v-if="!errors.email && formData.email && isValidEmail(formData.email)"
+                        v-if="(!errors.email || formSubmitted) && formData.email && isValidEmail(formData.email)"
                         class="w-5 h-5 text-primary-500 animate-fadeIn" />
                       <XCircle
-                        v-else-if="formData.email || touchedFields.email"
+                        v-else-if="(formData.email || touchedFields.email) && !formSubmitted"
                         class="w-5 h-5 text-accent-500 animate-fadeIn" />
                     </div>
                   </div>
@@ -234,7 +234,7 @@
                       :type="showPassword ? 'text' : 'password'"
                       autocomplete="new-password"
                       class="block w-full pl-10 pr-20 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
-                      :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.password }"
+                      :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.password && !formSubmitted }"
                       :placeholder="
                         t('pages.dash.userForm.form.placeholders.password') || 'Dejar vacío para no cambiar'
                       " />
@@ -278,7 +278,7 @@
                         <ListboxButton
                           class="relative w-full pl-10 pr-10 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 bg-background-50 text-left"
                           :class="[
-                            { 'border-accent-500 ring-1 ring-accent-300': errors.type },
+                            { 'border-accent-500 ring-1 ring-accent-300': errors.type && !formSubmitted },
                             !formData.type ? 'text-text-400' : 'text-text-950 font-medium',
                             isAdminAccount ? 'bg-background-100 cursor-not-allowed' : '',
                           ]">
@@ -296,7 +296,9 @@
                           </span>
                           <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                             <div class="flex items-center">
-                              <XCircle v-if="errors.type" class="w-5 h-5 text-accent-500 mr-2 animate-fadeIn" />
+                              <XCircle
+                                v-if="errors.type && !formSubmitted"
+                                class="w-5 h-5 text-accent-500 mr-2 animate-fadeIn" />
                               <Shield v-if="isAdminAccount" class="w-5 h-5 text-secondary-500 mr-2 animate-fadeIn" />
                               <ChevronDown class="w-5 h-5 text-text-400" />
                             </div>
@@ -511,6 +513,7 @@ const touchedFields = reactive({
 
 const isSubmitting = ref(false);
 const buttonState = ref("default");
+const formSubmitted = ref(false);
 
 const userTypes = ["normalUser", "managerUser", "adminUser"];
 
@@ -580,6 +583,8 @@ const passwordErrorMessage = computed(() => {
 });
 
 const validateFormField = async (field, value) => {
+  if (formSubmitted.value) return true;
+
   let result;
 
   switch (field) {
@@ -644,6 +649,8 @@ watch(
 );
 
 const isFormValid = computed(() => {
+  if (formSubmitted.value) return true;
+
   if (isValidatingPassword.value) return false;
 
   const mandatoryFieldsValid = !errors.name && !errors.email && !errors.type;
@@ -654,6 +661,8 @@ const isFormValid = computed(() => {
 });
 
 const validateForm = async () => {
+  if (formSubmitted.value) return true;
+
   let isValid = true;
   errors.name = "";
   errors.email = "";
@@ -717,6 +726,11 @@ const handleSubmit = async () => {
       const response = await axios.put(`/api/users?id=${userId.value}`, userUpdate);
 
       if (response.status === 200) {
+        formSubmitted.value = true;
+        errors.name = "";
+        errors.email = "";
+        errors.type = "";
+        errors.password = "";
         buttonState.value = "success";
         iziToast.success({
           message: t("pages.dash.userForm.notifications.updateSuccess"),
@@ -729,6 +743,11 @@ const handleSubmit = async () => {
       const response = await axios.post("/api/users", formData);
 
       if (response.status === 201) {
+        formSubmitted.value = true;
+        errors.name = "";
+        errors.email = "";
+        errors.type = "";
+        errors.password = "";
         buttonState.value = "success";
         iziToast.success({
           message: t("pages.dash.userForm.notifications.createSuccess"),
