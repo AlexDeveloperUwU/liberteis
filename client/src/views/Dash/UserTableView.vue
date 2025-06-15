@@ -48,13 +48,68 @@
               {{ t("pages.dash.users.page.title") }}
             </h2>
           </div>
-          <button
-            @click="$router.push({ name: 'dashUsersNew' })"
-            class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer"
-            style="min-width: 2.5rem">
-            <UserPlus class="w-4 h-4 mr-2" />
-            {{ t("pages.dash.users.actions.add") || "Añadir usuario" }}
-          </button>
+          <div class="flex items-center gap-3">
+            <!-- Selector de filtro usando Headless UI -->
+            <div class="flex items-center">
+              <Listbox v-model="userFilter" @update:model-value="loadUsers">
+                <div class="relative">
+                  <ListboxButton
+                    class="h-10 px-3 rounded-lg text-sm font-medium shadow-sm bg-background-50 border border-background-300 text-text-800 focus:outline-none focus:ring-2 focus:ring-primary-500 hover:border-primary-300 transition-all duration-200 flex items-center justify-between w-32">
+                    <span class="block truncate text-left">
+                      {{ t(`pages.other.commons.status.${userFilter}`) || userFilter }}
+                    </span>
+                    <ChevronDown class="w-4 h-4 text-text-400 ml-2" />
+                  </ListboxButton>
+                  <transition
+                    enter-active-class="transition ease-out duration-100"
+                    enter-from-class="transform opacity-0 scale-95"
+                    enter-to-class="transform opacity-100 scale-100"
+                    leave-active-class="transition ease-in duration-75"
+                    leave-from-class="transform opacity-100 scale-100"
+                    leave-to-class="transform opacity-0 scale-95">
+                    <ListboxOptions
+                      class="absolute z-10 mt-1 w-32 bg-background-50 border border-background-300 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none sm:text-sm origin-top-right">
+                      <ListboxOption
+                        v-for="filter in ['active', 'inactive', 'all']"
+                        :key="filter"
+                        :value="filter"
+                        v-slot="{ active, selected }">
+                        <li
+                          :class="[
+                            selected
+                              ? 'bg-primary-100 border-l-primary-500 text-primary-800'
+                              : active
+                                ? 'bg-primary-50 border-l-primary-300 text-primary-600'
+                                : 'text-text-800',
+                            'cursor-pointer select-none relative py-2 pl-10 pr-4 transition-all duration-150 border-l-[3px]',
+                            selected ? 'border-l-[3px]' : active ? 'border-l-[3px]' : 'border-transparent',
+                          ]">
+                          <div class="flex items-center">
+                            <component :is="filterIcons[filter]" class="mr-2 h-4 w-4 text-primary-600" />
+                            <span :class="[selected ? 'font-medium' : 'font-normal']">
+                              {{ t(`pages.other.commons.status.${filter}`) }}
+                            </span>
+                          </div>
+                          <span
+                            v-if="selected"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-600">
+                            <Check class="w-4 h-4 text-primary-600" />
+                          </span>
+                        </li>
+                      </ListboxOption>
+                    </ListboxOptions>
+                  </transition>
+                </div>
+              </Listbox>
+            </div>
+            <button
+              @click="$router.push({ name: 'dashUsersNew' })"
+              class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer"
+              style="min-width: 2.5rem">
+              <UserPlus class="w-4 h-4 mr-2" />
+              {{ t("pages.dash.users.actions.add") || "Añadir usuario" }}
+            </button>
+          </div>
         </div>
 
         <!-- Tabla responsive con scroll horizontal -->
@@ -119,7 +174,7 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-background-200">
-              <tr v-for="user in users" :key="user.id" class="group">
+              <tr v-for="user in paginatedUsers" :key="user.id" class="group">
                 <td
                   class="px-6 py-4 whitespace-nowrap sticky-column sticky left-0 bg-background-100 group-hover:bg-primary-50 transition-colors duration-150 z-20">
                   <span class="text-sm text-text-800">
@@ -170,9 +225,9 @@
                       :disabled="isAdminAccount(user)"
                       :class="[
                         'px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full border transition-colors duration-150',
-                        isAdminAccount(user) 
-                          ? 'bg-background-200 text-text-500 border-background-300 cursor-not-allowed' 
-                          : 'bg-accent-100 text-accent-800 border-accent-200 hover:bg-accent-200 cursor-pointer'
+                        isAdminAccount(user)
+                          ? 'bg-background-200 text-text-500 border-background-300 cursor-not-allowed'
+                          : 'bg-accent-100 text-accent-800 border-accent-200 hover:bg-accent-200 cursor-pointer',
                       ]">
                       <Trash class="w-3 h-3" :class="isAdminAccount(user) ? 'text-text-500' : 'text-red-600'" />
                       {{ t("pages.dash.users.actions.delete") }}
@@ -182,6 +237,43 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="mt-6 flex justify-end items-center">
+          <div class="flex items-center gap-2">
+            <button
+              @click="currentPage = Math.max(1, currentPage - 1)"
+              :disabled="currentPage === 1"
+              :class="[
+                'h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center transition-colors duration-150',
+                currentPage === 1
+                  ? 'bg-background-100 text-text-400 border border-background-300 cursor-not-allowed'
+                  : 'bg-background-50 text-text-700 border border-background-300 hover:bg-background-200 cursor-pointer',
+              ]"
+              aria-label="Previous page">
+              <ChevronLeft class="w-4 h-4" />
+            </button>
+
+            <div
+              class="text-sm font-medium text-text-700 px-4 h-10 rounded-lg border border-background-300 bg-background-50 flex items-center justify-center shadow-sm">
+              {{ t("pages.other.commons.pagination.page") }} {{ currentPage }}
+              {{ t("pages.other.commons.pagination.of") }} {{ totalPages }}
+            </div>
+
+            <button
+              @click="currentPage = Math.min(totalPages, currentPage + 1)"
+              :disabled="currentPage === totalPages"
+              :class="[
+                'h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center transition-colors duration-150',
+                currentPage === totalPages
+                  ? 'bg-background-100 text-text-400 border border-background-300 cursor-not-allowed'
+                  : 'bg-background-50 text-text-700 border border-background-300 hover:bg-background-200 cursor-pointer',
+              ]"
+              aria-label="Next page">
+              <ChevronRight class="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -202,13 +294,30 @@ import {
   Pencil,
   Trash,
   UserPlus,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Check,
 } from "lucide-vue-next";
+import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import axios from "axios";
 
 const { t } = useI18n();
 const route = useRoute();
+const router = useRouter();
+
+const userFilter = ref("active");
+const currentPage = ref(1);
+const itemsPerPage = 5;
+
+const filterIcons = {
+  active: UserCheck,
+  inactive: UserX,
+  all: Users,
+};
 
 const metrics = ref(
   route.meta.initialData?.metrics || {
@@ -219,6 +328,48 @@ const metrics = ref(
 );
 
 const users = ref(route.meta.initialData?.users || []);
+const isLoading = ref(false);
+
+const filteredUsers = computed(() => {
+  return users.value;
+});
+
+const totalPages = computed(() => {
+  return Math.max(1, Math.ceil(filteredUsers.value.length / itemsPerPage));
+});
+
+const paginatedUsers = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return filteredUsers.value.slice(start, end);
+});
+
+const loadUsers = async () => {
+  try {
+    isLoading.value = true;
+    const response = await axios.get("/api/users", {
+      params: {
+        status: userFilter.value,
+      },
+    });
+
+    users.value = response.data.data || [];
+
+    currentPage.value = 1;
+  } catch (error) {
+    console.error("Error cargando usuarios:", error);
+
+    users.value = [];
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  if (!route.meta.initialData) {
+    loadUsers();
+  }
+});
 
 const isUserActive = (lastLogin) => {
   if (!lastLogin) return false;
