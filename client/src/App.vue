@@ -16,6 +16,8 @@
     <main v-else class="full-content">
       <router-view />
     </main>
+
+    <Toasts />
   </div>
 </template>
 
@@ -24,6 +26,7 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import NavBar from "./components/NavBar.vue";
 import SideBar from "./components/SideBar.vue";
+import Toasts from "@/components/Toasts.vue";
 import { useConfigStore } from "@/stores/configStore";
 import { useMainStore } from "@/stores/mainStore";
 
