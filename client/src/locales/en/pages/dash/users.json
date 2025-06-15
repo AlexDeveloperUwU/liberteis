@@ -1,7 +1,8 @@
 {
   "page": {
     "title": "User management",
-    "description": "Manage users and roles within the system."
+    "description": "Manage users and roles within the system.",
+    "tableTitle": "User list"
   },
   "metrics": {
     "totals": "Total users",
@@ -18,13 +19,13 @@
     "actions": "Actions"
   },
   "types": {
-    "adminUser": "Administrator",
+    "adminUser": "Admin user",
     "normalUser": "Normal user",
     "managerUser": "Manager user"
   },
   "actions": {
     "edit": "Edit",
     "delete": "Delete",
-    "add": "Add user"
+    "add": "Add"
   }
 }

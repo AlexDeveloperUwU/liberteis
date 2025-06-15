@@ -1,7 +1,8 @@
 {
   "page": {
     "title": "Xestión de usuarios",
-    "description": "Xestiona os usuarios e roles dentro do sistema."
+    "description": "Xestiona os usuarios e roles dentro do sistema.",
+    "tableTitle": "Lista de usuarios"
   },
   "metrics": {
     "totals": "Usuarios totais",
@@ -18,13 +19,13 @@
     "actions": "Accións"
   },
   "types": {
-    "adminUser": "Administrador",
+    "adminUser": "Usuario admin",
     "normalUser": "Usuario normal",
     "managerUser": "Usuario xestor"
   },
   "actions": {
     "edit": "Editar",
     "delete": "Eliminar",
-    "add": "Engadir usuario"
+    "add": "Engadir"
   }
 }

@@ -1,7 +1,8 @@
 {
   "page": {
     "title": "Gestión de usuarios",
-    "description": "Administra usuarios y roles dentro del sistema."
+    "description": "Administra usuarios y roles dentro del sistema.",
+    "tableTitle": "Lista de usuarios"
   },
   "metrics": {
     "totals": "Usuarios totales",
@@ -18,13 +19,13 @@
     "actions": "Acciones"
   },
   "types": {
-    "adminUser": "Administrador",
+    "adminUser": "Usuario admin",
     "normalUser": "Usuario normal",
     "managerUser": "Usuario gestor"
   },
   "actions": {
     "edit": "Editar",
     "delete": "Eliminar",
-    "add": "Añadir usuario"
+    "add": "Añadir"
   }
 }
