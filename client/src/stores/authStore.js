@@ -47,15 +47,15 @@ export const useAuthStore = defineStore("auth", {
           return false;
         }
         console.error("Error verificando existencia del usuario:", error);
-        return true; 
+        return true;
       }
     },
     async updateUserProfile(userData) {
       if (!this.isAuthenticated || !this.userId) return false;
-      
+
       try {
         const response = await axios.put(`/api/users?id=${this.userId}`, userData);
-        
+
         if (response.data.success) {
           this.user = { ...this.user, ...userData };
           localStorage.setItem("auth_user", JSON.stringify(this.user));
@@ -67,6 +67,6 @@ export const useAuthStore = defineStore("auth", {
         console.error("Error actualizando perfil de usuario:", error);
         return false;
       }
-    }
+    },
   },
 });
