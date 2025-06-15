@@ -36,6 +36,15 @@
   },
   "status": {
     "success": "Operación exitosa",
-    "error": "Erro"
+    "error": "Erro",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "all": "Todos"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Seguinte",
+    "page": "Páxina",
+    "of": "de"
   }
 }
