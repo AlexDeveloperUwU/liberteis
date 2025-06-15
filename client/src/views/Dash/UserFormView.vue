@@ -425,12 +425,13 @@ import {
 } from "lucide-vue-next";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import axios from "axios";
-import iziToast from "izitoast";
+import { useToast } from "@/composables/useToast";
 import { isValidEmail, validateName, validateEmail, validateType, validatePassword } from "@/utils/validators";
 
 const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
+const toast = useToast();
 
 const isEditMode = computed(() => !!route.params.id);
 const userId = computed(() => route.params.id);
@@ -701,10 +702,7 @@ const handleSubmit = async () => {
       const isEmailAvailable = await checkEmailAvailability(formData.email);
       if (!isEmailAvailable) {
         errors.email = t("pages.dash.userForm.errors.emailExists");
-        iziToast.error({
-          message: t("pages.dash.userForm.errors.emailExists"),
-          position: "topRight",
-        });
+        toast.error(t("pages.dash.userForm.errors.emailExists"));
         buttonState.value = "error";
         setTimeout(() => {
           buttonState.value = "default";
@@ -732,10 +730,7 @@ const handleSubmit = async () => {
         errors.type = "";
         errors.password = "";
         buttonState.value = "success";
-        iziToast.success({
-          message: t("pages.dash.userForm.notifications.updateSuccess"),
-          position: "topRight",
-        });
+        toast.success(t("pages.dash.userForm.notifications.updateSuccess"));
         setTimeout(() => router.push({ name: "dashUsers" }), 2000);
       }
     } else {
@@ -749,10 +744,7 @@ const handleSubmit = async () => {
         errors.type = "";
         errors.password = "";
         buttonState.value = "success";
-        iziToast.success({
-          message: t("pages.dash.userForm.notifications.createSuccess"),
-          position: "topRight",
-        });
+        toast.success(t("pages.dash.userForm.notifications.createSuccess"));
         setTimeout(() => router.push({ name: "dashUsers" }), 2000);
       }
     }
@@ -761,25 +753,13 @@ const handleSubmit = async () => {
     buttonState.value = "error";
 
     if (error.message && error.message.includes("BigInt")) {
-      iziToast.error({
-        message: t("pages.dash.userForm.errors.bigIntError"),
-        position: "topRight",
-      });
+      toast.error(t("pages.dash.userForm.errors.bigIntError"));
     } else if (error.response) {
-      iziToast.error({
-        message: error.response.data?.message || t("pages.dash.userForm.errors.unknown"),
-        position: "topRight",
-      });
+      toast.error(error.response.data?.message || t("pages.dash.userForm.errors.unknown"));
     } else if (error.request) {
-      iziToast.error({
-        message: t("pages.dash.userForm.errors.noResponse"),
-        position: "topRight",
-      });
+      toast.error(t("pages.dash.userForm.errors.noResponse"));
     } else {
-      iziToast.error({
-        message: t("pages.dash.userForm.errors.requestSetup"),
-        position: "topRight",
-      });
+      toast.error(t("pages.dash.userForm.errors.requestSetup"));
     }
     setTimeout(() => {
       buttonState.value = "default";

@@ -273,8 +273,6 @@ const configStore = useConfigStore();
 // Obtener datos iniciales con la estructura del ErrorManager
 const initialData = route.meta.initialData || { metrics: {}, error: false, errorMessage: "" };
 const metrics = ref(initialData.metrics || {});
-const error = ref(initialData.error || false);
-const errorMessage = ref(initialData.errorMessage || "");
 
 const events = ref([
   {

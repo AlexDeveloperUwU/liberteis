@@ -52,12 +52,13 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/authStore";
 import { Eye, EyeOff } from "lucide-vue-next";
-import iziToast from "izitoast";
+import { useToast } from "@/composables/useToast";
 import { useRouter } from "vue-router";
 
 const { t } = useI18n();
 const router = useRouter();
 const authStore = useAuthStore();
+const toast = useToast();
 const credentials = ref({
   email: "",
   password: "",
@@ -98,21 +99,13 @@ const handleLogin = async () => {
   try {
     const success = await authStore.login(credentials.value.email, credentials.value.password);
     if (success) {
-      iziToast.success({
-        title: t("pages.auth.login.successTitle"),
-        message: t("pages.auth.login.successMessage"),
-        position: "topRight",
-      });
+      toast.success(t("pages.auth.login.successMessage"), t("pages.auth.login.successTitle"));
       await router.push("/dash/");
     } else {
       throw new Error("Login failed");
     }
   } catch (error) {
-    iziToast.error({
-      title: t("pages.auth.login.errorTitle"),
-      message: t("pages.auth.login.errorMessage"),
-      position: "topRight",
-    });
+    toast.error(t("pages.auth.login.errorMessage"), t("pages.auth.login.errorTitle"));
   }
 };
 </script>
