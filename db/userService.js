@@ -250,32 +250,31 @@ export async function getUsers(status = "active") {
  */
 export async function getUsersCount(type = null) {
   try {
-    const baseFilters = [{ field: "deleted", operator: "=", value: false }];
     let resultData;
 
     switch (type) {
       case "all": {
-        const total = await dbc.dbGetWhere("users", baseFilters);
+        const total = await dbc.dbGetAll("users");
         resultData = { totales: total.length };
         break;
       }
       case "active": {
-        const activeFilters = [...baseFilters, { field: "lastLogin", operator: "is not", value: null }];
+        const activeFilters = [{ field: "deleted", operator: "=", value: false }];
         const activos = await dbc.dbGetWhere("users", activeFilters);
         resultData = { activos: activos.length };
         break;
       }
       case "inactive": {
-        const inactiveFilters = [...baseFilters, { field: "lastLogin", operator: "is", value: null }];
+        const inactiveFilters = [{ field: "deleted", operator: "=", value: true }];
         const inactivos = await dbc.dbGetWhere("users", inactiveFilters);
         resultData = { inactivos: inactivos.length };
         break;
       }
       case null: {
-        const total = await dbc.dbGetWhere("users", baseFilters);
-        const activeFilters = [...baseFilters, { field: "lastLogin", operator: "is not", value: null }];
+        const total = await dbc.dbGetAll("users");
+        const activeFilters = [{ field: "deleted", operator: "=", value: false }];
         const activos = await dbc.dbGetWhere("users", activeFilters);
-        const inactiveFilters = [...baseFilters, { field: "lastLogin", operator: "is", value: null }];
+        const inactiveFilters = [{ field: "deleted", operator: "=", value: true }];
         const inactivos = await dbc.dbGetWhere("users", inactiveFilters);
         resultData = {
           total: total.length,
