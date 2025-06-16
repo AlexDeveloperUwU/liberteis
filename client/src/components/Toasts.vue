@@ -13,7 +13,7 @@
 
             <div class="flex-1 pt-0.5">
               <div v-if="toast.title" class="text-sm font-medium k2d" :class="getTitleClasses(toast.type)">
-                {{ toast.title }}
+                {{ toast.title || $t(`components.toast.titles.${toast.type}`) }}
               </div>
               <div class="text-sm" :class="getMessageClasses(toast.type)">
                 {{ toast.message }}
@@ -46,9 +46,11 @@
 import { CheckCircle, XCircle, AlertTriangle, AlertCircle, X } from "lucide-vue-next";
 import { useToastStore } from "@/stores/toastStore";
 import { ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 
 const toastStore = useToastStore();
 const toastTimers = ref({});
+const { t } = useI18n();
 
 const getToastIcon = (type) => {
   switch (type) {
