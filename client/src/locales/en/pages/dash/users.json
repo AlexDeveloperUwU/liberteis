@@ -26,6 +26,22 @@
   "actions": {
     "edit": "Edit",
     "delete": "Delete",
-    "add": "Add"
+    "add": "Add",
+    "reactivate": "Reactivate",
+    "deactivate": "Deactivate"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Deactivate user",
+      "text": "Are you sure you want to deactivate user {name}?"
+    },
+    "reactivate": {
+      "title": "Reactivate user",
+      "text": "Are you sure you want to reactivate user {name}?"
+    }
+  },
+  "toasts": {
+    "deactivated": "User deactivated successfully",
+    "reactivated": "User reactivated successfully"
   }
 }

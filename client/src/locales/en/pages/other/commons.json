@@ -50,5 +50,6 @@
   "search": {
     "placeholder": "Search...",
     "noResults": "No results"
-  }
+  },
+  "cancel": "Cancel"
 }

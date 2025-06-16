@@ -50,5 +50,6 @@
   "search": {
     "placeholder": "Buscar...",
     "noResults": "Sin resultados"
-  }
+  },
+  "cancel": "Cancelar"
 }
