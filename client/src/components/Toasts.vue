@@ -71,70 +71,70 @@ const getToastBaseClasses = () => {
 const getToastTypeClasses = (type) => {
   switch (type) {
     case "success":
-      return "bg-secondary-50 border-secondary-200";
+      return "bg-background-50 dark:bg-background-100 border-secondary-200 dark:border-secondary-300";
     case "error":
-      return "bg-accent-50 border-accent-200";
+      return "bg-background-50 dark:bg-background-100 border-accent-200 dark:border-accent-300";
     case "warning":
-      return "bg-background-50 border-background-300";
+      return "bg-background-50 dark:bg-background-100 border-background-300 dark:border-background-400";
     case "info":
     default:
-      return "bg-primary-50 border-primary-200";
+      return "bg-background-50 dark:bg-background-100 border-primary-200 dark:border-primary-300";
   }
 };
 
 const getIconClasses = (type) => {
   switch (type) {
     case "success":
-      return "text-secondary-600";
+      return "text-secondary-600 dark:text-secondary-500";
     case "error":
-      return "text-accent-600";
+      return "text-accent-600 dark:text-accent-500";
     case "warning":
-      return "text-text-700";
+      return "text-text-700 dark:text-text-300";
     case "info":
     default:
-      return "text-primary-600";
+      return "text-primary-600 dark:text-primary-500";
   }
 };
 
 const getTitleClasses = (type) => {
   switch (type) {
     case "success":
-      return "text-secondary-800";
+      return "text-text-900 dark:text-text-800";
     case "error":
-      return "text-accent-800";
+      return "text-text-900 dark:text-text-800";
     case "warning":
-      return "text-text-800";
+      return "text-text-900 dark:text-text-800";
     case "info":
     default:
-      return "text-primary-800";
+      return "text-text-900 dark:text-text-800";
   }
 };
 
 const getMessageClasses = (type) => {
   switch (type) {
     case "success":
-      return "text-secondary-700";
+      return "text-text-800 dark:text-text-700";
     case "error":
-      return "text-accent-700";
+      return "text-text-800 dark:text-text-700";
     case "warning":
-      return "text-text-700";
+      return "text-text-800 dark:text-text-700";
     case "info":
     default:
-      return "text-primary-700";
+      return "text-text-800 dark:text-text-700";
   }
 };
 
 const getCloseButtonClasses = (type) => {
   switch (type) {
     case "success":
-      return "text-secondary-600 hover:text-secondary-800";
+      return "text-text-700 hover:text-text-900 dark:text-text-700 dark:hover:text-text-900";
     case "error":
-      return "text-accent-600 hover:text-accent-800";
+      return "text-text-700 hover:text-text-900 dark:text-text-700 dark:hover:text-text-900";
     case "warning":
-      return "text-text-600 hover:text-text-800";
+      return "text-text-700 hover:text-text-900 dark:text-text-700 dark:hover:text-text-900";
     case "info":
     default:
-      return "text-primary-600 hover:text-primary-800";
+      return "text-text-700 hover:text-text-900 dark:text-text-700 dark:hover:text-text-900";
   }
 };
 

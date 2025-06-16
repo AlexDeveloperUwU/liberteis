@@ -237,15 +237,21 @@
                       {{ t("pages.dash.users.actions.edit") }}
                     </button>
                     <button
-                      :disabled="isAdminAccount(user)"
+                      v-if="!isAdminAccount(user)"
+                      @click="handleUserStatusToggle(user)"
                       :class="[
                         'px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full border transition-colors duration-150',
-                        isAdminAccount(user)
-                          ? 'bg-background-200 text-text-500 border-background-300 cursor-not-allowed'
-                          : 'bg-accent-100 text-accent-800 border-accent-200 hover:bg-accent-200 cursor-pointer',
+                        user.deleted
+                          ? 'bg-secondary-100 text-secondary-800 border-secondary-200 hover:bg-secondary-200'
+                          : 'bg-accent-100 text-accent-800 border-accent-200 hover:bg-accent-200',
                       ]">
-                      <Trash class="w-3 h-3" :class="isAdminAccount(user) ? 'text-text-500' : 'text-red-600'" />
-                      {{ t("pages.dash.users.actions.delete") }}
+                      <component
+                        :is="user.deleted ? UserCheck : Trash"
+                        class="w-3 h-3"
+                        :class="user.deleted ? 'text-secondary-600' : 'text-accent-600'" />
+                      {{
+                        user.deleted ? t("pages.dash.users.actions.reactivate") : t("pages.dash.users.actions.delete")
+                      }}
                     </button>
                   </div>
                 </td>
@@ -320,6 +326,8 @@ import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
+import { useModal } from "@/composables/useModal";
+import { useToast } from "@/composables/useToast";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -449,6 +457,50 @@ const getCreatedByName = (createdById) => {
 
   const creator = users.value.find((u) => u.id === createdById);
   return creator ? creator.name : createdById;
+};
+
+const modal = useModal();
+const toast = useToast();
+
+const handleUserStatusToggle = async (user) => {
+  const isDeactivating = !user.deleted;
+  const modalText = isDeactivating
+    ? t("pages.dash.users.modals.deactivate.text", { name: user.name })
+    : t("pages.dash.users.modals.reactivate.text", { name: user.name });
+
+  modal.confirm(
+    modalText,
+    isDeactivating ? t("pages.dash.users.modals.deactivate.title") : t("pages.dash.users.modals.reactivate.title"),
+    {
+      actions: [
+        {
+          label: t("pages.other.commons.cancel"),
+          type: "default",
+        },
+        {
+          label: isDeactivating ? t("pages.dash.users.actions.deactivate") : t("pages.dash.users.actions.reactivate"),
+          type: isDeactivating ? "danger" : "secondary",
+          onClick: async () => {
+            try {
+              const response = await axios.patch(`/api/users/toggle`, null, {
+                params: { id: user.id },
+              });
+
+              if (response.data.success) {
+                toast.success(
+                  isDeactivating ? t("pages.dash.users.toasts.deactivated") : t("pages.dash.users.toasts.reactivated"),
+                );
+                await loadUsers();
+              }
+            } catch (error) {
+              toast.error(t("pages.other.commons.errors.generic"));
+              console.error("Error toggling user status:", error);
+            }
+          },
+        },
+      ],
+    },
+  );
 };
 </script>
 

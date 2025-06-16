@@ -18,6 +18,7 @@
     </main>
 
     <Toasts />
+    <Modals />
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import { useRoute } from "vue-router";
 import NavBar from "./components/NavBar.vue";
 import SideBar from "./components/SideBar.vue";
 import Toasts from "@/components/Toasts.vue";
+import Modals from "@/components/Modals.vue";
 import { useConfigStore } from "@/stores/configStore";
 import { useMainStore } from "@/stores/mainStore";
 
