@@ -67,7 +67,7 @@ export const loadUsersData = async (to) => {
 export const loadUserEditData = async (to) => {
   try {
     const userId = to.params.id;
-    const userResponse = await axios.get(`/api/users?id=${userId}`);
+    const userResponse = await axios.get(`/api/users?id=${userId}&includeInactive=true`);
 
     to.meta.initialData = {
       user: userResponse.data.success ? userResponse.data.data : null,
