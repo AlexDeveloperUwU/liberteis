@@ -97,6 +97,32 @@ api.put("/", async (req, res) => {
   }
 });
 
+/**
+ * @name PATCH /api/users/toggle
+ * @description Toggles a user's active/inactive status
+ * @param {object} req - Express request object
+ * @param {object} req.query - Query parameters
+ * @param {string} req.query.id - The ID of the user to toggle
+ * @param {object} res - Express response object
+ * @returns {object} JSON with status code and toggle result
+ */
+api.patch("/toggle", async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    const result = await users.toggleUserStatus(id);
+    return res.status(result.code).json(result);
+  } catch (error) {
+    console.error("Error en /api/users/toggle [PATCH]:", error);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
+  }
+});
+
 //! Info retrieval operations
 
 /**
