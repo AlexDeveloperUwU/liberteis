@@ -133,49 +133,55 @@
             <thead class="bg-background-50">
               <tr class="border-b border-background-300">
                 <th scope="col" class="px-6 py-4 text-left sticky-column sticky left-0 bg-background-50 z-10">
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('id')">
                     <Hash class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">ID</span>
+                    <SortIcon :active="sortColumn === 'id'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('name')">
                     <User class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
                       {{ t("pages.dash.users.table.name") }}
                     </span>
+                    <SortIcon :active="sortColumn === 'name'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('email')">
                     <Mail class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
                       {{ t("pages.dash.users.table.email") }}
                     </span>
+                    <SortIcon :active="sortColumn === 'email'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('type')">
                     <Settings class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
                       {{ t("pages.dash.users.table.userType") }}
                     </span>
+                    <SortIcon :active="sortColumn === 'type'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('createdBy')">
                     <User class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
                       {{ t("pages.dash.users.table.createdBy") }}
                     </span>
+                    <SortIcon :active="sortColumn === 'createdBy'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('lastLogin')">
                     <Activity class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
                       {{ t("pages.dash.users.table.lastSeen") }}
                     </span>
+                    <SortIcon :active="sortColumn === 'lastLogin'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
@@ -320,6 +326,7 @@ import {
   Check,
   Search,
   X,
+  ChevronUp,
 } from "lucide-vue-next";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
@@ -354,6 +361,42 @@ const metrics = ref(
 const users = ref(route.meta.initialData?.users || []);
 const isLoading = ref(false);
 
+const sortColumn = ref("");
+const sortDirection = ref("asc");
+
+const toggleSort = (column) => {
+  if (sortColumn.value === column) {
+    sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
+  } else {
+    sortColumn.value = column;
+    sortDirection.value = "asc";
+  }
+  
+  currentPage.value = 1;
+};
+
+const SortIcon = defineComponent({
+  props: {
+    active: Boolean,
+    direction: String
+  },
+  setup(props) {
+    return () => {
+      if (!props.active) {
+        return h('span', { class: 'ml-1 text-text-400 opacity-0 group-hover:opacity-100 transition-opacity' }, [
+          h(ChevronUp, { class: 'w-3 h-3' })
+        ]);
+      }
+      
+      return h('span', { class: 'ml-1 text-primary-600' }, [
+        props.direction === 'asc' 
+          ? h(ChevronUp, { class: 'w-3 h-3' }) 
+          : h(ChevronDown, { class: 'w-3 h-3' })
+      ]);
+    };
+  }
+});
+
 const normalizeString = (str) => {
   return str
     ? str
@@ -377,25 +420,74 @@ const textIncludes = (text, searchTerm) => {
 };
 
 const filteredUsers = computed(() => {
-  if (!searchTerm.value.trim()) {
-    return users.value;
+  let result = users.value;
+
+  if (searchTerm.value.trim()) {
+    result = result.filter((user) => {
+      const displayValues = {
+        id: user.id?.toString() || "",
+        name: user.name || "",
+        email: user.email || "",
+        type: t(`pages.dash.users.types.${user.type}`) || user.type || "",
+        originalType: user.type || "",
+        createdBy: user.createdBy || "",
+        lastLogin: user.lastLogin
+          ? new Date(user.lastLogin).toLocaleString()
+          : t("pages.dash.users.table.neverLogged") || "",
+      };
+
+      return Object.values(displayValues).some((value) => textIncludes(value, searchTerm.value));
+    });
   }
 
-  return users.value.filter((user) => {
-    const displayValues = {
-      id: user.id?.toString() || "",
-      name: user.name || "",
-      email: user.email || "",
-      type: t(`pages.dash.users.types.${user.type}`) || user.type || "",
-      originalType: user.type || "",
-      createdBy: user.createdBy || "",
-      lastLogin: user.lastLogin
-        ? new Date(user.lastLogin).toLocaleString()
-        : t("pages.dash.users.table.neverLogged") || "",
-    };
+  if (sortColumn.value) {
+    result = [...result].sort((a, b) => {
+      let valueA, valueB;
 
-    return Object.values(displayValues).some((value) => textIncludes(value, searchTerm.value));
-  });
+      switch (sortColumn.value) {
+        case 'id':
+          valueA = a.id;
+          valueB = b.id;
+          break;
+        case 'name':
+          valueA = a.name?.toLowerCase() || '';
+          valueB = b.name?.toLowerCase() || '';
+          break;
+        case 'email':
+          valueA = a.email?.toLowerCase() || '';
+          valueB = b.email?.toLowerCase() || '';
+          break;
+        case 'type':
+          valueA = a.type || '';
+          valueB = b.type || '';
+          break;
+        case 'createdBy':
+          valueA = getCreatedByName(a.createdBy)?.toLowerCase() || '';
+          valueB = getCreatedByName(b.createdBy)?.toLowerCase() || '';
+          break;
+        case 'lastLogin':
+          valueA = a.lastLogin ? new Date(a.lastLogin).getTime() : 0;
+          valueB = b.lastLogin ? new Date(b.lastLogin).getTime() : 0;
+          break;
+        default:
+          return 0;
+      }
+
+      if (valueA === valueB) {
+        return 0;
+      }
+      
+      const direction = sortDirection.value === 'asc' ? 1 : -1;
+      
+      if (valueA < valueB) {
+        return -1 * direction;
+      } else {
+        return 1 * direction;
+      }
+    });
+  }
+
+  return result;
 });
 
 watch(searchTerm, () => {
@@ -502,6 +594,8 @@ const handleUserStatusToggle = async (user) => {
     },
   );
 };
+
+import { h, defineComponent } from 'vue';
 </script>
 
 <style>
