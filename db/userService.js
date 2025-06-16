@@ -66,6 +66,33 @@ export async function updateUser(id, user) {
 }
 
 /**
+ * Enables / Disables a user in the database.
+ * @param {string} id - User ID.
+ * @returns {Promise<Object>} Operation result.
+ */
+export async function toggleUserStatus(id) {
+  if (!id) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  try {
+    const userResult = await getUser(id, true);
+    if (userResult.error) {
+      return userResult;
+    }
+
+    const user = userResult.data;
+    const newStatus = { deleted: !user.deleted };
+
+    await dbc.dbUpdateData("users", id, newStatus);
+    return ErrorManager.returnSuccess(200, "User status updated successfully", { code: 200 });
+  } catch (error) {
+    logger.error(`Error toggling user status in the database: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
  * Updates a user's last login.
  * @param {string} id - User ID.
  * @returns {Promise<Object>} Operation result.
