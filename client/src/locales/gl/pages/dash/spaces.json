@@ -1,0 +1,40 @@
+{
+  "page": {
+    "title": "Xestión de espazos",
+    "description": "Administra os espazos dispoñibles para o uso polos eventos dentro do sistema.",
+    "tableTitle": "Lista de espazos"
+  },
+  "metrics": {
+    "totals": "Espazos totais",
+    "active": "Espazos activos",
+    "inactive": "Espazos inactivos"
+  },
+  "table": {
+    "name": "Nome",
+    "location": "Ubicación",
+    "info": "Información",
+    "createdBy": "Creado por",
+    "actions": "Accións"
+  },
+  "actions": {
+    "add": "Engadir",
+    "edit": "Editar",
+    "delete": "Desactivar",
+    "deactivate": "Desactivar",
+    "reactivate": "Reactivar"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Desactivar espazo",
+      "text": "Estás seguro de que queres desactivar o espazo '{name}'? Non estará dispoñible para novas reservas."
+    },
+    "reactivate": {
+      "title": "Reactivar espazo",
+      "text": "Estás seguro de que queres reactivar o espazo '{name}'? Estará dispoñible para novas reservas."
+    }
+  },
+  "toasts": {
+    "deactivated": "O espazo foi desactivado correctamente",
+    "reactivated": "O espazo foi reactivado correctamente"
+  }
+}

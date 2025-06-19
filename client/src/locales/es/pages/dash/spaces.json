@@ -1,0 +1,40 @@
+{
+  "page": {
+    "title": "Gestión de espacios",
+    "description": "Administra los espacios disponibles para el uso por los eventos dentro del sistema.",
+    "tableTitle": "Lista de espacios"
+  },
+  "metrics": {
+    "totals": "Espacios totales",
+    "active": "Espacios activos",
+    "inactive": "Espacios inactivos"
+  },
+  "table": {
+    "name": "Nombre",
+    "location": "Ubicación",
+    "info": "Información",
+    "createdBy": "Creado por",
+    "actions": "Acciones"
+  },
+  "actions": {
+    "add": "Añadir",
+    "edit": "Editar",
+    "delete": "Desactivar",
+    "deactivate": "Desactivar",
+    "reactivate": "Reactivar"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Desactivar espacio",
+      "text": "¿Estás seguro de que quieres desactivar el espacio '{name}'? No estará disponible para nuevas reservas."
+    },
+    "reactivate": {
+      "title": "Reactivar espacio",
+      "text": "¿Estás seguro de que quieres reactivar el espacio '{name}'? Estará disponible para nuevas reservas."
+    }
+  },
+  "toasts": {
+    "deactivated": "El espacio ha sido desactivado correctamente",
+    "reactivated": "El espacio ha sido reactivado correctamente"
+  }
+}

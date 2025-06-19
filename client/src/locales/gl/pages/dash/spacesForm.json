@@ -1,0 +1,58 @@
+{
+  "page": {
+    "createTitle": "Crear espazo",
+    "createDescription": "Engade un novo espazo para organizar eventos",
+    "editTitle": "Editar espazo",
+    "editDescription": "Modifica os datos do espazo seleccionado"
+  },
+  "profile": {
+    "preview": "Vista previa",
+    "creationDate": "Data de creación",
+    "createdBy": "Creado por",
+    "loading": "Cargando...",
+    "errorLoading": "Erro ao cargar"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Información básica"
+    },
+    "labels": {
+      "name": "Nome",
+      "location": "Localización",
+      "info": "Información adicional"
+    },
+    "placeholders": {
+      "name": "Nome do espazo",
+      "location": "Enderezo ou ubicación",
+      "info": "Describe este espazo (aforo, características, etc.)",
+      "noLocation": "Non se especificou localización",
+      "noInfo": "Non se engadiu información adicional"
+    },
+    "actions": {
+      "submitting": "Gardando...",
+      "updating": "Actualizando..."
+    }
+  },
+  "common": {
+    "create": "Crear espazo",
+    "edit": "Editar espazo",
+    "update": "Gardar cambios",
+    "cancel": "Cancelar",
+    "status": {
+      "success": "¡Completado!",
+      "error": "Erro"
+    }
+  },
+  "errors": {
+    "nameLength": "O nome debe ter polo menos 3 caracteres e máximo 100",
+    "locationLength": "A localización debe ter polo menos 3 caracteres",
+    "unknown": "Ocorreu un erro descoñecido",
+    "noResponse": "Non se recibiu resposta do servidor",
+    "requestSetup": "Erro ao preparar a solicitude",
+    "loadingSpace": "Erro ao cargar os datos do espazo"
+  },
+  "notifications": {
+    "createSuccess": "Espazo creado correctamente",
+    "updateSuccess": "Espazo actualizado correctamente"
+  }
+}

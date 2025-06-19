@@ -1,0 +1,58 @@
+{
+  "page": {
+    "createTitle": "Create space",
+    "createDescription": "Add a new space to organize events",
+    "editTitle": "Edit space",
+    "editDescription": "Modify the selected space information"
+  },
+  "profile": {
+    "preview": "Preview",
+    "creationDate": "Creation date",
+    "createdBy": "Created by",
+    "loading": "Loading...",
+    "errorLoading": "Error loading"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Basic information"
+    },
+    "labels": {
+      "name": "Name",
+      "location": "Location",
+      "info": "Additional information"
+    },
+    "placeholders": {
+      "name": "Space name",
+      "location": "Address or location",
+      "info": "Describe this space (capacity, features, etc.)",
+      "noLocation": "No location specified",
+      "noInfo": "No additional information added"
+    },
+    "actions": {
+      "submitting": "Saving...",
+      "updating": "Updating..."
+    }
+  },
+  "common": {
+    "create": "Create space",
+    "edit": "Edit space",
+    "update": "Save changes",
+    "cancel": "Cancel",
+    "status": {
+      "success": "Completed!",
+      "error": "Error"
+    }
+  },
+  "errors": {
+    "nameLength": "Name must be at least 3 characters and maximum 100",
+    "locationLength": "Location must be at least 3 characters",
+    "unknown": "An unknown error has occurred",
+    "noResponse": "No response received from server",
+    "requestSetup": "Error preparing request",
+    "loadingSpace": "Error loading space data"
+  },
+  "notifications": {
+    "createSuccess": "Space created successfully",
+    "updateSuccess": "Space updated successfully"
+  }
+}

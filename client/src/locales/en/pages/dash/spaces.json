@@ -1,0 +1,40 @@
+{
+  "page": {
+    "title": "Spaces management",
+    "description": "Manage the spaces avaliable for the use by the events inside the system.",
+    "tableTitle": "Spaces list"
+  },
+  "metrics": {
+    "totals": "Total spaces",
+    "active": "Active spaces",
+    "inactive": "Inactive spaces"
+  },
+  "table": {
+    "name": "Name",
+    "location": "Location",
+    "info": "Information",
+    "createdBy": "Created by",
+    "actions": "Actions"
+  },
+  "actions": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Deactivate",
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Deactivate space",
+      "text": "Are you sure you want to deactivate the space '{name}'? It will not be available for new bookings."
+    },
+    "reactivate": {
+      "title": "Reactivate space",
+      "text": "Are you sure you want to reactivate the space '{name}'? It will be available for new bookings."
+    }
+  },
+  "toasts": {
+    "deactivated": "The space has been deactivated successfully",
+    "reactivated": "The space has been reactivated successfully"
+  }
+}
