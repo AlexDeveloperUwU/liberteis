@@ -1,0 +1,40 @@
+{
+  "page": {
+    "title": "Categories Management",
+    "description": "Manage the categories available in the system.",
+    "tableTitle": "Categories List"
+  },
+  "metrics": {
+    "totals": "Total Categories",
+    "active": "Active Categories",
+    "inactive": "Inactive Categories"
+  },
+  "table": {
+    "name": "Name",
+    "spaces": "Spaces",
+    "createdBy": "Created by",
+    "actions": "Actions",
+    "noSpaces": "No associated spaces"
+  },
+  "actions": {
+    "add": "Add category",
+    "edit": "Edit",
+    "delete": "Deactivate",
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Deactivate category",
+      "text": "Are you sure you want to deactivate the category '{{name}}'? The spaces associated with this category will not be affected."
+    },
+    "reactivate": {
+      "title": "Reactivate category",
+      "text": "Are you sure you want to reactivate the category '{{name}}'?"
+    }
+  },
+  "toasts": {
+    "deactivated": "Category deactivated successfully",
+    "reactivated": "Category reactivated successfully"
+  }
+}

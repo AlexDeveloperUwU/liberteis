@@ -17,8 +17,8 @@ export async function addSpace(space) {
   space.deleted = false;
 
   try {
-    const result = await dbc.dbSaveData("spaces", space);
-    return ErrorManager.returnSuccess(201, "Space created successfully", result);
+    await dbc.dbSaveData("spaces", space);
+    return ErrorManager.returnSuccess(201, "Space created successfully", { code: 201 });
   } catch (error) {
     logger.error(`Error saving space to the database: ${error.message}`);
     return ErrorManager.returnError("spaceSaveError");
@@ -42,8 +42,8 @@ export async function updateSpace(id, space) {
       return ErrorManager.returnError("spaceNotFound");
     }
 
-    const result = await dbc.dbUpdateData("spaces", id, space);
-    return ErrorManager.returnSuccess(200, "Space updated successfully", result);
+    await dbc.dbUpdateData("spaces", id, space);
+    return ErrorManager.returnSuccess(200, "Space updated successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error updating space in the database: ${error.message}`);
     return ErrorManager.returnError("spaceUpdateError");
@@ -55,56 +55,18 @@ export async function updateSpace(id, space) {
  * @param {string} id - ID of the space whose status will be changed.
  * @returns {Promise<Object>} Operation result.
  */
-export async function changeSpaceStatus(id) {
+export async function toggleSpaceStatus(id) {
   if (!id) {
     return ErrorManager.returnError("invalidParameters");
   }
 
   try {
     const newStatus = !(await checkSpaceStatus(id));
-    const result = await dbc.dbUpdateData("spaces", id, { deleted: newStatus });
-    return ErrorManager.returnSuccess(200, "Space status changed successfully", result);
+    await dbc.dbUpdateData("spaces", id, { deleted: newStatus });
+    return ErrorManager.returnSuccess(200, "Space status changed successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error changing space status in the database: ${error.message}`);
     return ErrorManager.returnError("spaceStatusChangeError");
-  }
-}
-
-/**
- * Enables a space in the database.
- * @param {string} id - ID of the space to enable.
- * @returns {Promise<Object>} Operation result.
- */
-export async function enableSpace(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const result = await dbc.dbUpdateData("spaces", id, { deleted: false });
-    return ErrorManager.returnSuccess(200, "Space enabled successfully", result);
-  } catch (error) {
-    logger.error(`Error enabling space in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Disables a space in the database.
- * @param {string} id - ID of the space to disable.
- * @returns {Promise<Object>} Operation result.
- */
-export async function disableSpace(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const result = await dbc.dbUpdateData("spaces", id, { deleted: true });
-    return ErrorManager.returnSuccess(200, "Space disabled successfully", result);
-  } catch (error) {
-    logger.error(`Error disabling space in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
   }
 }
 
@@ -256,6 +218,57 @@ export async function checkSpaceExists(name) {
     return await getSpaceByName(name, true);
   } catch (error) {
     logger.error(`Error checking space existence in the database: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Gets a space count summary.
+ * @param {string} [type="null"] - Status of spaces to count ("all", "active", "inactive").
+ * @return {Promise<Object>} Summary of spaces count by status.
+ */
+export async function getSpacesCount(type = "null") {
+  try {
+    let resultData;
+    switch (type) {
+      case "all": {
+        resultData = await dbc.dbGetAll("spaces");
+        break;
+      }
+
+      case "active": {
+        const activeFilters = [{ field: "deleted", operator: "=", value: false }];
+        const activeSpaces = await dbc.dbGetWhere("spaces", activeFilters);
+        resultData = { active: activeSpaces.length };
+        break;
+      }
+      case "inactive": {
+        const inactiveFilters = [{ field: "deleted", operator: "=", value: true }];
+        const inactiveSpaces = await dbc.dbGetWhere("spaces", inactiveFilters);
+        resultData = { inactive: inactiveSpaces.length };
+        break;
+      }
+
+      case "null": {
+        const totalSpaces = await dbc.dbGetAll("spaces");
+        const activeFilters = [{ field: "deleted", operator: "=", value: false }];
+        const activeSpaces = await dbc.dbGetWhere("spaces", activeFilters);
+        const inactiveFilters = [{ field: "deleted", operator: "=", value: true }];
+        const inactiveSpaces = await dbc.dbGetWhere("spaces", inactiveFilters);
+        resultData = {
+          total: totalSpaces.length,
+          active: activeSpaces.length,
+          inactive: inactiveSpaces.length,
+        };
+        break;
+      }
+      default:
+        return ErrorManager.returnError("invalidParameters");
+    }
+
+    return ErrorManager.returnSuccess(200, "Spaces count retrieved successfully", resultData);
+  } catch (error) {
+    logger.error(`Error retrieving spaces count from the database: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }

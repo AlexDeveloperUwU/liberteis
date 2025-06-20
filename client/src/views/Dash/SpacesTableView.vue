@@ -1,15 +1,15 @@
 <template>
   <div class="h-full w-full p-6">
-    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.dash.users.page.title") }}</h1>
-    <p class="text-text-800 mb-6">{{ t("pages.dash.users.page.description") }}</p>
+    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.dash.spaces.page.title") }}</h1>
+    <p class="text-text-800 mb-6">{{ t("pages.dash.spaces.page.description") }}</p>
 
     <div class="responsive-container mb-6">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
         <div
           class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
           <div class="flex items-center gap-2 mb-2">
-            <Users class="w-5 h-5 text-primary-600" />
-            <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.totals") }}</p>
+            <MapPin class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.spaces.metrics.totals") }}</p>
           </div>
           <h2 class="text-2xl font-bold text-text-950">{{ metrics.total || 0 }}</h2>
         </div>
@@ -17,8 +17,8 @@
         <div
           class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
           <div class="flex items-center gap-2 mb-2">
-            <UserCheck class="w-5 h-5 text-primary-600" />
-            <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.active") }}</p>
+            <CheckCircle class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.spaces.metrics.active") }}</p>
           </div>
           <h2 class="text-2xl font-bold text-text-950">{{ metrics.active || 0 }}</h2>
         </div>
@@ -26,8 +26,8 @@
         <div
           class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
           <div class="flex items-center gap-2 mb-2">
-            <UserMinus class="w-5 h-5 text-primary-600" />
-            <p class="font-medium text-text-800">{{ t("pages.dash.users.metrics.inactive") }}</p>
+            <XCircle class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.spaces.metrics.inactive") }}</p>
           </div>
           <h2 class="text-2xl font-bold text-text-950">{{ metrics.inactive || 0 }}</h2>
         </div>
@@ -37,20 +37,17 @@
     <div class="gap-6 mt-6">
       <div
         class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow duration-200">
-        <!-- Título de la tabla -->
         <div class="flex items-center mb-6 pb-4 border-b border-background-400">
           <div
             class="p-2 bg-primary-100 rounded-lg border border-primary-500 mr-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
-            <Users class="w-5 h-5 text-primary-600" />
+            <MapPin class="w-5 h-5 text-primary-600" />
           </div>
           <h2 class="text-xl font-bold text-text-900 k2d">
-            {{ t("pages.dash.users.page.tableTitle") }}
+            {{ t("pages.dash.spaces.page.tableTitle") }}
           </h2>
         </div>
 
-        <!-- Barra de búsqueda, filtro y botón añadir en la misma línea -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <!-- Barra de búsqueda -->
           <div class="relative flex-1 max-w-md">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search class="h-4 w-4 text-text-500" />
@@ -68,14 +65,13 @@
             </div>
           </div>
 
-          <!-- Filtro y botón añadir -->
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-            <Listbox v-model="userFilter" @update:model-value="loadUsers">
+            <Listbox v-model="spaceFilter" @update:model-value="loadSpaces">
               <div class="relative w-full sm:w-40">
                 <ListboxButton
                   class="h-10 px-3 rounded-lg text-sm font-medium shadow-sm bg-background-50 border border-background-300 text-text-800 focus:outline-none focus:ring-2 focus:ring-primary-500 hover:border-primary-300 transition-all duration-200 flex items-center justify-between w-full">
                   <span class="block truncate text-left">
-                    {{ t(`pages.other.commons.status.${userFilter}`) || userFilter }}
+                    {{ t(`pages.other.commons.status.${spaceFilter}`) || spaceFilter }}
                   </span>
                   <ChevronDown class="w-4 h-4 text-text-400 ml-2" />
                 </ListboxButton>
@@ -120,10 +116,10 @@
             </Listbox>
 
             <button
-              @click="$router.push({ name: 'dashUsersNew' })"
+              @click="$router.push({ name: 'dashSpacesNew' })"
               class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer whitespace-nowrap w-full sm:w-auto">
-              <UserPlus class="w-4 h-4 mr-2" />
-              <span>{{ t("pages.dash.users.actions.add") || "Añadir usuario" }}</span>
+              <MapPinPlus class="w-4 h-4 mr-2" />
+              <span>{{ t("pages.dash.spaces.actions.add") || "Añadir espacio" }}</span>
             </button>
           </div>
         </div>
@@ -141,122 +137,97 @@
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
                   <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('name')">
-                    <User class="w-4 h-4 text-primary-600" />
+                    <BookMarked class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.users.table.name") }}
+                      {{ t("pages.dash.spaces.table.name") }}
                     </span>
                     <SortIcon :active="sortColumn === 'name'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('email')">
-                    <Mail class="w-4 h-4 text-primary-600" />
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('location')">
+                    <MapPin class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.users.table.email") }}
+                      {{ t("pages.dash.spaces.table.location") }}
                     </span>
-                    <SortIcon :active="sortColumn === 'email'" :direction="sortDirection" />
+                    <SortIcon :active="sortColumn === 'location'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('type')">
-                    <Settings class="w-4 h-4 text-primary-600" />
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('info')">
+                    <Info class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.users.table.userType") }}
+                      {{ t("pages.dash.spaces.table.info") }}
                     </span>
-                    <SortIcon :active="sortColumn === 'type'" :direction="sortDirection" />
+                    <SortIcon :active="sortColumn === 'info'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
                   <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('createdBy')">
                     <User class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.users.table.createdBy") }}
+                      {{ t("pages.dash.spaces.table.createdBy") }}
                     </span>
                     <SortIcon :active="sortColumn === 'createdBy'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('lastLogin')">
-                    <Activity class="w-4 h-4 text-primary-600" />
-                    <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.users.table.lastSeen") }}
-                    </span>
-                    <SortIcon :active="sortColumn === 'lastLogin'" :direction="sortDirection" />
-                  </div>
-                </th>
-                <th scope="col" class="px-6 py-4 text-left">
                   <div class="flex items-center gap-2">
-                    <UserCog class="w-4 h-4 text-primary-600" />
+                    <Settings class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.users.table.actions") }}
+                      {{ t("pages.dash.spaces.table.actions") }}
                     </span>
                   </div>
                 </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-background-200">
-              <tr v-for="user in paginatedUsers" :key="user.id" class="group">
+              <tr v-for="space in paginatedSpaces" :key="space.id" class="group">
                 <td
                   class="px-6 py-4 whitespace-nowrap sticky-column sticky left-0 bg-background-100 group-hover:bg-primary-50 transition-colors duration-150 z-20">
                   <span class="text-sm text-text-800">
-                    {{ user.id }}
+                    {{ space.id }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="ml-4">
-                    <div class="text-sm text-text-800">{{ user.name }}</div>
+                    <div class="text-sm text-text-800">{{ space.name }}</div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="text-sm text-text-800">{{ user.email }}</div>
+                  <div class="text-sm text-text-800">{{ space.location }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="text-sm text-text-800">
-                    {{ t(`pages.dash.users.types.${user.type}`) }}
-                  </div>
+                  <div class="text-sm text-text-800 truncate max-w-40" :title="space.info">{{ space.info }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="text-sm text-text-800 truncate max-w-32">{{ getCreatedByName(user.createdBy) }}</div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="flex items-center gap-2">
-                    <span
-                      :class="[
-                        'w-2 h-2 rounded-full',
-                        isUserActive(user.lastLogin) ? 'bg-primary-500' : 'bg-background-400',
-                      ]"></span>
-                    <span class="text-sm text-text-800">
-                      {{
-                        user.lastLogin
-                          ? new Date(user.lastLogin).toLocaleString()
-                          : t("pages.dash.users.table.neverLogged")
-                      }}
-                    </span>
-                  </div>
+                  <div class="text-sm text-text-800 truncate max-w-32">{{ getCreatedByName(space.createdBy) }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="flex items-center gap-2">
                     <button
-                      @click="$router.push({ name: 'dashUsersEdit', params: { id: user.id } })"
+                      @click="$router.push({ name: 'dashSpacesEdit', params: { id: space.id } })"
                       class="px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer">
                       <Pencil class="w-3 h-3 text-primary-600" />
-                      {{ t("pages.dash.users.actions.edit") }}
+                      {{ t("pages.dash.spaces.actions.edit") }}
                     </button>
                     <button
-                      v-if="!isAdminAccount(user)"
-                      @click="handleUserStatusToggle(user)"
+                      v-if="!isSystemSpace(space)"
+                      @click="handleSpaceStatusToggle(space)"
                       :class="[
                         'px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full border transition-colors duration-150',
-                        user.deleted
+                        space.deleted
                           ? 'bg-secondary-100 text-secondary-800 border-secondary-200 hover:bg-secondary-200'
                           : 'bg-accent-100 text-accent-800 border-accent-200 hover:bg-accent-200',
                       ]">
                       <component
-                        :is="user.deleted ? UserCheck : Trash"
+                        :is="space.deleted ? CheckCircle : Trash"
                         class="w-3 h-3"
-                        :class="user.deleted ? 'text-secondary-600' : 'text-accent-600'" />
+                        :class="space.deleted ? 'text-secondary-600' : 'text-accent-600'" />
                       {{
-                        user.deleted ? t("pages.dash.users.actions.reactivate") : t("pages.dash.users.actions.delete")
+                        space.deleted
+                          ? t("pages.dash.spaces.actions.reactivate")
+                          : t("pages.dash.spaces.actions.delete")
                       }}
                     </button>
                   </div>
@@ -308,18 +279,16 @@
 
 <script setup>
 import {
-  Users,
-  UserCheck,
-  UserMinus,
+  MapPin,
+  CheckCircle,
+  XCircle,
   Hash,
   User,
-  Mail,
-  Activity,
-  UserCog,
+  Info,
   Settings,
   Pencil,
   Trash,
-  UserPlus,
+  BookMarked,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
@@ -327,11 +296,12 @@ import {
   Search,
   X,
   ChevronUp,
+  MapPinPlus,
 } from "lucide-vue-next";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import axios from "axios";
 import { useModal } from "@/composables/useModal";
 import { useToast } from "@/composables/useToast";
@@ -340,26 +310,26 @@ const { t } = useI18n();
 const route = useRoute();
 
 const searchTerm = ref("");
-const userFilter = ref("active");
+const spaceFilter = ref("active");
 const currentPage = ref(1);
 const itemsPerPage = 5;
 
 const filterIcons = {
-  active: UserCheck,
-  inactive: UserMinus,
-  all: Users,
+  active: CheckCircle,
+  inactive: XCircle,
+  all: MapPin,
 };
 
-const metrics = ref(
-  route.meta.initialData?.metrics || {
-    total: 0,
-    active: 0,
-    inactive: 0,
-  },
-);
+const metrics = ref({
+  total: 0,
+  active: 0,
+  inactive: 0,
+});
 
-const users = ref(route.meta.initialData?.users || []);
+const spaces = ref([]);
+
 const isLoading = ref(false);
+const users = ref({});
 
 const sortColumn = ref("");
 const sortDirection = ref("asc");
@@ -417,21 +387,17 @@ const textIncludes = (text, searchTerm) => {
   return searchWords.every((word) => normalizedText.includes(word));
 };
 
-const filteredUsers = computed(() => {
-  let result = users.value;
+const filteredSpaces = computed(() => {
+  let result = spaces.value;
 
   if (searchTerm.value.trim()) {
-    result = result.filter((user) => {
+    result = result.filter((space) => {
       const displayValues = {
-        id: user.id?.toString() || "",
-        name: user.name || "",
-        email: user.email || "",
-        type: t(`pages.dash.users.types.${user.type}`) || user.type || "",
-        originalType: user.type || "",
-        createdBy: user.createdBy || "",
-        lastLogin: user.lastLogin
-          ? new Date(user.lastLogin).toLocaleString()
-          : t("pages.dash.users.table.neverLogged") || "",
+        id: space.id?.toString() || "",
+        name: space.name || "",
+        location: space.location || "",
+        info: space.info || "",
+        createdBy: space.createdBy || "",
       };
 
       return Object.values(displayValues).some((value) => textIncludes(value, searchTerm.value));
@@ -451,21 +417,17 @@ const filteredUsers = computed(() => {
           valueA = a.name?.toLowerCase() || "";
           valueB = b.name?.toLowerCase() || "";
           break;
-        case "email":
-          valueA = a.email?.toLowerCase() || "";
-          valueB = b.email?.toLowerCase() || "";
+        case "location":
+          valueA = a.location?.toLowerCase() || "";
+          valueB = b.location?.toLowerCase() || "";
           break;
-        case "type":
-          valueA = a.type || "";
-          valueB = b.type || "";
+        case "info":
+          valueA = a.info?.toLowerCase() || "";
+          valueB = b.info?.toLowerCase() || "";
           break;
         case "createdBy":
           valueA = getCreatedByName(a.createdBy)?.toLowerCase() || "";
           valueB = getCreatedByName(b.createdBy)?.toLowerCase() || "";
-          break;
-        case "lastLogin":
-          valueA = a.lastLogin ? new Date(a.lastLogin).getTime() : 0;
-          valueB = b.lastLogin ? new Date(b.lastLogin).getTime() : 0;
           break;
         default:
           return 0;
@@ -493,51 +455,74 @@ watch(searchTerm, () => {
 });
 
 const totalPages = computed(() => {
-  return Math.max(1, Math.ceil(filteredUsers.value.length / itemsPerPage));
+  return Math.max(1, Math.ceil(filteredSpaces.value.length / itemsPerPage));
 });
 
-const paginatedUsers = computed(() => {
+const paginatedSpaces = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
-  return filteredUsers.value.slice(start, end);
+  return filteredSpaces.value.slice(start, end);
 });
 
-const loadUsers = async () => {
+const loadSpaces = async () => {
   try {
     isLoading.value = true;
-    const response = await axios.get("/api/users", {
+
+    const response = await axios.get("/api/spaces", {
       params: {
-        status: userFilter.value,
+        status: spaceFilter.value,
       },
     });
 
-    users.value = response.data.data || [];
+    spaces.value = response.data.data || [];
+
+    if (response.data.metrics) {
+      console.log("Metrics from API response:", response.data.metrics);
+      metrics.value = response.data.metrics;
+    } else {
+      try {
+        const metricsResponse = await axios.get("/api/spaces/count");
+        if (metricsResponse.data && metricsResponse.data.success) {
+          console.log("Metrics from dedicated endpoint:", metricsResponse.data.data);
+          metrics.value = metricsResponse.data.data;
+        }
+      } catch (error) {
+        console.error("Error cargando métricas:", error);
+      }
+    }
 
     currentPage.value = 1;
   } catch (error) {
-    console.error("Error cargando usuarios:", error);
-
-    users.value = [];
+    console.error("Error cargando espacios:", error);
+    spaces.value = [];
   } finally {
     isLoading.value = false;
   }
 };
 
-onMounted(() => {
-  if (!route.meta.initialData) {
-    loadUsers();
+onMounted(async () => {
+  console.log("Mount - route.meta.initialData:", route.meta.initialData);
+
+  if (route.meta.initialData) {
+    // Usar datos del fetcher
+    if (route.meta.initialData.metrics) {
+      console.log("Mount - Setting metrics from initialData:", route.meta.initialData.metrics);
+      metrics.value = route.meta.initialData.metrics;
+    }
+
+    if (route.meta.initialData.spaces) {
+      console.log("Mount - Setting spaces from initialData");
+      spaces.value = route.meta.initialData.spaces;
+    }
+  } else {
+    // Fallback si no hay datos iniciales
+    console.log("Mount - No initial data, loading manually");
+    await loadSpaces();
   }
 });
 
-const isUserActive = (lastLogin) => {
-  if (!lastLogin) return false;
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  return new Date(lastLogin) > thirtyDaysAgo;
-};
-
-const isAdminAccount = (user) => {
-  return user.createdBy === "System" && user.name === "Administrador";
+const isSystemSpace = (space) => {
+  return space.createdBy === "System";
 };
 
 const getCreatedByName = (createdById) => {
@@ -545,22 +530,40 @@ const getCreatedByName = (createdById) => {
     return "Sistema";
   }
 
-  const creator = users.value.find((u) => u.id === createdById);
-  return creator ? creator.name : createdById;
+  if (users.value[createdById]) {
+    return users.value[createdById];
+  }
+
+  loadUserName(createdById);
+  return createdById;
+};
+
+const loadUserName = async (userId) => {
+  if (users.value[userId] !== undefined) return;
+
+  try {
+    const response = await axios.get(`/api/users?id=${userId}`);
+    if (response.data.data && response.data.data.name) {
+      users.value[userId] = response.data.data.name;
+    }
+  } catch (error) {
+    console.error(`Error cargando nombre de usuario ${userId}:`, error);
+    users.value[userId] = userId;
+  }
 };
 
 const modal = useModal();
 const toast = useToast();
 
-const handleUserStatusToggle = async (user) => {
-  const isDeactivating = !user.deleted;
+const handleSpaceStatusToggle = async (space) => {
+  const isDeactivating = !space.deleted;
   const modalText = isDeactivating
-    ? t("pages.dash.users.modals.deactivate.text", { name: user.name })
-    : t("pages.dash.users.modals.reactivate.text", { name: user.name });
+    ? t("pages.dash.spaces.modals.deactivate.text", { name: space.name })
+    : t("pages.dash.spaces.modals.reactivate.text", { name: space.name });
 
   modal.confirm(
     modalText,
-    isDeactivating ? t("pages.dash.users.modals.deactivate.title") : t("pages.dash.users.modals.reactivate.title"),
+    isDeactivating ? t("pages.dash.spaces.modals.deactivate.title") : t("pages.dash.spaces.modals.reactivate.title"),
     {
       actions: [
         {
@@ -568,23 +571,25 @@ const handleUserStatusToggle = async (user) => {
           type: "default",
         },
         {
-          label: isDeactivating ? t("pages.dash.users.actions.deactivate") : t("pages.dash.users.actions.reactivate"),
+          label: isDeactivating ? t("pages.dash.spaces.actions.deactivate") : t("pages.dash.spaces.actions.reactivate"),
           type: isDeactivating ? "danger" : "secondary",
           onClick: async () => {
             try {
-              const response = await axios.patch(`/api/users/toggle`, null, {
-                params: { id: user.id },
+              const response = await axios.patch(`/api/spaces/toggle`, null, {
+                params: { id: space.id },
               });
 
               if (response.data.success) {
                 toast.success(
-                  isDeactivating ? t("pages.dash.users.toasts.deactivated") : t("pages.dash.users.toasts.reactivated"),
+                  isDeactivating
+                    ? t("pages.dash.spaces.toasts.deactivated")
+                    : t("pages.dash.spaces.toasts.reactivated"),
                 );
-                await loadUsers();
+                await loadSpaces();
               }
             } catch (error) {
               toast.error(t("pages.other.commons.errors.generic"));
-              console.error("Error toggling user status:", error);
+              console.error("Error toggling space status:", error);
             }
           },
         },

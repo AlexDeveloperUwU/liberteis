@@ -8,7 +8,7 @@ import ErrorManager from "../errors/errorManager.js";
  * @async
  * @param {Object} category - Object representing the category.
  * @param {string} category.name - Name of the category.
- * @param {Array} [category.spaces=[]] - Spaces associated with the category.
+ * @param {Array<string>} [category.spaces=[]] - IDs of spaces associated with the category.
  * @returns {Promise<Object>} Operation result.
  */
 export async function addCategory(category) {
@@ -21,11 +21,13 @@ export async function addCategory(category) {
   if (!Array.isArray(category.spaces)) {
     category.spaces = [];
   }
+  // Ensure spaces only contains strings
+  category.spaces = category.spaces.filter((spaceId) => typeof spaceId === "string");
   category.spaces = JSON.stringify(category.spaces);
 
   try {
-    const result = await dbc.dbSaveData("categories", category);
-    return ErrorManager.returnSuccess(201, "Category created successfully", result);
+    await dbc.dbSaveData("categories", category);
+    return ErrorManager.returnSuccess(201, "Category created successfully", { code: 201 });
   } catch (error) {
     logger.error(`Error saving category to the database: ${error.message}`);
     return ErrorManager.returnError("categorySaveError");
@@ -48,12 +50,13 @@ export async function updateCategory(id, category) {
     if (!Array.isArray(category.spaces)) {
       category.spaces = [];
     }
+    category.spaces = category.spaces.filter((spaceId) => typeof spaceId === "string");
     category.spaces = JSON.stringify(category.spaces);
   }
 
   try {
-    const result = await dbc.dbUpdateData("categories", id, category);
-    return ErrorManager.returnSuccess(200, "Category updated successfully", result);
+    await dbc.dbUpdateData("categories", id, category);
+    return ErrorManager.returnSuccess(200, "Category updated successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error updating category in the database: ${error.message}`);
     return ErrorManager.returnError("categoryUpdateError");
@@ -73,8 +76,8 @@ export async function changeCategoryStatus(id) {
 
   try {
     const newStatus = !(await checkCategoryStatus(id));
-    const result = await dbc.dbUpdateData("categories", id, { deleted: newStatus });
-    return ErrorManager.returnSuccess(200, "Category status changed successfully", result);
+    await dbc.dbUpdateData("categories", id, { deleted: newStatus });
+    return ErrorManager.returnSuccess(200, "Category status changed successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error changing category status in the database: ${error.message}`);
     return ErrorManager.returnError("categoryStatusChangeError");
@@ -93,8 +96,8 @@ export async function enableCategory(id) {
   }
 
   try {
-    const result = await dbc.dbUpdateData("categories", id, { deleted: false });
-    return ErrorManager.returnSuccess(200, "Category enabled successfully", result);
+    await dbc.dbUpdateData("categories", id, { deleted: false });
+    return ErrorManager.returnSuccess(200, "Category enabled successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error enabling category in the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -113,8 +116,8 @@ export async function disableCategory(id) {
   }
 
   try {
-    const result = await dbc.dbUpdateData("categories", id, { deleted: true });
-    return ErrorManager.returnSuccess(200, "Category disabled successfully", result);
+    await dbc.dbUpdateData("categories", id, { deleted: true });
+    return ErrorManager.returnSuccess(200, "Category disabled successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error disabling category in the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -295,6 +298,57 @@ export async function getCategories(status = "active") {
     return ErrorManager.returnSuccess(200, "Categories retrieved successfully", result);
   } catch (error) {
     logger.error(`Error retrieving categories from the database: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Gets a category count summary.
+ * @async
+ * @param {string} [type="null"] - Status of categories to count ("all", "active", "inactive").
+ * @returns {Promise<Object>} Summary of categories count by status.
+ */
+export async function getCategoriesCount(type = "null") {
+  try {
+    let resultData;
+    switch (type) {
+      case "all": {
+        const allCategories = await dbc.dbGetAll("categories");
+        resultData = { total: allCategories.length };
+        break;
+      }
+      case "active": {
+        const activeFilters = [{ field: "deleted", operator: "=", value: false }];
+        const activeCategories = await dbc.dbGetWhere("categories", activeFilters);
+        resultData = { active: activeCategories.length };
+        break;
+      }
+      case "inactive": {
+        const inactiveFilters = [{ field: "deleted", operator: "=", value: true }];
+        const inactiveCategories = await dbc.dbGetWhere("categories", inactiveFilters);
+        resultData = { inactive: inactiveCategories.length };
+        break;
+      }
+      case "null": {
+        const allCategories = await dbc.dbGetAll("categories");
+        const activeFilters = [{ field: "deleted", operator: "=", value: false }];
+        const activeCategories = await dbc.dbGetWhere("categories", activeFilters);
+        const inactiveFilters = [{ field: "deleted", operator: "=", value: true }];
+        const inactiveCategories = await dbc.dbGetWhere("categories", inactiveFilters);
+        resultData = {
+          total: allCategories.length,
+          active: activeCategories.length,
+          inactive: inactiveCategories.length,
+        };
+        break;
+      }
+      default:
+        return ErrorManager.returnError("invalidParameters");
+    }
+
+    return ErrorManager.returnSuccess(200, "Categories count retrieved successfully", resultData);
+  } catch (error) {
+    logger.error(`Error retrieving categories count from the database: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }

@@ -1,13 +1,13 @@
-import { useModalStore } from '@/stores/modalStore'
+import { useModalStore } from "@/stores/modalStore";
 
 export function useModal() {
-  const modalStore = useModalStore()
+  const modalStore = useModalStore();
 
   return {
     confirm: modalStore.confirm,
     info: modalStore.info,
     show: modalStore.addModal,
     remove: modalStore.removeModal,
-    clear: modalStore.clearAllModals
-  }
+    clear: modalStore.clearAllModals,
+  };
 }

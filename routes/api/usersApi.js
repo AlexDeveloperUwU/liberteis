@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as users from "../../db/userService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { generatePass } from "../../utils/password.js";
+import { logger } from "../../utils/logger.js";
 
 /**
  * Express router for authentication related endpoints.
@@ -29,11 +30,11 @@ api.post("/", async (req, res) => {
 
     userData.password = generatePass();
 
-    console.log("Creating user with data:", userData);
+    logger.info("Creating user with data:", userData);
     const result = await users.addUser(userData);
     return res.status(result.code).json(result);
   } catch (error) {
-    console.error("Error en /api/users/ [POST]:", error);
+    logger.error("Error en /api/users/ [POST]:", error);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -91,7 +92,7 @@ api.put("/", async (req, res) => {
       }),
     );
   } catch (error) {
-    console.error("Error en /api/users/ [PUT]:", error);
+    logger.error("Error en /api/users/ [PUT]:", error);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -117,7 +118,7 @@ api.patch("/toggle", async (req, res) => {
     const result = await users.toggleUserStatus(id);
     return res.status(result.code).json(result);
   } catch (error) {
-    console.error("Error en /api/users/toggle [PATCH]:", error);
+    logger.error("Error en /api/users/toggle [PATCH]:", error);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -140,7 +141,7 @@ api.get("/count", async (req, res) => {
     const result = await users.getUsersCount(type);
     return res.status(result.code).json(result);
   } catch (error) {
-    console.error("Error in /api/users/count:", error);
+    logger.error("Error in /api/users/count:", error);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -170,7 +171,7 @@ api.get("/", async (req, res) => {
     const result = await users.getUsers(status || "active");
     return res.status(result.code).json(result);
   } catch (error) {
-    console.error("Error in /api/users/:", error);
+    logger.error("Error in /api/users/:", error);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -192,7 +193,7 @@ api.get("/emailCheck", async (req, res) => {
     const exists = await users.checkUserExists(email);
     return res.status(200).json(exists);
   } catch (error) {
-    console.error("Error in /api/users/:email/exists:", error);
+    logger.error("Error in /api/users/:email/exists:", error);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }

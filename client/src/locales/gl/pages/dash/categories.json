@@ -1,0 +1,40 @@
+{
+  "page": {
+    "title": "Xestión de Categorías",
+    "description": "Administra as categorías dispoñibles no sistema.",
+    "tableTitle": "Lista de Categorías"
+  },
+  "metrics": {
+    "totals": "Total de Categorías",
+    "active": "Categorías Activas",
+    "inactive": "Categorías Inactivas"
+  },
+  "table": {
+    "name": "Nome",
+    "spaces": "Espazos",
+    "createdBy": "Creado por",
+    "actions": "Accións",
+    "noSpaces": "Sen espazos asociados"
+  },
+  "actions": {
+    "add": "Engadir categoría",
+    "edit": "Editar",
+    "delete": "Desactivar",
+    "deactivate": "Desactivar",
+    "reactivate": "Reactivar"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Desactivar categoría",
+      "text": "¿Estás seguro de que desexas desactivar a categoría '{{name}}'? Os espazos asociados a esta categoría non se verán afectados."
+    },
+    "reactivate": {
+      "title": "Reactivar categoría",
+      "text": "¿Estás seguro de que desexas reactivar a categoría '{{name}}'?"
+    }
+  },
+  "toasts": {
+    "deactivated": "Categoría desactivada correctamente",
+    "reactivated": "Categoría reactivada correctamente"
+  }
+}

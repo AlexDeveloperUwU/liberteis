@@ -1,0 +1,40 @@
+{
+  "page": {
+    "title": "Gestión de Categorías",
+    "description": "Administra las categorías disponibles en el sistema.",
+    "tableTitle": "Lista de Categorías"
+  },
+  "metrics": {
+    "totals": "Total de Categorías",
+    "active": "Categorías Activas",
+    "inactive": "Categorías Inactivas"
+  },
+  "table": {
+    "name": "Nombre",
+    "spaces": "Espacios",
+    "createdBy": "Creado por",
+    "actions": "Acciones",
+    "noSpaces": "Sin espacios asociados"
+  },
+  "actions": {
+    "add": "Añadir categoría",
+    "edit": "Editar",
+    "delete": "Desactivar",
+    "deactivate": "Desactivar",
+    "reactivate": "Reactivar"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Desactivar categoría",
+      "text": "¿Estás seguro que deseas desactivar la categoría '{{name}}'? Los espacios asociados a esta categoría no se verán afectados."
+    },
+    "reactivate": {
+      "title": "Reactivar categoría",
+      "text": "¿Estás seguro que deseas reactivar la categoría '{{name}}'?"
+    }
+  },
+  "toasts": {
+    "deactivated": "Categoría desactivada correctamente",
+    "reactivated": "Categoría reactivada correctamente"
+  }
+}

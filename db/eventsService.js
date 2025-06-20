@@ -18,8 +18,8 @@ export async function addEvent(event) {
   event.id = await id.generateId("event");
 
   try {
-    const result = await dbc.dbSaveData("events", event);
-    return ErrorManager.returnSuccess(201, "Event created successfully", result);
+    await dbc.dbSaveData("events", event);
+    return ErrorManager.returnSuccess(201, "Event created successfully", { code: 201 });
   } catch (error) {
     logger.error(`Error saving event to the database: ${error.message}`);
     return ErrorManager.returnError("eventSaveError");
@@ -38,8 +38,8 @@ export async function updateEvent(id, event) {
   }
 
   try {
-    const result = await dbc.dbUpdateData("events", id, event);
-    return ErrorManager.returnSuccess(200, "Event updated successfully", result);
+    await dbc.dbUpdateData("events", id, event);
+    return ErrorManager.returnSuccess(200, "Event updated successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error updating event in the database: ${error.message}`);
     return ErrorManager.returnError("eventUpdateError");
@@ -58,49 +58,11 @@ export async function changeEventStatus(id) {
 
   try {
     const newStatus = !(await checkEventStatus(id));
-    const result = await dbc.dbUpdateData("events", id, { deleted: newStatus });
-    return ErrorManager.returnSuccess(200, "Event status changed successfully", result);
+    await dbc.dbUpdateData("events", id, { deleted: newStatus });
+    return ErrorManager.returnSuccess(200, "Event status changed successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error changing event status in the database: ${error.message}`);
     return ErrorManager.returnError("eventStatusChangeError");
-  }
-}
-
-/**
- * Enables an event in the database.
- * @param {string} id - ID of the event to enable.
- * @returns {Promise<Object>} Operation result.
- */
-export async function enableEvent(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const result = await dbc.dbUpdateData("events", id, { deleted: false });
-    return ErrorManager.returnSuccess(200, "Event enabled successfully", result);
-  } catch (error) {
-    logger.error(`Error enabling event in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Disables an event in the database.
- * @param {string} id - ID of the event to disable.
- * @returns {Promise<Object>} Operation result.
- */
-export async function disableEvent(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const result = await dbc.dbUpdateData("events", id, { deleted: true });
-    return ErrorManager.returnSuccess(200, "Event disabled successfully", result);
-  } catch (error) {
-    logger.error(`Error disabling event in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
   }
 }
 

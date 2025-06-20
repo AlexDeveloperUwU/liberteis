@@ -1,7 +1,7 @@
-import { useToastStore } from '@/stores/toastStore'
+import { useToastStore } from "@/stores/toastStore";
 
 export function useToast() {
-  const toastStore = useToastStore()
+  const toastStore = useToastStore();
 
   return {
     success: toastStore.success,
@@ -10,6 +10,6 @@ export function useToast() {
     info: toastStore.info,
     show: toastStore.addToast,
     remove: toastStore.removeToast,
-    clear: toastStore.clearAllToasts
-  }
+    clear: toastStore.clearAllToasts,
+  };
 }

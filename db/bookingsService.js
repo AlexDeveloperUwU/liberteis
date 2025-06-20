@@ -20,8 +20,8 @@ export async function addBooking(booking) {
   booking.deleted = false;
 
   try {
-    const result = await dbc.dbSaveData("bookings", booking);
-    return ErrorManager.returnSuccess(201, "Booking created successfully", result);
+    await dbc.dbSaveData("bookings", booking);
+    return ErrorManager.returnSuccess(201, "Booking created successfully", { code: 201 });
   } catch (error) {
     logger.error(`Error saving booking to the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -40,8 +40,8 @@ export async function updateBooking(id, booking) {
   }
 
   try {
-    const result = await dbc.dbUpdateData("bookings", id, booking);
-    return ErrorManager.returnSuccess(200, "Booking updated successfully", result);
+    await dbc.dbUpdateData("bookings", id, booking);
+    return ErrorManager.returnSuccess(200, "Booking updated successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error updating booking in the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -60,8 +60,8 @@ export async function changeBookingStatus(id) {
 
   try {
     const newStatus = !(await checkBookingStatus(id));
-    const result = await dbc.dbUpdateData("bookings", id, { deleted: newStatus });
-    return ErrorManager.returnSuccess(200, "Booking status changed successfully", result);
+    await dbc.dbUpdateData("bookings", id, { deleted: newStatus });
+    return ErrorManager.returnSuccess(200, "Booking status changed successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error changing booking status in the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -79,8 +79,8 @@ export async function enableBooking(id) {
   }
 
   try {
-    const result = await dbc.dbUpdateData("bookings", id, { deleted: false });
-    return ErrorManager.returnSuccess(200, "Booking enabled successfully", result);
+    await dbc.dbUpdateData("bookings", id, { deleted: false });
+    return ErrorManager.returnSuccess(200, "Booking enabled successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error enabling booking in the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -98,8 +98,8 @@ export async function disableBooking(id) {
   }
 
   try {
-    const result = await dbc.dbUpdateData("bookings", id, { deleted: true });
-    return ErrorManager.returnSuccess(200, "Booking disabled successfully", result);
+    await dbc.dbUpdateData("bookings", id, { deleted: true });
+    return ErrorManager.returnSuccess(200, "Booking disabled successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error disabling booking in the database: ${error.message}`);
     return ErrorManager.handleError(error);
