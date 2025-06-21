@@ -40,7 +40,6 @@
                   </p>
                 </div>
               </div>
-
               <div class="space-y-4">
                 <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
                   <MapPin class="w-5 h-5 text-primary-600 mr-3" />
@@ -65,7 +64,6 @@
                     </div>
                   </div>
                 </template>
-
                 <div
                   v-if="formData.info"
                   class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">

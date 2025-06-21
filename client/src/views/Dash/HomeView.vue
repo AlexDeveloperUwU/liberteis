@@ -42,9 +42,7 @@
       <div
         class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow duration-200">
         <div class="calendar-container">
-          <!-- Calendario -->
           <div class="custom-calendar">
-            <!-- Cabecera del Calendario -->
             <div
               class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 border-b border-background-400">
               <div class="flex items-center mb-4 sm:mb-0">
@@ -88,8 +86,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- Vista del Calendario (Mensual o Lista) -->
             <div
               v-if="currentView === 'month'"
               class="calendar-month-view border border-background-300 rounded-lg overflow-hidden shadow-sm">
@@ -140,8 +136,6 @@
                 </template>
               </div>
             </div>
-
-            <!-- Vista de Lista -->
             <div v-else class="calendar-list-view border border-background-300 rounded-lg overflow-hidden shadow-sm">
               <div class="divide-y divide-background-200">
                 <div v-for="(group, date) in groupedEvents" :key="date" class="bg-background-50">
@@ -270,7 +264,6 @@ const route = useRoute();
 const { t, locale } = useI18n();
 const configStore = useConfigStore();
 
-// Obtener datos iniciales con la estructura del ErrorManager
 const initialData = route.meta.initialData || { metrics: {}, error: false, errorMessage: "" };
 const metrics = ref(initialData.metrics || {});
 

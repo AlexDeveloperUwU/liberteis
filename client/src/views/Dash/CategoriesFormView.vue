@@ -256,9 +256,7 @@ import {
   CheckCircle2,
   X,
   Save,
-  Calendar,
   XCircle,
-  FileText,
   LayoutGrid,
   Check,
   ChevronDown,
@@ -368,7 +366,7 @@ watch(selectedSpaces, (newValue) => {
 watch(selectedSpace, (newValue) => {
   if (newValue) {
     selectedSpaces.value = [...selectedSpaces.value, newValue];
-    selectedSpace.value = ""; // Reset selection
+    selectedSpace.value = "";
   }
 });
 

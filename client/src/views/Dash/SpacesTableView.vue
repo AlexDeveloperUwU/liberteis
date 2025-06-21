@@ -502,7 +502,6 @@ const loadSpaces = async () => {
 
 onMounted(async () => {
   if (route.meta.initialData) {
-    // Usar datos del fetcher
     if (route.meta.initialData.metrics) {
       metrics.value = route.meta.initialData.metrics;
     }
@@ -511,7 +510,6 @@ onMounted(async () => {
       spaces.value = route.meta.initialData.spaces;
     }
   } else {
-    // Fallback si no hay datos iniciales
     await loadSpaces();
   }
 });

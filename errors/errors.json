@@ -130,5 +130,9 @@
   "passwordUpdateError": {
     "code": 500,
     "message": "pages.other.errors.passwordUpdateError"
+  },
+  "userDisabled": {
+    "code": 403,
+    "message": "pages.other.errors.userDisabled"
   }
 }

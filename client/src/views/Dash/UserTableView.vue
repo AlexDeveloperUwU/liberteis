@@ -37,7 +37,6 @@
     <div class="gap-6 mt-6">
       <div
         class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow duration-200">
-        <!-- Título de la tabla -->
         <div class="flex items-center mb-6 pb-4 border-b border-background-400">
           <div
             class="p-2 bg-primary-100 rounded-lg border border-primary-500 mr-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
@@ -47,10 +46,7 @@
             {{ t("pages.dash.users.page.tableTitle") }}
           </h2>
         </div>
-
-        <!-- Barra de búsqueda, filtro y botón añadir en la misma línea -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <!-- Barra de búsqueda -->
           <div class="relative flex-1 max-w-md">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search class="h-4 w-4 text-text-500" />
@@ -67,8 +63,6 @@
               <X class="h-4 w-4 text-text-400 hover:text-text-600" />
             </div>
           </div>
-
-          <!-- Filtro y botón añadir -->
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
             <Listbox v-model="userFilter" @update:model-value="loadUsers">
               <div class="relative w-full sm:w-40">
@@ -118,7 +112,6 @@
                 </transition>
               </div>
             </Listbox>
-
             <button
               @click="$router.push({ name: 'dashUsersNew' })"
               class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer whitespace-nowrap w-full sm:w-auto">

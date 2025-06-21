@@ -176,7 +176,6 @@ export async function dbCreateTables() {
       await trx.insertInto("config").values({ id: "domain", value: "http://localhost:3000" }).execute();
     }
 
-    // Después de crear todas las tablas y configuraciones, añadir el admin
     await createAdminUser();
   });
 }

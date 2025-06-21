@@ -2,6 +2,7 @@
   "title": "EvenTeis",
   "logout": "Logout",
   "login": "Login",
-  "lightMode": "Light Mode",
-  "darkMode": "Dark Mode"
+  "lightMode": "Light mode",
+  "darkMode": "Dark mode",
+  "settings": "Settings"
 }

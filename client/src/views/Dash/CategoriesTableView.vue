@@ -488,7 +488,6 @@ const loadCategories = async () => {
       }
     }
 
-    // Cargar información de espacios
     await loadSpaceInfo();
 
     currentPage.value = 1;
@@ -550,13 +549,11 @@ const getSpaceName = (spaceId) => {
 
 onMounted(async () => {
   if (route.meta.initialData) {
-    // Usar datos del fetcher
     if (route.meta.initialData.metrics) {
       metrics.value = route.meta.initialData.metrics;
     }
 
     if (route.meta.initialData.spaces && Array.isArray(route.meta.initialData.spaces)) {
-      // Inicializar la caché de espacios con los datos del fetcher
       for (const space of route.meta.initialData.spaces) {
         if (space && space.id) {
           spaces.value[space.id] = space;
@@ -569,7 +566,6 @@ onMounted(async () => {
       await loadSpaceInfo();
     }
   } else {
-    // Fallback si no hay datos iniciales
     await loadCategories();
   }
 });

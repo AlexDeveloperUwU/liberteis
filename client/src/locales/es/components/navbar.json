@@ -3,5 +3,6 @@
   "logout": "Cerrar sesión",
   "login": "Iniciar sesión",
   "lightMode": "Modo claro",
-  "darkMode": "Modo oscuro"
+  "darkMode": "Modo oscuro",
+  "settings": "Configuración"
 }

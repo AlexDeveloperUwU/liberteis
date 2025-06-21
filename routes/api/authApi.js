@@ -33,6 +33,9 @@ api.post("/login", async (req, res) => {
     }
 
     const user = userResult.data;
+    if (user.deleted) {
+      return res.status(403).json(ErrorManager.returnError("userDisabled"));
+    }
     const isPasswordValid = validatePass(password, user.hashedPassword);
     if (!isPasswordValid) {
       return res.status(401).json(ErrorManager.returnError("invalidParameters"));

@@ -123,6 +123,19 @@
                 </MenuItem>
                 <MenuItem v-if="authStore.isAuthenticated" v-slot="{ active }">
                   <button
+                    @click="navigateToConfig"
+                    class="w-full text-left px-4 py-2 text-sm transition-all duration-150 border-l-[3px] border-transparent flex items-center"
+                    :class="[
+                      active
+                        ? 'border-l-primary-500 text-primary-600 bg-primary-50'
+                        : 'text-text-800 hover:bg-primary-50 hover:text-primary-600 hover:border-l-primary-300',
+                    ]">
+                    <Settings class="inline-block mr-2 h-4 w-4" />
+                    {{ t("components.navbar.settings") }}
+                  </button>
+                </MenuItem>
+                <MenuItem v-if="authStore.isAuthenticated" v-slot="{ active }">
+                  <button
                     @click="handleLogout"
                     class="w-full text-left px-4 py-2 text-sm transition-all duration-150 border-l-[3px] border-transparent flex items-center"
                     :class="[
@@ -167,6 +180,7 @@ import {
   Moon,
   Sun,
   User,
+  Settings
 } from "lucide-vue-next";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
@@ -175,7 +189,7 @@ import { useMainStore } from "../stores/mainStore";
 import { useAuthStore } from "../stores/authStore";
 import { useConfigStore } from "@/stores/configStore";
 import { i18n } from "../i18n";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const props = defineProps({
   isCollapsed: {
@@ -187,6 +201,7 @@ const props = defineProps({
 const emit = defineEmits(["toggle-sidebar"]);
 
 const route = useRoute();
+const router = useRouter();
 
 const currentLayout = computed(() => {
   return route.meta.layout || "default";
@@ -217,6 +232,11 @@ const handleLogout = async () => {
 
 const handleLogin = () => {
   window.location.href = "/auth/login";
+  showUserMenu.value = false;
+};
+
+const navigateToConfig = () => {
+  router.push('/dash/config');
   showUserMenu.value = false;
 };
 

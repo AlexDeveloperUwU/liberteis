@@ -6,6 +6,7 @@ import {
   loadDashboardHomeData,
   loadUsersData,
   loadUserEditData,
+  loadUserConfigData,
   loadSpacesData,
   loadSpaceEditData,
   loadCategoriesData,
@@ -70,6 +71,16 @@ const routes = [
         meta: { allow: "managerUser", layout: "dashboard" },
         props: true,
         beforeEnter: loadUserEditData,
+      },
+      {
+        path: "config",
+        name: "dashUserConfig",
+        component: () => import("../views/Dash/UserConfigView.vue"),
+        meta: { 
+          allow: "normalUser", 
+          layout: "dashboard"
+        },
+        beforeEnter: loadUserConfigData,
       },
 
       {

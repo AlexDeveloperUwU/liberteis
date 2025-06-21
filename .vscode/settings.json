@@ -5,7 +5,8 @@
     "utils",
     "server",
     "tests",
-    "client"
+    "client",
+    "server + client"
   ],
   "jest.runMode": {
     "type": "on-demand",

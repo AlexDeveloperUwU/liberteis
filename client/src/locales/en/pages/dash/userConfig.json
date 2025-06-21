@@ -1,19 +1,19 @@
 {
   "page": {
-    "title": "User Configuration",
+    "title": "User configuration",
     "description": "Manage your personal settings and application preferences"
   },
   "profile": {
-    "preview": "Profile Preview",
-    "creationDate": "Creation Date",
-    "lastAccess": "Last Access",
-    "theme": "Application Theme",
-    "language": "Application Language",
-    "userPermissions": "User Permissions"
+    "preview": "Profile preview",
+    "creationDate": "Creation date",
+    "lastAccess": "Last access",
+    "theme": "Application theme",
+    "language": "Application language",
+    "userPermissions": "User permissions"
   },
   "form": {
     "sections": {
-      "basicInfo": "Basic Information",
+      "basicInfo": "Basic information",
       "preferences": "Preferences"
     },
     "labels": {
@@ -67,8 +67,8 @@
     "bigIntError": "Server error: Cannot process large numeric values"
   },
   "common": {
-    "edit": "Edit Profile",
-    "update": "Update Profile",
+    "edit": "Edit profile",
+    "update": "Update profile",
     "reset": "Reset",
     "status": {
       "success": "Updated!",

@@ -106,6 +106,42 @@ export const loadUserEditData = async (to) => {
 };
 
 /**
+ * Carga los datos para la configuración del usuario actual
+ */
+export const loadUserConfigData = async (to) => {
+  try {
+    // Importamos directamente el store aquí para asegurarnos de tener el userId
+    const { useAuthStore } = await import('@/stores/authStore');
+    const authStore = useAuthStore();
+    const userId = authStore.userId;
+
+    if (!userId) {
+      to.meta.initialData = {
+        user: null,
+        error: true,
+        errorMessage: "Usuario no autenticado o ID no disponible",
+      };
+      return;
+    }
+
+    const userResponse = await axios.get(`/api/users?id=${userId}`);
+
+    to.meta.initialData = {
+      user: userResponse.data.success ? userResponse.data.data : null,
+      error: !userResponse.data.success,
+      errorMessage: !userResponse.data.success ? userResponse.data.message : null,
+    };
+  } catch (error) {
+    console.error("Error fetching user config data:", error.message || error);
+    to.meta.initialData = {
+      user: null,
+      error: true,
+      errorMessage: "Error de conexión al cargar datos del usuario",
+    };
+  }
+};
+
+/**
  * Carga los datos para la gestión de espacios
  */
 export const loadSpacesData = async (to) => {
