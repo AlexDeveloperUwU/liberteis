@@ -1,0 +1,42 @@
+{
+  "page": {
+    "title": "Gestión de eventos",
+    "description": "Gestiona los eventos disponibles para la reserva de espacios.",
+    "tableTitle": "Lista de eventos"
+  },
+  "metrics": {
+    "totals": "Total de eventos",
+    "active": "Eventos activos",
+    "inactive": "Eventos inactivos"
+  },
+  "table": {
+    "title": "Título",
+    "info": "Descripción",
+    "duration": "Duración (min)",
+    "category": "Categoría",
+    "createdBy": "Creado por",
+    "actions": "Acciones",
+    "noCategory": "Sin categoría"
+  },
+  "actions": {
+    "add": "Añadir evento",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "reactivate": "Reactivar",
+    "deactivate": "Desactivar"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Desactivar evento",
+      "text": "¿Estás seguro de que quieres desactivar el evento '{name}'? No estará disponible para reservas."
+    },
+    "reactivate": {
+      "title": "Reactivar evento",
+      "text": "¿Estás seguro de que quieres reactivar el evento '{name}'? Estará disponible para reservas."
+    }
+  },
+  "toasts": {
+    "deactivated": "El evento '{name}' ha sido desactivado correctamente",
+    "reactivated": "El evento '{name}' ha sido reactivado correctamente"
+  }
+}

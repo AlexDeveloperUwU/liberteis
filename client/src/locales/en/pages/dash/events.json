@@ -1,0 +1,42 @@
+{
+  "page": {
+    "title": "Events management",
+    "description": "Manage the events available for space reservations.",
+    "tableTitle": "Events list"
+  },
+  "metrics": {
+    "totals": "Total events",
+    "active": "Active events",
+    "inactive": "Inactive events"
+  },
+  "table": {
+    "title": "Title",
+    "info": "Description",
+    "duration": "Duration (min)",
+    "category": "Category",
+    "createdBy": "Created by",
+    "actions": "Actions",
+    "noCategory": "No category"
+  },
+  "actions": {
+    "add": "Add event",
+    "edit": "Edit",
+    "delete": "Delete",
+    "reactivate": "Reactivate",
+    "deactivate": "Deactivate"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Deactivate event",
+      "text": "Are you sure you want to deactivate the event '{name}'? It won't be available for reservations."
+    },
+    "reactivate": {
+      "title": "Reactivate event",
+      "text": "Are you sure you want to reactivate the event '{name}'? It will be available for reservations."
+    }
+  },
+  "toasts": {
+    "deactivated": "The event '{name}' has been deactivated successfully",
+    "reactivated": "The event '{name}' has been reactivated successfully"
+  }
+}

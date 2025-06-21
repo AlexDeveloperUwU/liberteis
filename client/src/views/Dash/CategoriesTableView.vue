@@ -532,9 +532,10 @@ const getSpaceName = (spaceId) => {
   }
   if (!requestedSpaces.has(spaceId)) {
     requestedSpaces.add(spaceId);
-    axios.get(`/api/spaces`, {
-      params: { id: spaceId, includeInactive: true },
-    })
+    axios
+      .get(`/api/spaces`, {
+        params: { id: spaceId, includeInactive: true },
+      })
       .then((response) => {
         if (response.data.success && response.data.data) {
           spaces.value[spaceId] = response.data.data;
@@ -588,7 +589,7 @@ const loadUserName = async (userId) => {
 
   try {
     const response = await axios.get(`/api/users?id=${userId}`);
-    if (response.data.data && response.data.data.name) {
+    if (response.data.success && response.data.data && response.data.data.name) {
       users.value[userId] = response.data.data.name;
     }
   } catch (error) {
@@ -602,12 +603,11 @@ const toast = useToast();
 
 const handleCategoryStatusToggle = async (category) => {
   const isDeactivating = !category.deleted;
-  const modalText = isDeactivating
-    ? t("pages.dash.categories.modals.deactivate.text", { name: category.name })
-    : t("pages.dash.categories.modals.reactivate.text", { name: category.name });
 
   modal.confirm(
-    modalText,
+    isDeactivating
+      ? t("pages.dash.categories.modals.deactivate.text", { name: category.name })
+      : t("pages.dash.categories.modals.reactivate.text", { name: category.name }),
     isDeactivating
       ? t("pages.dash.categories.modals.deactivate.title")
       : t("pages.dash.categories.modals.reactivate.title"),

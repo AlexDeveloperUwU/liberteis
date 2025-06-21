@@ -28,11 +28,11 @@
   "modals": {
     "deactivate": {
       "title": "Desactivar categoría",
-      "text": "¿Estás seguro de que desexas desactivar a categoría '{{name}}'? Os espazos asociados a esta categoría non se verán afectados."
+      "text": "¿Estás seguro de que desexas desactivar a categoría '{name}'? Os espazos asociados a esta categoría non se verán afectados."
     },
     "reactivate": {
       "title": "Reactivar categoría",
-      "text": "¿Estás seguro de que desexas reactivar a categoría '{{name}}'?"
+      "text": "¿Estás seguro de que desexas reactivar a categoría '{name}'?"
     }
   },
   "toasts": {

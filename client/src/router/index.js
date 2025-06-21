@@ -11,6 +11,7 @@ import {
   loadSpaceEditData,
   loadCategoriesData,
   loadCategoryEditData,
+  loadEventsData,
 } from "./fetchers";
 
 const routes = [
@@ -142,6 +143,14 @@ const routes = [
         meta: { allow: "managerUser", layout: "dashboard" },
         props: true,
         beforeEnter: loadCategoryEditData,
+      },
+      
+      {
+        path: "events",
+        name: "dashEvents",
+        component: () => import("../views/Dash/EventsTableView.vue"),
+        meta: { allow: "managerUser", layout: "dashboard" },
+        beforeEnter: loadEventsData,
       },
     ],
   },

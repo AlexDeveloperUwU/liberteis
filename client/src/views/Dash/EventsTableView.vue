@@ -1,15 +1,15 @@
 <template>
   <div class="h-full w-full p-6">
-    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.dash.spaces.page.title") }}</h1>
-    <p class="text-text-800 mb-6">{{ t("pages.dash.spaces.page.description") }}</p>
+    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.dash.events.page.title") }}</h1>
+    <p class="text-text-800 mb-6">{{ t("pages.dash.events.page.description") }}</p>
 
     <div class="responsive-container mb-6">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
         <div
           class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
           <div class="flex items-center gap-2 mb-2">
-            <MapPin class="w-5 h-5 text-primary-600" />
-            <p class="font-medium text-text-800">{{ t("pages.dash.spaces.metrics.totals") }}</p>
+            <CalendarDays class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.events.metrics.totals") }}</p>
           </div>
           <h2 class="text-2xl font-bold text-text-950">{{ metrics.total || 0 }}</h2>
         </div>
@@ -17,8 +17,8 @@
         <div
           class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
           <div class="flex items-center gap-2 mb-2">
-            <CheckCircle class="w-5 h-5 text-primary-600" />
-            <p class="font-medium text-text-800">{{ t("pages.dash.spaces.metrics.active") }}</p>
+            <CalendarCheck class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.events.metrics.active") }}</p>
           </div>
           <h2 class="text-2xl font-bold text-text-950">{{ metrics.active || 0 }}</h2>
         </div>
@@ -26,8 +26,8 @@
         <div
           class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
           <div class="flex items-center gap-2 mb-2">
-            <XCircle class="w-5 h-5 text-primary-600" />
-            <p class="font-medium text-text-800">{{ t("pages.dash.spaces.metrics.inactive") }}</p>
+            <CalendarX class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.events.metrics.inactive") }}</p>
           </div>
           <h2 class="text-2xl font-bold text-text-950">{{ metrics.inactive || 0 }}</h2>
         </div>
@@ -40,10 +40,10 @@
         <div class="flex items-center mb-6 pb-4 border-b border-background-400">
           <div
             class="p-2 bg-primary-100 rounded-lg border border-primary-500 mr-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
-            <MapPin class="w-5 h-5 text-primary-600" />
+            <CalendarDays class="w-5 h-5 text-primary-600" />
           </div>
           <h2 class="text-xl font-bold text-text-900 k2d">
-            {{ t("pages.dash.spaces.page.tableTitle") }}
+            {{ t("pages.dash.events.page.tableTitle") }}
           </h2>
         </div>
 
@@ -66,12 +66,12 @@
           </div>
 
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-            <Listbox v-model="spaceFilter" @update:model-value="loadSpaces">
+            <Listbox v-model="eventFilter" @update:model-value="loadEvents">
               <div class="relative w-full sm:w-40">
                 <ListboxButton
                   class="h-10 px-3 rounded-lg text-sm font-medium shadow-sm bg-background-50 border border-background-300 text-text-800 focus:outline-none focus:ring-2 focus:ring-primary-500 hover:border-primary-300 transition-all duration-200 flex items-center justify-between w-full">
                   <span class="block truncate text-left">
-                    {{ t(`pages.other.commons.status.${spaceFilter}`) || spaceFilter }}
+                    {{ t(`pages.other.commons.status.${eventFilter}`) || eventFilter }}
                   </span>
                   <ChevronDown class="w-4 h-4 text-text-400 ml-2" />
                 </ListboxButton>
@@ -116,10 +116,10 @@
             </Listbox>
 
             <button
-              @click="$router.push({ name: 'dashSpacesNew' })"
+              @click="$router.push({ name: 'dashEventsNew' })"
               class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer whitespace-nowrap w-full sm:w-auto">
-              <MapPinPlus class="w-4 h-4 mr-2" />
-              <span>{{ t("pages.dash.spaces.actions.add") || "Añadir espacio" }}</span>
+              <CalendarPlus class="w-4 h-4 mr-2" />
+              <span>{{ t("pages.dash.events.actions.add") || "Añadir evento" }}</span>
             </button>
           </div>
         </div>
@@ -136,37 +136,46 @@
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('name')">
-                    <BookMarked class="w-4 h-4 text-primary-600" />
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('title')">
+                    <CalendarRange class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.spaces.table.name") }}
+                      {{ t("pages.dash.events.table.title") }}
                     </span>
-                    <SortIcon :active="sortColumn === 'name'" :direction="sortDirection" />
-                  </div>
-                </th>
-                <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('location')">
-                    <MapPin class="w-4 h-4 text-primary-600" />
-                    <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.spaces.table.location") }}
-                    </span>
-                    <SortIcon :active="sortColumn === 'location'" :direction="sortDirection" />
+                    <SortIcon :active="sortColumn === 'title'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
                   <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('info')">
-                    <Info class="w-4 h-4 text-primary-600" />
+                    <FileText class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.spaces.table.info") }}
+                      {{ t("pages.dash.events.table.info") }}
                     </span>
                     <SortIcon :active="sortColumn === 'info'" :direction="sortDirection" />
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 text-left">
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('duration')">
+                    <Clock class="w-4 h-4 text-primary-600" />
+                    <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
+                      {{ t("pages.dash.events.table.duration") }}
+                    </span>
+                    <SortIcon :active="sortColumn === 'duration'" :direction="sortDirection" />
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 text-left">
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('category')">
+                    <Bookmark class="w-4 h-4 text-primary-600" />
+                    <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
+                      {{ t("pages.dash.events.table.category") }}
+                    </span>
+                    <SortIcon :active="sortColumn === 'category'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
                   <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('createdBy')">
                     <User class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.spaces.table.createdBy") }}
+                      {{ t("pages.dash.events.table.createdBy") }}
                     </span>
                     <SortIcon :active="sortColumn === 'createdBy'" :direction="sortDirection" />
                   </div>
@@ -175,59 +184,72 @@
                   <div class="flex items-center gap-2">
                     <Settings class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.spaces.table.actions") }}
+                      {{ t("pages.dash.events.table.actions") }}
                     </span>
                   </div>
                 </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-background-200">
-              <tr v-for="space in paginatedSpaces" :key="space.id" class="group">
+              <tr v-for="event in paginatedEvents" :key="event.id" class="group">
                 <td
                   class="px-6 py-4 whitespace-nowrap sticky-column sticky left-0 bg-background-100 group-hover:bg-primary-50 transition-colors duration-150 z-20">
                   <span class="text-sm text-text-800">
-                    {{ space.id }}
+                    {{ event.id }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="ml-4">
-                    <div class="text-sm text-text-800">{{ space.name }}</div>
+                    <div class="text-sm text-text-800">{{ event.title }}</div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="text-sm text-text-800">{{ space.location }}</div>
+                  <div class="ml-4">
+                    <div class="text-sm text-text-800 truncate max-w-32">{{ event.info }}</div>
+                  </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="text-sm text-text-800 truncate max-w-40" :title="space.info">{{ space.info }}</div>
+                  <div class="text-sm text-text-800">
+                    {{ event.duration }} min
+                  </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="text-sm text-text-800 truncate max-w-32">{{ getCreatedByName(space.createdBy) }}</div>
+                  <div class="text-sm text-text-800">
+                    <div
+                      v-if="event.category"
+                      class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-primary-100 text-primary-800 border border-primary-200">
+                      {{ getCategoryName(event.category) }}
+                    </div>
+                    <div v-else class="text-text-500">{{ t("pages.dash.events.table.noCategory") }}</div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
+                  <div class="text-sm text-text-800 truncate max-w-32">{{ getCreatedByName(event.createdBy) }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="flex items-center gap-2">
                     <button
-                      @click="$router.push({ name: 'dashSpacesEdit', params: { id: space.id } })"
+                      @click="$router.push({ name: 'dashEventsEdit', params: { id: event.id } })"
                       class="px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer">
                       <Pencil class="w-3 h-3 text-primary-600" />
-                      {{ t("pages.dash.spaces.actions.edit") }}
+                      {{ t("pages.dash.events.actions.edit") }}
                     </button>
                     <button
-                      v-if="!isSystemSpace(space)"
-                      @click="handleSpaceStatusToggle(space)"
+                      @click="handleEventStatusToggle(event)"
                       :class="[
                         'px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full border transition-colors duration-150',
-                        space.deleted
+                        event.deleted
                           ? 'bg-secondary-100 text-secondary-800 border-secondary-200 hover:bg-secondary-200'
                           : 'bg-accent-100 text-accent-800 border-accent-200 hover:bg-accent-200',
                       ]">
                       <component
-                        :is="space.deleted ? CheckCircle : Trash"
+                        :is="event.deleted ? CalendarCheck : Trash"
                         class="w-3 h-3"
-                        :class="space.deleted ? 'text-secondary-600' : 'text-accent-600'" />
+                        :class="event.deleted ? 'text-secondary-600' : 'text-accent-600'" />
                       {{
-                        space.deleted
-                          ? t("pages.dash.spaces.actions.reactivate")
-                          : t("pages.dash.spaces.actions.delete")
+                        event.deleted
+                          ? t("pages.dash.events.actions.reactivate")
+                          : t("pages.dash.events.actions.deactivate")
                       }}
                     </button>
                   </div>
@@ -279,16 +301,11 @@
 
 <script setup>
 import {
-  MapPin,
-  CheckCircle,
-  XCircle,
   Hash,
   User,
-  Info,
   Settings,
   Pencil,
   Trash,
-  BookMarked,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
@@ -296,7 +313,14 @@ import {
   Search,
   X,
   ChevronUp,
-  MapPinPlus,
+  CalendarDays,
+  CalendarCheck,
+  CalendarX,
+  CalendarPlus,
+  CalendarRange,
+  FileText,
+  Clock,
+  Bookmark
 } from "lucide-vue-next";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
@@ -310,14 +334,14 @@ const { t } = useI18n();
 const route = useRoute();
 
 const searchTerm = ref("");
-const spaceFilter = ref("active");
+const eventFilter = ref("active");
 const currentPage = ref(1);
 const itemsPerPage = 5;
 
 const filterIcons = {
-  active: CheckCircle,
-  inactive: XCircle,
-  all: MapPin,
+  active: CalendarCheck,
+  inactive: CalendarX,
+  all: CalendarDays,
 };
 
 const metrics = ref({
@@ -326,7 +350,9 @@ const metrics = ref({
   inactive: 0,
 });
 
-const spaces = ref([]);
+const events = ref([]);
+const categories = ref({});
+const requestedCategories = new Set();
 
 const isLoading = ref(false);
 const users = ref({});
@@ -387,17 +413,18 @@ const textIncludes = (text, searchTerm) => {
   return searchWords.every((word) => normalizedText.includes(word));
 };
 
-const filteredSpaces = computed(() => {
-  let result = spaces.value;
+const filteredEvents = computed(() => {
+  let result = events.value;
 
   if (searchTerm.value.trim()) {
-    result = result.filter((space) => {
+    result = result.filter((event) => {
       const displayValues = {
-        id: space.id?.toString() || "",
-        name: space.name || "",
-        location: space.location || "",
-        info: space.info || "",
-        createdBy: space.createdBy || "",
+        id: event.id?.toString() || "",
+        title: event.title || "",
+        info: event.info || "",
+        duration: event.duration?.toString() || "",
+        category: getCategoryName(event.category) || "",
+        createdBy: event.createdBy || "",
       };
 
       return Object.values(displayValues).some((value) => textIncludes(value, searchTerm.value));
@@ -413,17 +440,21 @@ const filteredSpaces = computed(() => {
           valueA = a.id;
           valueB = b.id;
           break;
-        case "name":
-          valueA = a.name?.toLowerCase() || "";
-          valueB = b.name?.toLowerCase() || "";
-          break;
-        case "location":
-          valueA = a.location?.toLowerCase() || "";
-          valueB = b.location?.toLowerCase() || "";
+        case "title":
+          valueA = a.title?.toLowerCase() || "";
+          valueB = b.title?.toLowerCase() || "";
           break;
         case "info":
           valueA = a.info?.toLowerCase() || "";
           valueB = b.info?.toLowerCase() || "";
+          break;
+        case "duration":
+          valueA = a.duration || 0;
+          valueB = b.duration || 0;
+          break;
+        case "category":
+          valueA = getCategoryName(a.category)?.toLowerCase() || "";
+          valueB = getCategoryName(b.category)?.toLowerCase() || "";
           break;
         case "createdBy":
           valueA = getCreatedByName(a.createdBy)?.toLowerCase() || "";
@@ -455,35 +486,33 @@ watch(searchTerm, () => {
 });
 
 const totalPages = computed(() => {
-  return Math.max(1, Math.ceil(filteredSpaces.value.length / itemsPerPage));
+  return Math.max(1, Math.ceil(filteredEvents.value.length / itemsPerPage));
 });
 
-const paginatedSpaces = computed(() => {
+const paginatedEvents = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
-  return filteredSpaces.value.slice(start, end);
+  return filteredEvents.value.slice(start, end);
 });
 
-const loadSpaces = async () => {
+const loadEvents = async () => {
   try {
     isLoading.value = true;
 
-    const response = await axios.get("/api/spaces", {
+    const response = await axios.get("/api/events", {
       params: {
-        status: spaceFilter.value,
+        status: eventFilter.value,
       },
     });
 
-    spaces.value = response.data.data || [];
+    events.value = response.data.data || [];
 
     if (response.data.metrics) {
-      console.log("Metrics from API response:", response.data.metrics);
       metrics.value = response.data.metrics;
     } else {
       try {
-        const metricsResponse = await axios.get("/api/spaces/count");
+        const metricsResponse = await axios.get("/api/events/count");
         if (metricsResponse.data && metricsResponse.data.success) {
-          console.log("Metrics from dedicated endpoint:", metricsResponse.data.data);
           metrics.value = metricsResponse.data.data;
         }
       } catch (error) {
@@ -491,13 +520,62 @@ const loadSpaces = async () => {
       }
     }
 
+    await loadCategoriesInfo();
+
     currentPage.value = 1;
   } catch (error) {
-    console.error("Error cargando espacios:", error);
-    spaces.value = [];
+    console.error("Error cargando eventos:", error);
+    events.value = [];
   } finally {
     isLoading.value = false;
   }
+};
+
+const loadCategoriesInfo = async () => {
+  const categoryIds = new Set();
+  events.value.forEach((event) => {
+    if (event.category && !categories.value[event.category] && !requestedCategories.has(event.category)) {
+      categoryIds.add(event.category);
+    }
+  });
+
+  for (const categoryId of categoryIds) {
+    requestedCategories.add(categoryId);
+    try {
+      const response = await axios.get(`/api/categories`, {
+        params: { id: categoryId, includeInactive: true },
+      });
+      if (response.data.success && response.data.data) {
+        categories.value[categoryId] = response.data.data;
+      }
+    } catch (error) {
+      console.error(`Error cargando categoría ${categoryId}:`, error);
+    }
+  }
+};
+
+const getCategoryName = (categoryId) => {
+  if (!categoryId) return "";
+  
+  if (categories.value[categoryId]) {
+    return categories.value[categoryId].name;
+  }
+  
+  if (!requestedCategories.has(categoryId)) {
+    requestedCategories.add(categoryId);
+    axios.get(`/api/categories`, {
+      params: { id: categoryId, includeInactive: true },
+    })
+      .then((response) => {
+        if (response.data.success && response.data.data) {
+          categories.value[categoryId] = response.data.data;
+        }
+      })
+      .catch((error) => {
+        console.error(`Error cargando categoría puntual ${categoryId}:`, error);
+      });
+  }
+  return categoryId;
 };
 
 onMounted(async () => {
@@ -506,17 +584,22 @@ onMounted(async () => {
       metrics.value = route.meta.initialData.metrics;
     }
 
-    if (route.meta.initialData.spaces) {
-      spaces.value = route.meta.initialData.spaces;
+    if (route.meta.initialData.categories && Array.isArray(route.meta.initialData.categories)) {
+      for (const category of route.meta.initialData.categories) {
+        if (category && category.id) {
+          categories.value[category.id] = category;
+        }
+      }
+    }
+
+    if (route.meta.initialData.events) {
+      events.value = route.meta.initialData.events;
+      await loadCategoriesInfo();
     }
   } else {
-    await loadSpaces();
+    await loadEvents();
   }
 });
-
-const isSystemSpace = (space) => {
-  return space.createdBy === "System";
-};
 
 const getCreatedByName = (createdById) => {
   if (createdById === "System") {
@@ -546,16 +629,17 @@ const loadUserName = async (userId) => {
 };
 
 const modal = useModal();
-const toast = useToast();
+const toast = useToast();  const handleEventStatusToggle = async (event) => {
+  const isDeactivating = !event.deleted;
+  const modalText = isDeactivating
+    ? t("pages.dash.events.modals.deactivate.text", { name: event.title })
+    : t("pages.dash.events.modals.reactivate.text", { name: event.title });
 
-const handleSpaceStatusToggle = async (space) => {
-  const isDeactivating = !space.deleted;
-  
   modal.confirm(
+    modalText,
     isDeactivating
-      ? t("pages.dash.spaces.modals.deactivate.text", { name: space.name })
-      : t("pages.dash.spaces.modals.reactivate.text", { name: space.name }),
-    isDeactivating ? t("pages.dash.spaces.modals.deactivate.title") : t("pages.dash.spaces.modals.reactivate.title"),
+      ? t("pages.dash.events.modals.deactivate.title")
+      : t("pages.dash.events.modals.reactivate.title"),
     {
       actions: [
         {
@@ -563,25 +647,27 @@ const handleSpaceStatusToggle = async (space) => {
           type: "default",
         },
         {
-          label: isDeactivating ? t("pages.dash.spaces.actions.deactivate") : t("pages.dash.spaces.actions.reactivate"),
+          label: isDeactivating
+            ? t("pages.dash.events.actions.deactivate")
+            : t("pages.dash.events.actions.reactivate"),
           type: isDeactivating ? "danger" : "secondary",
           onClick: async () => {
             try {
-              const response = await axios.patch(`/api/spaces/toggle`, null, {
-                params: { id: space.id },
+              const response = await axios.patch(`/api/events/toggle`, null, {
+                params: { id: event.id },
               });
 
               if (response.data.success) {
                 toast.success(
                   isDeactivating
-                    ? t("pages.dash.spaces.toasts.deactivated")
-                    : t("pages.dash.spaces.toasts.reactivated"),
+                    ? t("pages.dash.events.toasts.deactivated", { name: event.title })
+                    : t("pages.dash.events.toasts.reactivated", { name: event.title }),
                 );
-                await loadSpaces();
+                await loadEvents();
               }
             } catch (error) {
               toast.error(t("pages.other.commons.errors.generic"));
-              console.error("Error toggling space status:", error);
+              console.error("Error toggling event status:", error);
             }
           },
         },

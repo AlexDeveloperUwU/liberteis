@@ -1,0 +1,42 @@
+{
+  "page": {
+    "title": "Xestión de eventos",
+    "description": "Xestiona os eventos dispoñibles para a reserva de espazos.",
+    "tableTitle": "Lista de eventos"
+  },
+  "metrics": {
+    "totals": "Total de eventos",
+    "active": "Eventos activos",
+    "inactive": "Eventos inactivos"
+  },
+  "table": {
+    "title": "Título",
+    "info": "Descrición",
+    "duration": "Duración (min)",
+    "category": "Categoría",
+    "createdBy": "Creado por",
+    "actions": "Accións",
+    "noCategory": "Sen categoría"
+  },
+  "actions": {
+    "add": "Engadir evento",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "reactivate": "Reactivar",
+    "deactivate": "Desactivar"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Desactivar evento",
+      "text": "Estás seguro de que queres desactivar o evento '{name}'? Non estará dispoñible para reservas."
+    },
+    "reactivate": {
+      "title": "Reactivar evento",
+      "text": "Estás seguro de que queres reactivar o evento '{name}'? Estará dispoñible para reservas."
+    }
+  },
+  "toasts": {
+    "deactivated": "O evento '{name}' foi desactivado correctamente",
+    "reactivated": "O evento '{name}' foi reactivado correctamente"
+  }
+}

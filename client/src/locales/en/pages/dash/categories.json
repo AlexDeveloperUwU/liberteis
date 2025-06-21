@@ -28,11 +28,11 @@
   "modals": {
     "deactivate": {
       "title": "Deactivate category",
-      "text": "Are you sure you want to deactivate the category '{{name}}'? The spaces associated with this category will not be affected."
+      "text": "Are you sure you want to deactivate the category '{name}'? The spaces associated with this category will not be affected."
     },
     "reactivate": {
       "title": "Reactivate category",
-      "text": "Are you sure you want to reactivate the category '{{name}}'?"
+      "text": "Are you sure you want to reactivate the category '{name}'?"
     }
   },
   "toasts": {
