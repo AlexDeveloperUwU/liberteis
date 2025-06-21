@@ -31,5 +31,6 @@
   "categorySaveError": "Error al guardar la categoría.",
   "categoryUpdateError": "Error al actualizar la categoría.",
   "categoryStatusChangeError": "Error al cambiar el estado de la categoría.",
-  "passwordUpdateError": "Error al actualizar la contraseña."
+  "passwordUpdateError": "Error al actualizar la contraseña.",
+  "userDisabled": "El usuario está deshabilitado."
 }

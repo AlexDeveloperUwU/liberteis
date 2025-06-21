@@ -1,0 +1,81 @@
+{
+  "page": {
+    "title": "User Configuration",
+    "description": "Manage your personal settings and application preferences"
+  },
+  "profile": {
+    "preview": "Profile Preview",
+    "creationDate": "Creation Date",
+    "lastAccess": "Last Access",
+    "theme": "Application Theme",
+    "language": "Application Language",
+    "userPermissions": "User Permissions"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Basic Information",
+      "preferences": "Preferences"
+    },
+    "labels": {
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "theme": "Theme",
+      "language": "Language"
+    },
+    "placeholders": {
+      "name": "Username",
+      "email": "Email address",
+      "password": "Leave blank to keep current password",
+      "noEmail": "No email provided"
+    },
+    "actions": {
+      "updating": "Updating..."
+    },
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "permissions": {
+    "manageOwnEvents": "Manage own events",
+    "manageAllEvents": "Manage all events (including others')",
+    "manageCategories": "Manage categories",
+    "manageSpaces": "Manage spaces",
+    "manageUsers": "Manage users",
+    "manageAppSettings": "Manage application settings"
+  },
+  "themes": {
+    "system": "System (automatic)",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "languages": {
+    "es": "Spanish",
+    "en": "English",
+    "gl": "Galician"
+  },
+  "errors": {
+    "loadingUser": "Error loading user data",
+    "nameLength": "Name must be at least 3 characters long",
+    "emailInvalid": "Please enter a valid email address",
+    "emailExists": "This email already exists in the system",
+    "passwordLength": "Password must be at least 6 characters long",
+    "cantChangeName": "Username cannot be changed",
+    "updateFailed": "Error updating profile",
+    "unknown": "Unknown error",
+    "noResponse": "No response from the server. Please check your connection",
+    "requestSetup": "Error setting up the request. Please try again",
+    "bigIntError": "Server error: Cannot process large numeric values"
+  },
+  "common": {
+    "edit": "Edit Profile",
+    "update": "Update Profile",
+    "reset": "Reset",
+    "status": {
+      "success": "Updated!",
+      "error": "Error"
+    }
+  },
+  "notifications": {
+    "updateSuccess": "User updated successfully!"
+  }
+}

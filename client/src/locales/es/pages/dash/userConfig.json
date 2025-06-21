@@ -1,0 +1,81 @@
+{
+  "page": {
+    "title": "Configuración de usuario",
+    "description": "Administra tu configuración personal y preferencias de la aplicación"
+  },
+  "profile": {
+    "preview": "Vista previa del perfil",
+    "creationDate": "Fecha de creación",
+    "lastAccess": "Último acceso",
+    "theme": "Tema de la aplicación",
+    "language": "Idioma de la aplicación",
+    "userPermissions": "Permisos de usuario"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Información básica",
+      "preferences": "Preferencias"
+    },
+    "labels": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "theme": "Tema",
+      "language": "Idioma"
+    },
+    "placeholders": {
+      "name": "Usuario",
+      "email": "Correo electrónico",
+      "password": "Dejar en blanco para mantener la contraseña actual",
+      "noEmail": "No se proporcionó correo electrónico"
+    },
+    "actions": {
+      "updating": "Actualizando..."
+    },
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña"
+  },
+  "permissions": {
+    "manageOwnEvents": "Gestionar sus propios eventos",
+    "manageAllEvents": "Gestionar todos los eventos (incluidos los de otros)",
+    "manageCategories": "Gestionar categorías",
+    "manageSpaces": "Gestionar espacios",
+    "manageUsers": "Gestionar usuarios",
+    "manageAppSettings": "Gestionar configuración de la aplicación"
+  },
+  "themes": {
+    "system": "Sistema (automático)",
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
+  "languages": {
+    "es": "Español",
+    "en": "Inglés",
+    "gl": "Gallego"
+  },
+  "errors": {
+    "loadingUser": "Error al cargar los datos del usuario",
+    "nameLength": "El nombre debe tener al menos 3 caracteres",
+    "emailInvalid": "Por favor, introduce un correo electrónico válido",
+    "emailExists": "El correo electrónico ya existe en el sistema",
+    "passwordLength": "La contraseña debe tener al menos 6 caracteres",
+    "cantChangeName": "No se puede cambiar el nombre del usuario",
+    "updateFailed": "Error al actualizar el perfil",
+    "unknown": "Error desconocido",
+    "noResponse": "No hay respuesta del servidor. Por favor, compruebe su conexión",
+    "requestSetup": "Error al configurar la solicitud. Por favor, inténtelo de nuevo",
+    "bigIntError": "Error del servidor: No se pueden procesar valores numéricos grandes"
+  },
+  "common": {
+    "edit": "Editar perfil",
+    "update": "Actualizar perfil",
+    "reset": "Restablecer",
+    "status": {
+      "success": "¡Actualizado!",
+      "error": "Error"
+    }
+  },
+  "notifications": {
+    "updateSuccess": "¡Usuario actualizado con éxito!"
+  }
+}

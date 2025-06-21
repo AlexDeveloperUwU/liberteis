@@ -1,0 +1,81 @@
+{
+  "page": {
+    "title": "Configuración de usuario",
+    "description": "Administra a túa configuración persoal e preferencias da aplicación"
+  },
+  "profile": {
+    "preview": "Vista previa do perfil",
+    "creationDate": "Data de creación",
+    "lastAccess": "Último acceso",
+    "theme": "Tema da aplicación",
+    "language": "Idioma da aplicación",
+    "userPermissions": "Permisos de usuario"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Información básica",
+      "preferences": "Preferencias"
+    },
+    "labels": {
+      "name": "Nome",
+      "email": "Correo electrónico",
+      "password": "Contrasinal",
+      "theme": "Tema",
+      "language": "Idioma"
+    },
+    "placeholders": {
+      "name": "Usuario",
+      "email": "Correo electrónico",
+      "password": "Deixar en branco para manter o contrasinal actual",
+      "noEmail": "Non se proporcionou correo electrónico"
+    },
+    "actions": {
+      "updating": "Actualizando..."
+    },
+    "showPassword": "Mostrar contrasinal",
+    "hidePassword": "Ocultar contrasinal"
+  },
+  "permissions": {
+    "manageOwnEvents": "Xestionar os seus propios eventos",
+    "manageAllEvents": "Xestionar todos os eventos (incluídos os doutros)",
+    "manageCategories": "Xestionar categorías",
+    "manageSpaces": "Xestionar espazos",
+    "manageUsers": "Xestionar usuarios",
+    "manageAppSettings": "Xestionar configuración da aplicación"
+  },
+  "themes": {
+    "system": "Sistema (automático)",
+    "light": "Claro",
+    "dark": "Escuro"
+  },
+  "languages": {
+    "es": "Español",
+    "en": "Inglés",
+    "gl": "Galego"
+  },
+  "errors": {
+    "loadingUser": "Erro ao cargar os datos do usuario",
+    "nameLength": "O nome debe ter polo menos 3 caracteres",
+    "emailInvalid": "Por favor, introduce un correo electrónico válido",
+    "emailExists": "O correo electrónico xa existe no sistema",
+    "passwordLength": "O contrasinal debe ter polo menos 6 caracteres",
+    "cantChangeName": "Non se pode cambiar o nome do usuario",
+    "updateFailed": "Erro ao actualizar o perfil",
+    "unknown": "Erro descoñecido",
+    "noResponse": "Non hai resposta do servidor. Por favor, comprobe a súa conexión",
+    "requestSetup": "Erro ao configurar a solicitude. Por favor, inténteo de novo",
+    "bigIntError": "Erro do servidor: Non se poden procesar valores numéricos grandes"
+  },
+  "common": {
+    "edit": "Editar perfil",
+    "update": "Actualizar perfil",
+    "reset": "Restablecer",
+    "status": {
+      "success": "Actualizado!",
+      "error": "Erro"
+    }
+  },
+  "notifications": {
+    "updateSuccess": "Usuario actualizado con éxito!"
+  }
+}

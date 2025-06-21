@@ -31,5 +31,6 @@
   "categorySaveError": "Erro ao gardar a categoría.",
   "categoryUpdateError": "Erro ao actualizar a categoría.",
   "categoryStatusChangeError": "Erro ao cambiar o estado da categoría.",
-  "passwordUpdateError": "Erro ao actualizar o contrasinal."
+  "passwordUpdateError": "Erro ao actualizar o contrasinal.",
+  "userDisabled": "O usuario está deshabilitado."
 }

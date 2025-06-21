@@ -31,5 +31,6 @@
   "categorySaveError": "Error saving category.",
   "categoryUpdateError": "Error updating category.",
   "categoryStatusChangeError": "Error changing category status.",
-  "passwordUpdateError": "Error updating password."
+  "passwordUpdateError": "Error updating password.",
+  "userDisabled": "User is disabled."
 }
