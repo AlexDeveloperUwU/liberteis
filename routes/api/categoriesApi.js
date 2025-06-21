@@ -23,11 +23,26 @@ export default api;
 api.post("/", async (req, res) => {
   try {
     const categoryData = req.body;
-    if (!categoryData) {
+    logger.info("Raw category data received:", JSON.stringify(categoryData, null, 2));
+    
+    if (!categoryData || !categoryData.name || !Array.isArray(categoryData.spaces)) {
+      logger.error("Invalid category data - missing required fields:");
+      logger.error("- name:", categoryData?.name);
+      logger.error("- spaces (isArray):", Array.isArray(categoryData?.spaces));
+      logger.error("- spaces value:", categoryData?.spaces);
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
-
-    logger.info("Creating category with data:", categoryData);
+    
+    try {
+      logger.info("Converting spaces array to JSON string:", categoryData.spaces);
+      categoryData.spaces = JSON.stringify(categoryData.spaces);
+      logger.info("Converted spaces to JSON:", categoryData.spaces);
+    } catch (err) {
+      logger.error("Error converting spaces to JSON:", err);
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    
+    logger.info("Final category data to save:", JSON.stringify(categoryData, null, 2));
     const result = await categories.addCategory(categoryData);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -54,6 +69,16 @@ api.put("/", async (req, res) => {
 
     if (!id) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    if (Array.isArray(categoryData.spaces)) {
+      try {
+        categoryData.spaces = JSON.stringify(categoryData.spaces);
+        logger.info("Converted spaces to JSON (PUT):", categoryData.spaces);
+      } catch (err) {
+        logger.error("Error converting spaces to JSON (PUT):", err);
+        return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+      }
     }
 
     logger.info("Updating category with ID:", id, "and data:", categoryData);

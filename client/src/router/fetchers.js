@@ -35,20 +35,41 @@ export const loadDashboardHomeData = async (to) => {
  */
 export const loadUsersData = async (to) => {
   try {
-    const [metricsResponse, usersResponse] = await Promise.all([
+    const [metricsResult, usersResult] = await Promise.allSettled([
       axios.get("/api/users/count"),
       axios.get("/api/users"),
     ]);
 
+    const metrics =
+      metricsResult.status === "fulfilled" && metricsResult.value.data.success ? metricsResult.value.data.data : {};
+
+    const users =
+      usersResult.status === "fulfilled" && usersResult.value.data.success ? usersResult.value.data.data : [];
+
+    const hasError =
+      metricsResult.status === "rejected" ||
+      usersResult.status === "rejected" ||
+      (metricsResult.status === "fulfilled" && !metricsResult.value.data.success) ||
+      (usersResult.status === "fulfilled" && !usersResult.value.data.success);
+
+    let errorMessage = null;
+    if (hasError) {
+      if (metricsResult.status === "rejected") {
+        errorMessage = "Error de conexión al cargar métricas de usuarios";
+      } else if (usersResult.status === "rejected") {
+        errorMessage = "Error de conexión al cargar lista de usuarios";
+      } else if (metricsResult.status === "fulfilled" && !metricsResult.value.data.success) {
+        errorMessage = metricsResult.value.data.message;
+      } else if (usersResult.status === "fulfilled" && !usersResult.value.data.success) {
+        errorMessage = usersResult.value.data.message;
+      }
+    }
+
     to.meta.initialData = {
-      metrics: metricsResponse.data.success ? metricsResponse.data.data : {},
-      users: usersResponse.data.success ? usersResponse.data.data : [],
-      error: !metricsResponse.data.success || !usersResponse.data.success,
-      errorMessage: !metricsResponse.data.success
-        ? metricsResponse.data.message
-        : !usersResponse.data.success
-          ? usersResponse.data.message
-          : null,
+      metrics,
+      users,
+      error: hasError,
+      errorMessage,
     };
   } catch (error) {
     console.error("Error fetching users data:", error.message || error);
@@ -80,6 +101,204 @@ export const loadUserEditData = async (to) => {
       user: null,
       error: true,
       errorMessage: "Error de conexión al cargar datos del usuario",
+    };
+  }
+};
+
+/**
+ * Carga los datos para la gestión de espacios
+ */
+export const loadSpacesData = async (to) => {
+  try {
+    const [metricsResult, spacesResult] = await Promise.allSettled([
+      axios.get("/api/spaces/count"),
+      axios.get("/api/spaces"),
+    ]);
+
+    const metrics =
+      metricsResult.status === "fulfilled" && metricsResult.value.data.success ? metricsResult.value.data.data : {};
+
+    const spaces =
+      spacesResult.status === "fulfilled" && spacesResult.value.data.success ? spacesResult.value.data.data : [];
+
+    const hasError =
+      metricsResult.status === "rejected" ||
+      spacesResult.status === "rejected" ||
+      (metricsResult.status === "fulfilled" && !metricsResult.value.data.success) ||
+      (spacesResult.status === "fulfilled" && !spacesResult.value.data.success);
+
+    let errorMessage = null;
+    if (hasError) {
+      if (metricsResult.status === "rejected") {
+        errorMessage = "Error de conexión al cargar métricas de espacios";
+      } else if (spacesResult.status === "rejected") {
+        errorMessage = "Error de conexión al cargar lista de espacios";
+      } else if (metricsResult.status === "fulfilled" && !metricsResult.value.data.success) {
+        errorMessage = metricsResult.value.data.message;
+      } else if (spacesResult.status === "fulfilled" && !spacesResult.value.data.success) {
+        errorMessage = spacesResult.value.data.message;
+      }
+    }
+
+    to.meta.initialData = {
+      metrics,
+      spaces,
+      error: hasError,
+      errorMessage,
+    };
+  } catch (error) {
+    console.error("Error fetching spaces data:", error.message || error);
+    to.meta.initialData = {
+      metrics: {},
+      spaces: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar datos de espacios",
+    };
+  }
+};
+
+/**
+ * Carga los datos para la edición de un espacio específico
+ */
+export const loadSpaceEditData = async (to) => {
+  try {
+    const spaceId = to.params.id;
+    const spaceResponse = await axios.get(`/api/spaces?id=${spaceId}&includeInactive=true`);
+
+    to.meta.initialData = {
+      space: spaceResponse.data.success ? spaceResponse.data.data : null,
+      error: !spaceResponse.data.success,
+      errorMessage: !spaceResponse.data.success ? spaceResponse.data.message : null,
+    };
+  } catch (error) {
+    console.error("Error fetching space data:", error.message || error);
+    to.meta.initialData = {
+      space: null,
+      error: true,
+      errorMessage: "Error de conexión al cargar datos del espacio",
+    };
+  }
+};
+
+/**
+ * Carga los datos para la gestión de categorías
+ */
+export const loadCategoriesData = async (to) => {
+  try {
+    const [metricsResult, categoriesResult, spacesResult] = await Promise.allSettled([
+      axios.get("/api/categories/count"),
+      axios.get("/api/categories"),
+      axios.get("/api/spaces"),
+    ]);
+
+    const metrics =
+      metricsResult.status === "fulfilled" && metricsResult.value.data.success ? metricsResult.value.data.data : {};
+
+    const categories =
+      categoriesResult.status === "fulfilled" && categoriesResult.value.data.success
+        ? categoriesResult.value.data.data
+        : [];
+
+    const spaces =
+      spacesResult.status === "fulfilled" && spacesResult.value.data.success
+        ? spacesResult.value.data.data
+        : [];
+
+    const hasError =
+      metricsResult.status === "rejected" ||
+      categoriesResult.status === "rejected" ||
+      spacesResult.status === "rejected" ||
+      (metricsResult.status === "fulfilled" && !metricsResult.value.data.success) ||
+      (categoriesResult.status === "fulfilled" && !categoriesResult.value.data.success) ||
+      (spacesResult.status === "fulfilled" && !spacesResult.value.data.success);
+
+    let errorMessage = null;
+    if (hasError) {
+      if (metricsResult.status === "rejected") {
+        errorMessage = "Error de conexión al cargar métricas de categorías";
+      } else if (categoriesResult.status === "rejected") {
+        errorMessage = "Error de conexión al cargar lista de categorías";
+      } else if (spacesResult.status === "rejected") {
+        errorMessage = "Error de conexión al cargar lista de espacios";
+      } else if (metricsResult.status === "fulfilled" && !metricsResult.value.data.success) {
+        errorMessage = metricsResult.value.data.message;
+      } else if (categoriesResult.status === "fulfilled" && !categoriesResult.value.data.success) {
+        errorMessage = categoriesResult.value.data.message;
+      } else if (spacesResult.status === "fulfilled" && !spacesResult.value.data.success) {
+        errorMessage = spacesResult.value.data.message;
+      }
+    }
+
+    to.meta.initialData = {
+      metrics,
+      categories,
+      spaces,
+      error: hasError,
+      errorMessage,
+    };
+  } catch (error) {
+    console.error("Error fetching categories data:", error.message || error);
+    to.meta.initialData = {
+      metrics: {},
+      categories: [],
+      spaces: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar datos de categorías",
+    };
+  }
+};
+
+/**
+ * Carga los datos para la edición de una categoría específica
+ */
+export const loadCategoryEditData = async (to) => {
+  try {
+    const categoryId = to.params.id;
+    const [categoryResponse, spacesResponse] = await Promise.allSettled([
+      axios.get(`/api/categories?id=${categoryId}&includeInactive=true`),
+      axios.get("/api/spaces"),
+    ]);
+
+    const category = 
+      categoryResponse.status === "fulfilled" && categoryResponse.value.data.success 
+        ? categoryResponse.value.data.data 
+        : null;
+
+    const spaces = 
+      spacesResponse.status === "fulfilled" && spacesResponse.value.data.success 
+        ? spacesResponse.value.data.data 
+        : [];
+
+    const hasError = 
+      categoryResponse.status === "rejected" ||
+      spacesResponse.status === "rejected" ||
+      (categoryResponse.status === "fulfilled" && !categoryResponse.value.data.success) ||
+      (spacesResponse.status === "fulfilled" && !spacesResponse.value.data.success);
+
+    let errorMessage = null;
+    if (hasError) {
+      if (categoryResponse.status === "rejected") {
+        errorMessage = "Error de conexión al cargar datos de la categoría";
+      } else if (spacesResponse.status === "rejected") {
+        errorMessage = "Error de conexión al cargar espacios disponibles";
+      } else {
+        errorMessage = categoryResponse.value.data.message || spacesResponse.value.data.message;
+      }
+    }
+
+    to.meta.initialData = {
+      category,
+      spaces,
+      error: hasError,
+      errorMessage,
+    };
+  } catch (error) {
+    console.error("Error fetching category data:", error.message || error);
+    to.meta.initialData = {
+      category: null,
+      spaces: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar datos de la categoría",
     };
   }
 };

@@ -1,1 +1,55 @@
-{}
+{
+  "page": {
+    "createTitle": "Create category",
+    "createDescription": "Add a new category to organize spaces",
+    "editTitle": "Edit category",
+    "editDescription": "Modify the selected category information"
+  },
+  "profile": {
+    "preview": "Preview",
+    "creationDate": "Creation date",
+    "createdBy": "Created by",
+    "loading": "Loading...",
+    "errorLoading": "Error loading"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Basic information"
+    },
+    "labels": {
+      "name": "Name",
+      "spaces": "Associated spaces"
+    },
+    "placeholders": {
+      "name": "Category name",
+      "spaces": "Select spaces for this category",
+      "noSpaces": "No spaces assigned"
+    },
+    "actions": {
+      "submitting": "Saving...",
+      "updating": "Updating..."
+    }
+  },
+  "common": {
+    "create": "Create category",
+    "edit": "Edit category",
+    "update": "Save changes",
+    "cancel": "Cancel",
+    "status": {
+      "success": "Completed!",
+      "error": "Error"
+    }
+  },
+  "errors": {
+    "nameLength": "Name must be at least 3 characters and maximum 100",
+    "typeLength": "Type must be at least 3 characters",
+    "unknown": "An unknown error has occurred",
+    "noResponse": "No response received from server",
+    "requestSetup": "Error preparing request",
+    "loadingCategory": "Error loading category data"
+  },
+  "notifications": {
+    "createSuccess": "Category created successfully",
+    "updateSuccess": "Category updated successfully"
+  }
+}

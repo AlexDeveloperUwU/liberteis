@@ -31,6 +31,8 @@ import {
   Users as LucideUsers,
   FileText as LucideFileText,
   Settings as LucideSettings,
+  MapPin as LucideMapPin,
+  Bookmark as LucideBookmark,
 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import { ref, onMounted, computed } from "vue";
@@ -47,6 +49,8 @@ export default {
     LucideUsers,
     LucideFileText,
     LucideSettings,
+    LucideMapPin,
+    LucideBookmark,
   },
   props: {
     isCollapsed: {
@@ -76,6 +80,18 @@ export default {
           icon: "LucideHome",
           route: "/dash/home",
           permission: "normalUser",
+        },
+        {
+          titleKey: "components.sidebar.categories",
+          icon: "LucideBookmark",
+          route: "/dash/categories",
+          permission: "managerUser",
+        },
+        {
+          titleKey: "components.sidebar.spaces",
+          icon: "LucideMapPin",
+          route: "/dash/spaces",
+          permission: "managerUser",
         },
         {
           titleKey: "components.sidebar.users",

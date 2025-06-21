@@ -1,13 +1,14 @@
 {
   "page": {
-    "title": "Gestión de Categorías",
+    "title": "Gestión de categorías",
     "description": "Administra las categorías disponibles en el sistema.",
-    "tableTitle": "Lista de Categorías"
+    "tableTitle": "Lista de categorías"
   },
+
   "metrics": {
-    "totals": "Total de Categorías",
-    "active": "Categorías Activas",
-    "inactive": "Categorías Inactivas"
+    "totals": "Total de categorías",
+    "active": "Categorías activas",
+    "inactive": "Categorías inactivas"
   },
   "table": {
     "name": "Nombre",
@@ -21,7 +22,9 @@
     "edit": "Editar",
     "delete": "Desactivar",
     "deactivate": "Desactivar",
-    "reactivate": "Reactivar"
+    "reactivate": "Reactivar",
+    "create": "Crear categoría",
+    "update": "Actualizar categoría"
   },
   "modals": {
     "deactivate": {
@@ -35,6 +38,14 @@
   },
   "toasts": {
     "deactivated": "Categoría desactivada correctamente",
-    "reactivated": "Categoría reactivada correctamente"
+    "reactivated": "Categoría reactivada correctamente",
+    "created": "Categoría creada correctamente",
+    "updated": "Categoría actualizada correctamente"
+  },
+  "errors": {
+    "notFound": "No se encontró la categoría",
+    "unknown": "Ha ocurrido un error desconocido",
+    "noResponse": "No se recibió respuesta del servidor",
+    "requestSetup": "Error al configurar la solicitud"
   }
 }

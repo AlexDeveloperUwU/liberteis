@@ -1,1 +1,58 @@
-{}
+{
+  "page": {
+    "createTitle": "Crear categoría",
+    "createDescription": "Añadir una nueva categoría para organizar espacios",
+    "editTitle": "Editar categoría",
+    "editDescription": "Modificar la información de la categoría seleccionada"
+  },
+  "profile": {
+    "preview": "Vista previa",
+    "creationDate": "Fecha de creación",
+    "createdBy": "Creado por",
+    "loading": "Cargando...",
+    "errorLoading": "Error al cargar"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Información básica"
+    },
+    "labels": {
+      "name": "Nombre",
+      "spaces": "Espacios asociados",
+      "description": "Información adicional"
+    },
+    "placeholders": {
+      "name": "Nombre de la categoría",
+      "spaces": "Selecciona los espacios para esta categoría",
+      "description": "Describe esta categoría (uso, propósito, etc.)",
+      "noSpaces": "Sin espacios asignados",
+      "noDescription": "Sin información adicional"
+    },
+    "actions": {
+      "submitting": "Guardando...",
+      "updating": "Actualizando..."
+    }
+  },
+  "common": {
+    "create": "Crear categoría",
+    "edit": "Editar categoría", 
+    "update": "Guardar cambios",
+    "cancel": "Cancelar",
+    "status": {
+      "success": "¡Completado!",
+      "error": "Error"
+    }
+  },
+  "errors": {
+    "nameLength": "El nombre debe tener al menos 3 caracteres y máximo 100",
+    "typeLength": "El tipo debe tener al menos 3 caracteres",
+    "unknown": "Ha ocurrido un error desconocido",
+    "noResponse": "No se recibió respuesta del servidor",
+    "requestSetup": "Error al preparar la solicitud",
+    "loadingCategory": "Error al cargar los datos de la categoría"
+  },
+  "notifications": {
+    "createSuccess": "Categoría creada exitosamente",
+    "updateSuccess": "Categoría actualizada exitosamente"
+  }
+}

@@ -1,78 +1,78 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export const useToastStore = defineStore('toast', () => {
-  const toasts = ref([])
-  let nextId = 0
+export const useToastStore = defineStore("toast", () => {
+  const toasts = ref([]);
+  let nextId = 0;
 
   const addToast = (toast) => {
-    const id = nextId++
+    const id = nextId++;
     const newToast = {
       id,
-      type: toast.type || 'info',
+      type: toast.type || "info",
       title: toast.title,
       message: toast.message,
       duration: toast.duration || 2000,
-      persistent: toast.persistent || false
-    }
+      persistent: toast.persistent || false,
+    };
 
-    toasts.value.push(newToast)
+    toasts.value.push(newToast);
 
     if (!newToast.persistent && newToast.duration > 0) {
       setTimeout(() => {
-        removeToast(id)
-      }, newToast.duration)
+        removeToast(id);
+      }, newToast.duration);
     }
 
-    return id
-  }
+    return id;
+  };
 
   const removeToast = (id) => {
-    const index = toasts.value.findIndex(toast => toast.id === id)
+    const index = toasts.value.findIndex((toast) => toast.id === id);
     if (index !== -1) {
-      toasts.value.splice(index, 1)
+      toasts.value.splice(index, 1);
     }
-  }
+  };
 
   const clearAllToasts = () => {
-    toasts.value = []
-  }
+    toasts.value = [];
+  };
 
-  const success = (message, title = 'Éxito', options = {}) => {
+  const success = (message, title = "Éxito", options = {}) => {
     return addToast({
-      type: 'success',
+      type: "success",
       title,
       message,
-      ...options
-    })
-  }
+      ...options,
+    });
+  };
 
-  const error = (message, title = 'Error', options = {}) => {
+  const error = (message, title = "Error", options = {}) => {
     return addToast({
-      type: 'error',
+      type: "error",
       title,
       message,
-      ...options
-    })
-  }
+      ...options,
+    });
+  };
 
-  const warning = (message, title = 'Advertencia', options = {}) => {
+  const warning = (message, title = "Advertencia", options = {}) => {
     return addToast({
-      type: 'warning',
+      type: "warning",
       title,
       message,
-      ...options
-    })
-  }
+      ...options,
+    });
+  };
 
-  const info = (message, title = 'Información', options = {}) => {
+  const info = (message, title = "Información", options = {}) => {
     return addToast({
-      type: 'info',
+      type: "info",
       title,
       message,
-      ...options
-    })
-  }
+      ...options,
+    });
+  };
 
   return {
     toasts,
@@ -82,6 +82,6 @@ export const useToastStore = defineStore('toast', () => {
     success,
     error,
     warning,
-    info
-  }
-})
+    info,
+  };
+});

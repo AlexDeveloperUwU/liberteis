@@ -1,13 +1,13 @@
 {
   "page": {
-    "title": "Xestión de Categorías",
+    "title": "Xestión de categorías",
     "description": "Administra as categorías dispoñibles no sistema.",
-    "tableTitle": "Lista de Categorías"
+    "tableTitle": "Lista de categorías"
   },
   "metrics": {
-    "totals": "Total de Categorías",
-    "active": "Categorías Activas",
-    "inactive": "Categorías Inactivas"
+    "totals": "Total de categorías",
+    "active": "Categorías activas",
+    "inactive": "Categorías inactivas"
   },
   "table": {
     "name": "Nome",
@@ -21,7 +21,9 @@
     "edit": "Editar",
     "delete": "Desactivar",
     "deactivate": "Desactivar",
-    "reactivate": "Reactivar"
+    "reactivate": "Reactivar",
+    "create": "Crear categoría",
+    "update": "Actualizar categoría"
   },
   "modals": {
     "deactivate": {
@@ -35,6 +37,14 @@
   },
   "toasts": {
     "deactivated": "Categoría desactivada correctamente",
-    "reactivated": "Categoría reactivada correctamente"
+    "reactivated": "Categoría reactivada correctamente",
+    "created": "Categoría creada correctamente",
+    "updated": "Categoría actualizada correctamente"
+  },
+  "errors": {
+    "notFound": "Non se atopou a categoría",
+    "unknown": "Ocorreu un erro descoñecido",
+    "noResponse": "Non se recibiu resposta do servidor",
+    "requestSetup": "Erro ao configurar a solicitude"
   }
 }

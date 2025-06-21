@@ -1,7 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "../stores/authStore";
 import { hasPermission } from "../utils/permissions";
-import { loadDashboardHomeData, loadUsersData, loadUserEditData } from "./fetchers";
+import axios from "axios";
+import {
+  loadDashboardHomeData,
+  loadUsersData,
+  loadUserEditData,
+  loadSpacesData,
+  loadSpaceEditData,
+  loadCategoriesData,
+  loadCategoryEditData,
+} from "./fetchers";
 
 const routes = [
   {
@@ -61,6 +70,67 @@ const routes = [
         meta: { allow: "managerUser", layout: "dashboard" },
         props: true,
         beforeEnter: loadUserEditData,
+      },
+
+      {
+        path: "spaces",
+        name: "dashSpaces",
+        component: () => import("../views/Dash/SpacesTableView.vue"),
+        meta: { allow: "managerUser", layout: "dashboard" },
+        beforeEnter: loadSpacesData,
+      },
+      {
+        path: "spaces/new",
+        name: "dashSpacesNew",
+        component: () => import("../views/Dash/SpacesFormView.vue"),
+        meta: { allow: "managerUser", layout: "dashboard" },
+      },
+      {
+        path: "spaces/edit/:id",
+        name: "dashSpacesEdit",
+        component: () => import("../views/Dash/SpacesFormView.vue"),
+        meta: { allow: "managerUser", layout: "dashboard" },
+        props: true,
+        beforeEnter: loadSpaceEditData,
+      },
+
+      {
+        path: "categories",
+        name: "dashCategories",
+        component: () => import("../views/Dash/CategoriesTableView.vue"),
+        meta: { allow: "managerUser", layout: "dashboard" },
+        beforeEnter: loadCategoriesData,
+      },
+      {
+        path: "categories/new",
+        name: "dashCategoriesNew",
+        component: () => import("../views/Dash/CategoriesFormView.vue"),
+        meta: { allow: "managerUser", layout: "dashboard" },
+        beforeEnter: async (to) => {
+          try {
+            const spacesResponse = await axios.get("/api/spaces");
+            to.meta.initialData = {
+              spaces: spacesResponse.data.success ? spacesResponse.data.data : [],
+              error: !spacesResponse.data.success,
+              errorMessage: !spacesResponse.data.success ? spacesResponse.data.message : null,
+            };
+          } catch (error) {
+            console.error("Error loading spaces:", error.message || error);
+            to.meta.initialData = {
+              spaces: [],
+              error: true,
+              errorMessage: "Error de conexión al cargar espacios disponibles",
+            };
+          }
+        },
+      },
+      {
+        path: "categories/edit/:id",
+        name: "dashCategoriesEdit",
+        component: () => import("../views/Dash/CategoriesFormView.vue"),
+        meta: { allow: "managerUser", layout: "dashboard" },
+        props: true,
+        beforeEnter: loadCategoryEditData,
       },
     ],
   },

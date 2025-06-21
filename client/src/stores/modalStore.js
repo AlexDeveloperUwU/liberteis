@@ -1,54 +1,54 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export const useModalStore = defineStore('modal', () => {
-  const modals = ref([])
-  let nextId = 0
+export const useModalStore = defineStore("modal", () => {
+  const modals = ref([]);
+  let nextId = 0;
 
   const addModal = (modal) => {
-    const id = nextId++
+    const id = nextId++;
     const newModal = {
       id,
-      type: modal.type || 'info',
+      type: modal.type || "info",
       title: modal.title,
       content: modal.content,
       persistent: modal.persistent || false,
-      width: modal.width || 'md',
-      actions: modal.actions || []
-    }
+      width: modal.width || "md",
+      actions: modal.actions || [],
+    };
 
-    modals.value.push(newModal)
-    return id
-  }
+    modals.value.push(newModal);
+    return id;
+  };
 
   const removeModal = (id) => {
-    const index = modals.value.findIndex(modal => modal.id === id)
+    const index = modals.value.findIndex((modal) => modal.id === id);
     if (index !== -1) {
-      modals.value.splice(index, 1)
+      modals.value.splice(index, 1);
     }
-  }
+  };
 
   const clearAllModals = () => {
-    modals.value = []
-  }
+    modals.value = [];
+  };
 
-  const confirm = (content, title = 'Confirmar', options = {}) => {
+  const confirm = (content, title = "Confirmar", options = {}) => {
     return addModal({
-      type: 'confirm',
+      type: "confirm",
       title,
       content,
-      ...options
-    })
-  }
+      ...options,
+    });
+  };
 
-  const info = (content, title = 'Información', options = {}) => {
+  const info = (content, title = "Información", options = {}) => {
     return addModal({
-      type: 'info',
+      type: "info",
       title,
       content,
-      ...options
-    })
-  }
+      ...options,
+    });
+  };
 
   return {
     modals,
@@ -56,6 +56,6 @@ export const useModalStore = defineStore('modal', () => {
     removeModal,
     clearAllModals,
     confirm,
-    info
-  }
-})
+    info,
+  };
+});

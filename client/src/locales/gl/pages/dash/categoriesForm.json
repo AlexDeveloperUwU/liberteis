@@ -1,1 +1,55 @@
-{}
+{
+  "page": {
+    "createTitle": "Crear categoría",
+    "createDescription": "Engadir unha nova categoría para organizar espazos",
+    "editTitle": "Editar categoría",
+    "editDescription": "Modificar a información da categoría seleccionada"
+  },
+  "profile": {
+    "preview": "Vista previa",
+    "creationDate": "Data de creación",
+    "createdBy": "Creado por",
+    "loading": "Cargando...",
+    "errorLoading": "Erro ao cargar"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Información básica"
+    },
+    "labels": {
+      "name": "Nome",
+      "spaces": "Espazos asociados"
+    },
+    "placeholders": {
+      "name": "Nome da categoría",
+      "spaces": "Selecciona os espazos para esta categoría",
+      "noSpaces": "Sen espazos asignados"
+    },
+    "actions": {
+      "submitting": "Gardando...",
+      "updating": "Actualizando..."
+    }
+  },
+  "common": {
+    "create": "Crear categoría",
+    "edit": "Editar categoría",
+    "update": "Gardar cambios",
+    "cancel": "Cancelar",
+    "status": {
+      "success": "¡Completado!",
+      "error": "Erro"
+    }
+  },
+  "errors": {
+    "nameLength": "O nome debe ter polo menos 3 caracteres e máximo 100",
+    "typeLength": "O tipo debe ter polo menos 3 caracteres",
+    "unknown": "Ocorreu un erro descoñecido",
+    "noResponse": "Non se recibiu resposta do servidor",
+    "requestSetup": "Erro ao preparar a solicitude",
+    "loadingCategory": "Erro ao cargar os datos da categoría"
+  },
+  "notifications": {
+    "createSuccess": "Categoría creada con éxito",
+    "updateSuccess": "Categoría actualizada con éxito"
+  }
+}

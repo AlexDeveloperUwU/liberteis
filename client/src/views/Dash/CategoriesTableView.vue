@@ -1,15 +1,15 @@
 <template>
   <div class="h-full w-full p-6">
-    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.dash.spaces.page.title") }}</h1>
-    <p class="text-text-800 mb-6">{{ t("pages.dash.spaces.page.description") }}</p>
+    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.dash.categories.page.title") }}</h1>
+    <p class="text-text-800 mb-6">{{ t("pages.dash.categories.page.description") }}</p>
 
     <div class="responsive-container mb-6">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
         <div
           class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
           <div class="flex items-center gap-2 mb-2">
-            <MapPin class="w-5 h-5 text-primary-600" />
-            <p class="font-medium text-text-800">{{ t("pages.dash.spaces.metrics.totals") }}</p>
+            <Bookmark class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.categories.metrics.totals") }}</p>
           </div>
           <h2 class="text-2xl font-bold text-text-950">{{ metrics.total || 0 }}</h2>
         </div>
@@ -17,8 +17,8 @@
         <div
           class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
           <div class="flex items-center gap-2 mb-2">
-            <CheckCircle class="w-5 h-5 text-primary-600" />
-            <p class="font-medium text-text-800">{{ t("pages.dash.spaces.metrics.active") }}</p>
+            <BookmarkCheck class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.categories.metrics.active") }}</p>
           </div>
           <h2 class="text-2xl font-bold text-text-950">{{ metrics.active || 0 }}</h2>
         </div>
@@ -26,8 +26,8 @@
         <div
           class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
           <div class="flex items-center gap-2 mb-2">
-            <XCircle class="w-5 h-5 text-primary-600" />
-            <p class="font-medium text-text-800">{{ t("pages.dash.spaces.metrics.inactive") }}</p>
+            <BookmarkX class="w-5 h-5 text-primary-600" />
+            <p class="font-medium text-text-800">{{ t("pages.dash.categories.metrics.inactive") }}</p>
           </div>
           <h2 class="text-2xl font-bold text-text-950">{{ metrics.inactive || 0 }}</h2>
         </div>
@@ -40,10 +40,10 @@
         <div class="flex items-center mb-6 pb-4 border-b border-background-400">
           <div
             class="p-2 bg-primary-100 rounded-lg border border-primary-500 mr-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
-            <MapPin class="w-5 h-5 text-primary-600" />
+            <Bookmark class="w-5 h-5 text-primary-600" />
           </div>
           <h2 class="text-xl font-bold text-text-900 k2d">
-            {{ t("pages.dash.spaces.page.tableTitle") }}
+            {{ t("pages.dash.categories.page.tableTitle") }}
           </h2>
         </div>
 
@@ -66,12 +66,12 @@
           </div>
 
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-            <Listbox v-model="spaceFilter" @update:model-value="loadSpaces">
+            <Listbox v-model="categoryFilter" @update:model-value="loadCategories">
               <div class="relative w-full sm:w-40">
                 <ListboxButton
                   class="h-10 px-3 rounded-lg text-sm font-medium shadow-sm bg-background-50 border border-background-300 text-text-800 focus:outline-none focus:ring-2 focus:ring-primary-500 hover:border-primary-300 transition-all duration-200 flex items-center justify-between w-full">
                   <span class="block truncate text-left">
-                    {{ t(`pages.other.commons.status.${spaceFilter}`) || spaceFilter }}
+                    {{ t(`pages.other.commons.status.${categoryFilter}`) || categoryFilter }}
                   </span>
                   <ChevronDown class="w-4 h-4 text-text-400 ml-2" />
                 </ListboxButton>
@@ -116,10 +116,10 @@
             </Listbox>
 
             <button
-              @click="$router.push({ name: 'dashSpacesNew' })"
+              @click="$router.push({ name: 'dashCategoriesNew' })"
               class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer whitespace-nowrap w-full sm:w-auto">
-              <MapPinPlus class="w-4 h-4 mr-2" />
-              <span>{{ t("pages.dash.spaces.actions.add") || "Añadir espacio" }}</span>
+              <BookmarkPlus class="w-4 h-4 mr-2" />
+              <span>{{ t("pages.dash.categories.actions.add") || "Añadir categoría" }}</span>
             </button>
           </div>
         </div>
@@ -139,34 +139,25 @@
                   <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('name')">
                     <BookMarked class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.spaces.table.name") }}
+                      {{ t("pages.dash.categories.table.name") }}
                     </span>
                     <SortIcon :active="sortColumn === 'name'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('location')">
+                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('spaces')">
                     <MapPin class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.spaces.table.location") }}
+                      {{ t("pages.dash.categories.table.spaces") }}
                     </span>
-                    <SortIcon :active="sortColumn === 'location'" :direction="sortDirection" />
-                  </div>
-                </th>
-                <th scope="col" class="px-6 py-4 text-left">
-                  <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('info')">
-                    <Info class="w-4 h-4 text-primary-600" />
-                    <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.spaces.table.info") }}
-                    </span>
-                    <SortIcon :active="sortColumn === 'info'" :direction="sortDirection" />
+                    <SortIcon :active="sortColumn === 'spaces'" :direction="sortDirection" />
                   </div>
                 </th>
                 <th scope="col" class="px-6 py-4 text-left">
                   <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('createdBy')">
                     <User class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.spaces.table.createdBy") }}
+                      {{ t("pages.dash.categories.table.createdBy") }}
                     </span>
                     <SortIcon :active="sortColumn === 'createdBy'" :direction="sortDirection" />
                   </div>
@@ -175,59 +166,70 @@
                   <div class="flex items-center gap-2">
                     <Settings class="w-4 h-4 text-primary-600" />
                     <span class="text-sm font-bold text-text-800 uppercase tracking-wider">
-                      {{ t("pages.dash.spaces.table.actions") }}
+                      {{ t("pages.dash.categories.table.actions") }}
                     </span>
                   </div>
                 </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-background-200">
-              <tr v-for="space in paginatedSpaces" :key="space.id" class="group">
+              <tr v-for="category in paginatedCategories" :key="category.id" class="group">
                 <td
                   class="px-6 py-4 whitespace-nowrap sticky-column sticky left-0 bg-background-100 group-hover:bg-primary-50 transition-colors duration-150 z-20">
                   <span class="text-sm text-text-800">
-                    {{ space.id }}
+                    {{ category.id }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="ml-4">
-                    <div class="text-sm text-text-800">{{ space.name }}</div>
+                    <div class="text-sm text-text-800">{{ category.name }}</div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="text-sm text-text-800">{{ space.location }}</div>
+                  <div class="text-sm text-text-800">
+                    <div v-if="category.spaces && category.spaces.length" class="flex flex-wrap gap-1">
+                      <div
+                        v-for="(spaceId, index) in category.spaces.slice(0, 3)"
+                        :key="spaceId"
+                        class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-primary-100 text-primary-800 border border-primary-200">
+                        {{ getSpaceName(spaceId) }}
+                      </div>
+                      <div
+                        v-if="category.spaces.length > 3"
+                        class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-background-100 text-text-500 border border-background-200">
+                        +{{ category.spaces.length - 3 }}
+                      </div>
+                    </div>
+                    <div v-else class="text-text-500">{{ t("pages.dash.categories.table.noSpaces") }}</div>
+                  </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="text-sm text-text-800 truncate max-w-40" :title="space.info">{{ space.info }}</div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="text-sm text-text-800 truncate max-w-32">{{ getCreatedByName(space.createdBy) }}</div>
+                  <div class="text-sm text-text-800 truncate max-w-32">{{ getCreatedByName(category.createdBy) }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="flex items-center gap-2">
                     <button
-                      @click="$router.push({ name: 'dashSpacesEdit', params: { id: space.id } })"
+                      @click="$router.push({ name: 'dashCategoriesEdit', params: { id: category.id } })"
                       class="px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer">
                       <Pencil class="w-3 h-3 text-primary-600" />
-                      {{ t("pages.dash.spaces.actions.edit") }}
+                      {{ t("pages.dash.categories.actions.edit") }}
                     </button>
                     <button
-                      v-if="!isSystemSpace(space)"
-                      @click="handleSpaceStatusToggle(space)"
+                      @click="handleCategoryStatusToggle(category)"
                       :class="[
                         'px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full border transition-colors duration-150',
-                        space.deleted
+                        category.deleted
                           ? 'bg-secondary-100 text-secondary-800 border-secondary-200 hover:bg-secondary-200'
                           : 'bg-accent-100 text-accent-800 border-accent-200 hover:bg-accent-200',
                       ]">
                       <component
-                        :is="space.deleted ? CheckCircle : Trash"
+                        :is="category.deleted ? BookmarkCheck : Trash"
                         class="w-3 h-3"
-                        :class="space.deleted ? 'text-secondary-600' : 'text-accent-600'" />
+                        :class="category.deleted ? 'text-secondary-600' : 'text-accent-600'" />
                       {{
-                        space.deleted
-                          ? t("pages.dash.spaces.actions.reactivate")
-                          : t("pages.dash.spaces.actions.delete")
+                        category.deleted
+                          ? t("pages.dash.categories.actions.reactivate")
+                          : t("pages.dash.categories.actions.delete")
                       }}
                     </button>
                   </div>
@@ -279,12 +281,8 @@
 
 <script setup>
 import {
-  MapPin,
-  CheckCircle,
-  XCircle,
   Hash,
   User,
-  Info,
   Settings,
   Pencil,
   Trash,
@@ -296,7 +294,11 @@ import {
   Search,
   X,
   ChevronUp,
-  MapPinPlus,
+  MapPin,
+  Bookmark,
+  BookmarkCheck,
+  BookmarkX,
+  BookmarkPlus,
 } from "lucide-vue-next";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
@@ -310,14 +312,14 @@ const { t } = useI18n();
 const route = useRoute();
 
 const searchTerm = ref("");
-const spaceFilter = ref("active");
+const categoryFilter = ref("active");
 const currentPage = ref(1);
 const itemsPerPage = 5;
 
 const filterIcons = {
-  active: CheckCircle,
-  inactive: XCircle,
-  all: MapPin,
+  active: BookmarkCheck,
+  inactive: BookmarkX,
+  all: Bookmark,
 };
 
 const metrics = ref({
@@ -326,7 +328,9 @@ const metrics = ref({
   inactive: 0,
 });
 
-const spaces = ref([]);
+const categories = ref([]);
+const spaces = ref({});
+const requestedSpaces = new Set();
 
 const isLoading = ref(false);
 const users = ref({});
@@ -387,17 +391,16 @@ const textIncludes = (text, searchTerm) => {
   return searchWords.every((word) => normalizedText.includes(word));
 };
 
-const filteredSpaces = computed(() => {
-  let result = spaces.value;
+const filteredCategories = computed(() => {
+  let result = categories.value;
 
   if (searchTerm.value.trim()) {
-    result = result.filter((space) => {
+    result = result.filter((category) => {
       const displayValues = {
-        id: space.id?.toString() || "",
-        name: space.name || "",
-        location: space.location || "",
-        info: space.info || "",
-        createdBy: space.createdBy || "",
+        id: category.id?.toString() || "",
+        name: category.name || "",
+        createdBy: category.createdBy || "",
+        spaces: category.spaces?.map((spaceId) => getSpaceName(spaceId)).join(" ") || "",
       };
 
       return Object.values(displayValues).some((value) => textIncludes(value, searchTerm.value));
@@ -417,13 +420,9 @@ const filteredSpaces = computed(() => {
           valueA = a.name?.toLowerCase() || "";
           valueB = b.name?.toLowerCase() || "";
           break;
-        case "location":
-          valueA = a.location?.toLowerCase() || "";
-          valueB = b.location?.toLowerCase() || "";
-          break;
-        case "info":
-          valueA = a.info?.toLowerCase() || "";
-          valueB = b.info?.toLowerCase() || "";
+        case "spaces":
+          valueA = a.spaces?.length || 0;
+          valueB = b.spaces?.length || 0;
           break;
         case "createdBy":
           valueA = getCreatedByName(a.createdBy)?.toLowerCase() || "";
@@ -455,35 +454,33 @@ watch(searchTerm, () => {
 });
 
 const totalPages = computed(() => {
-  return Math.max(1, Math.ceil(filteredSpaces.value.length / itemsPerPage));
+  return Math.max(1, Math.ceil(filteredCategories.value.length / itemsPerPage));
 });
 
-const paginatedSpaces = computed(() => {
+const paginatedCategories = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
-  return filteredSpaces.value.slice(start, end);
+  return filteredCategories.value.slice(start, end);
 });
 
-const loadSpaces = async () => {
+const loadCategories = async () => {
   try {
     isLoading.value = true;
 
-    const response = await axios.get("/api/spaces", {
+    const response = await axios.get("/api/categories", {
       params: {
-        status: spaceFilter.value,
+        status: categoryFilter.value,
       },
     });
 
-    spaces.value = response.data.data || [];
+    categories.value = response.data.data || [];
 
     if (response.data.metrics) {
-      console.log("Metrics from API response:", response.data.metrics);
       metrics.value = response.data.metrics;
     } else {
       try {
-        const metricsResponse = await axios.get("/api/spaces/count");
+        const metricsResponse = await axios.get("/api/categories/count");
         if (metricsResponse.data && metricsResponse.data.success) {
-          console.log("Metrics from dedicated endpoint:", metricsResponse.data.data);
           metrics.value = metricsResponse.data.data;
         }
       } catch (error) {
@@ -491,13 +488,64 @@ const loadSpaces = async () => {
       }
     }
 
+    // Cargar información de espacios
+    await loadSpaceInfo();
+
     currentPage.value = 1;
   } catch (error) {
-    console.error("Error cargando espacios:", error);
-    spaces.value = [];
+    console.error("Error cargando categorías:", error);
+    categories.value = [];
   } finally {
     isLoading.value = false;
   }
+};
+
+const loadSpaceInfo = async () => {
+  const spaceIds = new Set();
+  categories.value.forEach((category) => {
+    if (category.spaces && Array.isArray(category.spaces)) {
+      category.spaces.forEach((spaceId) => {
+        if (spaceId && !spaces.value[spaceId] && !requestedSpaces.has(spaceId)) {
+          spaceIds.add(spaceId);
+        }
+      });
+    }
+  });
+
+  for (const spaceId of spaceIds) {
+    requestedSpaces.add(spaceId);
+    try {
+      const response = await axios.get(`/api/spaces`, {
+        params: { id: spaceId, includeInactive: true },
+      });
+      if (response.data.success && response.data.data) {
+        spaces.value[spaceId] = response.data.data;
+      }
+    } catch (error) {
+      console.error(`Error cargando espacio ${spaceId}:`, error);
+    }
+  }
+};
+
+const getSpaceName = (spaceId) => {
+  if (spaces.value[spaceId]) {
+    return spaces.value[spaceId].name;
+  }
+  if (!requestedSpaces.has(spaceId)) {
+    requestedSpaces.add(spaceId);
+    axios.get(`/api/spaces`, {
+      params: { id: spaceId, includeInactive: true },
+    })
+      .then((response) => {
+        if (response.data.success && response.data.data) {
+          spaces.value[spaceId] = response.data.data;
+        }
+      })
+      .catch((error) => {
+        console.error(`Error cargando espacio puntual ${spaceId}:`, error);
+      });
+  }
+  return spaceId;
 };
 
 onMounted(async () => {
@@ -507,18 +555,24 @@ onMounted(async () => {
       metrics.value = route.meta.initialData.metrics;
     }
 
-    if (route.meta.initialData.spaces) {
-      spaces.value = route.meta.initialData.spaces;
+    if (route.meta.initialData.spaces && Array.isArray(route.meta.initialData.spaces)) {
+      // Inicializar la caché de espacios con los datos del fetcher
+      for (const space of route.meta.initialData.spaces) {
+        if (space && space.id) {
+          spaces.value[space.id] = space;
+        }
+      }
+    }
+
+    if (route.meta.initialData.categories) {
+      categories.value = route.meta.initialData.categories;
+      await loadSpaceInfo();
     }
   } else {
     // Fallback si no hay datos iniciales
-    await loadSpaces();
+    await loadCategories();
   }
 });
-
-const isSystemSpace = (space) => {
-  return space.createdBy === "System";
-};
 
 const getCreatedByName = (createdById) => {
   if (createdById === "System") {
@@ -550,15 +604,17 @@ const loadUserName = async (userId) => {
 const modal = useModal();
 const toast = useToast();
 
-const handleSpaceStatusToggle = async (space) => {
-  const isDeactivating = !space.deleted;
+const handleCategoryStatusToggle = async (category) => {
+  const isDeactivating = !category.deleted;
   const modalText = isDeactivating
-    ? t("pages.dash.spaces.modals.deactivate.text", { name: space.name })
-    : t("pages.dash.spaces.modals.reactivate.text", { name: space.name });
+    ? t("pages.dash.categories.modals.deactivate.text", { name: category.name })
+    : t("pages.dash.categories.modals.reactivate.text", { name: category.name });
 
   modal.confirm(
     modalText,
-    isDeactivating ? t("pages.dash.spaces.modals.deactivate.title") : t("pages.dash.spaces.modals.reactivate.title"),
+    isDeactivating
+      ? t("pages.dash.categories.modals.deactivate.title")
+      : t("pages.dash.categories.modals.reactivate.title"),
     {
       actions: [
         {
@@ -566,25 +622,27 @@ const handleSpaceStatusToggle = async (space) => {
           type: "default",
         },
         {
-          label: isDeactivating ? t("pages.dash.spaces.actions.deactivate") : t("pages.dash.spaces.actions.reactivate"),
+          label: isDeactivating
+            ? t("pages.dash.categories.actions.deactivate")
+            : t("pages.dash.categories.actions.reactivate"),
           type: isDeactivating ? "danger" : "secondary",
           onClick: async () => {
             try {
-              const response = await axios.patch(`/api/spaces/toggle`, null, {
-                params: { id: space.id },
+              const response = await axios.patch(`/api/categories/toggle`, null, {
+                params: { id: category.id },
               });
 
               if (response.data.success) {
                 toast.success(
                   isDeactivating
-                    ? t("pages.dash.spaces.toasts.deactivated")
-                    : t("pages.dash.spaces.toasts.reactivated"),
+                    ? t("pages.dash.categories.toasts.deactivated")
+                    : t("pages.dash.categories.toasts.reactivated"),
                 );
-                await loadSpaces();
+                await loadCategories();
               }
             } catch (error) {
               toast.error(t("pages.other.commons.errors.generic"));
-              console.error("Error toggling space status:", error);
+              console.error("Error toggling category status:", error);
             }
           },
         },

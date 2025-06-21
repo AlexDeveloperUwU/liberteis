@@ -16,7 +16,7 @@
                 {{ toast.title || $t(`components.toast.titles.${toast.type}`) }}
               </div>
               <div class="text-sm" :class="getMessageClasses(toast.type)">
-                {{ toast.message }}
+                {{ toast.message.startsWith('pages.other.errors') ? t(toast.message) : toast.message }}
               </div>
             </div>
 

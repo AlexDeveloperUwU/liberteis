@@ -5,10 +5,7 @@ import ErrorManager from "../errors/errorManager.js";
 
 /**
  * Adds a category to the database.
- * @async
- * @param {Object} category - Object representing the category.
- * @param {string} category.name - Name of the category.
- * @param {Array<string>} [category.spaces=[]] - IDs of spaces associated with the category.
+ * @param {Object} category - Object representing the category to add.
  * @returns {Promise<Object>} Operation result.
  */
 export async function addCategory(category) {
@@ -17,13 +14,24 @@ export async function addCategory(category) {
   }
 
   category.id = await id.generateId("category");
+  category.deleted = false;
 
-  if (!Array.isArray(category.spaces)) {
-    category.spaces = [];
+  // Validar y logear el contenido de spaces antes de guardarlo
+  logger.info("Category data before saving:", JSON.stringify(category));
+  
+  // Verificar que spaces sea un string JSON válido
+  if (typeof category.spaces === 'string') {
+    try {
+      JSON.parse(category.spaces);
+      logger.info("Spaces field is valid JSON string:", category.spaces);
+    } catch (err) {
+      logger.error("Invalid JSON in spaces field:", category.spaces, err.message);
+      return ErrorManager.returnError("invalidParameters");
+    }
+  } else {
+    logger.error("Spaces field is not a string:", typeof category.spaces, category.spaces);
+    return ErrorManager.returnError("invalidParameters");
   }
-  // Ensure spaces only contains strings
-  category.spaces = category.spaces.filter((spaceId) => typeof spaceId === "string");
-  category.spaces = JSON.stringify(category.spaces);
 
   try {
     await dbc.dbSaveData("categories", category);
@@ -36,9 +44,8 @@ export async function addCategory(category) {
 
 /**
  * Updates a category in the database.
- * @async
  * @param {string} id - ID of the category to update.
- * @param {Object} category - Object with updated category data.
+ * @param {Object} category - Object with the updated category data.
  * @returns {Promise<Object>} Operation result.
  */
 export async function updateCategory(id, category) {
@@ -46,15 +53,12 @@ export async function updateCategory(id, category) {
     return ErrorManager.returnError("invalidParameters");
   }
 
-  if (category.spaces) {
-    if (!Array.isArray(category.spaces)) {
-      category.spaces = [];
-    }
-    category.spaces = category.spaces.filter((spaceId) => typeof spaceId === "string");
-    category.spaces = JSON.stringify(category.spaces);
-  }
-
   try {
+    const existingCategory = await getCategory(id, true);
+    if (!existingCategory.success) {
+      return ErrorManager.returnError("categoryNotFound");
+    }
+
     await dbc.dbUpdateData("categories", id, category);
     return ErrorManager.returnSuccess(200, "Category updated successfully", { code: 200 });
   } catch (error) {
@@ -64,9 +68,8 @@ export async function updateCategory(id, category) {
 }
 
 /**
- * Changes a category's status (enable/disable) in the database.
- * @async
- * @param {string} id - Category ID.
+ * Changes the status of a category (enable/disable) in the database.
+ * @param {string} id - ID of the category whose status will be changed.
  * @returns {Promise<Object>} Operation result.
  */
 export async function changeCategoryStatus(id) {
@@ -75,8 +78,12 @@ export async function changeCategoryStatus(id) {
   }
 
   try {
-    const newStatus = !(await checkCategoryStatus(id));
-    await dbc.dbUpdateData("categories", id, { deleted: newStatus });
+    const categoryStatus = await getCategoryStatus(id);
+    if (typeof categoryStatus !== 'boolean') {
+      return categoryStatus; // Return error if any
+    }
+
+    await dbc.dbUpdateData("categories", id, { deleted: !categoryStatus });
     return ErrorManager.returnSuccess(200, "Category status changed successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error changing category status in the database: ${error.message}`);
@@ -85,51 +92,10 @@ export async function changeCategoryStatus(id) {
 }
 
 /**
- * Enables a category in the database.
- * @async
- * @param {string} id - Category ID.
- * @returns {Promise<Object>} Operation result.
- */
-export async function enableCategory(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    await dbc.dbUpdateData("categories", id, { deleted: false });
-    return ErrorManager.returnSuccess(200, "Category enabled successfully", { code: 200 });
-  } catch (error) {
-    logger.error(`Error enabling category in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Disables a category in the database.
- * @async
- * @param {string} id - Category ID.
- * @returns {Promise<Object>} Operation result.
- */
-export async function disableCategory(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    await dbc.dbUpdateData("categories", id, { deleted: true });
-    return ErrorManager.returnSuccess(200, "Category disabled successfully", { code: 200 });
-  } catch (error) {
-    logger.error(`Error disabling category in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Retrieves a category from the database.
- * @async
- * @param {string} id - Category ID.
+ * Gets a category from the database.
+ * @param {string} id - ID of the category to retrieve.
  * @param {boolean} [includeInactive=false] - Whether to include inactive categories.
- * @returns {Promise<Object>} The found category.
+ * @returns {Promise<Object>} Found category or error message.
  */
 export async function getCategory(id, includeInactive = false) {
   if (!id) {
@@ -157,25 +123,7 @@ export async function getCategory(id, includeInactive = false) {
       return ErrorManager.returnError("categoryNotFound");
     }
 
-    // Process spaces
-    let category = result[0];
-
-    if (category.spaces) {
-      try {
-        category.spaces = JSON.parse(category.spaces);
-        if (!Array.isArray(category.spaces)) {
-          logger.warn(`Spaces is not an array for category ${id}, setting to empty array`);
-          category.spaces = [];
-        }
-      } catch (e) {
-        logger.warn(`Could not parse spaces for category ${id}: ${e.message}`);
-        category.spaces = [];
-      }
-    } else {
-      category.spaces = [];
-    }
-
-    return ErrorManager.returnSuccess(200, "Category retrieved successfully", category);
+    return ErrorManager.returnSuccess(200, "Category retrieved successfully", result[0]);
   } catch (error) {
     logger.error(`Error retrieving category from the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -183,11 +131,10 @@ export async function getCategory(id, includeInactive = false) {
 }
 
 /**
- * Retrieves a category by its name from the database.
- * @async
- * @param {string} name - Category name.
+ * Gets a category by name from the database.
+ * @param {string} name - Name of the category to retrieve.
  * @param {boolean} [includeInactive=false] - Whether to include inactive categories.
- * @returns {Promise<Object>} The found category.
+ * @returns {Promise<Object>} Found category or error message.
  */
 export async function getCategoryByName(name, includeInactive = false) {
   if (!name) {
@@ -215,36 +162,17 @@ export async function getCategoryByName(name, includeInactive = false) {
       return ErrorManager.returnError("categoryNotFound");
     }
 
-    // Process spaces
-    let category = result[0];
-
-    if (category.spaces) {
-      try {
-        category.spaces = JSON.parse(category.spaces);
-        if (!Array.isArray(category.spaces)) {
-          logger.warn(`Spaces is not an array for category ${category.id}, setting to empty array`);
-          category.spaces = [];
-        }
-      } catch (e) {
-        logger.warn(`Could not parse spaces for category ${category.id}: ${e.message}`);
-        category.spaces = [];
-      }
-    } else {
-      category.spaces = [];
-    }
-
-    return ErrorManager.returnSuccess(200, "Category retrieved successfully", category);
+    return ErrorManager.returnSuccess(200, "Category retrieved successfully", result[0]);
   } catch (error) {
-    logger.error(`Error retrieving category from the database: ${error.message}`);
+    logger.error(`Error retrieving category by name from the database: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }
 
 /**
- * Retrieves all categories from the database.
- * @async
+ * Gets all categories from the database according to their status.
  * @param {string} [status="active"] - Status of categories to retrieve ("all", "active", "inactive").
- * @returns {Promise<Array>} List of categories.
+ * @returns {Promise<Object[]>} List of found categories or error message.
  */
 export async function getCategories(status = "active") {
   let result;
@@ -255,45 +183,18 @@ export async function getCategories(status = "active") {
         result = await dbc.dbGetAll("categories");
         break;
       case "active":
-        result = await dbc.dbGetWhere("categories", {
-          field: "deleted",
-          operator: "=",
-          value: false,
-        });
+        result = await dbc.dbGetWhere("categories", [{ field: "deleted", operator: "=", value: false }]);
         break;
       case "inactive":
-        result = await dbc.dbGetWhere("categories", {
-          field: "deleted",
-          operator: "=",
-          value: true,
-        });
+        result = await dbc.dbGetWhere("categories", [{ field: "deleted", operator: "=", value: true }]);
         break;
       default:
         return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return ErrorManager.returnError("categoryNotFound");
+      return ErrorManager.returnSuccess(200, "No categories found", []);
     }
-
-    // Process spaces for each category
-    result = result.map((category) => {
-      if (category.spaces) {
-        try {
-          category.spaces = JSON.parse(category.spaces);
-          if (!Array.isArray(category.spaces)) {
-            logger.warn(`Spaces is not an array for category ${category.id}, setting to empty array`);
-            category.spaces = [];
-          }
-        } catch (e) {
-          logger.warn(`Could not parse spaces for category ${category.id}: ${e.message}`);
-          category.spaces = [];
-        }
-      } else {
-        category.spaces = [];
-      }
-      return category;
-    });
 
     return ErrorManager.returnSuccess(200, "Categories retrieved successfully", result);
   } catch (error) {
@@ -303,63 +204,11 @@ export async function getCategories(status = "active") {
 }
 
 /**
- * Gets a category count summary.
- * @async
- * @param {string} [type="null"] - Status of categories to count ("all", "active", "inactive").
- * @returns {Promise<Object>} Summary of categories count by status.
+ * Gets the status of a category from the database.
+ * @param {string} id - ID of the category to check.
+ * @returns {Promise<boolean>} True if category is deleted, false if active.
  */
-export async function getCategoriesCount(type = "null") {
-  try {
-    let resultData;
-    switch (type) {
-      case "all": {
-        const allCategories = await dbc.dbGetAll("categories");
-        resultData = { total: allCategories.length };
-        break;
-      }
-      case "active": {
-        const activeFilters = [{ field: "deleted", operator: "=", value: false }];
-        const activeCategories = await dbc.dbGetWhere("categories", activeFilters);
-        resultData = { active: activeCategories.length };
-        break;
-      }
-      case "inactive": {
-        const inactiveFilters = [{ field: "deleted", operator: "=", value: true }];
-        const inactiveCategories = await dbc.dbGetWhere("categories", inactiveFilters);
-        resultData = { inactive: inactiveCategories.length };
-        break;
-      }
-      case "null": {
-        const allCategories = await dbc.dbGetAll("categories");
-        const activeFilters = [{ field: "deleted", operator: "=", value: false }];
-        const activeCategories = await dbc.dbGetWhere("categories", activeFilters);
-        const inactiveFilters = [{ field: "deleted", operator: "=", value: true }];
-        const inactiveCategories = await dbc.dbGetWhere("categories", inactiveFilters);
-        resultData = {
-          total: allCategories.length,
-          active: activeCategories.length,
-          inactive: inactiveCategories.length,
-        };
-        break;
-      }
-      default:
-        return ErrorManager.returnError("invalidParameters");
-    }
-
-    return ErrorManager.returnSuccess(200, "Categories count retrieved successfully", resultData);
-  } catch (error) {
-    logger.error(`Error retrieving categories count from the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Checks the status of a category in the database.
- * @async
- * @param {string} id - Category ID.
- * @returns {Promise<boolean>} Category status (true if disabled).
- */
-export async function checkCategoryStatus(id) {
+export async function getCategoryStatus(id) {
   if (!id) {
     return ErrorManager.returnError("invalidParameters");
   }
@@ -378,20 +227,69 @@ export async function checkCategoryStatus(id) {
 
 /**
  * Checks if a category exists in the database.
- * @async
- * @param {string} title - Category title.
- * @returns {Promise<boolean>} True if the category exists, otherwise throws an error.
+ * @param {string} name - Name of the category to check.
+ * @returns {Promise<Object>} Found category or error message.
  */
-export async function checkCategoryExists(title) {
-  if (!title) {
+export async function checkCategoryExists(name) {
+  if (!name) {
     return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    const result = await getCategoryByName(title, true);
-    return result.success;
+    return await getCategoryByName(name, true);
   } catch (error) {
-    logger.error(`Error checking if category exists in the database: ${error.message}`);
+    logger.error(`Error checking category existence in the database: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Gets a category count summary.
+ * @param {string} [type="null"] - Status of categories to count ("all", "active", "inactive").
+ * @return {Promise<Object>} Summary of categories count by status.
+ */
+export async function getCategoriesCount(type = "null") {
+  try {
+    let resultData;
+    switch (type) {
+      case "all": {
+        resultData = await dbc.dbGetAll("categories");
+        break;
+      }
+
+      case "active": {
+        const activeFilters = [{ field: "deleted", operator: "=", value: false }];
+        const activeCategories = await dbc.dbGetWhere("categories", activeFilters);
+        resultData = { active: activeCategories.length };
+        break;
+      }
+      case "inactive": {
+        const inactiveFilters = [{ field: "deleted", operator: "=", value: true }];
+        const inactiveCategories = await dbc.dbGetWhere("categories", inactiveFilters);
+        resultData = { inactive: inactiveCategories.length };
+        break;
+      }
+
+      case "null": {
+        const totalCategories = await dbc.dbGetAll("categories");
+        const activeFilters = [{ field: "deleted", operator: "=", value: false }];
+        const activeCategories = await dbc.dbGetWhere("categories", activeFilters);
+        const inactiveFilters = [{ field: "deleted", operator: "=", value: true }];
+        const inactiveCategories = await dbc.dbGetWhere("categories", inactiveFilters);
+        resultData = {
+          total: totalCategories.length,
+          active: activeCategories.length,
+          inactive: inactiveCategories.length,
+        };
+        break;
+      }
+      default:
+        return ErrorManager.returnError("invalidParameters");
+    }
+
+    return ErrorManager.returnSuccess(200, "Categories count retrieved successfully", resultData);
+  } catch (error) {
+    logger.error(`Error retrieving categories count from the database: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }

@@ -1,13 +1,13 @@
 {
   "page": {
-    "title": "Categories Management",
+    "title": "Categories management",
     "description": "Manage the categories available in the system.",
-    "tableTitle": "Categories List"
+    "tableTitle": "Categories list"
   },
   "metrics": {
-    "totals": "Total Categories",
-    "active": "Active Categories",
-    "inactive": "Inactive Categories"
+    "totals": "Total categories",
+    "active": "Active categories",
+    "inactive": "Inactive categories"
   },
   "table": {
     "name": "Name",
@@ -21,7 +21,9 @@
     "edit": "Edit",
     "delete": "Deactivate",
     "deactivate": "Deactivate",
-    "reactivate": "Reactivate"
+    "reactivate": "Reactivate",
+    "create": "Create category",
+    "update": "Update category"
   },
   "modals": {
     "deactivate": {
@@ -35,6 +37,14 @@
   },
   "toasts": {
     "deactivated": "Category deactivated successfully",
-    "reactivated": "Category reactivated successfully"
+    "reactivated": "Category reactivated successfully",
+    "created": "Category created successfully",
+    "updated": "Category updated successfully"
+  },
+  "errors": {
+    "notFound": "Category not found",
+    "unknown": "An unknown error has occurred",
+    "noResponse": "No response received from server",
+    "requestSetup": "Error setting up request"
   }
 }
