@@ -12,6 +12,16 @@ const envConfig = dotenv.config({
 }).parsed;
 
 /**
+ * Log the database connection details for debugging purposes.
+ */
+logger.info(`Connecting to database with the following credentials:
+  Host: ${envConfig.MYSQL_HOST}
+  User: ${envConfig.MYSQL_USER}
+  Password: ${envConfig.MYSQL_PASSWORD}
+  Database: ${envConfig.MYSQL_DATABASE}`);
+
+
+/**
  * MySQL database connection configuration.
  */
 const dbPool = mysql.createPool({
@@ -370,3 +380,4 @@ async function createAdminUser() {
     }
   }
 }
+
