@@ -7,6 +7,12 @@ services:
       - "3306:3306"
     env_file:
       - ./data/secrets/dbcreds.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=${MYSQL_HOST}
     volumes:
       - ./data/secrets/dbcreds.env:/run/secrets/dbcreds.env:ro 
       - data:/var/lib/mysql
@@ -16,12 +22,6 @@ services:
       timeout: 5s
       retries: 5
     command: ["mysqld", "--bind-address=0.0.0.0"]
-    environment:
-      - MYSQL_ROOT_PASSWORD
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-      - MYSQL_HOST
 
   # Only dev service
   liberteis-dev:
