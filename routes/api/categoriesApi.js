@@ -10,8 +10,6 @@ import { logger } from "../../utils/logger.js";
 const api = Router();
 export default api;
 
-//! Basic CRUD operations
-
 /**
  * @name POST /api/categories
  * @description Creates a new category
@@ -23,26 +21,20 @@ export default api;
 api.post("/", async (req, res) => {
   try {
     const categoryData = req.body;
-    logger.info("Raw category data received:", JSON.stringify(categoryData, null, 2));
     
     if (!categoryData || !categoryData.name || !Array.isArray(categoryData.spaces)) {
-      logger.error("Invalid category data - missing required fields:");
-      logger.error("- name:", categoryData?.name);
-      logger.error("- spaces (isArray):", Array.isArray(categoryData?.spaces));
-      logger.error("- spaces value:", categoryData?.spaces);
+      logger.error("Invalid category data - missing required fields");
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
     
     try {
-      logger.info("Converting spaces array to JSON string:", categoryData.spaces);
       categoryData.spaces = JSON.stringify(categoryData.spaces);
-      logger.info("Converted spaces to JSON:", categoryData.spaces);
+      logger.info("Creating category with name:", categoryData.name);
     } catch (err) {
       logger.error("Error converting spaces to JSON:", err);
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
     
-    logger.info("Final category data to save:", JSON.stringify(categoryData, null, 2));
     const result = await categories.addCategory(categoryData);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -74,14 +66,13 @@ api.put("/", async (req, res) => {
     if (Array.isArray(categoryData.spaces)) {
       try {
         categoryData.spaces = JSON.stringify(categoryData.spaces);
-        logger.info("Converted spaces to JSON (PUT):", categoryData.spaces);
       } catch (err) {
         logger.error("Error converting spaces to JSON (PUT):", err);
         return res.status(400).json(ErrorManager.returnError("invalidParameters"));
       }
     }
 
-    logger.info("Updating category with ID:", id, "and data:", categoryData);
+    logger.info("Updating category with ID:", id);
     const result = await categories.updateCategory(id, categoryData);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -117,8 +108,6 @@ api.patch("/toggle", async (req, res) => {
     return res.status(errorResponse.code).json(errorResponse);
   }
 });
-
-//! Info retrieval operations
 
 /**
  * @name GET /api/categories/count

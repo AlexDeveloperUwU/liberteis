@@ -33,6 +33,7 @@ export const useMainStore = defineStore("main", () => {
   const locale = ref(authStore.user?.lang || getLocalStorageItem("locale", "gl"));
   const theme = ref(authStore.user?.theme || getLocalStorageItem("theme", "system"));
   const sidebarCollapsed = ref(getLocalStorageItem("sidebarCollapsed", "true") === "true");
+  const version = ref(null);
 
   const setLocale = async (lang) => {
     locale.value = lang;
@@ -78,6 +79,22 @@ export const useMainStore = defineStore("main", () => {
     }
   };
 
+  const fetchVersion = async () => {
+    try {
+      const response = await fetch('/api/utils/version');
+      const data = await response.json();
+      
+      if (data.success && data.data) {
+        version.value = data.data.version || 'N/A';
+      } else {
+        version.value = 'N/A';
+      }
+    } catch (error) {
+      console.error('Error fetching version:', error);
+      version.value = 'Error';
+    }
+  };
+
   applyTheme();
 
   watch(
@@ -96,9 +113,11 @@ export const useMainStore = defineStore("main", () => {
     locale,
     theme,
     sidebarCollapsed,
+    version,
     setLocale,
     setTheme,
     setSidebarCollapsed,
+    fetchVersion,
     applyTheme,
   };
 });

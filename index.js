@@ -81,7 +81,7 @@ async function main() {
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use("/", e.static(path.join(__dirname, "views")));
-  app.use("/uploads", e.static(path.join(__dirname, "uploads")));
+  app.use("/uploads", e.static(path.join(__dirname, "data", "uploads")));
 
   //! Create the database tables if they don't exist
   dbCreateTables();

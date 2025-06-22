@@ -159,21 +159,37 @@ export async function getEventByTitle(title, includeInactive = false) {
 /**
  * Gets all events from the database according to the specified status.
  * @param {string} [status="active"] - Status of events to retrieve ("all", "active", "inactive").
+ * @param {string} [userId=null] - Optional user ID to filter events by specific user.
  * @returns {Promise<Array>} List of found events or error message.
  */
-export async function getEvents(status = "active") {
+export async function getEvents(status = "active", userId = null) {
   let result;
 
   try {
+    let conditions = [];
+    
     switch (status) {
       case "all":
-        result = await dbc.dbGetAll("events");
+        if (userId) {
+          conditions = [{ field: "createdBy", operator: "=", value: userId }];
+          result = await dbc.dbGetWhere("events", conditions);
+        } else {
+          result = await dbc.dbGetAll("events");
+        }
         break;
       case "active":
-        result = await dbc.dbGetWhere("events", [{ field: "deleted", operator: "=", value: false }]);
+        conditions = [{ field: "deleted", operator: "=", value: false }];
+        if (userId) {
+          conditions.push({ field: "createdBy", operator: "=", value: userId });
+        }
+        result = await dbc.dbGetWhere("events", conditions);
         break;
       case "inactive":
-        result = await dbc.dbGetWhere("events", [{ field: "deleted", operator: "=", value: true }]);
+        conditions = [{ field: "deleted", operator: "=", value: true }];
+        if (userId) {
+          conditions.push({ field: "createdBy", operator: "=", value: userId });
+        }
+        result = await dbc.dbGetWhere("events", conditions);
         break;
       default:
         return ErrorManager.returnError("invalidParameters");

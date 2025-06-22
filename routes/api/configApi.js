@@ -5,8 +5,6 @@ import ErrorManager from "../../errors/errorManager.js";
 const api = Router();
 export default api;
 
-//! Basic CRUD operations
-
 /**
  * @name GET /api/configs
  * @description Gets all configs or a specific config by key

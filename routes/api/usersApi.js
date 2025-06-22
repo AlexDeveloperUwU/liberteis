@@ -11,8 +11,6 @@ import { logger } from "../../utils/logger.js";
 const api = Router();
 export default api;
 
-//! Basic CRUD operations
-
 /**
  * @name POST /api/users
  * @description Creates a new user
@@ -30,7 +28,7 @@ api.post("/", async (req, res) => {
 
     userData.password = generatePass();
 
-    logger.info("Creating user with data:", userData);
+    logger.info("Creating user with email:", userData.email);
     const result = await users.addUser(userData);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -78,6 +76,7 @@ api.put("/", async (req, res) => {
     let updateResult;
     const userDataKeys = Object.keys(userData).filter((key) => key !== "password");
     if (userDataKeys.length > 0) {
+      logger.info("Updating user with ID:", id);
       updateResult = await users.updateUser(id, userData);
 
       if (!updateResult.success) {
@@ -123,8 +122,6 @@ api.patch("/toggle", async (req, res) => {
     return res.status(errorResponse.code).json(errorResponse);
   }
 });
-
-//! Info retrieval operations
 
 /**
  * @name GET /api/users/count
@@ -186,7 +183,6 @@ api.get("/", async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and check result.
  */
-
 api.get("/emailCheck", async (req, res) => {
   try {
     const { email } = req.query;

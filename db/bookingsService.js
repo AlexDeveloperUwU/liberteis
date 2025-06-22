@@ -15,8 +15,19 @@ export async function addBooking(booking) {
     return ErrorManager.returnError("invalidParameters");
   }
 
+  // Validar que el espacio pertenezca a la categoría del evento
+  const spaceValidation = await validateSpaceForEvent(booking.eventId, booking.space);
+  if (!spaceValidation.success) {
+    return spaceValidation;
+  }
+
+  // Verificar disponibilidad del espacio en la fecha
+  const availability = await checkSpaceAvailability(booking.space, booking.bookingDate, booking.eventId);
+  if (!availability.success) {
+    return availability;
+  }
+
   booking.id = await id.generateId("booking");
-  booking.status = "active";
   booking.deleted = false;
 
   try {
@@ -40,6 +51,31 @@ export async function updateBooking(id, booking) {
   }
 
   try {
+    const existingBooking = await getBooking(id, true);
+    if (!existingBooking.success) {
+      return ErrorManager.returnError("bookingNotFound");
+    }
+
+    // Si se cambia el espacio o evento, validar nuevamente
+    if (booking.eventId || booking.space) {
+      const eventId = booking.eventId || existingBooking.data.eventId;
+      const space = booking.space || existingBooking.data.space;
+      
+      const spaceValidation = await validateSpaceForEvent(eventId, space);
+      if (!spaceValidation.success) {
+        return spaceValidation;
+      }
+
+      // Verificar disponibilidad si cambia fecha o espacio
+      if (booking.bookingDate || booking.space) {
+        const bookingDate = booking.bookingDate || existingBooking.data.bookingDate;
+        const availability = await checkSpaceAvailability(space, bookingDate, eventId, id);
+        if (!availability.success) {
+          return availability;
+        }
+      }
+    }
+
     await dbc.dbUpdateData("bookings", id, booking);
     return ErrorManager.returnSuccess(200, "Booking updated successfully", { code: 200 });
   } catch (error) {
@@ -59,8 +95,12 @@ export async function changeBookingStatus(id) {
   }
 
   try {
-    const newStatus = !(await checkBookingStatus(id));
-    await dbc.dbUpdateData("bookings", id, { deleted: newStatus });
+    const bookingStatus = await getBookingStatus(id);
+    if (typeof bookingStatus !== 'boolean') {
+      return bookingStatus; // Return error if any
+    }
+
+    await dbc.dbUpdateData("bookings", id, { deleted: !bookingStatus });
     return ErrorManager.returnSuccess(200, "Booking status changed successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error changing booking status in the database: ${error.message}`);
@@ -124,7 +164,7 @@ export async function getBooking(id, includeInactive = false) {
   try {
     switch (includeInactive) {
       case true:
-        result = await dbc.dbGetData("bookings", id);
+        result = await dbc.dbGetOne("bookings", id);
         break;
       case false:
         result = await dbc.dbGetWhere("bookings", [
@@ -194,33 +234,149 @@ export async function getBookingByEventAndDate(eventId, bookingDate, includeInac
 /**
  * Retrieves bookings from the database based on their status.
  * @param {string} [status="active"] - The status of bookings to retrieve ("all", "active", "inactive").
+ * @param {string} [userId=null] - Optional user ID to filter bookings by specific user.
  * @returns {Promise<object[]>} An array of bookings or an error message.
  */
-export async function getBookings(status = "active") {
+export async function getBookings(status = "active", userId = null) {
   let result;
 
   try {
+    let conditions = [];
+    
     switch (status) {
       case "all":
-        result = await dbc.dbGetAll("bookings");
+        if (userId) {
+          conditions = [{ field: "bookedBy", operator: "=", value: userId }];
+          result = await dbc.dbGetWhere("bookings", conditions);
+        } else {
+          result = await dbc.dbGetAll("bookings");
+        }
         break;
       case "active":
-        result = await dbc.dbGetWhere("bookings", [{ field: "deleted", operator: "=", value: false }]);
+        conditions = [{ field: "deleted", operator: "=", value: false }];
+        if (userId) {
+          conditions.push({ field: "bookedBy", operator: "=", value: userId });
+        }
+        result = await dbc.dbGetWhere("bookings", conditions);
         break;
       case "inactive":
-        result = await dbc.dbGetWhere("bookings", [{ field: "deleted", operator: "=", value: true }]);
+        conditions = [{ field: "deleted", operator: "=", value: true }];
+        if (userId) {
+          conditions.push({ field: "bookedBy", operator: "=", value: userId });
+        }
+        result = await dbc.dbGetWhere("bookings", conditions);
         break;
       default:
         return ErrorManager.returnError("invalidParameters");
     }
 
     if (result.length === 0) {
-      return ErrorManager.returnError("bookingNotFound");
+      return ErrorManager.returnSuccess(200, "No bookings found", []);
     }
 
     return ErrorManager.returnSuccess(200, "Bookings retrieved successfully", result);
   } catch (error) {
     logger.error(`Error retrieving bookings from the database: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Gets bookings filtered by event ID.
+ * @param {string} eventId - ID of the event to filter by.
+ * @param {boolean} [includeInactive=false] - Whether to include inactive bookings.
+ * @returns {Promise<object>} Found bookings or error message.
+ */
+export async function getBookingsByEvent(eventId, includeInactive = false) {
+  if (!eventId) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  let result;
+
+  try {
+    switch (includeInactive) {
+      case true:
+        result = await dbc.dbGetWhere("bookings", [{ field: "eventId", operator: "=", value: eventId }]);
+        break;
+      case false:
+        result = await dbc.dbGetWhere("bookings", [
+          { field: "eventId", operator: "=", value: eventId },
+          { field: "deleted", operator: "=", value: false },
+        ]);
+        break;
+      default:
+        return ErrorManager.returnError("invalidParameters");
+    }
+
+    if (result.length === 0) {
+      return ErrorManager.returnSuccess(200, "No bookings found", []);
+    }
+
+    return ErrorManager.returnSuccess(200, "Bookings retrieved successfully", result);
+  } catch (error) {
+    logger.error(`Error retrieving bookings by event from the database: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Gets bookings filtered by user ID.
+ * @param {string} userId - ID of the user to filter by.
+ * @param {boolean} [includeInactive=false] - Whether to include inactive bookings.
+ * @returns {Promise<object>} Found bookings or error message.
+ */
+export async function getBookingsByUser(userId, includeInactive = false) {
+  if (!userId) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  let result;
+
+  try {
+    switch (includeInactive) {
+      case true:
+        result = await dbc.dbGetWhere("bookings", [{ field: "bookedBy", operator: "=", value: userId }]);
+        break;
+      case false:
+        result = await dbc.dbGetWhere("bookings", [
+          { field: "bookedBy", operator: "=", value: userId },
+          { field: "deleted", operator: "=", value: false },
+        ]);
+        break;
+      default:
+        return ErrorManager.returnError("invalidParameters");
+    }
+
+    if (result.length === 0) {
+      return ErrorManager.returnSuccess(200, "No bookings found", []);
+    }
+
+    return ErrorManager.returnSuccess(200, "Bookings retrieved successfully", result);
+  } catch (error) {
+    logger.error(`Error retrieving bookings by user from the database: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Gets the status of a booking from the database.
+ * @param {string} id - ID of the booking to check.
+ * @returns {Promise<boolean>} True if booking is deleted, false if active.
+ */
+export async function getBookingStatus(id) {
+  if (!id) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  try {
+    const booking = await getBooking(id, true);
+    if (booking.success === false) {
+      return false;
+    }
+    return booking.data.deleted;
+  } catch (error) {
+    logger.error(`Error checking booking status in the database: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }
@@ -236,10 +392,112 @@ export async function checkBookingStatus(id) {
   }
 
   try {
-    const result = await dbc.dbGetData("bookings", id);
-    return result.deleted;
+    const result = await dbc.dbGetOne("bookings", id);
+    return result[0]?.deleted || false;
   } catch (error) {
     logger.error(`Error checking booking status in the database: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Validates that a space belongs to the same category as the event.
+ * @param {string} eventId - The ID of the event.
+ * @param {string} spaceId - The ID of the space.
+ * @returns {Promise<object>} Validation result.
+ */
+export async function validateSpaceForEvent(eventId, spaceId) {
+  try {
+    // Obtener el evento y su categoría
+    const eventResult = await dbc.dbGetOne("events", eventId);
+    if (eventResult.length === 0) {
+      return ErrorManager.returnError("eventNotFound");
+    }
+    const event = eventResult[0];
+
+    // Obtener la categoría y sus espacios
+    const categoryResult = await dbc.dbGetOne("categories", event.category);
+    if (categoryResult.length === 0) {
+      return ErrorManager.returnError("categoryNotFound");
+    }
+    const category = categoryResult[0];
+
+    // Parsear los espacios de la categoría
+    let categorySpaces;
+    try {
+      categorySpaces = typeof category.spaces === 'string' ? JSON.parse(category.spaces) : category.spaces;
+    } catch (error) {
+      logger.error("Error parsing category spaces:", error);
+      return ErrorManager.returnError("invalidCategoryData");
+    }
+
+    // Verificar que el espacio esté en la categoría
+    if (!categorySpaces || !categorySpaces.includes(spaceId)) {
+      return ErrorManager.returnError("spaceNotInCategory");
+    }
+
+    return ErrorManager.returnSuccess(200, "Space validation successful", { valid: true });
+  } catch (error) {
+    logger.error(`Error validating space for event: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Checks if a space is available for booking at a specific date and time.
+ * @param {string} spaceId - The ID of the space.
+ * @param {string} bookingDate - The date and time for the booking.
+ * @param {string} eventId - The ID of the event.
+ * @param {string} [excludeBookingId] - ID of booking to exclude from check (for updates).
+ * @returns {Promise<object>} Availability result.
+ */
+export async function checkSpaceAvailability(spaceId, bookingDate, eventId, excludeBookingId = null) {
+  try {
+    // Obtener la duración del evento
+    const eventResult = await dbc.dbGetOne("events", eventId);
+    if (eventResult.length === 0) {
+      return ErrorManager.returnError("eventNotFound");
+    }
+    const event = eventResult[0];
+    const duration = event.duration || 30; // duración en minutos
+
+    // Calcular el rango de tiempo del evento
+    const startTime = new Date(bookingDate);
+    const endTime = new Date(startTime.getTime() + duration * 60000); // convertir minutos a millisegundos
+
+    // Buscar reservas conflictivas en el mismo espacio
+    const conditions = [
+      { field: "space", operator: "=", value: spaceId },
+      { field: "deleted", operator: "=", value: false }
+    ];
+
+    if (excludeBookingId) {
+      conditions.push({ field: "id", operator: "!=", value: excludeBookingId });
+    }
+
+    const existingBookings = await dbc.dbGetWhere("bookings", conditions);
+
+    // Verificar conflictos de horario
+    for (const booking of existingBookings) {
+      // Obtener la duración del evento de la reserva existente
+      const existingEventResult = await dbc.dbGetOne("events", booking.eventId);
+      if (existingEventResult.length === 0) continue;
+      
+      const existingEvent = existingEventResult[0];
+      const existingDuration = existingEvent.duration || 30;
+
+      const existingStart = new Date(booking.bookingDate);
+      const existingEnd = new Date(existingStart.getTime() + existingDuration * 60000);
+
+      // Verificar si hay solapamiento
+      if ((startTime < existingEnd && endTime > existingStart)) {
+        return ErrorManager.returnError("spaceNotAvailable");
+      }
+    }
+
+    return ErrorManager.returnSuccess(200, "Space is available", { available: true });
+  } catch (error) {
+    logger.error(`Error checking space availability: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }

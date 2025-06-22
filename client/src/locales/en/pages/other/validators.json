@@ -2,7 +2,7 @@
   "password": {
     "pwned": "This password has been compromised in a data breach. Please choose a different password.",
     "singular": "once",
-    "plural": "{{count}} times",
+    "plural": "{count} times",
     "checkError": "An error occurred while checking the password."
   }
 }

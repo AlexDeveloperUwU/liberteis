@@ -1,0 +1,85 @@
+{
+  "page": {
+    "createTitle": "Crear evento",
+    "createDescription": "Añade un nuevo evento al sistema",
+    "editTitle": "Editar evento",
+    "editDescription": "Modifica los detalles del evento seleccionado"
+  },
+  "common": {
+    "create": "Crear evento",
+    "update": "Actualizar evento",
+    "edit": "Editar evento",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "delete": "Eliminar",
+    "status": {
+      "success": "¡Completado!",
+      "error": "Error"
+    }
+  },
+  "profile": {
+    "preview": "Vista previa",
+    "createdBy": "Creado por",
+    "loading": "Cargando...",
+    "errorLoading": "Error al cargar datos"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Información básica"
+    },
+    "labels": {
+      "title": "Título del evento",
+      "date": "Fecha y hora",
+      "category": "Categoría",
+      "info": "Descripción",
+      "duration": "Duración",
+      "cover": "Imagen de portada",
+      "hours": "Horas",
+      "minutes": "Minutos",
+      "hoursShort": "h",
+      "minutesShort": "min",
+      "hourSingular": "hora",
+      "hourPlural": "horas",
+      "minuteSingular": "minuto",
+      "minutePlural": "minutos"
+    },
+    "placeholders": {
+      "title": "Introduce un título para el evento",
+      "date": "Fecha y hora del evento",
+      "noDate": "Sin fecha seleccionada",
+      "selectCategory": "Selecciona una categoría",
+      "noCategory": "Sin categoría seleccionada",
+      "info": "Describe el evento...",
+      "noInfo": "Sin descripción",
+      "hours": "Horas",
+      "minutes": "Minutos",
+      "noDuration": "Sin duración definida",
+      "uploadCover": "Haz clic para subir una imagen",
+      "dropImageHere": "Suelta la imagen aquí",
+      "coverFormat": "Se requiere formato 9:16",
+      "noCover": "Sin imagen de portada"
+    },
+    "actions": {
+      "submitting": "Creando evento...",
+      "updating": "Actualizando evento..."
+    }
+  },
+  "errors": {
+    "titleLength": "El título debe tener entre 3 y 200 caracteres",
+    "dateRequired": "La fecha es obligatoria",
+    "categoryRequired": "Debes seleccionar una categoría",
+    "infoLength": "La descripción no puede superar los 500 caracteres",
+    "durationRequired": "La duración debe ser mayor que cero",
+    "invalidFileType": "El archivo seleccionado no es una imagen válida",
+    "wrongAspectRatio": "La imagen debe tener una proporción 9:16",
+    "coverRequired": "La imagen de portada es obligatoria",
+    "loadingEvent": "Error al cargar los datos del evento",
+    "noResponse": "No se recibió respuesta del servidor",
+    "requestSetup": "Error en la configuración de la solicitud",
+    "unknown": "Ha ocurrido un error inesperado"
+  },
+  "notifications": {
+    "createSuccess": "Evento creado con éxito",
+    "updateSuccess": "Evento actualizado con éxito"
+  }
+}

@@ -10,8 +10,6 @@ import { logger } from "../../utils/logger.js";
 const api = Router();
 export default api;
 
-//! Basic CRUD operations
-
 /**
  * @name POST /api/spaces
  * @description Creates a new space
@@ -27,7 +25,7 @@ api.post("/", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Creating space with data:", spaceData);
+    logger.info("Creating space with name:", spaceData.name);
     const result = await spaces.addSpace(spaceData);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -56,7 +54,7 @@ api.put("/", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Updating space with ID:", id, "and data:", spaceData);
+    logger.info("Updating space with ID:", id);
     const result = await spaces.updateSpace(id, spaceData);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -92,8 +90,6 @@ api.patch("/toggle", async (req, res) => {
     return res.status(errorResponse.code).json(errorResponse);
   }
 });
-
-//! Info retrieval operations
 
 /**
  * @name GET /api/spaces/count

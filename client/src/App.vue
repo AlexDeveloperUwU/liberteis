@@ -31,6 +31,7 @@ import Toasts from "@/components/Toasts.vue";
 import Modals from "@/components/Modals.vue";
 import { useConfigStore } from "@/stores/configStore";
 import { useMainStore } from "@/stores/mainStore";
+import iconUrl from '@/assets/img/icon.png'; 
 
 const configStore = useConfigStore();
 const mainStore = useMainStore();
@@ -79,6 +80,17 @@ watch(
 );
 
 onMounted(async () => {
+  // Configurar el favicon dinámicamente
+  const favicon = document.querySelector('link[rel="icon"]');
+  if (favicon) {
+    favicon.href = iconUrl;
+  } else {
+    const newFavicon = document.createElement('link');
+    newFavicon.rel = 'icon';
+    newFavicon.href = iconUrl;
+    document.head.appendChild(newFavicon);
+  }
+
   isSidebarCollapsed.value = mainStore.sidebarCollapsed;
 
   detectMobile();

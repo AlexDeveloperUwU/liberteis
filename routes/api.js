@@ -6,6 +6,9 @@ import eventsApi from "./api/eventsApi.js";
 import spacesApi from "./api/spacesApi.js";
 import usersApi from "./api/usersApi.js";
 import authApi from "./api/authApi.js";
+import utilsApi from "./api/utilsApi.js";
+import * as dbc from "../db/dbController.js";
+import { logger } from "../utils/logger.js";
 
 /**
  * Main router for all API routes.
@@ -13,6 +16,26 @@ import authApi from "./api/authApi.js";
  */
 const apiRouter = router();
 export default apiRouter;
+
+/**
+ * Middleware to extract user information from session
+ */
+const userMiddleware = async (req, res, next) => {
+  try {
+    if (req.session && req.session.userId) {
+      const userResult = await dbc.dbGetOne("users", req.session.userId);
+      if (userResult.length > 0) {
+        req._reqUser = userResult[0];
+      }
+    }
+  } catch (error) {
+    logger.error("Error in user middleware:", error);
+  }
+  next();
+};
+
+// Apply user middleware to all API routes
+apiRouter.use(userMiddleware);
 
 /**
  * @name /api/bookings
@@ -62,3 +85,10 @@ apiRouter.use("/users", usersApi);
  * @see {@link authApi}
  */
 apiRouter.use("/auth", authApi);
+
+/**
+ * @name /api/utils
+ * @description Routes for utility functions.
+ * @see {@link utilsApi}
+ */
+apiRouter.use("/utils", utilsApi);

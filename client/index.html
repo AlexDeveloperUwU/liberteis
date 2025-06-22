@@ -1,28 +1,31 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EvenTeis</title>
-    <script>
-      (function () {
-        try {
-          const theme = localStorage.getItem("theme");
-          if (theme === "dark" || (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-            document.documentElement.classList.add("dark");
-          }
-        } catch (e) {
-          console.error("Error applying theme:", e);
-        }
-      })();
-    </script>
-    <link href="/src/assets/main.css" rel="stylesheet" />
-    <link href="/node_modules/izitoast/dist/css/iziToast.min.css" rel="stylesheet" />
-  </head>
 
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EvenTeis</title>
+  <script>
+    (function() {
+      try {
+        const theme = localStorage.getItem("theme");
+        if (theme === "dark" || (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.classList.add("dark");
+        }
+      } catch (e) {
+        console.error("Error applying theme:", e);
+      }
+    })();
+  </script>
+  <link href="/src/assets/main.css" rel="stylesheet" />
+  <link href="/node_modules/izitoast/dist/css/iziToast.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
+
 </html>

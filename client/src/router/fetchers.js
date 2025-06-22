@@ -110,7 +110,6 @@ export const loadUserEditData = async (to) => {
  */
 export const loadUserConfigData = async (to) => {
   try {
-    // Importamos directamente el store aquí para asegurarnos de tener el userId
     const { useAuthStore } = await import("@/stores/authStore");
     const authStore = useAuthStore();
     const userId = authStore.userId;
@@ -352,10 +351,16 @@ export const loadEventsData = async (to) => {
     const events =
       eventsResult.status === "fulfilled" && eventsResult.value.data.success ? eventsResult.value.data.data : [];
 
-    const categories =
+    let categories =
       categoriesResult.status === "fulfilled" && categoriesResult.value.data.success
         ? categoriesResult.value.data.data
         : [];
+
+    // Normalizar las categorías para asegurar que tengan el campo _id
+    categories = categories.map((category) => ({
+      ...category,
+      _id: category._id || category.id,
+    }));
 
     const hasError =
       metricsResult.status === "rejected" ||
@@ -397,6 +402,99 @@ export const loadEventsData = async (to) => {
       categories: [],
       error: true,
       errorMessage: "Error de conexión al cargar datos de eventos",
+    };
+  }
+};
+
+/**
+ * Carga los datos para la creación de un evento nuevo
+ */
+export const loadEventCreateData = async (to) => {
+  try {
+    console.log("Fetching categories for events/new...");
+    const categoriesResponse = await axios.get("/api/categories");
+    console.log("Categories response:", JSON.parse(JSON.stringify(categoriesResponse.data)));
+
+    let categories = categoriesResponse.data.success ? categoriesResponse.data.data : [];
+    console.log("Raw categories:", JSON.parse(JSON.stringify(categories)));
+
+    // Normalizar las categorías para asegurar que tengan el campo _id
+    categories = categories.map((category) => ({
+      ...category,
+      _id: category._id || category.id,
+    }));
+
+    console.log("Normalized categories:", JSON.parse(JSON.stringify(categories)));
+
+    to.meta.initialData = {
+      categories,
+      error: !categoriesResponse.data.success,
+      errorMessage: !categoriesResponse.data.success ? categoriesResponse.data.message : null,
+    };
+  } catch (error) {
+    console.error("Error loading categories:", error.message || error);
+    to.meta.initialData = {
+      categories: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar categorías disponibles",
+    };
+  }
+};
+
+/**
+ * Carga los datos para la edición de un evento específico
+ */
+export const loadEventEditData = async (to) => {
+  try {
+    const eventId = to.params.id;
+    const [eventResponse, categoriesResponse] = await Promise.allSettled([
+      axios.get(`/api/events?id=${eventId}&includeInactive=true`),
+      axios.get("/api/categories"),
+    ]);
+
+    const event =
+      eventResponse.status === "fulfilled" && eventResponse.value.data.success ? eventResponse.value.data.data : null;
+
+    let categories =
+      categoriesResponse.status === "fulfilled" && categoriesResponse.value.data.success
+        ? categoriesResponse.value.data.data
+        : [];
+
+    categories = categories.map((category) => ({
+      ...category,
+      _id: category._id || category.id,
+    }));
+
+    const hasError =
+      eventResponse.status === "rejected" ||
+      categoriesResponse.status === "rejected" ||
+      (eventResponse.status === "fulfilled" && !eventResponse.value.data.success) ||
+      (categoriesResponse.status === "fulfilled" && !categoriesResponse.value.data.success);
+
+    let errorMessage = null;
+    if (hasError) {
+      if (eventResponse.status === "rejected") {
+        errorMessage = "Error de conexión al cargar datos del evento";
+      } else if (categoriesResponse.status === "rejected") {
+        errorMessage = "Error de conexión al cargar categorías disponibles";
+      } else {
+        errorMessage = eventResponse.value.data.message || categoriesResponse.value.data.message;
+      }
+    }
+
+    to.meta.initialData = {
+      event,
+      categories,
+      error: hasError,
+      errorMessage,
+    };
+  } catch (error) {
+    console.error("Error fetching event data:", error.message || error);
+    to.meta.initialData = {
+      event: null,
+      categories: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar datos del evento",
     };
   }
 };

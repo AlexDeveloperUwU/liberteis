@@ -61,7 +61,12 @@ export async function toggleSpaceStatus(id) {
   }
 
   try {
-    const newStatus = !(await checkSpaceStatus(id));
+    const currentSpace = await getSpace(id, true);
+    if (!currentSpace.success) {
+      return ErrorManager.returnError("spaceNotFound");
+    }
+
+    const newStatus = !currentSpace.data.deleted;
     await dbc.dbUpdateData("spaces", id, { deleted: newStatus });
     return ErrorManager.returnSuccess(200, "Space status changed successfully", { code: 200 });
   } catch (error) {
@@ -110,45 +115,6 @@ export async function getSpace(id, includeInactive = false) {
 }
 
 /**
- * Gets a space by name from the database.
- * @param {string} name - Name of the space to retrieve.
- * @param {boolean} [includeInactive=false] - Whether to include inactive spaces.
- * @returns {Promise<Object>} Found space or error message.
- */
-export async function getSpaceByName(name, includeInactive = false) {
-  if (!name) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  let result;
-
-  try {
-    switch (includeInactive) {
-      case true:
-        result = await dbc.dbGetWhere("spaces", [{ field: "name", operator: "=", value: name }]);
-        break;
-      case false:
-        result = await dbc.dbGetWhere("spaces", [
-          { field: "name", operator: "=", value: name },
-          { field: "deleted", operator: "=", value: false },
-        ]);
-        break;
-      default:
-        return ErrorManager.returnError("invalidParameters");
-    }
-
-    if (result.length === 0) {
-      return ErrorManager.returnError("spaceNotFound");
-    }
-
-    return ErrorManager.returnSuccess(200, "Space retrieved successfully", result[0]);
-  } catch (error) {
-    logger.error(`Error retrieving space by name from the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
  * Gets all spaces from the database according to their status.
  * @param {string} [status="active"] - Status of spaces to retrieve ("all", "active", "inactive").
  * @returns {Promise<Object[]>} List of found spaces or error message.
@@ -178,46 +144,6 @@ export async function getSpaces(status = "active") {
     return ErrorManager.returnSuccess(200, "Spaces retrieved successfully", result);
   } catch (error) {
     logger.error(`Error retrieving spaces from the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Checks the status of a space in the database.
- * @param {string} id - ID of the space to check.
- * @returns {Promise<boolean>} Space status (true if deleted, false if active).
- */
-export async function checkSpaceStatus(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const space = await getSpace(id, true);
-    if (space.success === false) {
-      return false;
-    }
-    return space.data.deleted;
-  } catch (error) {
-    logger.error(`Error checking space status in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Checks if a space exists in the database.
- * @param {string} name - Name of the space to check.
- * @returns {Promise<Object>} Found space or error message.
- */
-export async function checkSpaceExists(name) {
-  if (!name) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    return await getSpaceByName(name, true);
-  } catch (error) {
-    logger.error(`Error checking space existence in the database: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }

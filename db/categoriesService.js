@@ -16,10 +16,8 @@ export async function addCategory(category) {
   category.id = await id.generateId("category");
   category.deleted = false;
 
-  // Validar y logear el contenido de spaces antes de guardarlo
   logger.info("Category data before saving:", JSON.stringify(category));
   
-  // Verificar que spaces sea un string JSON válido
   if (typeof category.spaces === 'string') {
     try {
       JSON.parse(category.spaces);
@@ -78,12 +76,13 @@ export async function changeCategoryStatus(id) {
   }
 
   try {
-    const categoryStatus = await getCategoryStatus(id);
-    if (typeof categoryStatus !== 'boolean') {
-      return categoryStatus; // Return error if any
+    const currentCategory = await getCategory(id, true);
+    if (!currentCategory.success) {
+      return ErrorManager.returnError("categoryNotFound");
     }
 
-    await dbc.dbUpdateData("categories", id, { deleted: !categoryStatus });
+    const newStatus = !currentCategory.data.deleted;
+    await dbc.dbUpdateData("categories", id, { deleted: newStatus });
     return ErrorManager.returnSuccess(200, "Category status changed successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error changing category status in the database: ${error.message}`);
@@ -131,45 +130,6 @@ export async function getCategory(id, includeInactive = false) {
 }
 
 /**
- * Gets a category by name from the database.
- * @param {string} name - Name of the category to retrieve.
- * @param {boolean} [includeInactive=false] - Whether to include inactive categories.
- * @returns {Promise<Object>} Found category or error message.
- */
-export async function getCategoryByName(name, includeInactive = false) {
-  if (!name) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  let result;
-
-  try {
-    switch (includeInactive) {
-      case true:
-        result = await dbc.dbGetWhere("categories", [{ field: "name", operator: "=", value: name }]);
-        break;
-      case false:
-        result = await dbc.dbGetWhere("categories", [
-          { field: "name", operator: "=", value: name },
-          { field: "deleted", operator: "=", value: false },
-        ]);
-        break;
-      default:
-        return ErrorManager.returnError("invalidParameters");
-    }
-
-    if (result.length === 0) {
-      return ErrorManager.returnError("categoryNotFound");
-    }
-
-    return ErrorManager.returnSuccess(200, "Category retrieved successfully", result[0]);
-  } catch (error) {
-    logger.error(`Error retrieving category by name from the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
  * Gets all categories from the database according to their status.
  * @param {string} [status="active"] - Status of categories to retrieve ("all", "active", "inactive").
  * @returns {Promise<Object[]>} List of found categories or error message.
@@ -199,46 +159,6 @@ export async function getCategories(status = "active") {
     return ErrorManager.returnSuccess(200, "Categories retrieved successfully", result);
   } catch (error) {
     logger.error(`Error retrieving categories from the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Gets the status of a category from the database.
- * @param {string} id - ID of the category to check.
- * @returns {Promise<boolean>} True if category is deleted, false if active.
- */
-export async function getCategoryStatus(id) {
-  if (!id) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    const category = await getCategory(id, true);
-    if (category.success === false) {
-      return false;
-    }
-    return category.data.deleted;
-  } catch (error) {
-    logger.error(`Error checking category status in the database: ${error.message}`);
-    return ErrorManager.handleError(error);
-  }
-}
-
-/**
- * Checks if a category exists in the database.
- * @param {string} name - Name of the category to check.
- * @returns {Promise<Object>} Found category or error message.
- */
-export async function checkCategoryExists(name) {
-  if (!name) {
-    return ErrorManager.returnError("invalidParameters");
-  }
-
-  try {
-    return await getCategoryByName(name, true);
-  } catch (error) {
-    logger.error(`Error checking category existence in the database: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }

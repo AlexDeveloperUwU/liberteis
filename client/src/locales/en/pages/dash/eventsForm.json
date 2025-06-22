@@ -1,0 +1,85 @@
+{
+  "page": {
+    "createTitle": "Create event",
+    "createDescription": "Add a new event to the system",
+    "editTitle": "Edit event",
+    "editDescription": "Modify the details of the selected event"
+  },
+  "common": {
+    "create": "Create event",
+    "update": "Update event",
+    "edit": "Edit event",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "status": {
+      "success": "Completed!",
+      "error": "Error"
+    }
+  },
+  "profile": {
+    "preview": "Preview",
+    "createdBy": "Created by",
+    "loading": "Loading...",
+    "errorLoading": "Error loading data"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Basic information"
+    },
+    "labels": {
+      "title": "Event title",
+      "date": "Date and time",
+      "category": "Category",
+      "info": "Description",
+      "duration": "Duration",
+      "cover": "Cover image",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "hoursShort": "h",
+      "minutesShort": "min",
+      "hourSingular": "hour",
+      "hourPlural": "hours",
+      "minuteSingular": "minute",
+      "minutePlural": "minutes"
+    },
+    "placeholders": {
+      "title": "Enter a title for the event",
+      "date": "Event date and time",
+      "noDate": "No date selected",
+      "selectCategory": "Select a category",
+      "noCategory": "No category selected",
+      "info": "Describe the event...",
+      "noInfo": "No description",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "noDuration": "No duration defined",
+      "uploadCover": "Click to upload an image",
+      "dropImageHere": "Drop image here",
+      "coverFormat": "9:16 format required",
+      "noCover": "No cover image"
+    },
+    "actions": {
+      "submitting": "Creating event...",
+      "updating": "Updating event..."
+    }
+  },
+  "errors": {
+    "titleLength": "The title must be between 3 and 200 characters",
+    "dateRequired": "Date is required",
+    "categoryRequired": "You must select a category",
+    "infoLength": "Description cannot exceed 500 characters",
+    "durationRequired": "Duration must be greater than zero",
+    "invalidFileType": "The selected file is not a valid image",
+    "wrongAspectRatio": "The image must have a 9:16 aspect ratio",
+    "coverRequired": "Cover image is required",
+    "loadingEvent": "Error loading event data",
+    "noResponse": "No response received from server",
+    "requestSetup": "Error in request setup",
+    "unknown": "An unexpected error has occurred"
+  },
+  "notifications": {
+    "createSuccess": "Event created successfully",
+    "updateSuccess": "Event updated successfully"
+  }
+}

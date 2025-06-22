@@ -350,10 +350,6 @@ onMounted(() => {
   }
 });
 
-const availableUnselectedSpaces = computed(() => {
-  return availableSpaces.value.filter((space) => !selectedSpaces.value.includes(space.id));
-});
-
 const updateSelectedSpacesInfo = () => {
   selectedSpacesInfo.value = availableSpaces.value.filter((space) => selectedSpaces.value.includes(space.id));
 };
@@ -370,17 +366,9 @@ watch(selectedSpace, (newValue) => {
   }
 });
 
-const removeSpace = (spaceId) => {
-  selectedSpaces.value = selectedSpaces.value.filter((id) => id !== spaceId);
-};
-
 const isSubmitting = ref(false);
 const buttonState = ref("default");
 const formSubmitted = ref(false);
-
-const currentDate = computed(() => {
-  return new Date().toLocaleDateString();
-});
 
 const getInitials = (name) => {
   if (!name) return "";
@@ -423,8 +411,6 @@ watch(
 
 const validateForm = () => {
   if (formSubmitted.value) return true;
-
-  let isValid = true;
   errors.name = "";
   return validateFormField("name", formData.name);
 };
@@ -509,12 +495,6 @@ const loadCreatorData = async (creatorId) => {
   }
 };
 
-function formatDate(dateStr) {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  if (isNaN(d)) return dateStr;
-  return d.toLocaleString();
-}
 </script>
 
 <style scoped>

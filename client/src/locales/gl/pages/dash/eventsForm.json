@@ -1,0 +1,85 @@
+{
+  "page": {
+    "createTitle": "Crear evento",
+    "createDescription": "Engade un novo evento ao sistema",
+    "editTitle": "Editar evento",
+    "editDescription": "Modifica os detalles do evento seleccionado"
+  },
+  "common": {
+    "create": "Crear evento",
+    "update": "Actualizar evento",
+    "edit": "Editar evento",
+    "cancel": "Cancelar",
+    "close": "Pechar",
+    "delete": "Eliminar",
+    "status": {
+      "success": "¡Completado!",
+      "error": "Erro"
+    }
+  },
+  "profile": {
+    "preview": "Vista previa",
+    "createdBy": "Creado por",
+    "loading": "Cargando...",
+    "errorLoading": "Erro ao cargar datos"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Información básica"
+    },
+    "labels": {
+      "title": "Título do evento",
+      "date": "Data e hora",
+      "category": "Categoría",
+      "info": "Descrición",
+      "duration": "Duración",
+      "cover": "Imaxe de portada",
+      "hours": "Horas",
+      "minutes": "Minutos",
+      "hoursShort": "h",
+      "minutesShort": "min",
+      "hourSingular": "hora",
+      "hourPlural": "horas",
+      "minuteSingular": "minuto",
+      "minutePlural": "minutos"
+    },
+    "placeholders": {
+      "title": "Introduce un título para o evento",
+      "date": "Data e hora do evento",
+      "noDate": "Sen data seleccionada",
+      "selectCategory": "Selecciona unha categoría",
+      "noCategory": "Sen categoría seleccionada",
+      "info": "Describe o evento...",
+      "noInfo": "Sen descrición",
+      "hours": "Horas",
+      "minutes": "Minutos",
+      "noDuration": "Sen duración definida",
+      "uploadCover": "Fai clic para subir unha imaxe",
+      "dropImageHere": "Solta a imaxe aquí",
+      "coverFormat": "Requírese formato 9:16",
+      "noCover": "Sen imaxe de portada"
+    },
+    "actions": {
+      "submitting": "Creando evento...",
+      "updating": "Actualizando evento..."
+    }
+  },
+  "errors": {
+    "titleLength": "O título debe ter entre 3 e 200 caracteres",
+    "dateRequired": "A data é obrigatoria",
+    "categoryRequired": "Debes seleccionar unha categoría",
+    "infoLength": "A descrición non pode superar os 500 caracteres",
+    "durationRequired": "A duración debe ser maior que cero",
+    "invalidFileType": "O arquivo seleccionado non é unha imaxe válida",
+    "wrongAspectRatio": "A imaxe debe ter unha proporción 9:16",
+    "coverRequired": "A imaxe de portada é obrigatoria",
+    "loadingEvent": "Erro ao cargar os datos do evento",
+    "noResponse": "Non se recibiu resposta do servidor",
+    "requestSetup": "Erro na configuración da solicitude",
+    "unknown": "Ocorreu un erro inesperado"
+  },
+  "notifications": {
+    "createSuccess": "Evento creado con éxito",
+    "updateSuccess": "Evento actualizado con éxito"
+  }
+}

@@ -12,6 +12,8 @@ import {
   loadCategoriesData,
   loadCategoryEditData,
   loadEventsData,
+  loadEventCreateData,
+  loadEventEditData,
 } from "./fetchers";
 
 const routes = [
@@ -77,9 +79,9 @@ const routes = [
         path: "config",
         name: "dashUserConfig",
         component: () => import("../views/Dash/UserConfigView.vue"),
-        meta: { 
-          allow: "normalUser", 
-          layout: "dashboard"
+        meta: {
+          allow: "normalUser",
+          layout: "dashboard",
         },
         beforeEnter: loadUserConfigData,
       },
@@ -144,13 +146,28 @@ const routes = [
         props: true,
         beforeEnter: loadCategoryEditData,
       },
-      
+
       {
         path: "events",
         name: "dashEvents",
         component: () => import("../views/Dash/EventsTableView.vue"),
         meta: { allow: "managerUser", layout: "dashboard" },
         beforeEnter: loadEventsData,
+      },
+      {
+        path: "events/new",
+        name: "dashEventsNew",
+        component: () => import("../views/Dash/EventsFormView.vue"),
+        meta: { allow: "managerUser", layout: "dashboard" },
+        beforeEnter: loadEventCreateData,
+      },
+      {
+        path: "events/edit/:id",
+        name: "dashEventsEdit",
+        component: () => import("../views/Dash/EventsFormView.vue"),
+        meta: { allow: "managerUser", layout: "dashboard" },
+        props: true,
+        beforeEnter: loadEventEditData,
       },
     ],
   },

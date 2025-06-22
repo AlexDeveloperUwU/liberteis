@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as events from "../../db/eventsService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { logger } from "../../utils/logger.js";
+import { uploadEventImage, deleteEventImage } from "../../utils/fileUpload.js";
 
 /**
  * Express router for event related endpoints.
@@ -9,8 +10,6 @@ import { logger } from "../../utils/logger.js";
  */
 const api = Router();
 export default api;
-
-//! Basic CRUD operations
 
 /**
  * @name POST /api/events
@@ -20,20 +19,22 @@ export default api;
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and result message.
  */
-api.post("/", async (req, res) => {
+api.post("/", uploadEventImage, async (req, res) => {
   try {
     const eventData = req.body;
-    logger.info("Raw event data received:", JSON.stringify(eventData, null, 2));
-    
+
     if (!eventData || !eventData.title || !eventData.info || !eventData.category) {
-      logger.error("Invalid event data - missing required fields:");
-      logger.error("- title:", eventData?.title);
-      logger.error("- info:", eventData?.info);
-      logger.error("- category:", eventData?.category);
+      logger.error("Invalid event data - missing required fields");
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
-    
-    logger.info("Final event data to save:", JSON.stringify(eventData, null, 2));
+
+    if (req.file) {
+      eventData.coverUrl = `/uploads/${req.file.filename}`;
+      delete eventData.image;
+      logger.info("Image uploaded:", req.file.filename);
+    }
+
+    logger.info("Creating event with title:", eventData.title);
     const result = await events.addEvent(eventData);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -53,7 +54,7 @@ api.post("/", async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and update result.
  */
-api.put("/", async (req, res) => {
+api.put("/", uploadEventImage, async (req, res) => {
   try {
     const { id } = req.query;
     const eventData = req.body;
@@ -62,7 +63,21 @@ api.put("/", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Updating event with ID:", id, "and data:", eventData);
+    if (req.file) {
+      const currentEventResult = await events.getEvent(id, true);
+
+      if (currentEventResult.code === 200 && currentEventResult.data && currentEventResult.data.coverUrl) {
+        const oldFilename = currentEventResult.data.coverUrl.replace("/uploads/", "");
+        deleteEventImage(oldFilename);
+        logger.info("Previous image deleted:", oldFilename);
+      }
+
+      eventData.coverUrl = `/uploads/${req.file.filename}`;
+      delete eventData.image;
+      logger.info("New image uploaded:", req.file.filename);
+    }
+
+    logger.info("Updating event with ID:", id);
     const result = await events.updateEvent(id, eventData);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -99,8 +114,6 @@ api.patch("/toggle", async (req, res) => {
   }
 });
 
-//! Info retrieval operations
-
 /**
  * @name GET /api/events/count
  * @description Retrieves the count of events based on their status.
@@ -123,6 +136,34 @@ api.get("/count", async (req, res) => {
 });
 
 /**
+ * @name GET /api/events/category
+ * @description Gets events filtered by category ID.
+ * @param {object} req - Express request object.
+ * @param {object} req.query - Query parameters.
+ * @param {string} req.query.categoryId - ID of the category to filter by.
+ * @param {boolean} [req.query.includeInactive=false] - Whether to include inactive events.
+ * @param {object} res - Express response object.
+ * @returns {object} JSON with status code and events data.
+ */
+api.get("/category", async (req, res) => {
+  try {
+    const { categoryId, includeInactive } = req.query;
+
+    if (!categoryId) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    const include = includeInactive === "true";
+    const result = await events.getEventsByCategory(categoryId, include);
+    return res.status(result.code).json(result);
+  } catch (error) {
+    logger.error("Error in /api/events/category [GET]:", error);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
+  }
+});
+
+/**
  * @name GET /api/events/
  * @description Gets either a specific event by ID or a list of events filtered by status
  * @param {object} req - Express request object.
@@ -136,12 +177,23 @@ api.get("/count", async (req, res) => {
 api.get("/", async (req, res) => {
   try {
     const { id, status, includeInactive } = req.query;
+    const userRole = req._reqUser?.role;
+    const userId = req._reqUser?.id;
+
     if (id) {
       const include = includeInactive === "true";
       const result = await events.getEvent(id, include);
+      
+      // Si es normalUser, verificar que el evento le pertenece
+      if (userRole === "normalUser" && result.success && result.data.createdBy !== userId) {
+        return res.status(403).json(ErrorManager.returnError("accessDenied"));
+      }
+      
       return res.status(result.code).json(result);
     } else {
-      const result = await events.getEvents(status || "active");
+      // Si es normalUser, solo mostrar sus eventos
+      const filterUserId = userRole === "normalUser" ? userId : null;
+      const result = await events.getEvents(status || "active", filterUserId);
       return res.status(result.code).json(result);
     }
   } catch (error) {
