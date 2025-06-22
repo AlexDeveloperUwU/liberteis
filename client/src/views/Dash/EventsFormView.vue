@@ -28,9 +28,14 @@
                 </div>
 
                 <div class="flex justify-center">
-                  <div class="relative rounded-lg overflow-hidden border border-background-300 shadow-sm cursor-pointer group" style="width: 25%; aspect-ratio: 9/16" @click="openImageModal">
+                  <div class="relative rounded-lg overflow-hidden border border-background-300 shadow-sm cursor-pointer group" style="width: 15%; aspect-ratio: 9/16" @click="openImageModal">
                     <div v-if="imagePreview || formData.coverUrl" class="w-full h-full">
                       <img :src="imagePreview || formData.coverUrl" alt="Event cover" class="w-full h-full object-cover" />
+                      <div class="absolute inset-0 bg-background-950/10 group-hover:bg-background-950/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                        <div class="bg-background-50/90 p-2 rounded-full">
+                          <Search class="w-5 h-5 text-text-900" />
+                        </div>
+                      </div>
                     </div>
                     <div v-else class="w-full h-full bg-background-200 flex flex-col items-center justify-center">
                       <ImageIcon class="w-12 h-12 text-primary-600 mb-2" />

@@ -182,7 +182,7 @@ api.get("/user", async (req, res) => {
  */
 api.get("/", async (req, res) => {
   try {
-    const { id, status, includeInactive } = req.query;
+    const { id, status, includeInactive, startMonth, endMonth } = req.query;
     const userRole = req._reqUser?.role;
     const userId = req._reqUser?.id;
 
@@ -190,16 +190,17 @@ api.get("/", async (req, res) => {
       const include = includeInactive === "true";
       const result = await bookings.getBooking(id, include);
       
-      // Si es normalUser, verificar que la reserva le pertenece
       if (userRole === "normalUser" && result.success && result.data.bookedBy !== userId) {
         return res.status(403).json(ErrorManager.returnError("accessDenied"));
       }
       
       return res.status(result.code).json(result);
     } else {
-      // Si es normalUser, solo mostrar sus reservas
       const filterUserId = userRole === "normalUser" ? userId : null;
-      const result = await bookings.getBookings(status || "active", filterUserId);
+      const filters = {};
+      if (startMonth) filters.startMonth = startMonth;
+      if (endMonth) filters.endMonth = endMonth;
+      const result = await bookings.getBookings(status || "active", filterUserId, filters);
       return res.status(result.code).json(result);
     }
   } catch (error) {

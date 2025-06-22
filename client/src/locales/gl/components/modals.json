@@ -1,0 +1,17 @@
+{
+  "common": {
+    "close": "Pechar",
+    "notAvailable": "Non dispoñible"
+  },
+  "bookingDetails": {
+    "event": "Evento",
+    "description": "Descrición do evento",
+    "additionalInfo": "Información adicional",
+    "dateTime": "Data e hora",
+    "duration": "Duración",
+    "space": "Espazo",
+    "category": "Categoría",
+    "bookedBy": "Reservado por",
+    "edit": "Editar"
+  }
+}

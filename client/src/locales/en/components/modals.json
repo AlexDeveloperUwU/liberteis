@@ -1,0 +1,17 @@
+{
+  "common": {
+    "close": "Close",
+    "notAvailable": "Not available"
+  },
+  "bookingDetails": {
+    "event": "Event",
+    "description": "Event description",
+    "additionalInfo": "Additional information",
+    "dateTime": "Date and time",
+    "duration": "Duration",
+    "space": "Space",
+    "category": "Category",
+    "bookedBy": "Booked by",
+    "edit": "Edit"
+  }
+}

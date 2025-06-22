@@ -4,28 +4,80 @@ import axios from "axios";
  * Carga las métricas para el dashboard principal
  */
 export const loadDashboardHomeData = async (to) => {
+  console.log("⏳ Iniciando carga de datos del dashboard home...");
   try {
-    const metricsResponse = await axios.get("/api/bookings/count");
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1; // 1-12
+    
+    // Mes anterior
+    const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+    
+    // Mes siguiente
+    const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+    const nextYear = currentMonth === 12 ? currentYear + 1 : currentYear;
 
-    if (metricsResponse.data && metricsResponse.data.success) {
-      to.meta.initialData = {
-        metrics: metricsResponse.data.data || {},
-        error: false,
-      };
-    } else {
-      console.error("Error fetching dashboard metrics:", metricsResponse.data?.message || "Unknown error");
-      to.meta.initialData = {
-        metrics: {},
-        error: true,
-        errorMessage: metricsResponse.data?.message || "Error desconocido al cargar métricas",
-      };
+    // Formatear meses para la API en formato mm/yy
+    const startMonthStr = `${prevMonth.toString().padStart(2, '0')}/${(prevYear % 100).toString().padStart(2, '0')}`;
+    const endMonthStr = `${nextMonth.toString().padStart(2, '0')}/${(nextYear % 100).toString().padStart(2, '0')}`;
+
+    console.log(`📅 Rango de fechas para cargar bookings: ${startMonthStr} - ${endMonthStr}`);
+
+    const [metricsResponse, bookingsResponse] = await Promise.allSettled([
+      axios.get("/api/bookings/count"),
+      axios.get(`/api/bookings?startMonth=${startMonthStr}&endMonth=${endMonthStr}`)
+    ]);
+    
+    console.log("📊 Estado respuesta métricas:", metricsResponse.status);
+    console.log("📚 Estado respuesta bookings:", bookingsResponse.status);
+
+    const metrics = metricsResponse.status === "fulfilled" && metricsResponse.value.data.success 
+      ? metricsResponse.value.data.data || {}
+      : {};
+      
+    const bookings = bookingsResponse.status === "fulfilled" && bookingsResponse.value.data.success
+      ? bookingsResponse.value.data.data || []
+      : [];
+      
+    console.log(`📋 Bookings cargados: ${bookings.length}`);
+
+    const hasError = 
+      metricsResponse.status === "rejected" ||
+      bookingsResponse.status === "rejected" ||
+      (metricsResponse.status === "fulfilled" && !metricsResponse.value.data.success) ||
+      (bookingsResponse.status === "fulfilled" && !bookingsResponse.value.data.success);
+
+    let errorMessage = null;
+    if (hasError) {
+      if (metricsResponse.status === "rejected") {
+        errorMessage = "Error de conexión al cargar métricas";
+      } else if (bookingsResponse.status === "rejected") {
+        errorMessage = "Error de conexión al cargar reservas";
+      } else if (metricsResponse.status === "fulfilled" && !metricsResponse.value.data.success) {
+        errorMessage = metricsResponse.value.data.message;
+      } else if (bookingsResponse.status === "fulfilled" && !bookingsResponse.value.data.success) {
+        errorMessage = bookingsResponse.value.data.message;
+      }
     }
+
+    to.meta.initialData = {
+      metrics: metrics || {},
+      bookings: bookings || [],
+      startMonth: startMonthStr,
+      endMonth: endMonthStr,
+      error: hasError,
+      errorMessage: errorMessage || ""
+    };
+    
+    console.log("✅ Datos del dashboard cargados correctamente");
   } catch (error) {
-    console.error("Error fetching dashboard metrics:", error.message || error);
+    console.error("❌ Error fetching dashboard data:", error.message || error);
     to.meta.initialData = {
       metrics: {},
+      bookings: [],
       error: true,
-      errorMessage: "Error de conexión al cargar métricas",
+      errorMessage: "Error de conexión al cargar datos del dashboard",
     };
   }
 };
@@ -495,6 +547,147 @@ export const loadEventEditData = async (to) => {
       categories: [],
       error: true,
       errorMessage: "Error de conexión al cargar datos del evento",
+    };
+  }
+};
+
+/**
+ * Carga los datos para la gestión de reservas
+ */
+export const loadBookingsData = async (to) => {
+  try {
+    const [metricsResult, bookingsResult, eventsResult] = await Promise.allSettled([
+      axios.get("/api/bookings/count"),
+      axios.get("/api/bookings"),
+      axios.get("/api/events"),
+    ]);
+
+    const metrics =
+      metricsResult.status === "fulfilled" && metricsResult.value.data.success ? metricsResult.value.data.data : {};
+
+    const bookings =
+      bookingsResult.status === "fulfilled" && bookingsResult.value.data.success ? bookingsResult.value.data.data : [];
+
+    const events =
+      eventsResult.status === "fulfilled" && eventsResult.value.data.success ? eventsResult.value.data.data : [];
+
+    const hasError =
+      metricsResult.status === "rejected" ||
+      bookingsResult.status === "rejected" ||
+      eventsResult.status === "rejected" ||
+      (metricsResult.status === "fulfilled" && !metricsResult.value.data.success) ||
+      (bookingsResult.status === "fulfilled" && !bookingsResult.value.data.success) ||
+      (eventsResult.status === "fulfilled" && !eventsResult.value.data.success);
+
+    let errorMessage = null;
+    if (hasError) {
+      if (metricsResult.status === "rejected") {
+        errorMessage = "Error de conexión al cargar métricas de reservas";
+      } else if (bookingsResult.status === "rejected") {
+        errorMessage = "Error de conexión al cargar lista de reservas";
+      } else if (eventsResult.status === "rejected") {
+        errorMessage = "Error de conexión al cargar eventos";
+      } else if (metricsResult.status === "fulfilled" && !metricsResult.value.data.success) {
+        errorMessage = metricsResult.value.data.message;
+      } else if (bookingsResult.status === "fulfilled" && !bookingsResult.value.data.success) {
+        errorMessage = bookingsResult.value.data.message;
+      } else if (eventsResult.status === "fulfilled" && !eventsResult.value.data.success) {
+        errorMessage = eventsResult.value.data.message;
+      }
+    }
+
+    to.meta.initialData = {
+      metrics,
+      bookings,
+      events,
+      error: hasError,
+      errorMessage,
+    };
+  } catch (error) {
+    console.error("Error fetching bookings data:", error.message || error);
+    to.meta.initialData = {
+      metrics: {},
+      bookings: [],
+      events: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar datos de reservas",
+    };
+  }
+};
+
+/**
+ * Carga los datos para la creación de una nueva reserva
+ */
+export const loadBookingCreateData = async (to) => {
+  try {
+    const eventsResponse = await axios.get("/api/events");
+
+    const events = eventsResponse.data.success ? eventsResponse.data.data : [];
+
+    to.meta.initialData = {
+      events,
+      error: !eventsResponse.data.success,
+      errorMessage: !eventsResponse.data.success ? eventsResponse.data.message : null,
+    };
+  } catch (error) {
+    console.error("Error loading events for booking creation:", error.message || error);
+    to.meta.initialData = {
+      events: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar eventos disponibles",
+    };
+  }
+};
+
+/**
+ * Carga los datos para la edición de una reserva específica
+ */
+export const loadBookingEditData = async (to) => {
+  try {
+    const bookingId = to.params.id;
+    const [bookingResponse, eventsResponse] = await Promise.allSettled([
+      axios.get(`/api/bookings?id=${bookingId}&includeInactive=true`),
+      axios.get("/api/events"),
+    ]);
+
+    const booking =
+      bookingResponse.status === "fulfilled" && bookingResponse.value.data.success
+        ? bookingResponse.value.data.data
+        : null;
+
+    const events =
+      eventsResponse.status === "fulfilled" && eventsResponse.value.data.success ? eventsResponse.value.data.data : [];
+
+    const hasError =
+      bookingResponse.status === "rejected" ||
+      eventsResponse.status === "rejected" ||
+      (bookingResponse.status === "fulfilled" && !bookingResponse.value.data.success) ||
+      (eventsResponse.status === "fulfilled" && !eventsResponse.value.data.success);
+
+    let errorMessage = null;
+    if (hasError) {
+      if (bookingResponse.status === "rejected") {
+        errorMessage = "Error de conexión al cargar datos de la reserva";
+      } else if (eventsResponse.status === "rejected") {
+        errorMessage = "Error de conexión al cargar eventos disponibles";
+      } else {
+        errorMessage = bookingResponse.value.data.message || eventsResponse.value.data.message;
+      }
+    }
+
+    to.meta.initialData = {
+      booking,
+      events,
+      error: hasError,
+      errorMessage,
+    };
+  } catch (error) {
+    console.error("Error fetching booking data:", error.message || error);
+    to.meta.initialData = {
+      booking: null,
+      events: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar datos de la reserva",
     };
   }
 };

@@ -12,6 +12,7 @@
   "calendar": {
     "today": "Hoy",
     "noEventsMonth": "No hay eventos para este mes",
-    "tryAnotherMonth": "Intenta ver otro mes"
+    "tryAnotherMonth": "Intenta ver otro mes",
+    "close": "Cerrar"
   }
 }

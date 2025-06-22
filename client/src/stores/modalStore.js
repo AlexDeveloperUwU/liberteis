@@ -1,30 +1,23 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-export const useModalStore = defineStore("modal", () => {
+export const useModalStore = defineStore("modalStore", () => {
   const modals = ref([]);
-  let nextId = 0;
 
   const addModal = (modal) => {
-    const id = nextId++;
-    const newModal = {
+    const id = Date.now().toString();
+    modals.value.push({
       id,
-      type: modal.type || "info",
-      title: modal.title,
-      content: modal.content,
-      persistent: modal.persistent || false,
-      width: modal.width || "md",
-      actions: modal.actions || [],
-    };
-
-    modals.value.push(newModal);
+      ...modal,
+    });
     return id;
   };
 
   const removeModal = (id) => {
-    const index = modals.value.findIndex((modal) => modal.id === id);
-    if (index !== -1) {
-      modals.value.splice(index, 1);
+    if (id) {
+      modals.value = modals.value.filter((modal) => modal.id !== id);
+    } else {
+      modals.value = [];
     }
   };
 
@@ -32,12 +25,24 @@ export const useModalStore = defineStore("modal", () => {
     modals.value = [];
   };
 
-  const confirm = (content, title = "Confirmar", options = {}) => {
+  const confirm = (options = {}) => {
     return addModal({
       type: "confirm",
-      title,
-      content,
-      ...options,
+      title: options.title || "Confirmar",
+      content: options.content || "¿Está seguro de realizar esta acción?",
+      actions: options.actions || [
+        {
+          label: options.confirmText || "Confirmar",
+          type: options.confirmType || "primary",
+          onClick: options.onConfirm,
+        },
+        {
+          label: options.cancelText || "Cancelar",
+          type: "default",
+          onClick: options.onCancel,
+        },
+      ],
+      width: options.width || "md",
     });
   };
 
@@ -50,6 +55,17 @@ export const useModalStore = defineStore("modal", () => {
     });
   };
 
+  const showBookingDetails = (data, title = "Detalles de la Reserva", options = {}) => {
+    console.log("Modal store received bookingId:", data.bookingId);
+    return addModal({
+      type: "bookingDetails",
+      title,
+      data,
+      width: "xl",
+      ...options,
+    });
+  };
+
   return {
     modals,
     addModal,
@@ -57,5 +73,6 @@ export const useModalStore = defineStore("modal", () => {
     clearAllModals,
     confirm,
     info,
+    showBookingDetails,
   };
 });

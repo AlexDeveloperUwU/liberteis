@@ -14,6 +14,9 @@ import {
   loadEventsData,
   loadEventCreateData,
   loadEventEditData,
+  loadBookingsData,
+  loadBookingCreateData,
+  loadBookingEditData,
 } from "./fetchers";
 
 const routes = [
@@ -51,7 +54,7 @@ const routes = [
         name: "dashHome",
         component: () => import("../views/Dash/HomeView.vue"),
         meta: { allow: "normalUser", layout: "dashboard" },
-        beforeEnter: loadDashboardHomeData,
+        beforeEnter: loadDashboardHomeData, // Esto debe estar presente para cargar los datos
       },
 
       {
@@ -168,6 +171,30 @@ const routes = [
         meta: { allow: "managerUser", layout: "dashboard" },
         props: true,
         beforeEnter: loadEventEditData,
+      },
+      /*
+      {
+        path: "bookings",
+        name: "dashBookings",
+        component: () => import("../views/Dash/BookingsTableView.vue"),
+        meta: { allow: "normalUser", layout: "dashboard" },
+        beforeEnter: loadBookingsData,
+      },
+      */
+      {
+        path: "bookings/new",
+        name: "dashBookingsNew",
+        component: () => import("../views/Dash/BookingFormView.vue"),
+        meta: { allow: "normalUser", layout: "dashboard" },
+        beforeEnter: loadBookingCreateData,
+      },
+      {
+        path: "bookings/edit/:id",
+        name: "dashBookingsEdit",
+        component: () => import("../views/Dash/BookingFormView.vue"),
+        meta: { allow: "normalUser", layout: "dashboard" },
+        props: true,
+        beforeEnter: loadBookingEditData,
       },
     ],
   },

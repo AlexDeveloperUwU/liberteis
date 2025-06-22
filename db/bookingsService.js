@@ -232,12 +232,13 @@ export async function getBookingByEventAndDate(eventId, bookingDate, includeInac
 }
 
 /**
- * Retrieves bookings from the database based on their status.
+ * Retrieves bookings from the database based on their status and optional filters.
  * @param {string} [status="active"] - The status of bookings to retrieve ("all", "active", "inactive").
  * @param {string} [userId=null] - Optional user ID to filter bookings by specific user.
+ * @param {object} [filters={}] - Optional filters: { startMonth, endMonth }
  * @returns {Promise<object[]>} An array of bookings or an error message.
  */
-export async function getBookings(status = "active", userId = null) {
+export async function getBookings(status = "active", userId = null, filters = {}) {
   let result;
 
   try {
@@ -269,6 +270,27 @@ export async function getBookings(status = "active", userId = null) {
       default:
         return ErrorManager.returnError("invalidParameters");
     }
+
+    if (filters.startMonth || filters.endMonth) {
+      let startDate = null;
+      let endDate = null;
+      if (filters.startMonth) {
+        const [sm, sy] = filters.startMonth.split("/");
+        startDate = new Date(Number(`20${sy.length === 2 ? sy : "0" + sy}`), Number(sm) - 1, 1, 0, 0, 0, 0);
+      }
+      if (filters.endMonth) {
+        const [em, ey] = filters.endMonth.split("/");
+        endDate = new Date(Number(`20${ey.length === 2 ? ey : "0" + ey}`), Number(em), 0, 23, 59, 59, 999);
+      }
+      if (startDate) {
+        conditions.push({ field: "bookingDate", operator: ">=", value: startDate.toISOString() });
+      }
+      if (endDate) {
+        conditions.push({ field: "bookingDate", operator: "<=", value: endDate.toISOString() });
+      }
+    }
+
+    result = await dbc.dbGetWhere("bookings", conditions);
 
     if (result.length === 0) {
       return ErrorManager.returnSuccess(200, "No bookings found", []);

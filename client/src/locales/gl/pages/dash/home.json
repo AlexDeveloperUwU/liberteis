@@ -12,6 +12,7 @@
   "calendar": {
     "today": "Hoxe",
     "noEventsMonth": "Non hai eventos para este mes",
-    "tryAnotherMonth": "Tenta ver outro mes"
+    "tryAnotherMonth": "Tenta ver outro mes",
+    "close": "Pechar"
   }
 }

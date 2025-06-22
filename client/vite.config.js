@@ -6,7 +6,7 @@ import vueDevTools from "vite-plugin-vue-devtools";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss(), vueDevTools()],
+  plugins: [vue(), tailwindcss()],
   server: {
     proxy: {
       "/api": {
