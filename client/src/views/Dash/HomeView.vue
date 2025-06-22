@@ -627,7 +627,7 @@ const updateNextBooking = () => {
     const nextEvent = upcomingEvents[0];
     const nextDate = new Date(nextEvent.start);
 
-    upcomingBookingDate.value = nextDate.toLocaleDateString(locale.value, {
+    upcomingBookingDate.value = nextDate.toLocaleDateString("es", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric"
@@ -653,10 +653,13 @@ const formatDuration = (minutes) => {
 const navigateToBookingForm = (date) => {
   if (!date) return;
 
-  const formattedDate = date.toISOString().split('T')[0];
+  const adjustedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+    .toISOString()
+    .split('T')[0];
+
   router.push({
     name: 'dashBookingsNew',
-    query: { date: formattedDate }
+    query: { date: adjustedDate },
   });
 };
 

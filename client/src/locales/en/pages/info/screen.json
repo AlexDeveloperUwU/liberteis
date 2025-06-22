@@ -1,0 +1,16 @@
+{
+  "title": "Upcoming Events",
+  "upcoming": "Upcoming events",
+  "noEvents": "No scheduled events",
+  "checkLater": "Check back later to see upcoming events",
+  "event": "Event",
+  "description": "Description",
+  "additionalInfo": "Additional information",
+  "dateTime": "Date and time",
+  "duration": "Duration",
+  "space": "Space",
+  "category": "Category",
+  "noDuration": "Duration not specified",
+  "addedBy": "Added by",
+  "date": "Date"
+}

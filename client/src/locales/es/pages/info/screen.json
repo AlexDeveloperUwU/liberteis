@@ -1,0 +1,16 @@
+{
+  "title": "Próximos Eventos",
+  "upcoming": "Próximos eventos",
+  "noEvents": "No hay eventos programados",
+  "checkLater": "Vuelve a revisar más tarde para ver los próximos eventos",
+  "event": "Evento",
+  "description": "Descripción",
+  "additionalInfo": "Información adicional",
+  "dateTime": "Fecha y hora",
+  "duration": "Duración",
+  "space": "Espacio",
+  "category": "Categoría",
+  "noDuration": "Duración no especificada",
+  "addedBy": "Añadido por",
+  "date": "Fecha"
+}

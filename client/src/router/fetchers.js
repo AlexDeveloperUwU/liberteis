@@ -691,3 +691,184 @@ export const loadBookingEditData = async (to) => {
     };
   }
 };
+
+// Sistema de caché para reducir peticiones repetitivas
+const cacheSystem = {
+  data: {},
+  timestamps: {},
+  maxAge: {
+    default: 5 * 60 * 1000, // 5 minutos por defecto
+    screenEvents: 3 * 60 * 1000, // 3 minutos para eventos de pantalla
+  },
+
+  // Guardar datos en caché
+  save(key, data) {
+    this.data[key] = JSON.parse(JSON.stringify(data)); // Copia profunda para evitar referencias
+    this.timestamps[key] = Date.now();
+    return data;
+  },
+
+  // Obtener datos de la caché si son válidos
+  get(key, maxAgeOverride) {
+    const cachedData = this.data[key];
+    const timestamp = this.timestamps[key];
+    
+    if (!cachedData || !timestamp) return null;
+    
+    const maxAge = maxAgeOverride || this.maxAge[key] || this.maxAge.default;
+    const now = Date.now();
+    
+    // Si los datos han expirado, devolver null
+    if (now - timestamp > maxAge) return null;
+    
+    return JSON.parse(JSON.stringify(cachedData)); // Devolver copia para evitar mutaciones
+  },
+
+  // Comprobar si hay datos válidos en caché
+  isValid(key, maxAgeOverride) {
+    const timestamp = this.timestamps[key];
+    if (!timestamp) return false;
+    
+    const maxAge = maxAgeOverride || this.maxAge[key] || this.maxAge.default;
+    return (Date.now() - timestamp) < maxAge;
+  },
+
+  // Limpiar entradas específicas o toda la caché
+  clear(key = null) {
+    if (key) {
+      delete this.data[key];
+      delete this.timestamps[key];
+    } else {
+      this.data = {};
+      this.timestamps = {};
+    }
+  }
+};
+
+/**
+ * Carga los datos para la pantalla de información con eventos próximos
+ */
+export const loadScreenData = async (to) => {
+  console.log("⏳ Iniciando carga de datos para pantalla de información...");
+  try {
+    // Comprobar si los datos están en caché
+    const cacheKey = 'screenEvents';
+    let events = cacheSystem.get(cacheKey);
+    
+    if (events) {
+      console.log("📋 Usando datos en caché para pantalla de información");
+      to.meta.initialData = {
+        events,
+        cachedAt: cacheSystem.timestamps[cacheKey],
+        error: false
+      };
+      return;
+    }
+    
+    // Obtener fecha actual y fecha en 7 días
+    const now = new Date();
+    const nextWeek = new Date(now);
+    nextWeek.setDate(now.getDate() + 7);
+    
+    // Formatear fechas para la API
+    const startDate = now.toISOString();
+    const endDate = nextWeek.toISOString();
+    
+    console.log(`📅 Rango de fechas para cargar eventos: ${startDate} - ${endDate}`);
+    
+    // Solicitar bookings para los próximos 7 días
+    const bookingsResponse = await axios.get(`/api/bookings?startDate=${startDate}&endDate=${endDate}`);
+    
+    if (!bookingsResponse.data.success) {
+      throw new Error(bookingsResponse.data.message || "Error al obtener reservas");
+    }
+    
+    const bookings = bookingsResponse.data.data;
+    console.log(`📋 Reservas cargadas: ${bookings.length}`);
+    
+    // Procesar las reservas para obtener información completa
+    events = [];
+    for (const booking of bookings) {
+      try {
+        // Consultar detalles del evento
+        const eventResponse = await axios.get(`/api/events?id=${booking.eventId}`);
+        if (!eventResponse.data.success) continue;
+
+        // Consultar detalles del espacio
+        const spaceResponse = await axios.get(`/api/spaces?id=${booking.space}`);
+        if (!spaceResponse.data.success) continue;
+
+        // Consultar detalles del usuario que añadió el evento
+        const userResponse = await axios.get(`/api/users?id=${booking.bookedBy}`);
+        if (!userResponse.data.success) continue;
+
+        // Consultar categoría si existe
+        let categoryName = "";
+        if (eventResponse.data.data.category) {
+          const categoryResponse = await axios.get(`/api/categories?id=${eventResponse.data.data.category}`);
+          if (categoryResponse.data.success) {
+            categoryName = categoryResponse.data.data.name;
+          }
+        }
+
+        const event = eventResponse.data.data;
+        const space = spaceResponse.data.data;
+        const user = userResponse.data.data;
+
+        // Calcular duración formateada
+        let durationStr = "";
+        if (event.duration !== undefined && event.duration !== null) {
+          const hours = Math.floor(event.duration / 60);
+          const mins = event.duration % 60;
+          if (hours > 0 && mins > 0) {
+            durationStr = `${hours}h ${mins}min`;
+          } else if (hours > 0) {
+            durationStr = `${hours}h`;
+          } else {
+            durationStr = `${mins}min`;
+          }
+        }
+        
+        // Crear objeto de evento completo
+        events.push({
+          id: booking.id || booking._id,
+          title: event.title,
+          start: new Date(booking.bookingDate),
+          end: new Date(new Date(booking.bookingDate).getTime() + (event.duration || 60) * 60000),
+          description: event.info,
+          info: event.info,
+          coverUrl: event.coverUrl,
+          bookingInfo: booking.info,
+          spaceName: space.name,
+          categoryName: categoryName,
+          addedBy: user.name, // Incluir el autor del evento
+          duration: durationStr,
+        });
+      } catch (error) {
+        console.error(`Error al procesar booking ${booking._id || booking.id}:`, error.message || error);
+      }
+    }
+    
+    // Ordenar eventos por fecha
+    events.sort((a, b) => a.start - b.start);
+    
+    // Guardar en caché
+    cacheSystem.save(cacheKey, events);
+    
+    console.log(`✅ Datos para pantalla cargados: ${events.length} eventos`);
+    
+    to.meta.initialData = {
+      events,
+      cachedAt: null, // Datos frescos
+      error: false
+    };
+    
+  } catch (error) {
+    console.error("❌ Error al cargar datos para pantalla:", error.message || error);
+    to.meta.initialData = {
+      events: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar eventos"
+    };
+  }
+};

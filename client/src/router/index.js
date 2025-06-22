@@ -14,9 +14,9 @@ import {
   loadEventsData,
   loadEventCreateData,
   loadEventEditData,
-  loadBookingsData,
   loadBookingCreateData,
   loadBookingEditData,
+  loadScreenData,
 } from "./fetchers";
 
 const routes = [
@@ -202,7 +202,15 @@ const routes = [
   {
     path: "/info",
     meta: { allow: "any", layout: "info" },
-    children: [],
+    children: [
+      {
+        path: "screen",
+        name: "infoScreen",
+        component: () => import("../views/Info/ScreenView.vue"),
+        meta: { allow: "any", layout: "info" },
+        beforeEnter: loadScreenData,
+      },
+    ],
   },
 ];
 

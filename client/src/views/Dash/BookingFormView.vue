@@ -385,6 +385,7 @@ import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headless
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
+import { toMySQLDateTime } from "@/utils/dateUtils";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -397,7 +398,9 @@ const formatDateForInput = (dateString) => {
   try {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "";
-    return date.toISOString().slice(0, 16);
+    // Ajustar la fecha para evitar desfases de zona horaria
+    const adjustedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    return adjustedDate.toISOString().slice(0, 16);
   } catch (error) {
     console.error("Error formatting date:", error);
     return "";
@@ -455,7 +458,9 @@ const returnRoute = ref('dashBookings');
 
 onMounted(async () => {
   if (route.query.returnTo) {
-    returnRoute.value = route.query.returnTo;
+    returnRoute.value = route.query.returnTo; // Configura la ruta de retorno desde la query
+  } else {
+    returnRoute.value = 'dashHome'; // Por defecto, vuelve al HomeView
   }
 
   if (!isEditMode.value && route.query.date) {
@@ -771,7 +776,9 @@ const handleSubmit = async () => {
   buttonState.value = "processing";
 
   try {
-    const bookingDate = formData.bookingDate ? new Date(formData.bookingDate).toISOString() : "";
+    const bookingDate = formData.bookingDate
+      ? toMySQLDateTime(new Date(formData.bookingDate).toISOString())
+      : "";
 
     const bookingData = {
       eventId: formData.eventId,
