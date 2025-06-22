@@ -1,0 +1,72 @@
+{
+  "page": {
+    "createTitle": "Crear nueva reserva",
+    "createDescription": "Crea una nueva reserva seleccionando un evento y configurando los detalles",
+    "editTitle": "Editar reserva",
+    "editDescription": "Modifica los detalles de la reserva existente"
+  },
+  "profile": {
+    "preview": "Vista previa",
+    "createdBy": "Creado por",
+    "loading": "Cargando...",
+    "errorLoading": "Error al cargar",
+    "bookedBy": "Reservado por"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Información básica",
+      "bookingDetails": "Detalles de la reserva"
+    },
+    "labels": {
+      "event": "Evento",
+      "space": "Espacio",
+      "bookingDate": "Fecha y hora",
+      "info": "Información adicional",
+      "eventTitle": "Evento",
+      "eventCategory": "Categoría",
+      "eventDuration": "Duración"
+    },
+    "placeholders": {
+      "selectEvent": "Selecciona un evento...",
+      "selectSpace": "Selecciona un espacio...",
+      "noEvent": "Sin evento seleccionado",
+      "noSpace": "Sin espacio seleccionado",
+      "noDate": "Sin fecha programada",
+      "info": "Información adicional sobre la reserva",
+      "noInfo": "Sin información adicional",
+      "selectSpaceFirst": "Primero selecciona un evento"
+    },
+    "actions": {
+      "submitting": "Creando...",
+      "updating": "Actualizando..."
+    }
+  },
+  "common": {
+    "create": "Crear reserva",
+    "edit": "Editar",
+    "update": "Actualizar reserva",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "delete": "Eliminar",
+    "status": {
+      "success": "Éxito",
+      "error": "Error"
+    }
+  },
+  "errors": {
+    "eventRequired": "Debes seleccionar un evento",
+    "spaceRequired": "Debes seleccionar un espacio",
+    "dateRequired": "Debes seleccionar una fecha y hora",
+    "infoLength": "La información no puede exceder 500 caracteres",
+    "loadingEvent": "Error al cargar el evento",
+    "loadingBooking": "Error al cargar la reserva",
+    "unknown": "Error desconocido",
+    "noResponse": "Sin respuesta del servidor",
+    "requestSetup": "Error al configurar la solicitud",
+    "spaceNotAvailable": "El espacio no está disponible en esa fecha y hora"
+  },
+  "notifications": {
+    "createSuccess": "Reserva creada exitosamente",
+    "updateSuccess": "Reserva actualizada exitosamente"
+  }
+}

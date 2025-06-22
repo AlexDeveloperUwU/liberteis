@@ -13,7 +13,7 @@
     "close": "Cerrar",
     "delete": "Eliminar",
     "status": {
-      "success": "¡Completado!",
+      "success": "Completado",
       "error": "Error"
     }
   },

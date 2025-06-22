@@ -1,0 +1,72 @@
+{
+  "page": {
+    "createTitle": "Crear nova reserva",
+    "createDescription": "Crea unha nova reserva seleccionando un evento e configurando os detalles",
+    "editTitle": "Editar reserva",
+    "editDescription": "Modifica os detalles da reserva existente"
+  },
+  "profile": {
+    "preview": "Vista previa",
+    "createdBy": "Creado por",
+    "loading": "Cargando...",
+    "errorLoading": "Erro ao cargar",
+    "bookedBy": "Reservado por"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Información básica",
+      "bookingDetails": "Detalles da reserva"
+    },
+    "labels": {
+      "event": "Evento",
+      "space": "Espazo",
+      "bookingDate": "Data e hora",
+      "info": "Información adicional",
+      "eventTitle": "Evento",
+      "eventCategory": "Categoría",
+      "eventDuration": "Duración"
+    },
+    "placeholders": {
+      "selectEvent": "Selecciona un evento...",
+      "selectSpace": "Selecciona un espazo...",
+      "noEvent": "Sen evento seleccionado",
+      "noSpace": "Sen espazo seleccionado",
+      "noDate": "Sen data programada",
+      "info": "Información adicional sobre a reserva",
+      "noInfo": "Sen información adicional",
+      "selectSpaceFirst": "Primeiro selecciona un evento"
+    },
+    "actions": {
+      "submitting": "Creando...",
+      "updating": "Actualizando..."
+    }
+  },
+  "common": {
+    "create": "Crear reserva",
+    "edit": "Editar",
+    "update": "Actualizar reserva",
+    "cancel": "Cancelar",
+    "close": "Pechar",
+    "delete": "Eliminar",
+    "status": {
+      "success": "¡Éxito!",
+      "error": "Erro"
+    }
+  },
+  "errors": {
+    "eventRequired": "Debes seleccionar un evento",
+    "spaceRequired": "Debes seleccionar un espazo",
+    "dateRequired": "Debes seleccionar unha data e hora",
+    "infoLength": "A información non pode exceder 500 caracteres",
+    "loadingEvent": "Erro ao cargar o evento",
+    "loadingBooking": "Erro ao cargar a reserva",
+    "unknown": "Erro descoñecido",
+    "noResponse": "Sen resposta do servidor",
+    "requestSetup": "Erro ao configurar a solicitude",
+    "spaceNotAvailable": "O espazo non está dispoñible nesa data e hora"
+  },
+  "notifications": {
+    "createSuccess": "Reserva creada exitosamente",
+    "updateSuccess": "Reserva actualizada exitosamente"
+  }
+}

@@ -28,7 +28,7 @@
     },
     "placeholders": {
       "name": "User",
-      "email": "E-Mail",
+      "email": "E-mail",
       "selectType": "Select user type",
       "noRoleSelected": "No role selected",
       "noEmail": "No email provided",
@@ -50,7 +50,7 @@
     "neverLoggedIn": "User has never logged in"
   },
   "permissions": {
-    "manageOwnEvents": "Manage it's own events",
+    "manageOwnEvents": "Manage its own events",
     "manageAllEvents": "Manage all events (other's events too)",
     "manageCategories": "Manage categories",
     "manageSpaces": "Manage spaces",

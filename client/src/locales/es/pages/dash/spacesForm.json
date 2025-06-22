@@ -39,7 +39,7 @@
     "update": "Guardar cambios",
     "cancel": "Cancelar",
     "status": {
-      "success": "¡Completado!",
+      "success": "Completado",
       "error": "Error"
     }
   },

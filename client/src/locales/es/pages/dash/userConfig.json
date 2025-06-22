@@ -71,11 +71,11 @@
     "update": "Actualizar perfil",
     "reset": "Restablecer",
     "status": {
-      "success": "¡Actualizado!",
+      "success": "Actualizado",
       "error": "Error"
     }
   },
   "notifications": {
-    "updateSuccess": "¡Usuario actualizado con éxito!"
+    "updateSuccess": "Usuario actualizado con éxito"
   }
 }

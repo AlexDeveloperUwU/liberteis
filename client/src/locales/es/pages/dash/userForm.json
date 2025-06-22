@@ -72,7 +72,7 @@
     "cantChangeRole": "No se puede cambiar el rol del usuario"
   },
   "notifications": {
-    "createSuccess": "¡Usuario creado con éxito!",
-    "updateSuccess": "¡Usuario actualizado con éxito!"
+    "createSuccess": "Usuario creado con éxito",
+    "updateSuccess": "Usuario actualizado con éxito"
   }
 }

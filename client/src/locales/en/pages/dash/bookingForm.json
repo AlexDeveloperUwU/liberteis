@@ -1,0 +1,72 @@
+{
+  "page": {
+    "createTitle": "Create new booking",
+    "createDescription": "Create a new booking by selecting an event and configuring the details",
+    "editTitle": "Edit booking",
+    "editDescription": "Modify the details of the existing booking"
+  },
+  "profile": {
+    "preview": "Preview",
+    "createdBy": "Created by",
+    "loading": "Loading...",
+    "errorLoading": "Error loading",
+    "bookedBy": "Booked by"
+  },
+  "form": {
+    "sections": {
+      "basicInfo": "Basic information",
+      "bookingDetails": "Booking details"
+    },
+    "labels": {
+      "event": "Event",
+      "space": "Space",
+      "bookingDate": "Date and time",
+      "info": "Additional information",
+      "eventTitle": "Event",
+      "eventCategory": "Category",
+      "eventDuration": "Duration"
+    },
+    "placeholders": {
+      "selectEvent": "Select an event...",
+      "selectSpace": "Select a space...",
+      "noEvent": "No event selected",
+      "noSpace": "No space selected",
+      "noDate": "No date scheduled",
+      "info": "Additional information about the booking",
+      "noInfo": "No additional information",
+      "selectSpaceFirst": "Select an event first"
+    },
+    "actions": {
+      "submitting": "Creating...",
+      "updating": "Updating..."
+    }
+  },
+  "common": {
+    "create": "Create booking",
+    "edit": "Edit",
+    "update": "Update booking",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "status": {
+      "success": "Success!",
+      "error": "Error"
+    }
+  },
+  "errors": {
+    "eventRequired": "You must select an event",
+    "spaceRequired": "You must select a space",
+    "dateRequired": "You must select a date and time",
+    "infoLength": "Information cannot exceed 500 characters",
+    "loadingEvent": "Error loading event",
+    "loadingBooking": "Error loading booking",
+    "unknown": "Unknown error",
+    "noResponse": "No response from server",
+    "requestSetup": "Error setting up request",
+    "spaceNotAvailable": "The space is not available at that date and time"
+  },
+  "notifications": {
+    "createSuccess": "Booking created successfully",
+    "updateSuccess": "Booking updated successfully"
+  }
+}
