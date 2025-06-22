@@ -8,7 +8,7 @@ import fs from "fs/promises";
 const __dirname = path.resolve();
 
 const envConfig = dotenv.config({
-  path: path.resolve(__dirname, "./data/secrets/dbcreds.env"),
+  path: process.env.DOTENV_CONFIG_PATH || path.resolve(__dirname, "./data/secrets/dbcreds.env"),
 }).parsed;
 
 /**

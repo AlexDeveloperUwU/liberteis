@@ -62,6 +62,10 @@ create_directories() {
         echo -e "${RED}Error setting permissions for $dir${NC}"
         exit 1
       }
+      chown -R "$(id -u):$(id -g)" "$dir" || { # Asegurar que el usuario tenga acceso
+        echo -e "${RED}Error setting ownership for $dir${NC}"
+        exit 1
+      }
       echo -e "${GREEN}Created directory: $dir${NC}"
     else
       echo -e "${YELLOW}Directory already exists: $dir${NC}"
@@ -102,6 +106,10 @@ MYSQL_USER=liberteis-app
 MYSQL_PASSWORD=$user_password
 EOF
     echo -e "${GREEN}Database credentials file created.${NC}"
+    echo -e "${BLUE}Generated credentials:${NC}"
+    echo "MYSQL_ROOT_PASSWORD=$root_password"
+    echo "MYSQL_USER=liberteis-app"
+    echo "MYSQL_PASSWORD=$user_password"
   else
     echo -e "${YELLOW}Database credentials file already exists.${NC}"
   fi

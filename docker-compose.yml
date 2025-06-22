@@ -8,6 +8,7 @@ services:
     env_file:
       - ./data/secrets/dbcreds.env
     volumes:
+      - ./data/secrets/dbcreds.env:/run/secrets/dbcreds.env:ro 
       - data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -29,9 +30,15 @@ services:
       - "3000:3000"
     profiles:
       - dev
+    environment:
+      - MYSQL_HOST=liberteis-db
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     volumes:
       - ./data:/app/data
       - ./data/secrets:/app/secrets
+      - ./data/logs:/app/logs 
 
   # Only prod service
   liberteis-prod:
@@ -46,9 +53,15 @@ services:
       - "3000:3000"
     profiles:
       - prod
+    environment:
+      - MYSQL_HOST=liberteis-db
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     volumes:
       - ./data:/app/data
       - ./data/secrets:/app/secrets
+      - ./data/logs:/app/logs # Montar logs en el contenedor
 
 volumes:
   data:
