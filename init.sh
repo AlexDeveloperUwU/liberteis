@@ -180,6 +180,21 @@ create_admin_account_key() {
   fi
 }
 
+# Export environment variables from dbcreds.env
+export_env_variables() {
+  creds_file="./data/secrets/dbcreds.env"
+  if [ -f "$creds_file" ]; then
+    export $(grep -v '^#' "$creds_file" | xargs) || {
+      echo -e "${RED}Error exporting environment variables from $creds_file${NC}"
+      exit 1
+    }
+    echo -e "${GREEN}Environment variables exported from $creds_file${NC}"
+  else
+    echo -e "${RED}Credentials file $creds_file not found.${NC}"
+    exit 1
+  fi
+}
+
 # Main initialization logic
 initialize() {
   if [ ! -f "./data/init/initialized.txt" ]; then
@@ -188,9 +203,11 @@ initialize() {
     set_key
     create_db_creds_file
     create_admin_account_key
+    export_env_variables
     echo -e "${GREEN}Initialization complete.${NC}"
   else
     echo -e "${YELLOW}Initialization already completed. Skipping.${NC}"
+    export_env_variables
   fi
 }
 

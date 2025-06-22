@@ -16,6 +16,12 @@ services:
       timeout: 5s
       retries: 5
     command: ["mysqld", "--bind-address=0.0.0.0"]
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_HOST
 
   # Only dev service
   liberteis-dev:
@@ -31,10 +37,10 @@ services:
     profiles:
       - dev
     environment:
-      - MYSQL_HOST=liberteis-db
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_HOST
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE
     volumes:
       - ./data:/app/data
       - ./data/secrets:/app/secrets
@@ -54,14 +60,14 @@ services:
     profiles:
       - prod
     environment:
-      - MYSQL_HOST=liberteis-db
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_HOST
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE
     volumes:
       - ./data:/app/data
       - ./data/secrets:/app/secrets
-      - ./data/logs:/app/logs # Montar logs en el contenedor
+      - ./data/logs:/app/logs
 
 volumes:
   data:
