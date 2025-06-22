@@ -165,6 +165,16 @@ stop_and_remove_containers() {
   echo -e "${GREEN}All containers stopped and removed.${NC}"
 }
 
+# Stop, remove containers, and delete volumes
+stop_remove_and_clean_volumes() {
+  echo -e "${BLUE}Stopping and removing all containers and volumes...${NC}"
+  docker compose down -v || {
+    echo -e "${RED}Error stopping and removing containers and volumes${NC}"
+    exit 1
+  }
+  echo -e "${GREEN}All containers and volumes removed.${NC}"
+}
+
 # Generar contraseña aleatoria para la cuenta admin y crear el archivo adminaccount.key
 create_admin_account_key() {
   admin_key_file="./data/secrets/adminaccount.key"
@@ -219,6 +229,12 @@ initialize() {
     create_db_creds_file
     create_admin_account_key
     export_env_variables
+    echo -e "${BLUE}Setting up MySQL with the following credentials:${NC}"
+    echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD"
+    echo "MYSQL_DATABASE=$MYSQL_DATABASE"
+    echo "MYSQL_USER=$MYSQL_USER"
+    echo "MYSQL_PASSWORD=$MYSQL_PASSWORD"
+    echo "MYSQL_HOST=$MYSQL_HOST"
     grant_mysql_permissions
     echo -e "${GREEN}Initialization complete.${NC}"
   else
@@ -239,16 +255,16 @@ if [ "$ENVIRONMENT" == "dev" ]; then
     echo "1) Outside container"
     echo "2) Inside container"
     echo "3) Stop and remove all containers"
-    read -p "Enter the corresponding number (1, 2, or 3): " dev_choice
+    echo "4) Stop, remove all containers, and clean volumes"
+    read -p "Enter the corresponding number (1, 2, 3, or 4): " dev_choice
 
     case $dev_choice in
     1)
       clear
-        export_env_variables
       echo -e "${BLUE}Running outside container...${NC}"
       set_mysql_host "local"
       update_mysql_host_in_creds
-      docker compose -f docker-compose.yml --profile dev up -d mysql || {
+      docker compose up --force-recreate -d mysql || {
         echo -e "${RED}Error starting MySQL with Docker Compose${NC}"
         exit 1
       }
@@ -268,7 +284,7 @@ if [ "$ENVIRONMENT" == "dev" ]; then
       echo -e "${BLUE}Running inside container...${NC}"
       set_mysql_host "container"
       update_mysql_host_in_creds
-      docker compose -f docker-compose.yml --profile dev up --build || {
+      docker compose up --force-recreate --build || {
         echo -e "${RED}Error starting Docker Compose${NC}"
         exit 1
       }
@@ -276,6 +292,10 @@ if [ "$ENVIRONMENT" == "dev" ]; then
       ;;
     3)
       stop_and_remove_containers
+      break
+      ;;
+    4)
+      stop_remove_and_clean_volumes
       break
       ;;
     *)
@@ -286,8 +306,8 @@ if [ "$ENVIRONMENT" == "dev" ]; then
 elif [ "$ENVIRONMENT" == "prod" ]; then
   clear
   echo -e "${BLUE}Setting up production environment...${NC}"
-  export_env_variables # Imprimir credenciales antes de generar contenedores
-  docker compose -f docker-compose.yml --profile prod up || {
+  export_env_variables
+  docker compose up --force-recreate || {
     echo -e "${RED}Error starting Docker Compose${NC}"
     exit 1
   }

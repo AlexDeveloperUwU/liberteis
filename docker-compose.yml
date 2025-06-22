@@ -1,7 +1,7 @@
 services:
   # Database service
   mysql:
-    image: mysql:9.2.0
+    image: mysql:9.3.0
     container_name: liberteis-db
     ports:
       - "3306:3306"
@@ -17,7 +17,7 @@ services:
       - ./data/secrets/dbcreds.env:/run/secrets/dbcreds.env:ro 
       - data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$MYSQL_ROOT_PASSWORD"]
       interval: 10s
       timeout: 5s
       retries: 5
