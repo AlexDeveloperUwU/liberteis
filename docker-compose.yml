@@ -31,6 +31,7 @@ services:
       - dev
     volumes:
       - ./data:/app/data
+      - ./data/secrets:/app/secrets
 
   # Only prod service
   liberteis-prod:
@@ -47,6 +48,7 @@ services:
       - prod
     volumes:
       - ./data:/app/data
+      - ./data/secrets:/app/secrets
 
 volumes:
   data:

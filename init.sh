@@ -58,6 +58,10 @@ create_directories() {
         echo -e "${RED}Error creating directory $dir${NC}"
         exit 1
       }
+      chmod -R 755 "$dir" || {
+        echo -e "${RED}Error setting permissions for $dir${NC}"
+        exit 1
+      }
       echo -e "${GREEN}Created directory: $dir${NC}"
     else
       echo -e "${YELLOW}Directory already exists: $dir${NC}"
