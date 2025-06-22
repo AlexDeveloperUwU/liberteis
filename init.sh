@@ -195,6 +195,15 @@ export_env_variables() {
   fi
 }
 
+# Grant MySQL user permissions for any host
+grant_mysql_permissions() {
+  docker exec liberteis-db mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'; FLUSH PRIVILEGES;" || {
+    echo -e "${RED}Error granting MySQL user permissions${NC}"
+    exit 1
+  }
+  echo -e "${GREEN}Granted MySQL user permissions for any host.${NC}"
+}
+
 # Main initialization logic
 initialize() {
   if [ ! -f "./data/init/initialized.txt" ]; then
@@ -204,6 +213,7 @@ initialize() {
     create_db_creds_file
     create_admin_account_key
     export_env_variables
+    grant_mysql_permissions
     echo -e "${GREEN}Initialization complete.${NC}"
   else
     echo -e "${YELLOW}Initialization already completed. Skipping.${NC}"
