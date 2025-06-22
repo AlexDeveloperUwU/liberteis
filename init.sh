@@ -234,6 +234,7 @@ create_init_indicator
 if [ "$ENVIRONMENT" == "dev" ]; then
   clear
   echo -e "${BLUE}Setting up development environment...${NC}"
+  export_env_variables
   while true; do
     echo "1) Outside container"
     echo "2) Inside container"
@@ -243,6 +244,7 @@ if [ "$ENVIRONMENT" == "dev" ]; then
     case $dev_choice in
     1)
       clear
+        export_env_variables
       echo -e "${BLUE}Running outside container...${NC}"
       set_mysql_host "local"
       update_mysql_host_in_creds
@@ -284,6 +286,7 @@ if [ "$ENVIRONMENT" == "dev" ]; then
 elif [ "$ENVIRONMENT" == "prod" ]; then
   clear
   echo -e "${BLUE}Setting up production environment...${NC}"
+  export_env_variables # Imprimir credenciales antes de generar contenedores
   docker compose -f docker-compose.yml --profile prod up || {
     echo -e "${RED}Error starting Docker Compose${NC}"
     exit 1
