@@ -271,7 +271,7 @@ if [ "$ENVIRONMENT" == "dev" ]; then
       echo -e "${BLUE}Running inside container...${NC}"
       set_mysql_host "container"
       update_mysql_host_in_creds
-      docker compose --profile dev up --force-recreate --build || {
+      docker compose --profile dev up --force-recreate --build -d || {
         echo -e "${RED}Error starting Docker Compose${NC}"
         exit 1
       }
@@ -294,7 +294,7 @@ elif [ "$ENVIRONMENT" == "prod" ]; then
   clear
   echo -e "${BLUE}Setting up production environment...${NC}"
   export_env_variables
-  docker compose --profile prod up --force-recreate || {
+  docker compose --profile prod up --force-recreate -d || {
     echo -e "${RED}Error starting Docker Compose${NC}"
     exit 1
   }

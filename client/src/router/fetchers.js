@@ -1,36 +1,24 @@
 import axios from "axios";
 
-/**
- * Carga las métricas para el dashboard principal
- */
 export const loadDashboardHomeData = async (to) => {
-  console.log("⏳ Iniciando carga de datos del dashboard home...");
   try {
     const today = new Date();
     const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth() + 1; // 1-12
+    const currentMonth = today.getMonth() + 1;
     
-    // Mes anterior
     const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
     const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
     
-    // Mes siguiente
     const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
     const nextYear = currentMonth === 12 ? currentYear + 1 : currentYear;
 
-    // Formatear meses para la API en formato mm/yy
     const startMonthStr = `${prevMonth.toString().padStart(2, '0')}/${(prevYear % 100).toString().padStart(2, '0')}`;
     const endMonthStr = `${nextMonth.toString().padStart(2, '0')}/${(nextYear % 100).toString().padStart(2, '0')}`;
-
-    console.log(`📅 Rango de fechas para cargar bookings: ${startMonthStr} - ${endMonthStr}`);
 
     const [metricsResponse, bookingsResponse] = await Promise.allSettled([
       axios.get("/api/bookings/count"),
       axios.get(`/api/bookings?startMonth=${startMonthStr}&endMonth=${endMonthStr}`)
     ]);
-    
-    console.log("📊 Estado respuesta métricas:", metricsResponse.status);
-    console.log("📚 Estado respuesta bookings:", bookingsResponse.status);
 
     const metrics = metricsResponse.status === "fulfilled" && metricsResponse.value.data.success 
       ? metricsResponse.value.data.data || {}
@@ -39,8 +27,6 @@ export const loadDashboardHomeData = async (to) => {
     const bookings = bookingsResponse.status === "fulfilled" && bookingsResponse.value.data.success
       ? bookingsResponse.value.data.data || []
       : [];
-      
-    console.log(`📋 Bookings cargados: ${bookings.length}`);
 
     const hasError = 
       metricsResponse.status === "rejected" ||
@@ -69,8 +55,6 @@ export const loadDashboardHomeData = async (to) => {
       error: hasError,
       errorMessage: errorMessage || ""
     };
-    
-    console.log("✅ Datos del dashboard cargados correctamente");
   } catch (error) {
     console.error("❌ Error fetching dashboard data:", error.message || error);
     to.meta.initialData = {
@@ -82,9 +66,6 @@ export const loadDashboardHomeData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la gestión de usuarios
- */
 export const loadUsersData = async (to) => {
   try {
     const [metricsResult, usersResult] = await Promise.allSettled([
@@ -134,9 +115,6 @@ export const loadUsersData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la edición de un usuario específico
- */
 export const loadUserEditData = async (to) => {
   try {
     const userId = to.params.id;
@@ -157,9 +135,6 @@ export const loadUserEditData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la configuración del usuario actual
- */
 export const loadUserConfigData = async (to) => {
   try {
     const { useAuthStore } = await import("@/stores/authStore");
@@ -192,9 +167,6 @@ export const loadUserConfigData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la gestión de espacios
- */
 export const loadSpacesData = async (to) => {
   try {
     const [metricsResult, spacesResult] = await Promise.allSettled([
@@ -244,9 +216,6 @@ export const loadSpacesData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la edición de un espacio específico
- */
 export const loadSpaceEditData = async (to) => {
   try {
     const spaceId = to.params.id;
@@ -267,9 +236,6 @@ export const loadSpaceEditData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la gestión de categorías
- */
 export const loadCategoriesData = async (to) => {
   try {
     const [metricsResult, categoriesResult, spacesResult] = await Promise.allSettled([
@@ -333,9 +299,6 @@ export const loadCategoriesData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la edición de una categoría específica
- */
 export const loadCategoryEditData = async (to) => {
   try {
     const categoryId = to.params.id;
@@ -386,9 +349,6 @@ export const loadCategoryEditData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la gestión de eventos
- */
 export const loadEventsData = async (to) => {
   try {
     const [metricsResult, eventsResult, categoriesResult] = await Promise.allSettled([
@@ -408,7 +368,6 @@ export const loadEventsData = async (to) => {
         ? categoriesResult.value.data.data
         : [];
 
-    // Normalizar las categorías para asegurar que tengan el campo _id
     categories = categories.map((category) => ({
       ...category,
       _id: category._id || category.id,
@@ -458,25 +417,16 @@ export const loadEventsData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la creación de un evento nuevo
- */
 export const loadEventCreateData = async (to) => {
   try {
-    console.log("Fetching categories for events/new...");
     const categoriesResponse = await axios.get("/api/categories");
-    console.log("Categories response:", JSON.parse(JSON.stringify(categoriesResponse.data)));
 
     let categories = categoriesResponse.data.success ? categoriesResponse.data.data : [];
-    console.log("Raw categories:", JSON.parse(JSON.stringify(categories)));
 
-    // Normalizar las categorías para asegurar que tengan el campo _id
     categories = categories.map((category) => ({
       ...category,
       _id: category._id || category.id,
     }));
-
-    console.log("Normalized categories:", JSON.parse(JSON.stringify(categories)));
 
     to.meta.initialData = {
       categories,
@@ -493,9 +443,6 @@ export const loadEventCreateData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la edición de un evento específico
- */
 export const loadEventEditData = async (to) => {
   try {
     const eventId = to.params.id;
@@ -551,9 +498,6 @@ export const loadEventEditData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la gestión de reservas
- */
 export const loadBookingsData = async (to) => {
   try {
     const [metricsResult, bookingsResult, eventsResult] = await Promise.allSettled([
@@ -615,9 +559,6 @@ export const loadBookingsData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la creación de una nueva reserva
- */
 export const loadBookingCreateData = async (to) => {
   try {
     const eventsResponse = await axios.get("/api/events");
@@ -639,9 +580,6 @@ export const loadBookingCreateData = async (to) => {
   }
 };
 
-/**
- * Carga los datos para la edición de una reserva específica
- */
 export const loadBookingEditData = async (to) => {
   try {
     const bookingId = to.params.id;
@@ -692,23 +630,20 @@ export const loadBookingEditData = async (to) => {
   }
 };
 
-// Sistema de caché para reducir peticiones repetitivas
 const cacheSystem = {
   data: {},
   timestamps: {},
   maxAge: {
-    default: 5 * 60 * 1000, // 5 minutos por defecto
-    screenEvents: 3 * 60 * 1000, // 3 minutos para eventos de pantalla
+    default: 5 * 60 * 1000,
+    screenEvents: 3 * 60 * 1000,
   },
 
-  // Guardar datos en caché
   save(key, data) {
-    this.data[key] = JSON.parse(JSON.stringify(data)); // Copia profunda para evitar referencias
+    this.data[key] = JSON.parse(JSON.stringify(data));
     this.timestamps[key] = Date.now();
     return data;
   },
 
-  // Obtener datos de la caché si son válidos
   get(key, maxAgeOverride) {
     const cachedData = this.data[key];
     const timestamp = this.timestamps[key];
@@ -718,13 +653,11 @@ const cacheSystem = {
     const maxAge = maxAgeOverride || this.maxAge[key] || this.maxAge.default;
     const now = Date.now();
     
-    // Si los datos han expirado, devolver null
     if (now - timestamp > maxAge) return null;
     
-    return JSON.parse(JSON.stringify(cachedData)); // Devolver copia para evitar mutaciones
+    return JSON.parse(JSON.stringify(cachedData));
   },
 
-  // Comprobar si hay datos válidos en caché
   isValid(key, maxAgeOverride) {
     const timestamp = this.timestamps[key];
     if (!timestamp) return false;
@@ -733,7 +666,6 @@ const cacheSystem = {
     return (Date.now() - timestamp) < maxAge;
   },
 
-  // Limpiar entradas específicas o toda la caché
   clear(key = null) {
     if (key) {
       delete this.data[key];
@@ -745,18 +677,12 @@ const cacheSystem = {
   }
 };
 
-/**
- * Carga los datos para la pantalla de información con eventos próximos
- */
 export const loadScreenData = async (to) => {
-  console.log("⏳ Iniciando carga de datos para pantalla de información...");
   try {
-    // Comprobar si los datos están en caché
     const cacheKey = 'screenEvents';
     let events = cacheSystem.get(cacheKey);
     
     if (events) {
-      console.log("📋 Usando datos en caché para pantalla de información");
       to.meta.initialData = {
         events,
         cachedAt: cacheSystem.timestamps[cacheKey],
@@ -765,18 +691,13 @@ export const loadScreenData = async (to) => {
       return;
     }
     
-    // Obtener fecha actual y fecha en 7 días
     const now = new Date();
     const nextWeek = new Date(now);
     nextWeek.setDate(now.getDate() + 7);
     
-    // Formatear fechas para la API
     const startDate = now.toISOString();
     const endDate = nextWeek.toISOString();
     
-    console.log(`📅 Rango de fechas para cargar eventos: ${startDate} - ${endDate}`);
-    
-    // Solicitar bookings para los próximos 7 días
     const bookingsResponse = await axios.get(`/api/bookings?startDate=${startDate}&endDate=${endDate}`);
     
     if (!bookingsResponse.data.success) {
@@ -784,25 +705,19 @@ export const loadScreenData = async (to) => {
     }
     
     const bookings = bookingsResponse.data.data;
-    console.log(`📋 Reservas cargadas: ${bookings.length}`);
     
-    // Procesar las reservas para obtener información completa
     events = [];
     for (const booking of bookings) {
       try {
-        // Consultar detalles del evento
         const eventResponse = await axios.get(`/api/events?id=${booking.eventId}`);
         if (!eventResponse.data.success) continue;
 
-        // Consultar detalles del espacio
         const spaceResponse = await axios.get(`/api/spaces?id=${booking.space}`);
         if (!spaceResponse.data.success) continue;
 
-        // Consultar detalles del usuario que añadió el evento
         const userResponse = await axios.get(`/api/users?id=${booking.bookedBy}`);
         if (!userResponse.data.success) continue;
 
-        // Consultar categoría si existe
         let categoryName = "";
         if (eventResponse.data.data.category) {
           const categoryResponse = await axios.get(`/api/categories?id=${eventResponse.data.data.category}`);
@@ -815,7 +730,6 @@ export const loadScreenData = async (to) => {
         const space = spaceResponse.data.data;
         const user = userResponse.data.data;
 
-        // Calcular duración formateada
         let durationStr = "";
         if (event.duration !== undefined && event.duration !== null) {
           const hours = Math.floor(event.duration / 60);
@@ -829,7 +743,6 @@ export const loadScreenData = async (to) => {
           }
         }
         
-        // Crear objeto de evento completo
         events.push({
           id: booking.id || booking._id,
           title: event.title,
@@ -841,7 +754,7 @@ export const loadScreenData = async (to) => {
           bookingInfo: booking.info,
           spaceName: space.name,
           categoryName: categoryName,
-          addedBy: user.name, // Incluir el autor del evento
+          addedBy: user.name,
           duration: durationStr,
         });
       } catch (error) {
@@ -849,17 +762,13 @@ export const loadScreenData = async (to) => {
       }
     }
     
-    // Ordenar eventos por fecha
     events.sort((a, b) => a.start - b.start);
     
-    // Guardar en caché
     cacheSystem.save(cacheKey, events);
-    
-    console.log(`✅ Datos para pantalla cargados: ${events.length} eventos`);
     
     to.meta.initialData = {
       events,
-      cachedAt: null, // Datos frescos
+      cachedAt: null,
       error: false
     };
     
@@ -869,6 +778,24 @@ export const loadScreenData = async (to) => {
       events: [],
       error: true,
       errorMessage: "Error de conexión al cargar eventos"
+    };
+  }
+};
+
+export const loadCategoryCreateData = async (to) => {
+  try {
+    const spacesResponse = await axios.get("/api/spaces");
+    to.meta.initialData = {
+      spaces: spacesResponse.data.success ? spacesResponse.data.data : [],
+      error: !spacesResponse.data.success,
+      errorMessage: !spacesResponse.data.success ? spacesResponse.data.message : null,
+    };
+  } catch (error) {
+    console.error("Error loading spaces:", error.message || error);
+    to.meta.initialData = {
+      spaces: [],
+      error: true,
+      errorMessage: "Error de conexión al cargar espacios disponibles",
     };
   }
 };

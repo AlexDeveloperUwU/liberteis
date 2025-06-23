@@ -17,6 +17,7 @@ import {
   loadBookingCreateData,
   loadBookingEditData,
   loadScreenData,
+  loadCategoryCreateData,
 } from "./fetchers";
 
 const routes = [
@@ -54,7 +55,7 @@ const routes = [
         name: "dashHome",
         component: () => import("../views/Dash/HomeView.vue"),
         meta: { allow: "normalUser", layout: "dashboard" },
-        beforeEnter: loadDashboardHomeData, // Esto debe estar presente para cargar los datos
+        beforeEnter: loadDashboardHomeData, 
       },
 
       {
@@ -123,23 +124,7 @@ const routes = [
         name: "dashCategoriesNew",
         component: () => import("../views/Dash/CategoriesFormView.vue"),
         meta: { allow: "managerUser", layout: "dashboard" },
-        beforeEnter: async (to) => {
-          try {
-            const spacesResponse = await axios.get("/api/spaces");
-            to.meta.initialData = {
-              spaces: spacesResponse.data.success ? spacesResponse.data.data : [],
-              error: !spacesResponse.data.success,
-              errorMessage: !spacesResponse.data.success ? spacesResponse.data.message : null,
-            };
-          } catch (error) {
-            console.error("Error loading spaces:", error.message || error);
-            to.meta.initialData = {
-              spaces: [],
-              error: true,
-              errorMessage: "Error de conexión al cargar espacios disponibles",
-            };
-          }
-        },
+        beforeEnter: loadCategoryCreateData,
       },
       {
         path: "categories/edit/:id",
@@ -154,21 +139,21 @@ const routes = [
         path: "events",
         name: "dashEvents",
         component: () => import("../views/Dash/EventsTableView.vue"),
-        meta: { allow: "managerUser", layout: "dashboard" },
+        meta: { allow: "normalUser", layout: "dashboard" },
         beforeEnter: loadEventsData,
       },
       {
         path: "events/new",
         name: "dashEventsNew",
         component: () => import("../views/Dash/EventsFormView.vue"),
-        meta: { allow: "managerUser", layout: "dashboard" },
+        meta: { allow: "normalUser", layout: "dashboard" },
         beforeEnter: loadEventCreateData,
       },
       {
         path: "events/edit/:id",
         name: "dashEventsEdit",
         component: () => import("../views/Dash/EventsFormView.vue"),
-        meta: { allow: "managerUser", layout: "dashboard" },
+        meta: { allow: "normalUser", layout: "dashboard" },
         props: true,
         beforeEnter: loadEventEditData,
       },
