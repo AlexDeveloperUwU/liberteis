@@ -5,30 +5,37 @@ export const loadDashboardHomeData = async (to) => {
     const today = new Date();
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth() + 1;
-    
+
     const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
     const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
-    
+
     const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
     const nextYear = currentMonth === 12 ? currentYear + 1 : currentYear;
 
-    const startMonthStr = `${prevMonth.toString().padStart(2, '0')}/${(prevYear % 100).toString().padStart(2, '0')}`;
-    const endMonthStr = `${nextMonth.toString().padStart(2, '0')}/${(nextYear % 100).toString().padStart(2, '0')}`;
+    const startMonthStr = `${prevMonth.toString().padStart(2, "0")}/${(prevYear % 100).toString().padStart(2, "0")}`;
+    const endMonthStr = `${nextMonth.toString().padStart(2, "0")}/${(nextYear % 100).toString().padStart(2, "0")}`;
 
     const [metricsResponse, bookingsResponse] = await Promise.allSettled([
       axios.get("/api/bookings/count"),
-      axios.get(`/api/bookings?startMonth=${startMonthStr}&endMonth=${endMonthStr}`)
+      axios.get(`/api/bookings?startMonth=${startMonthStr}&endMonth=${endMonthStr}`),
     ]);
 
-    const metrics = metricsResponse.status === "fulfilled" && metricsResponse.value.data.success 
-      ? metricsResponse.value.data.data || {}
-      : {};
-      
-    const bookings = bookingsResponse.status === "fulfilled" && bookingsResponse.value.data.success
-      ? bookingsResponse.value.data.data || []
-      : [];
+    let metrics =
+      metricsResponse.status === "fulfilled" && metricsResponse.value.data.success
+        ? metricsResponse.value.data.data || {}
+        : {};
+    metrics = {
+      total: typeof metrics.total === "number" ? metrics.total : 0,
+      done: typeof metrics.done === "number" ? metrics.done : 0,
+      todo: typeof metrics.todo === "number" ? metrics.todo : 0,
+    };
 
-    const hasError = 
+    const bookings =
+      bookingsResponse.status === "fulfilled" && bookingsResponse.value.data.success
+        ? bookingsResponse.value.data.data || []
+        : [];
+
+    const hasError =
       metricsResponse.status === "rejected" ||
       bookingsResponse.status === "rejected" ||
       (metricsResponse.status === "fulfilled" && !metricsResponse.value.data.success) ||
@@ -48,12 +55,12 @@ export const loadDashboardHomeData = async (to) => {
     }
 
     to.meta.initialData = {
-      metrics: metrics || {},
+      metrics,
       bookings: bookings || [],
       startMonth: startMonthStr,
       endMonth: endMonthStr,
       error: hasError,
-      errorMessage: errorMessage || ""
+      errorMessage: errorMessage || "",
     };
   } catch (error) {
     console.error("❌ Error fetching dashboard data:", error.message || error);
@@ -647,23 +654,23 @@ const cacheSystem = {
   get(key, maxAgeOverride) {
     const cachedData = this.data[key];
     const timestamp = this.timestamps[key];
-    
+
     if (!cachedData || !timestamp) return null;
-    
+
     const maxAge = maxAgeOverride || this.maxAge[key] || this.maxAge.default;
     const now = Date.now();
-    
+
     if (now - timestamp > maxAge) return null;
-    
+
     return JSON.parse(JSON.stringify(cachedData));
   },
 
   isValid(key, maxAgeOverride) {
     const timestamp = this.timestamps[key];
     if (!timestamp) return false;
-    
+
     const maxAge = maxAgeOverride || this.maxAge[key] || this.maxAge.default;
-    return (Date.now() - timestamp) < maxAge;
+    return Date.now() - timestamp < maxAge;
   },
 
   clear(key = null) {
@@ -674,38 +681,38 @@ const cacheSystem = {
       this.data = {};
       this.timestamps = {};
     }
-  }
+  },
 };
 
 export const loadScreenData = async (to) => {
   try {
-    const cacheKey = 'screenEvents';
+    const cacheKey = "screenEvents";
     let events = cacheSystem.get(cacheKey);
-    
+
     if (events) {
       to.meta.initialData = {
         events,
         cachedAt: cacheSystem.timestamps[cacheKey],
-        error: false
+        error: false,
       };
       return;
     }
-    
+
     const now = new Date();
     const nextWeek = new Date(now);
     nextWeek.setDate(now.getDate() + 7);
-    
+
     const startDate = now.toISOString();
     const endDate = nextWeek.toISOString();
-    
+
     const bookingsResponse = await axios.get(`/api/bookings?startDate=${startDate}&endDate=${endDate}`);
-    
+
     if (!bookingsResponse.data.success) {
       throw new Error(bookingsResponse.data.message || "Error al obtener reservas");
     }
-    
+
     const bookings = bookingsResponse.data.data;
-    
+
     events = [];
     for (const booking of bookings) {
       try {
@@ -742,7 +749,7 @@ export const loadScreenData = async (to) => {
             durationStr = `${mins}min`;
           }
         }
-        
+
         events.push({
           id: booking.id || booking._id,
           title: event.title,
@@ -761,23 +768,22 @@ export const loadScreenData = async (to) => {
         console.error(`Error al procesar booking ${booking._id || booking.id}:`, error.message || error);
       }
     }
-    
+
     events.sort((a, b) => a.start - b.start);
-    
+
     cacheSystem.save(cacheKey, events);
-    
+
     to.meta.initialData = {
       events,
       cachedAt: null,
-      error: false
+      error: false,
     };
-    
   } catch (error) {
     console.error("❌ Error al cargar datos para pantalla:", error.message || error);
     to.meta.initialData = {
       events: [],
       error: true,
-      errorMessage: "Error de conexión al cargar eventos"
+      errorMessage: "Error de conexión al cargar eventos",
     };
   }
 };

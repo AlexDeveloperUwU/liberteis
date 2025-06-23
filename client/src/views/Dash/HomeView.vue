@@ -201,7 +201,11 @@ const initialData = route.meta.initialData || {
   error: false,
   errorMessage: ""
 };
-const metrics = ref(initialData.metrics || {});
+const metrics = ref({
+  totales: initialData.metrics.total || 0, 
+  hechos: initialData.metrics.done || 0, 
+  porHacer: initialData.metrics.todo || 0
+});
 const preloadedBookings = initialData.bookings || [];
 
 const events = ref([]);
@@ -423,13 +427,8 @@ const showEventDetailsModal = (event) => {
     return;
   }
 
-  // Ajustar para manejar tanto id como _id en el bookingData
   const bookingId = event.id ||
     (event.bookingData && (event.bookingData.id || event.bookingData._id));
-
-  console.log("Evento completo:", event);
-  console.log("Booking data:", event.bookingData);
-  console.log("Opening modal with bookingId:", bookingId);
 
   if (!bookingId) {
     console.error("No booking ID found in event data:", event);
@@ -603,16 +602,22 @@ const loadBookings = async () => {
 const updateMetrics = async () => {
   try {
     const response = await axios.get('/api/bookings/count');
-
+    console.log("Métricas cargadas:", response.data);
     if (response.data.success) {
       metrics.value = {
         totales: response.data.data.total || 0,
-        hechos: response.data.data.past || 0,
-        porHacer: response.data.data.upcoming || 0
+        hechos: response.data.data.done || 0,
+        porHacer: response.data.data.todo || 0  // Cambiado de toDo a todo para coincidir con la API
       };
     }
   } catch (error) {
     console.error("Error al cargar métricas:", error);
+    // Asegurar que mantenemos valores numéricos incluso en caso de error
+    metrics.value = {
+      totales: 0,
+      hechos: 0,
+      porHacer: 0
+    };
   }
 };
 

@@ -65,7 +65,7 @@ export async function changeEventStatus(id) {
   try {
     const eventStatus = await getEventStatus(id);
     if (typeof eventStatus !== 'boolean') {
-      return eventStatus; // Return error if any
+      return eventStatus;
     }
 
     await dbc.dbUpdateData("events", id, { deleted: !eventStatus });

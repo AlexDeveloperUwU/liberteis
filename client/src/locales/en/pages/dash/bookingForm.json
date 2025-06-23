@@ -24,7 +24,8 @@
       "info": "Additional information",
       "eventTitle": "Event",
       "eventCategory": "Category",
-      "eventDuration": "Duration"
+      "eventDuration": "Duration",
+      "eventCover": "Cover image"
     },
     "placeholders": {
       "selectEvent": "Select an event...",

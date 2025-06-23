@@ -430,21 +430,18 @@ export async function checkBookingStatus(id) {
  */
 export async function validateSpaceForEvent(eventId, spaceId) {
   try {
-    // Obtener el evento y su categoría
     const eventResult = await dbc.dbGetOne("events", eventId);
     if (eventResult.length === 0) {
       return ErrorManager.returnError("eventNotFound");
     }
     const event = eventResult[0];
 
-    // Obtener la categoría y sus espacios
     const categoryResult = await dbc.dbGetOne("categories", event.category);
     if (categoryResult.length === 0) {
       return ErrorManager.returnError("categoryNotFound");
     }
     const category = categoryResult[0];
 
-    // Parsear los espacios de la categoría
     let categorySpaces;
     try {
       categorySpaces = typeof category.spaces === 'string' ? JSON.parse(category.spaces) : category.spaces;
@@ -453,7 +450,6 @@ export async function validateSpaceForEvent(eventId, spaceId) {
       return ErrorManager.returnError("invalidCategoryData");
     }
 
-    // Verificar que el espacio esté en la categoría
     if (!categorySpaces || !categorySpaces.includes(spaceId)) {
       return ErrorManager.returnError("spaceNotInCategory");
     }
@@ -475,19 +471,16 @@ export async function validateSpaceForEvent(eventId, spaceId) {
  */
 export async function checkSpaceAvailability(spaceId, bookingDate, eventId, excludeBookingId = null) {
   try {
-    // Obtener la duración del evento
     const eventResult = await dbc.dbGetOne("events", eventId);
     if (eventResult.length === 0) {
       return ErrorManager.returnError("eventNotFound");
     }
     const event = eventResult[0];
-    const duration = event.duration || 30; // duración en minutos
+    const duration = event.duration || 30; 
 
-    // Calcular el rango de tiempo del evento
     const startTime = new Date(bookingDate);
-    const endTime = new Date(startTime.getTime() + duration * 60000); // convertir minutos a millisegundos
+    const endTime = new Date(startTime.getTime() + duration * 60000);
 
-    // Buscar reservas conflictivas en el mismo espacio
     const conditions = [
       { field: "space", operator: "=", value: spaceId },
       { field: "deleted", operator: "=", value: false }
@@ -499,9 +492,7 @@ export async function checkSpaceAvailability(spaceId, bookingDate, eventId, excl
 
     const existingBookings = await dbc.dbGetWhere("bookings", conditions);
 
-    // Verificar conflictos de horario
     for (const booking of existingBookings) {
-      // Obtener la duración del evento de la reserva existente
       const existingEventResult = await dbc.dbGetOne("events", booking.eventId);
       if (existingEventResult.length === 0) continue;
       
@@ -511,7 +502,6 @@ export async function checkSpaceAvailability(spaceId, bookingDate, eventId, excl
       const existingStart = new Date(booking.bookingDate);
       const existingEnd = new Date(existingStart.getTime() + existingDuration * 60000);
 
-      // Verificar si hay solapamiento
       if ((startTime < existingEnd && endTime > existingStart)) {
         return ErrorManager.returnError("spaceNotAvailable");
       }
@@ -541,19 +531,19 @@ export async function getBookingsCount(userId = null, type = null) {
     switch (type) {
       case "all": {
         const total = await dbc.dbGetWhere("bookings", baseFilters);
-        resultData = { totales: total.length };
+        resultData = { total: total.length };
         break;
       }
       case "done": {
         const doneFilters = [...baseFilters, { field: "bookingDate", operator: "<", value: currentDate }];
         const hechos = await dbc.dbGetWhere("bookings", doneFilters);
-        resultData = { hechos: hechos.length };
+        resultData = { done: hechos.length };
         break;
       }
       case "pending": {
         const pendingFilters = [...baseFilters, { field: "bookingDate", operator: ">", value: currentDate }];
         const porHacer = await dbc.dbGetWhere("bookings", pendingFilters);
-        resultData = { porHacer: porHacer.length };
+        resultData = { toDo: porHacer.length };
         break;
       }
       case null: {
@@ -563,9 +553,9 @@ export async function getBookingsCount(userId = null, type = null) {
         const pendingFilters = [...baseFilters, { field: "bookingDate", operator: ">", value: currentDate }];
         const porHacer = await dbc.dbGetWhere("bookings", pendingFilters);
         resultData = {
-          totales: total.length,
-          hechos: hechos.length,
-          porHacer: porHacer.length,
+          total: total.length,
+          done: hechos.length,
+          todo: porHacer.length,
         };
         break;
       }
