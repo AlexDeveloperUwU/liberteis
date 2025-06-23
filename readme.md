@@ -13,9 +13,8 @@ Una pequeña aplicación web que permite la gestión de eventos de la biblioteca
 ## Tiempo invertido en desarrollo
 
 Primer año de desarrollo: 22/12/2023 - 10/09/2024 => Aproximadamente 120h acomuladas en desarrollo  
-Segundo año de desarrollo: 11/09/2024 - Actualidad
+Segundo año de desarrollo: 11/09/2024 - 23/06/2025 => Aproximadamente 195h acomuladas en desarrollo
 
-[Mirar el changelog de versiones](./docs/CHANGELOG.md)
 
 ## Stats del repo
 

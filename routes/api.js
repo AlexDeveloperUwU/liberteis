@@ -20,7 +20,7 @@ export default apiRouter;
 /**
  * Middleware to extract user information from session
  */
-const userMiddleware = async (req, res, next) => {
+const userMiddleware = async (req, next) => {
   try {
     if (req.session && req.session.userId) {
       const userResult = await dbc.dbGetOne("users", req.session.userId);
@@ -34,7 +34,6 @@ const userMiddleware = async (req, res, next) => {
   next();
 };
 
-// Apply user middleware to all API routes
 apiRouter.use(userMiddleware);
 
 /**
