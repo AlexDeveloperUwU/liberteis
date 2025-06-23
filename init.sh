@@ -198,13 +198,6 @@ export_env_variables() {
       echo -e "${RED}Error exporting environment variables from $creds_file${NC}"
       exit 1
     }
-    echo -e "${GREEN}Environment variables exported from $creds_file${NC}"
-    echo -e "${BLUE}Current MySQL credentials:${NC}"
-    echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD"
-    echo "MYSQL_DATABASE=$MYSQL_DATABASE"
-    echo "MYSQL_USER=$MYSQL_USER"
-    echo "MYSQL_PASSWORD=$MYSQL_PASSWORD"
-    echo "MYSQL_HOST=$MYSQL_HOST"
   else
     echo -e "${RED}Credentials file $creds_file not found.${NC}"
     exit 1
@@ -229,12 +222,6 @@ initialize() {
     create_db_creds_file
     create_admin_account_key
     export_env_variables
-    echo -e "${BLUE}Setting up MySQL with the following credentials:${NC}"
-    echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD"
-    echo "MYSQL_DATABASE=$MYSQL_DATABASE"
-    echo "MYSQL_USER=$MYSQL_USER"
-    echo "MYSQL_PASSWORD=$MYSQL_PASSWORD"
-    echo "MYSQL_HOST=$MYSQL_HOST"
     grant_mysql_permissions
     echo -e "${GREEN}Initialization complete.${NC}"
   else
