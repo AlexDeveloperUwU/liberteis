@@ -370,4 +370,3 @@ async function createAdminUser() {
     }
   }
 }
-

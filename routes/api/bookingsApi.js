@@ -22,7 +22,13 @@ api.post("/", async (req, res) => {
   try {
     const bookingData = req.body;
 
-    if (!bookingData || !bookingData.eventId || !bookingData.space || !bookingData.bookingDate || !bookingData.bookedBy) {
+    if (
+      !bookingData ||
+      !bookingData.eventId ||
+      !bookingData.space ||
+      !bookingData.bookingDate ||
+      !bookingData.bookedBy
+    ) {
       logger.error("Invalid booking data - missing required fields");
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
@@ -189,11 +195,11 @@ api.get("/", async (req, res) => {
     if (id) {
       const include = includeInactive === "true";
       const result = await bookings.getBooking(id, include);
-      
+
       if (userRole === "normalUser" && result.success && result.data.bookedBy !== userId) {
         return res.status(403).json(ErrorManager.returnError("accessDenied"));
       }
-      
+
       return res.status(result.code).json(result);
     } else {
       const filterUserId = userRole === "normalUser" ? userId : null;

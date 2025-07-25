@@ -17,8 +17,8 @@ export async function addCategory(category) {
   category.deleted = false;
 
   logger.info("Category data before saving:", JSON.stringify(category));
-  
-  if (typeof category.spaces === 'string') {
+
+  if (typeof category.spaces === "string") {
     try {
       JSON.parse(category.spaces);
       logger.info("Spaces field is valid JSON string:", category.spaces);

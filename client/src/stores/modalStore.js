@@ -25,11 +25,11 @@ export const useModalStore = defineStore("modalStore", () => {
     modals.value = [];
   };
 
-  const confirm = (options = {}) => {
+  const confirm = (content, title = "Confirmar", options = {}) => {
     return addModal({
       type: "confirm",
-      title: options.title || "Confirmar",
-      content: options.content || "¿Está seguro de realizar esta acción?",
+      title: title || "Confirmar",
+      content: content || "¿Está seguro de realizar esta acción?",
       actions: options.actions || [
         {
           label: options.confirmText || "Confirmar",
@@ -43,6 +43,7 @@ export const useModalStore = defineStore("modalStore", () => {
         },
       ],
       width: options.width || "md",
+      ...options,
     });
   };
 

@@ -37,7 +37,7 @@ const convertToAvif = async (req, res, next) => {
     await sharp(req.file.buffer)
       .avif({
         quality: 75,
-        effort: 1, 
+        effort: 1,
       })
       .toFile(outputPath);
 

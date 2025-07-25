@@ -559,11 +559,12 @@ const handleUserStatusToggle = async (user) => {
         {
           label: t("pages.other.commons.cancel"),
           type: "default",
+          keepOpen: true,
         },
         {
           label: isDeactivating ? t("pages.dash.users.actions.deactivate") : t("pages.dash.users.actions.reactivate"),
           type: isDeactivating ? "danger" : "secondary",
-          onClick: async () => {
+          onClick: async (modalId) => {
             try {
               const response = await axios.patch(`/api/users/toggle`, null, {
                 params: { id: user.id },
@@ -574,10 +575,14 @@ const handleUserStatusToggle = async (user) => {
                   isDeactivating ? t("pages.dash.users.toasts.deactivated") : t("pages.dash.users.toasts.reactivated"),
                 );
                 await loadUsers();
+                modal.remove(modalId);
+              } else {
+                throw new Error("No success");
               }
             } catch (error) {
               toast.error(t("pages.other.commons.errors.generic"));
               console.error("Error toggling user status:", error);
+              throw error;
             }
           },
         },

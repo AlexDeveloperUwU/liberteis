@@ -183,12 +183,12 @@ api.get("/", async (req, res) => {
     if (id) {
       const include = includeInactive === "true";
       const result = await events.getEvent(id, include);
-      
+
       // Si es normalUser, verificar que el evento le pertenece
       if (userRole === "normalUser" && result.success && result.data.createdBy !== userId) {
         return res.status(403).json(ErrorManager.returnError("accessDenied"));
       }
-      
+
       return res.status(result.code).json(result);
     } else {
       // Si es normalUser, solo mostrar sus eventos

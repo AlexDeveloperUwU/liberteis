@@ -209,9 +209,7 @@
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
-                  <div class="text-sm text-text-800">
-                    {{ event.duration }} min
-                  </div>
+                  <div class="text-sm text-text-800">{{ event.duration }} min</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap group-hover:bg-primary-50 transition-colors duration-150">
                   <div class="text-sm text-text-800">
@@ -320,7 +318,7 @@ import {
   CalendarRange,
   FileText,
   Clock,
-  Bookmark
+  Bookmark,
 } from "lucide-vue-next";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
@@ -556,16 +554,17 @@ const loadCategoriesInfo = async () => {
 
 const getCategoryName = (categoryId) => {
   if (!categoryId) return "";
-  
+
   if (categories.value[categoryId]) {
     return categories.value[categoryId].name;
   }
-  
+
   if (!requestedCategories.has(categoryId)) {
     requestedCategories.add(categoryId);
-    axios.get(`/api/categories`, {
-      params: { id: categoryId, includeInactive: true },
-    })
+    axios
+      .get(`/api/categories`, {
+        params: { id: categoryId, includeInactive: true },
+      })
       .then((response) => {
         if (response.data.success && response.data.data) {
           categories.value[categoryId] = response.data.data;
@@ -629,7 +628,8 @@ const loadUserName = async (userId) => {
 };
 
 const modal = useModal();
-const toast = useToast();  const handleEventStatusToggle = async (event) => {
+const toast = useToast();
+const handleEventStatusToggle = async (event) => {
   const isDeactivating = !event.deleted;
   const modalText = isDeactivating
     ? t("pages.dash.events.modals.deactivate.text", { name: event.title })
@@ -637,9 +637,7 @@ const toast = useToast();  const handleEventStatusToggle = async (event) => {
 
   modal.confirm(
     modalText,
-    isDeactivating
-      ? t("pages.dash.events.modals.deactivate.title")
-      : t("pages.dash.events.modals.reactivate.title"),
+    isDeactivating ? t("pages.dash.events.modals.deactivate.title") : t("pages.dash.events.modals.reactivate.title"),
     {
       actions: [
         {
@@ -647,9 +645,7 @@ const toast = useToast();  const handleEventStatusToggle = async (event) => {
           type: "default",
         },
         {
-          label: isDeactivating
-            ? t("pages.dash.events.actions.deactivate")
-            : t("pages.dash.events.actions.reactivate"),
+          label: isDeactivating ? t("pages.dash.events.actions.deactivate") : t("pages.dash.events.actions.reactivate"),
           type: isDeactivating ? "danger" : "secondary",
           onClick: async () => {
             try {

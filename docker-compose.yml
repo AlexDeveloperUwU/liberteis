@@ -14,7 +14,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_HOST=${MYSQL_HOST}
     volumes:
-      - ./data/secrets/dbcreds.env:/run/secrets/dbcreds.env:ro 
+      - ./data/secrets/dbcreds.env:/run/secrets/dbcreds.env:ro
       - data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$MYSQL_ROOT_PASSWORD"]
@@ -44,7 +44,7 @@ services:
     volumes:
       - ./data:/app/data
       - ./data/secrets:/app/secrets
-      - ./data/logs:/app/logs 
+      - ./data/logs:/app/logs
 
   # Only prod service
   liberteis-prod:

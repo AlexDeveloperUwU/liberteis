@@ -10,18 +10,30 @@
       <div v-if="loading" class="flex justify-center items-center">
         <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[var(--primary-600)]"></div>
       </div>
-      <div v-else-if="events.length === 0" class="flex flex-col justify-center items-center bg-[var(--background-50)] p-8 rounded-xl shadow-lg max-w-full">
-        <h2 class="text-2xl font-bold mb-2 text-[var(--text-700)] text-center">{{ t("pages.info.screen.noEvents") }}</h2>
+      <div
+        v-else-if="events.length === 0"
+        class="flex flex-col justify-center items-center bg-[var(--background-50)] p-8 rounded-xl shadow-lg max-w-full">
+        <h2 class="text-2xl font-bold mb-2 text-[var(--text-700)] text-center">
+          {{ t("pages.info.screen.noEvents") }}
+        </h2>
         <p class="text-[var(--text-500)] text-center">{{ t("pages.info.screen.checkLater") }}</p>
       </div>
-      <div v-else class="flex flex-col w-full h-full max-w-6xl bg-[var(--background-50)] rounded-xl shadow-lg overflow-hidden relative">
+      <div
+        v-else
+        class="flex flex-col w-full h-full max-w-6xl bg-[var(--background-50)] rounded-xl shadow-lg overflow-hidden relative">
         <transition name="fade" mode="out-in" @before-leave="startTransition" @after-leave="finishTransition">
           <div :key="currentEventIndex" class="flex h-full flex-col md:flex-row overflow-auto">
-            <div class="w-full md:w-1/2 h-64 md:h-full flex items-center justify-center p-4 md:p-8 bg-[var(--background-100)]">
+            <div
+              class="w-full md:w-1/2 h-64 md:h-full flex items-center justify-center p-4 md:p-8 bg-[var(--background-100)]">
               <div v-if="currentEvent.coverUrl" class="w-full h-full flex items-center justify-center relative">
-                <img :src="currentEvent.coverUrl" class="max-h-full max-w-full object-contain rounded-lg shadow-md" alt="Event cover" />
+                <img
+                  :src="currentEvent.coverUrl"
+                  class="max-h-full max-w-full object-contain rounded-lg shadow-md"
+                  alt="Event cover" />
               </div>
-              <div v-else class="w-full h-full flex items-center justify-center bg-[var(--background-200)] rounded-lg text-[var(--text-500)]">
+              <div
+                v-else
+                class="w-full h-full flex items-center justify-center bg-[var(--background-200)] rounded-lg text-[var(--text-500)]">
                 <span class="text-lg text-center">{{ t("pages.info.screen.noImage") }}</span>
               </div>
             </div>
@@ -30,16 +42,25 @@
                 <h2 class="text-3xl font-bold text-[var(--text-900)]">{{ currentEvent.title }}</h2>
               </div>
               <div class="space-y-6">
-                <div v-if="currentEvent.description" class="bg-[var(--background-100)] rounded-lg p-5 border border-[var(--background-200)] shadow-sm">
-                  <h3 class="text-lg font-semibold text-[var(--text-800)] mb-2">{{ t("pages.info.screen.description") }}</h3>
+                <div
+                  v-if="currentEvent.description"
+                  class="bg-[var(--background-100)] rounded-lg p-5 border border-[var(--background-200)] shadow-sm">
+                  <h3 class="text-lg font-semibold text-[var(--text-800)] mb-2">
+                    {{ t("pages.info.screen.description") }}
+                  </h3>
                   <p class="text-[var(--text-700)] whitespace-pre-wrap break-words">{{ currentEvent.description }}</p>
                 </div>
-                <div v-if="currentEvent.bookingInfo" class="bg-[var(--background-100)] rounded-lg p-5 border border-[var(--background-200)] shadow-sm">
-                  <h3 class="text-lg font-semibold text-[var(--text-800)] mb-2">{{ t("pages.info.screen.additionalInfo") }}</h3>
+                <div
+                  v-if="currentEvent.bookingInfo"
+                  class="bg-[var(--background-100)] rounded-lg p-5 border border-[var(--background-200)] shadow-sm">
+                  <h3 class="text-lg font-semibold text-[var(--text-800)] mb-2">
+                    {{ t("pages.info.screen.additionalInfo") }}
+                  </h3>
                   <p class="text-[var(--text-700)] whitespace-pre-wrap break-words">{{ currentEvent.bookingInfo }}</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                  <div
+                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
                         <Clock class="w-5 h-5 text-[var(--primary-600)]" />
@@ -50,7 +71,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                  <div
+                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
                         <Clock class="w-5 h-5 text-[var(--primary-600)]" />
@@ -61,7 +83,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                  <div
+                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
                         <MapPin class="w-5 h-5 text-[var(--primary-600)]" />
@@ -72,18 +95,20 @@
                       </div>
                     </div>
                   </div>
-                  <div class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                  <div
+                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
                         <Tag class="w-5 h-5 text-[var(--primary-600)]" />
                       </div>
                       <div>
                         <p class="text-xs text-[var(--text-500)]">{{ t("pages.info.screen.category") }}</p>
-                        <p class="text-[var(--text-800)] font-medium">{{ currentEvent.categoryName || '-' }}</p>
+                        <p class="text-[var(--text-800)] font-medium">{{ currentEvent.categoryName || "-" }}</p>
                       </div>
                     </div>
                   </div>
-                  <div class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                  <div
+                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
                         <CalendarDays class="w-5 h-5 text-[var(--primary-600)]" />
@@ -94,14 +119,15 @@
                       </div>
                     </div>
                   </div>
-                  <div class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                  <div
+                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
                         <User class="w-5 h-5 text-[var(--primary-600)]" />
                       </div>
                       <div>
                         <p class="text-xs text-[var(--text-500)]">{{ t("pages.info.screen.addedBy") }}</p>
-                        <p class="text-[var(--text-800)] font-medium">{{ currentEvent.addedBy || '-' }}</p>
+                        <p class="text-[var(--text-800)] font-medium">{{ currentEvent.addedBy || "-" }}</p>
                       </div>
                     </div>
                   </div>
@@ -120,7 +146,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import axios from "axios";
-import { Clock, MapPin, Tag, CalendarDays, User } from 'lucide-vue-next';
+import { Clock, MapPin, Tag, CalendarDays, User } from "lucide-vue-next";
 
 const route = useRoute();
 const { t, locale } = useI18n();
@@ -146,57 +172,57 @@ const currentEvent = computed(() => {
 const updateClock = () => {
   const now = new Date();
   currentDateTime.value = now.toLocaleDateString(locale.value, {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
   timeOnly.value = now.toLocaleTimeString(locale.value, {
-    hour: '2-digit',
-    minute: '2-digit'
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
 const formatDate = (dateStr) => {
-  if (!dateStr) return '';
+  if (!dateStr) return "";
   const date = new Date(dateStr);
   return date.toLocaleDateString(locale.value, {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long'
+    weekday: "long",
+    day: "numeric",
+    month: "long",
   });
 };
 
 const formatFullDate = (dateStr) => {
-  if (!dateStr) return '';
+  if (!dateStr) return "";
   const date = new Date(dateStr);
   return date.toLocaleDateString(locale.value, {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 };
 
 const formatTime = (dateStr) => {
-  if (!dateStr) return '';
+  if (!dateStr) return "";
   const date = new Date(dateStr);
   return date.toLocaleTimeString(locale.value, {
-    hour: '2-digit',
-    minute: '2-digit'
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
 const formatDateTime = (dateStr) => {
-  if (!dateStr) return '';
+  if (!dateStr) return "";
   const date = new Date(dateStr);
   return date.toLocaleDateString(locale.value, {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
@@ -296,7 +322,7 @@ const finishTransition = () => {
 
 const setupIntervals = () => {
   clockInterval = setInterval(updateClock, 1000);
-  rotateEventInterval = setInterval(rotateEvent, 10000); 
+  rotateEventInterval = setInterval(rotateEvent, 10000);
   dataRefreshInterval = setInterval(loadEvents, 300000);
   pageRefreshInterval = setInterval(() => {
     window.location.reload();

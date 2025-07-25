@@ -81,17 +81,17 @@ export const useMainStore = defineStore("main", () => {
 
   const fetchVersion = async () => {
     try {
-      const response = await fetch('/api/utils/version');
+      const response = await fetch("/api/utils/version");
       const data = await response.json();
-      
+
       if (data.success && data.data) {
-        version.value = data.data.version || 'N/A';
+        version.value = data.data.version || "N/A";
       } else {
-        version.value = 'N/A';
+        version.value = "N/A";
       }
     } catch (error) {
-      console.error('Error fetching version:', error);
-      version.value = 'Error';
+      console.error("Error fetching version:", error);
+      version.value = "Error";
     }
   };
 

@@ -550,7 +550,7 @@ const toast = useToast();
 
 const handleSpaceStatusToggle = async (space) => {
   const isDeactivating = !space.deleted;
-  
+
   modal.confirm(
     isDeactivating
       ? t("pages.dash.spaces.modals.deactivate.text", { name: space.name })

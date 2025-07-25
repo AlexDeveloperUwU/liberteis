@@ -1,9 +1,14 @@
 <template>
-  <aside class="sidebar-container bg-background-100 border-r-[1.5px] border-background-300 flex flex-col items-stretch" :class="[isMobile && isCollapsed ? 'sidebar-hidden' : '']">
+  <aside
+    class="sidebar-container bg-background-100 border-r-[1.5px] border-background-300 flex flex-col items-stretch"
+    :class="[isMobile && isCollapsed ? 'sidebar-hidden' : '']">
     <nav class="sidebar-nav flex-1 w-full" :style="sidebarStyle">
       <ul class="space-y-3 w-full">
         <li v-for="(item, index) in menuItems" :key="index" class="rounded-md w-full">
-          <router-link :to="item.route" class="flex items-center gap-2 p-3 bg-background-200 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)] w-full" active-class="bg-primary-100 border-primary-500 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
+          <router-link
+            :to="item.route"
+            class="flex items-center gap-2 p-3 bg-background-200 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)] w-full"
+            active-class="bg-primary-100 border-primary-500 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
             <div class="sidebar-icon text-primary-600">
               <component :is="item.icon" />
             </div>
@@ -15,14 +20,16 @@
       </ul>
     </nav>
 
-    <div class="sidebar-footer border-t border-background-300 flex items-center justify-center w-full" :style="sidebarStyle">
+    <div
+      class="sidebar-footer border-t border-background-300 flex items-center justify-center w-full"
+      :style="sidebarStyle">
       <div class="flex items-center w-full justify-center">
-      <div class="sidebar-logo">
-        <img :src="logoImg" alt="Logo" class="w-4 h-4" />
-      </div>
-      <div v-if="!isCollapsed || isMobile" class="sidebar-version text-xs text-text-600">
-        <span>{{ mainStore.version || '...' }}</span>
-      </div>
+        <div class="sidebar-logo">
+          <img :src="logoImg" alt="Logo" class="w-4 h-4" />
+        </div>
+        <div v-if="!isCollapsed || isMobile" class="sidebar-version text-xs text-text-600">
+          <span>{{ mainStore.version || "..." }}</span>
+        </div>
       </div>
     </div>
   </aside>
@@ -46,7 +53,7 @@ import { ref, onMounted, computed } from "vue";
 import { useMainStore } from "../stores/mainStore";
 import { useAuthStore } from "../stores/authStore";
 import { hasPermission } from "../utils/permissions";
-import logoImg from '@/assets/img/logo.png';
+import logoImg from "@/assets/img/logo.png";
 
 export default {
   components: {

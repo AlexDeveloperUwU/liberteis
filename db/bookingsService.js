@@ -60,7 +60,7 @@ export async function updateBooking(id, booking) {
     if (booking.eventId || booking.space) {
       const eventId = booking.eventId || existingBooking.data.eventId;
       const space = booking.space || existingBooking.data.space;
-      
+
       const spaceValidation = await validateSpaceForEvent(eventId, space);
       if (!spaceValidation.success) {
         return spaceValidation;
@@ -96,7 +96,7 @@ export async function changeBookingStatus(id) {
 
   try {
     const bookingStatus = await getBookingStatus(id);
-    if (typeof bookingStatus !== 'boolean') {
+    if (typeof bookingStatus !== "boolean") {
       return bookingStatus; // Return error if any
     }
 
@@ -243,7 +243,7 @@ export async function getBookings(status = "active", userId = null, filters = {}
 
   try {
     let conditions = [];
-    
+
     switch (status) {
       case "all":
         if (userId) {
@@ -444,7 +444,7 @@ export async function validateSpaceForEvent(eventId, spaceId) {
 
     let categorySpaces;
     try {
-      categorySpaces = typeof category.spaces === 'string' ? JSON.parse(category.spaces) : category.spaces;
+      categorySpaces = typeof category.spaces === "string" ? JSON.parse(category.spaces) : category.spaces;
     } catch (error) {
       logger.error("Error parsing category spaces:", error);
       return ErrorManager.returnError("invalidCategoryData");
@@ -476,14 +476,14 @@ export async function checkSpaceAvailability(spaceId, bookingDate, eventId, excl
       return ErrorManager.returnError("eventNotFound");
     }
     const event = eventResult[0];
-    const duration = event.duration || 30; 
+    const duration = event.duration || 30;
 
     const startTime = new Date(bookingDate);
     const endTime = new Date(startTime.getTime() + duration * 60000);
 
     const conditions = [
       { field: "space", operator: "=", value: spaceId },
-      { field: "deleted", operator: "=", value: false }
+      { field: "deleted", operator: "=", value: false },
     ];
 
     if (excludeBookingId) {
@@ -495,14 +495,14 @@ export async function checkSpaceAvailability(spaceId, bookingDate, eventId, excl
     for (const booking of existingBookings) {
       const existingEventResult = await dbc.dbGetOne("events", booking.eventId);
       if (existingEventResult.length === 0) continue;
-      
+
       const existingEvent = existingEventResult[0];
       const existingDuration = existingEvent.duration || 30;
 
       const existingStart = new Date(booking.bookingDate);
       const existingEnd = new Date(existingStart.getTime() + existingDuration * 60000);
 
-      if ((startTime < existingEnd && endTime > existingStart)) {
+      if (startTime < existingEnd && endTime > existingStart) {
         return ErrorManager.returnError("spaceNotAvailable");
       }
     }

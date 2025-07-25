@@ -55,7 +55,7 @@ const routes = [
         name: "dashHome",
         component: () => import("../views/Dash/HomeView.vue"),
         meta: { allow: "normalUser", layout: "dashboard" },
-        beforeEnter: loadDashboardHomeData, 
+        beforeEnter: loadDashboardHomeData,
       },
 
       {

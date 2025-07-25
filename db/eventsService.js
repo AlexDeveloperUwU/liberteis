@@ -64,7 +64,7 @@ export async function changeEventStatus(id) {
 
   try {
     const eventStatus = await getEventStatus(id);
-    if (typeof eventStatus !== 'boolean') {
+    if (typeof eventStatus !== "boolean") {
       return eventStatus;
     }
 
@@ -167,7 +167,7 @@ export async function getEvents(status = "active", userId = null) {
 
   try {
     let conditions = [];
-    
+
     switch (status) {
       case "all":
         if (userId) {

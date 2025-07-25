@@ -4,7 +4,15 @@ export function useModal() {
   const modalStore = useModalStore();
 
   return {
-    confirm: modalStore.confirm,
+    confirm: (content, title, options = {}) => {
+      modalStore.confirm(content, title, {
+        ...options,
+        actions: options.actions?.map((action) => ({
+          ...action,
+          onClick: action.onClick,
+        })),
+      });
+    },
     info: modalStore.info,
     show: modalStore.addModal,
     remove: modalStore.removeModal,

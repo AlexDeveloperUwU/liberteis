@@ -21,12 +21,12 @@ export default api;
 api.post("/", async (req, res) => {
   try {
     const categoryData = req.body;
-    
+
     if (!categoryData || !categoryData.name || !Array.isArray(categoryData.spaces)) {
       logger.error("Invalid category data - missing required fields");
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
-    
+
     try {
       categoryData.spaces = JSON.stringify(categoryData.spaces);
       logger.info("Creating category with name:", categoryData.name);
@@ -34,7 +34,7 @@ api.post("/", async (req, res) => {
       logger.error("Error converting spaces to JSON:", err);
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
-    
+
     const result = await categories.addCategory(categoryData);
     return res.status(result.code).json(result);
   } catch (error) {

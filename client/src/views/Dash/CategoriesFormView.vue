@@ -65,8 +65,6 @@
                     </div>
                   </div>
                 </template>
-
-
               </div>
             </div>
           </div>
@@ -186,8 +184,6 @@
                     </Listbox>
                   </div>
                 </div>
-
-
               </div>
             </div>
 
@@ -494,7 +490,6 @@ const loadCreatorData = async (creatorId) => {
     isLoadingCreator.value = false;
   }
 };
-
 </script>
 
 <style scoped>

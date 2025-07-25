@@ -15,7 +15,6 @@ Una pequeña aplicación web que permite la gestión de eventos de la biblioteca
 Primer año de desarrollo: 22/12/2023 - 10/09/2024 => Aproximadamente 120h acomuladas en desarrollo  
 Segundo año de desarrollo: 11/09/2024 - 23/06/2025 => Aproximadamente 195h acomuladas en desarrollo
 
-
 ## Stats del repo
 
 ![Alt](https://repobeats.axiom.co/api/embed/31271bb411db22e430e939d345535195abc7ede4.svg "Repobeats analytics image")

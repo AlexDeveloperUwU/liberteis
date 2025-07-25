@@ -59,7 +59,7 @@ export const useAuthStore = defineStore("auth", {
         if (response.data.success) {
           // Recargar todos los datos del usuario para obtener información actualizada
           const userResponse = await axios.get(`/api/users?id=${this.userId}`);
-          
+
           if (userResponse.data.success) {
             // Actualizar el estado con todos los datos del usuario
             this.user = userResponse.data.data;
@@ -69,7 +69,7 @@ export const useAuthStore = defineStore("auth", {
             // Actualización parcial si la recarga falla
             this.user = { ...this.user, ...userData };
             localStorage.setItem("auth_user", JSON.stringify(this.user));
-            console.log(`Actualización parcial: ${Object.keys(userData).join(', ')}`);
+            console.log(`Actualización parcial: ${Object.keys(userData).join(", ")}`);
           }
           return true;
         }

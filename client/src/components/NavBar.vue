@@ -180,7 +180,7 @@ import {
   Moon,
   Sun,
   User,
-  Settings
+  Settings,
 } from "lucide-vue-next";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
@@ -236,7 +236,7 @@ const handleLogin = () => {
 };
 
 const navigateToConfig = () => {
-  router.push('/dash/config');
+  router.push("/dash/config");
   showUserMenu.value = false;
 };
 
