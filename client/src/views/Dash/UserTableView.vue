@@ -236,20 +236,22 @@
                       {{ t("pages.dash.users.actions.edit") }}
                     </button>
                     <button
-                      v-if="!isAdminAccount(user)"
+                      v-if="!isAdminAccount(user) && user.id !== authStore.userId"
                       @click="handleUserStatusToggle(user)"
                       :class="[
-                        'px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full border transition-colors duration-150',
+                        'px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full border transition-colors duration-150 cursor-pointer',
                         user.deleted
                           ? 'bg-secondary-100 text-secondary-800 border-secondary-200 hover:bg-secondary-200'
                           : 'bg-accent-100 text-accent-800 border-accent-200 hover:bg-accent-200',
                       ]">
                       <component
-                        :is="user.deleted ? UserCheck : Trash"
+                        :is="user.deleted ? UserCheck : UserMinus"
                         class="w-3 h-3"
                         :class="user.deleted ? 'text-secondary-600' : 'text-accent-600'" />
                       {{
-                        user.deleted ? t("pages.dash.users.actions.reactivate") : t("pages.dash.users.actions.delete")
+                        user.deleted
+                          ? t("pages.dash.users.actions.reactivate")
+                          : t("pages.dash.users.actions.deactivate")
                       }}
                     </button>
                   </div>
@@ -311,7 +313,6 @@ import {
   UserCog,
   Settings,
   Pencil,
-  Trash,
   UserPlus,
   ChevronLeft,
   ChevronRight,
@@ -324,14 +325,15 @@ import {
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import axios from "axios";
 import { useModal } from "@/composables/useModal";
 import { useToast } from "@/composables/useToast";
+import { useAuthStore } from "@/stores/authStore";
 
 const { t } = useI18n();
 const route = useRoute();
-
+const authStore = useAuthStore();
 const searchTerm = ref("");
 const userFilter = ref("active");
 const currentPage = ref(1);
@@ -531,6 +533,10 @@ const isUserActive = (lastLogin) => {
 
 const isAdminAccount = (user) => {
   return user.createdBy === "System" && user.name === "Administrador";
+};
+
+const isCurrentUser = (user) => {
+  return user.id === route.meta.currentUserId;
 };
 
 const getCreatedByName = (createdById) => {
