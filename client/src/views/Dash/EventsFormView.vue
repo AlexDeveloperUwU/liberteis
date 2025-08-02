@@ -66,7 +66,7 @@
 
                 <template v-if="isEditMode && initialEventData">
                   <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                    <Mail class="w-5 h-5 text-primary-600 mr-3" />
+                    <User class="w-5 h-5 text-primary-600 mr-3" />
                     <div>
                       <p class="text-xs text-text-600">{{ t("pages.dash.eventsForm.profile.createdBy") }}</p>
                       <p class="text-text-800 font-medium">
@@ -482,6 +482,7 @@ import {
   Check,
   Search,
   Bookmark,
+  User,
 } from "lucide-vue-next";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import axios from "axios";
@@ -745,8 +746,8 @@ const validateFormField = (field, value) => {
       errors.category = isCategoryValid ? "" : t("pages.dash.eventsForm.errors.categoryRequired");
       return isCategoryValid;
     case "info":
-      const isInfoValid = !value || value.length <= 500;
-      errors.info = isInfoValid ? "" : t("pages.dash.eventsForm.errors.infoLength");
+      const isInfoValid = value && value.length >= 100 && value.length <= 500;
+      errors.info = isInfoValid ? "" : t("pages.dash.eventsForm.errors.infoLength", { min: 100, max: 500 });
       return isInfoValid;
     case "duration":
       const isDurationValid = value && value > 0;

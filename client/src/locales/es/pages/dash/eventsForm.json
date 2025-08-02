@@ -68,7 +68,7 @@
     "titleLength": "El título debe tener entre 3 y 200 caracteres",
     "dateRequired": "La fecha es obligatoria",
     "categoryRequired": "Debes seleccionar una categoría",
-    "infoLength": "La descripción no puede superar los 500 caracteres",
+    "infoLength": "La descripción debe tener entre {min} y {max} caracteres",
     "durationRequired": "La duración debe ser mayor que cero",
     "invalidFileType": "El archivo seleccionado no es una imagen válida",
     "wrongAspectRatio": "La imagen debe tener una proporción 9:16",

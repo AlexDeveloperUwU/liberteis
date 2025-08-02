@@ -68,7 +68,7 @@
     "titleLength": "The title must be between 3 and 200 characters",
     "dateRequired": "Date is required",
     "categoryRequired": "You must select a category",
-    "infoLength": "Description cannot exceed 500 characters",
+    "infoLength": "Description must be between {min} and {max} characters",
     "durationRequired": "Duration must be greater than zero",
     "invalidFileType": "The selected file is not a valid image",
     "wrongAspectRatio": "The image must have a 9:16 aspect ratio",
