@@ -39,7 +39,9 @@
     },
     "actions": {
       "submitting": "Creating...",
-      "updating": "Updating..."
+      "updating": "Updating...",
+      "createEvent": "Can't find your event? Create a new one",
+      "createEventDesc": "If the event you need doesn't exist, you can create it now."
     }
   },
   "common": {

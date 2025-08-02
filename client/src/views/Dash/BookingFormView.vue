@@ -5,7 +5,6 @@
         {{ pageTitle }}
       </h1>
     </div>
-    <p class="text-text-800 mb-6">{{ pageDescription }}</p>
 
     <div class="relative">
       <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -219,6 +218,16 @@
                         </transition>
                       </div>
                     </Listbox>
+                    <button
+                      type="button"
+                      class="mt-2 w-full h-9 px-4 rounded-md text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150"
+                      @click="$router.push({ name: 'dashEventsNew' })">
+                      <Calendar class="w-4 h-4 mr-2" />
+                      {{
+                        t("pages.dash.bookingForm.form.actions.createEvent") ||
+                        "¿No encuentras tu evento? Crea uno nuevo"
+                      }}
+                    </button>
                   </div>
                 </div>
 

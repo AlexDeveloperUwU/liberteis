@@ -39,7 +39,9 @@
     },
     "actions": {
       "submitting": "Creando...",
-      "updating": "Actualizando..."
+      "updating": "Actualizando...",
+      "createEvent": "Non atopas o teu evento? Créao agora",
+      "createEventDesc": "Se o evento que buscas non existe, podes crealo agora."
     }
   },
   "common": {
