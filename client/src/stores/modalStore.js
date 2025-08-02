@@ -56,11 +56,10 @@ export const useModalStore = defineStore("modalStore", () => {
     });
   };
 
-  const showBookingDetails = (data, title = "Detalles de la Reserva", options = {}) => {
-    console.log("Modal store received bookingId:", data.bookingId);
+  const showBookingDetails = (data, titleKey = "components.modals.bookingDetails.title", options = {}) => {
     return addModal({
       type: "bookingDetails",
-      title,
+      titleKey,
       data,
       width: "xl",
       ...options,

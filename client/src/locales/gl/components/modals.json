@@ -4,6 +4,7 @@
     "notAvailable": "Non dispoñible"
   },
   "bookingDetails": {
+    "title": "Detalles da reserva",
     "event": "Evento",
     "description": "Descrición do evento",
     "additionalInfo": "Información adicional",
@@ -12,6 +13,7 @@
     "space": "Espazo",
     "category": "Categoría",
     "bookedBy": "Reservado por",
-    "edit": "Editar"
+    "edit": "Editar",
+    "deactivate": "Desactivar"
   }
 }

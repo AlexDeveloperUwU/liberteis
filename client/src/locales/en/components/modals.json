@@ -4,6 +4,7 @@
     "notAvailable": "Not available"
   },
   "bookingDetails": {
+    "title": "Booking details",
     "event": "Event",
     "description": "Event description",
     "additionalInfo": "Additional information",
@@ -12,6 +13,7 @@
     "space": "Space",
     "category": "Category",
     "bookedBy": "Booked by",
-    "edit": "Edit"
+    "edit": "Edit",
+    "deactivate": "Deactivate"
   }
 }

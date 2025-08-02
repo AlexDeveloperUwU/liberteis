@@ -20,7 +20,7 @@
                 <div class="">
                   <div class="flex items-center justify-between p-4">
                     <h3 class="text-lg font-semibold text-text-900 dark:text-text-800">
-                      {{ modal.title }}
+                      {{ modal.titleKey ? $t(modal.titleKey) : modal.title }}
                     </h3>
                     <button
                       @click="modalStore.removeModal(modal.id)"
@@ -290,10 +290,10 @@
 
                   <div
                     v-if="modal.type === 'bookingDetails' && modal.data?.bookingId"
-                    class="w-full sm:w-auto mb-2 sm:mb-0 sm:mr-auto">
+                    class="w-full sm:w-auto mb-2 sm:mb-0 sm:mr-auto flex gap-2 flex-col sm:flex-row">
                     <button
                       @click="navigateToBookingEdit(modal.data.bookingId)"
-                      class="inline-flex justify-center rounded-md bg-primary-600 dark:bg-primary-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors w-full sm:w-auto cursor-pointer">
+                      class="inline-flex justify-center rounded-md bg-primary-600 dark:bg-primary-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors w-full sm:w-auto cursor-pointer mb-2 sm:mb-0">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -307,6 +307,21 @@
                           d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
                       </svg>
                       {{ $t("components.modals.bookingDetails.edit") }}
+                    </button>
+                    <button
+                      v-if="modal.data?.isActive && modal.data?.onDeactivate"
+                      @click="modal.data.onDeactivate(modal.id)"
+                      class="inline-flex justify-center rounded-md bg-accent-600 dark:bg-accent-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent-700 dark:hover:bg-accent-600 transition-colors w-full sm:w-auto cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-4 h-4 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      {{ $t("components.modals.bookingDetails.deactivate") }}
                     </button>
                   </div>
                 </div>
