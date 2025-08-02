@@ -15,16 +15,16 @@
           <div class="fixed inset-0 overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
               <div
-                class="relative w-full transform rounded-lg bg-background-50 dark:bg-background-100 text-left shadow-xl transition-all duration-300 sm:my-8 opacity-100 scale-100"
+                class="relative w-full transform rounded-lg bg-background-50 dark:bg-background-100 text-left shadow-xl transition-all duration-300 sm:my-8 opacity-100 scale-100 border border-background-200 dark:border-background-300 overflow-hidden"
                 :class="getModalWidth(modal.width)">
-                <div class="border-b border-background-200 dark:border-background-300">
+                <div class="">
                   <div class="flex items-center justify-between p-4">
                     <h3 class="text-lg font-semibold text-text-900 dark:text-text-800">
                       {{ modal.title }}
                     </h3>
                     <button
                       @click="modalStore.removeModal(modal.id)"
-                      class="rounded-md p-2 text-text-700 dark:text-text-700 hover:bg-background-100 dark:hover:bg-background-200 hover:text-text-900 dark:hover:text-text-900 transition-colors">
+                      class="rounded-md p-2 text-text-700 dark:text-text-700 hover:bg-background-100 dark:hover:bg-background-200 hover:text-text-900 dark:hover:text-text-900 transition-colors cursor-pointer">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -43,7 +43,7 @@
                     <div v-if="modal.data?.coverUrl" class="mb-4">
                       <div class="flex flex-col items-center">
                         <div
-                          class="relative overflow-hidden rounded-lg border border-background-300 bg-background-200 dark:bg-background-300"
+                          class="relative overflow-hidden bg-background-200 dark:bg-background-300"
                           style="max-width: 15%; height: auto">
                           <img
                             :src="modal.data.coverUrl"
@@ -53,7 +53,7 @@
                       </div>
                     </div>
 
-                    <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
+                    <div class="flex items-center p-3 bg-background-100">
                       <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -76,9 +76,7 @@
                       </div>
                     </div>
 
-                    <div
-                      v-if="modal.data?.eventDescription"
-                      class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
+                    <div v-if="modal.data?.eventDescription" class="flex items-start p-3 bg-background-100">
                       <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3 mt-1 flex-shrink-0">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +99,7 @@
 
                     <div
                       v-if="!modal.data?.coverUrl && modal.data?.eventDescription"
-                      class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
+                      class="flex items-start p-3 bg-background-100">
                       <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3 mt-1 flex-shrink-0">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -122,9 +120,7 @@
                       </div>
                     </div>
 
-                    <div
-                      v-if="modal.data?.bookingInfo"
-                      class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
+                    <div v-if="modal.data?.bookingInfo" class="flex items-start p-3 bg-background-100">
                       <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3 mt-1 flex-shrink-0">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -145,7 +141,7 @@
                       </div>
                     </div>
 
-                    <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
+                    <div class="flex items-center p-3 bg-background-100">
                       <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +164,7 @@
                       </div>
                     </div>
 
-                    <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
+                    <div class="flex items-center p-3 bg-background-100">
                       <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -191,7 +187,7 @@
                       </div>
                     </div>
 
-                    <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
+                    <div class="flex items-center p-3 bg-background-100">
                       <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -218,7 +214,7 @@
                       </div>
                     </div>
 
-                    <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
+                    <div class="flex items-center p-3 bg-background-100">
                       <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -242,7 +238,7 @@
                       </div>
                     </div>
 
-                    <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
+                    <div class="flex items-center p-3 bg-background-100">
                       <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -280,14 +276,14 @@
                         v-for="action in modal.actions"
                         :key="action.label"
                         @click="handleAction(action, modal)"
-                        :class="getActionButtonClass(action.type)">
+                        :class="getActionButtonClass(action.type) + ' cursor-pointer'">
                         {{ action.label }}
                       </button>
                     </template>
                     <button
                       v-else
                       @click="modalStore.removeModal(modal.id)"
-                      class="inline-flex justify-center rounded-md bg-background-50 dark:bg-background-100 px-3 py-2 text-sm font-semibold text-text-800 dark:text-text-700 shadow-sm ring-1 ring-inset ring-background-300 dark:ring-background-400 hover:bg-background-100 dark:hover:bg-background-200 transition-colors sm:w-auto">
+                      class="inline-flex justify-center rounded-md bg-background-50 dark:bg-background-100 px-3 py-2 text-sm font-semibold text-text-800 dark:text-text-700 shadow-sm ring-1 ring-inset ring-background-300 dark:ring-background-400 hover:bg-background-100 dark:hover:bg-background-200 transition-colors sm:w-auto cursor-pointer">
                       {{ $t("components.modals.common.close") }}
                     </button>
                   </div>
@@ -297,7 +293,7 @@
                     class="w-full sm:w-auto mb-2 sm:mb-0 sm:mr-auto">
                     <button
                       @click="navigateToBookingEdit(modal.data.bookingId)"
-                      class="inline-flex justify-center rounded-md bg-primary-600 dark:bg-primary-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors w-full sm:w-auto">
+                      class="inline-flex justify-center rounded-md bg-primary-600 dark:bg-primary-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors w-full sm:w-auto cursor-pointer">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -358,7 +354,6 @@ const getActionButtonClass = (type) => {
 const handleAction = async (action, modal) => {
   if (action.onClick) {
     try {
-      // Permitir que la acción reciba el id del modal
       await action.onClick(modal.id);
       if (!action.keepOpen) {
         modalStore.removeModal(modal.id);
@@ -366,7 +361,8 @@ const handleAction = async (action, modal) => {
     } catch (e) {
       // Si hay error, no cerrar el modal
     }
-  } else if (!action.keepOpen) {
+  } else {
+    // Si la acción es de tipo 'secondary', 'cancel' o no tiene función, cerrar el modal
     modalStore.removeModal(modal.id);
   }
 };
