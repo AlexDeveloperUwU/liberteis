@@ -206,11 +206,18 @@ export_env_variables() {
 
 # Grant MySQL user permissions for any host
 grant_mysql_permissions() {
-  docker exec liberteis-db mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'; FLUSH PRIVILEGES;" || {
-    echo -e "${RED}Error granting MySQL user permissions${NC}"
-    exit 1
-  }
-  echo -e "${GREEN}Granted MySQL user permissions for any host.${NC}"
+  # Check if container exists
+  if ! docker ps --format '{{.Names}}' | grep -q "^liberteis-db$"; then
+    echo -e "${YELLOW}MySQL container 'liberteis-db' not found. Skipping granting permissions for now.${NC}"
+    return 0
+  fi
+
+  # Try to run the grant command; if it fails, warn but don't abort the whole script
+  if docker exec liberteis-db mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'; FLUSH PRIVILEGES;"; then
+    echo -e "${GREEN}Granted MySQL user permissions for any host.${NC}"
+  else
+    echo -e "${RED}Warning: could not grant MySQL user permissions. You may retry manually once MySQL is ready.${NC}"
+  fi
 }
 
 # Main initialization logic
@@ -222,8 +229,8 @@ initialize() {
     create_db_creds_file
     create_admin_account_key
     export_env_variables
-    grant_mysql_permissions
-    echo -e "${GREEN}Initialization complete.${NC}"
+    # No intentar otorgar permisos aún: MySQL puede no estar levantado.
+    echo -e "${GREEN}Initialization complete. MySQL permission grant will run after the DB is started.${NC}"
   else
     echo -e "${YELLOW}Initialization already completed. Skipping.${NC}"
     export_env_variables
@@ -256,10 +263,14 @@ if [ "$ENVIRONMENT" == "dev" ]; then
         exit 1
       }
       echo -e "${BLUE}Waiting for MySQL to become healthy...${NC}"
-      until [ "$(docker inspect --format='{{.State.Health.Status}}' liberteis-db)" == "healthy" ]; do
+      until [ "$(docker inspect --format='{{.State.Health.Status}}' liberteis-db 2>/dev/null)" == "healthy" ]; do
+        # If the container doesn't exist yet, wait a bit
         sleep 5
       done
       echo -e "${GREEN}MySQL is healthy.${NC}"
+      # Export credentials and attempt to grant permissions now that DB is up
+      export_env_variables
+      grant_mysql_permissions
       npm run dev || {
         echo -e "${RED}Error running development environment${NC}"
         exit 1
@@ -275,6 +286,13 @@ if [ "$ENVIRONMENT" == "dev" ]; then
         echo -e "${RED}Error starting Docker Compose${NC}"
         exit 1
       }
+      # Esperar a que MySQL esté listo si existe
+      echo -e "${BLUE}Waiting for MySQL to become healthy (if present)...${NC}"
+      until [ "$(docker inspect --format='{{.State.Health.Status}}' liberteis-db 2>/dev/null)" == "healthy" ] || ! docker ps --format '{{.Names}}' | grep -q "^liberteis-db$"; do
+        sleep 5
+      done
+      export_env_variables
+      grant_mysql_permissions
       break
       ;;
     3)
@@ -298,4 +316,6 @@ elif [ "$ENVIRONMENT" == "prod" ]; then
     echo -e "${RED}Error starting Docker Compose${NC}"
     exit 1
   }
+  # Intentar otorgar permisos si hay un contenedor DB
+  grant_mysql_permissions
 fi
