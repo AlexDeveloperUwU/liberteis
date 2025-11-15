@@ -112,7 +112,7 @@
                         v-for="(permission, index) in permissions[userData.type] || []"
                         :key="index"
                         class="flex items-center text-text-800 text-xs">
-                        <CheckCircle class="w-3 h-3 text-primary-600 mr-1.5 flex-shrink-0" />
+                        <CheckCircle class="w-3 h-3 text-primary-600 mr-1.5 shrink-0" />
                         <span>{{ permission }}</span>
                       </div>
                     </div>

@@ -99,7 +99,7 @@
                       <div v-if="day.day !== 0" class="space-y-1 overflow-y-auto max-h-[110px] relative z-1">
                         <div v-for="event in getEventsForDay(day.date)" :key="event.id" @click.stop="showEventDetailsModal(event)" :data-booking-id="event.id || (event.bookingData && (event.bookingData.id || event.bookingData._id))
                           " class="py-1 px-2 rounded-lg cursor-pointer flex items-center font-semibold text-xs border-l-4 shadow-sm transition-all duration-150 hover:shadow-md" :class="getEventClassByStatus(event)">
-                          <div class="w-2.5 h-2.5 rounded-full mr-2 flex-shrink-0" :class="getEventDotClass(event)"></div>
+                          <div class="w-2.5 h-2.5 rounded-full mr-2 shrink-0" :class="getEventDotClass(event)"></div>
                           <span class="truncate">{{ event.title }}</span>
                         </div>
                       </div>
@@ -135,8 +135,8 @@
                     <div v-for="event in group" :key="event.id" @click="showEventDetailsModal(event)" :data-booking-id="event.id || (event.bookingData && (event.bookingData.id || event.bookingData._id))
                       " class="p-4 transition-colors duration-150 cursor-pointer group" :class="getEventStatusClass(event)">
                       <div class="flex items-start">
-                        <div class="h-3 w-3 rounded-full mt-1.5 mr-3 flex-shrink-0" :class="getEventDotClass(event)"></div>
-                        <div class="flex-grow">
+                        <div class="h-3 w-3 rounded-full mt-1.5 mr-3 shrink-0" :class="getEventDotClass(event)"></div>
+                        <div class="grow">
                           <div class="font-medium text-text-900 group-hover:text-primary-900">{{ event.title }}</div>
                           <div class="text-sm text-text-600 mt-1 flex items-center group-hover:text-primary-900">
                             <Clock class="w-3.5 h-3.5 mr-1.5 text-primary-600" />

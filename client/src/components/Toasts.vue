@@ -7,7 +7,7 @@
           :key="toast.id"
           :class="[getToastBaseClasses(), getToastTypeClasses(toast.type)]">
           <div class="flex gap-3">
-            <div :class="getIconClasses(toast.type)" class="flex-shrink-0 flex items-center">
+            <div :class="getIconClasses(toast.type)" class="shrink-0 flex items-center">
               <component :is="getToastIcon(toast.type)" class="w-5 h-5" />
             </div>
 
@@ -22,7 +22,7 @@
 
             <button
               @click="toastStore.removeToast(toast.id)"
-              class="flex-shrink-0 flex items-start pt-1.5"
+              class="shrink-0 flex items-start pt-1.5"
               :class="getCloseButtonClasses(toast.type)">
               <X class="w-4 h-4" />
             </button>

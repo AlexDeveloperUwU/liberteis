@@ -1,30 +1,30 @@
 <template>
-  <div class="screen-view h-screen w-full flex flex-col bg-[var(--background-200)] overflow-hidden">
-    <div class="flex justify-between items-center p-2 bg-[var(--background-100)] text-[var(--text-800)] shadow-sm">
+  <div class="screen-view h-screen w-full flex flex-col bg-(--background-200) overflow-hidden">
+    <div class="flex justify-between items-center p-2 bg-(--background-100) text-(--text-800) shadow-sm">
       <h1 class="text-xl font-semibold truncate">{{ currentDateTime }}</h1>
       <div class="text-right font-bold text-xl">
-        <span class="bg-[var(--background-200)] text-[var(--text-800)] py-1 px-3 rounded-full">{{ timeOnly }}</span>
+        <span class="bg-(--background-200) text-(--text-800) py-1 px-3 rounded-full">{{ timeOnly }}</span>
       </div>
     </div>
     <div class="flex-1 flex justify-center items-center p-8 overflow-auto">
       <div v-if="loading" class="flex justify-center items-center">
-        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[var(--primary-600)]"></div>
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-(--primary-600)"></div>
       </div>
       <div
         v-else-if="events.length === 0"
-        class="flex flex-col justify-center items-center bg-[var(--background-50)] p-8 rounded-xl shadow-lg max-w-full">
-        <h2 class="text-2xl font-bold mb-2 text-[var(--text-700)] text-center">
+        class="flex flex-col justify-center items-center bg-(--background-50) p-8 rounded-xl shadow-lg max-w-full">
+        <h2 class="text-2xl font-bold mb-2 text-(--text-700) text-center">
           {{ t("pages.info.screen.noEvents") }}
         </h2>
-        <p class="text-[var(--text-500)] text-center">{{ t("pages.info.screen.checkLater") }}</p>
+        <p class="text-(--text-500) text-center">{{ t("pages.info.screen.checkLater") }}</p>
       </div>
       <div
         v-else
-        class="flex flex-col w-full h-full max-w-6xl bg-[var(--background-50)] rounded-xl shadow-lg overflow-hidden relative">
+        class="flex flex-col w-full h-full max-w-6xl bg-(--background-50) rounded-xl shadow-lg overflow-hidden relative">
         <transition name="fade" mode="out-in" @before-leave="startTransition" @after-leave="finishTransition">
           <div :key="currentEventIndex" class="flex h-full flex-col md:flex-row overflow-auto">
             <div
-              class="w-full md:w-1/2 h-64 md:h-full flex items-center justify-center p-4 md:p-8 bg-[var(--background-100)]">
+              class="w-full md:w-1/2 h-64 md:h-full flex items-center justify-center p-4 md:p-8 bg-(--background-100)">
               <div v-if="currentEvent.coverUrl" class="w-full h-full flex items-center justify-center relative">
                 <img
                   :src="currentEvent.coverUrl"
@@ -33,101 +33,101 @@
               </div>
               <div
                 v-else
-                class="w-full h-full flex items-center justify-center bg-[var(--background-200)] rounded-lg text-[var(--text-500)]">
+                class="w-full h-full flex items-center justify-center bg-(--background-200) rounded-lg text-(--text-500)">
                 <span class="text-lg text-center">{{ t("pages.info.screen.noImage") }}</span>
               </div>
             </div>
-            <div class="w-full md:w-1/2 bg-[var(--background-50)] p-6 md:p-8 overflow-y-auto">
-              <div class="mb-6 pb-4 border-b border-[var(--background-200)]">
-                <h2 class="text-3xl font-bold text-[var(--text-900)]">{{ currentEvent.title }}</h2>
+            <div class="w-full md:w-1/2 bg-(--background-50) p-6 md:p-8 overflow-y-auto">
+              <div class="mb-6 pb-4 border-b border-(--background-200)">
+                <h2 class="text-3xl font-bold text-(--text-900)">{{ currentEvent.title }}</h2>
               </div>
               <div class="space-y-6">
                 <div
                   v-if="currentEvent.description"
-                  class="bg-[var(--background-100)] rounded-lg p-5 border border-[var(--background-200)] shadow-sm">
-                  <h3 class="text-lg font-semibold text-[var(--text-800)] mb-2">
+                  class="bg-(--background-100) rounded-lg p-5 border border-(--background-200) shadow-sm">
+                  <h3 class="text-lg font-semibold text-(--text-800) mb-2">
                     {{ t("pages.info.screen.description") }}
                   </h3>
-                  <p class="text-[var(--text-700)] whitespace-pre-wrap break-words">{{ currentEvent.description }}</p>
+                  <p class="text-(--text-700) whitespace-pre-wrap wrap-break-word">{{ currentEvent.description }}</p>
                 </div>
                 <div
                   v-if="currentEvent.bookingInfo"
-                  class="bg-[var(--background-100)] rounded-lg p-5 border border-[var(--background-200)] shadow-sm">
-                  <h3 class="text-lg font-semibold text-[var(--text-800)] mb-2">
+                  class="bg-(--background-100) rounded-lg p-5 border border-(--background-200) shadow-sm">
+                  <h3 class="text-lg font-semibold text-(--text-800) mb-2">
                     {{ t("pages.info.screen.additionalInfo") }}
                   </h3>
-                  <p class="text-[var(--text-700)] whitespace-pre-wrap break-words">{{ currentEvent.bookingInfo }}</p>
+                  <p class="text-(--text-700) whitespace-pre-wrap wrap-break-word">{{ currentEvent.bookingInfo }}</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div
-                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
-                      <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
-                        <Clock class="w-5 h-5 text-[var(--primary-600)]" />
+                      <div class="bg-(--primary-100) p-2 rounded-full mr-3">
+                        <Clock class="w-5 h-5 text-(--primary-600)" />
                       </div>
                       <div>
-                        <p class="text-xs text-[var(--text-500)]">{{ t("pages.info.screen.dateTime") }}</p>
-                        <p class="text-[var(--text-800)] font-medium">{{ formatTime(currentEvent.start) }}</p>
+                        <p class="text-xs text-(--text-500)">{{ t("pages.info.screen.dateTime") }}</p>
+                        <p class="text-(--text-800) font-medium">{{ formatTime(currentEvent.start) }}</p>
                       </div>
                     </div>
                   </div>
                   <div
-                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
-                      <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
-                        <Clock class="w-5 h-5 text-[var(--primary-600)]" />
+                      <div class="bg-(--primary-100) p-2 rounded-full mr-3">
+                        <Clock class="w-5 h-5 text-(--primary-600)" />
                       </div>
                       <div>
-                        <p class="text-xs text-[var(--text-500)]">{{ t("pages.info.screen.duration") }}</p>
-                        <p class="text-[var(--text-800)] font-medium">{{ currentEvent.duration }}</p>
+                        <p class="text-xs text-(--text-500)">{{ t("pages.info.screen.duration") }}</p>
+                        <p class="text-(--text-800) font-medium">{{ currentEvent.duration }}</p>
                       </div>
                     </div>
                   </div>
                   <div
-                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
-                      <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
-                        <MapPin class="w-5 h-5 text-[var(--primary-600)]" />
+                      <div class="bg-(--primary-100) p-2 rounded-full mr-3">
+                        <MapPin class="w-5 h-5 text-(--primary-600)" />
                       </div>
                       <div>
-                        <p class="text-xs text-[var(--text-500)]">{{ t("pages.info.screen.space") }}</p>
-                        <p class="text-[var(--text-800)] font-medium">{{ currentEvent.spaceName }}</p>
+                        <p class="text-xs text-(--text-500)">{{ t("pages.info.screen.space") }}</p>
+                        <p class="text-(--text-800) font-medium">{{ currentEvent.spaceName }}</p>
                       </div>
                     </div>
                   </div>
                   <div
-                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
-                      <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
-                        <Tag class="w-5 h-5 text-[var(--primary-600)]" />
+                      <div class="bg-(--primary-100) p-2 rounded-full mr-3">
+                        <Tag class="w-5 h-5 text-(--primary-600)" />
                       </div>
                       <div>
-                        <p class="text-xs text-[var(--text-500)]">{{ t("pages.info.screen.category") }}</p>
-                        <p class="text-[var(--text-800)] font-medium">{{ currentEvent.categoryName || "-" }}</p>
+                        <p class="text-xs text-(--text-500)">{{ t("pages.info.screen.category") }}</p>
+                        <p class="text-(--text-800) font-medium">{{ currentEvent.categoryName || "-" }}</p>
                       </div>
                     </div>
                   </div>
                   <div
-                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
-                      <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
-                        <CalendarDays class="w-5 h-5 text-[var(--primary-600)]" />
+                      <div class="bg-(--primary-100) p-2 rounded-full mr-3">
+                        <CalendarDays class="w-5 h-5 text-(--primary-600)" />
                       </div>
                       <div>
-                        <p class="text-xs text-[var(--text-500)]">{{ t("pages.info.screen.date") }}</p>
-                        <p class="text-[var(--text-800)] font-medium">{{ formatFullDate(currentEvent.start) }}</p>
+                        <p class="text-xs text-(--text-500)">{{ t("pages.info.screen.date") }}</p>
+                        <p class="text-(--text-800) font-medium">{{ formatFullDate(currentEvent.start) }}</p>
                       </div>
                     </div>
                   </div>
                   <div
-                    class="bg-[var(--background-100)] rounded-lg p-4 border border-[var(--background-200)] shadow-sm">
+                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
-                      <div class="bg-[var(--primary-100)] p-2 rounded-full mr-3">
-                        <User class="w-5 h-5 text-[var(--primary-600)]" />
+                      <div class="bg-(--primary-100) p-2 rounded-full mr-3">
+                        <User class="w-5 h-5 text-(--primary-600)" />
                       </div>
                       <div>
-                        <p class="text-xs text-[var(--text-500)]">{{ t("pages.info.screen.addedBy") }}</p>
-                        <p class="text-[var(--text-800)] font-medium">{{ currentEvent.addedBy || "-" }}</p>
+                        <p class="text-xs text-(--text-500)">{{ t("pages.info.screen.addedBy") }}</p>
+                        <p class="text-(--text-800) font-medium">{{ currentEvent.addedBy || "-" }}</p>
                       </div>
                     </div>
                   </div>

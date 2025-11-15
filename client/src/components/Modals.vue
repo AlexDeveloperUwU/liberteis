@@ -48,7 +48,7 @@
                           <img
                             :src="modal.data.coverUrl"
                             alt="Imagen del evento"
-                            class="w-full object-contain aspect-[9/16]" />
+                            class="w-full object-contain aspect-9/16" />
                         </div>
                       </div>
                     </div>
@@ -77,7 +77,7 @@
                     </div>
 
                     <div v-if="modal.data?.eventDescription" class="flex items-start p-3 bg-background-100">
-                      <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3 mt-1 flex-shrink-0">
+                      <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3 mt-1 shrink-0">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -93,14 +93,14 @@
                       </div>
                       <div>
                         <p class="text-xs text-text-600">{{ $t("components.modals.bookingDetails.description") }}</p>
-                        <p class="text-text-900 whitespace-pre-wrap break-words">{{ modal.data?.eventDescription }}</p>
+                        <p class="text-text-900 whitespace-pre-wrap wrap-break-word">{{ modal.data?.eventDescription }}</p>
                       </div>
                     </div>
 
                     <div
                       v-if="!modal.data?.coverUrl && modal.data?.eventDescription"
                       class="flex items-start p-3 bg-background-100">
-                      <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3 mt-1 flex-shrink-0">
+                      <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3 mt-1 shrink-0">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -116,12 +116,12 @@
                       </div>
                       <div>
                         <p class="text-xs text-text-600">{{ $t("components.modals.bookingDetails.description") }}</p>
-                        <p class="text-text-900 whitespace-pre-wrap break-words">{{ modal.data?.eventDescription }}</p>
+                        <p class="text-text-900 whitespace-pre-wrap wrap-break-word">{{ modal.data?.eventDescription }}</p>
                       </div>
                     </div>
 
                     <div v-if="modal.data?.bookingInfo" class="flex items-start p-3 bg-background-100">
-                      <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3 mt-1 flex-shrink-0">
+                      <div class="bg-primary-100 p-2 rounded-full border-primary-300 mr-3 mt-1 shrink-0">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -137,7 +137,7 @@
                       </div>
                       <div>
                         <p class="text-xs text-text-600">{{ $t("components.modals.bookingDetails.additionalInfo") }}</p>
-                        <p class="text-text-900 whitespace-pre-wrap break-words">{{ modal.data?.bookingInfo }}</p>
+                        <p class="text-text-900 whitespace-pre-wrap wrap-break-word">{{ modal.data?.bookingInfo }}</p>
                       </div>
                     </div>
 

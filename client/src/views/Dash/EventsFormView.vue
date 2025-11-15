@@ -82,10 +82,10 @@
                 <div
                   v-if="formData.info"
                   class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
-                  <FileText class="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
+                  <FileText class="w-5 h-5 text-primary-600 mr-3 mt-0.5 shrink-0" />
                   <div class="w-full">
                     <p class="text-xs text-text-600">{{ t("pages.dash.eventsForm.form.labels.info") }}</p>
-                    <p class="text-text-800 mt-1 whitespace-pre-wrap break-words">
+                    <p class="text-text-800 mt-1 whitespace-pre-wrap wrap-break-word">
                       {{ formData.info }}
                     </p>
                   </div>
