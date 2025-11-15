@@ -33,3 +33,5 @@ coverage
 
 *.tsbuildinfo
 test.js
+concat.sh
+full_project_context.md

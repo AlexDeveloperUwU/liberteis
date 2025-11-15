@@ -1,19 +1,16 @@
 #!/bin/bash
 
-# Define colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# Usage function
 usage() {
   echo -e "${YELLOW}Usage: $0 [dev|prod]${NC}"
   exit 1
 }
 
-# Prompt for environment if not provided
 if [ -n "$1" ]; then
   ENVIRONMENT=$1
 else
@@ -33,7 +30,6 @@ else
   esac
 fi
 
-# Validate environment
 if [[ "$ENVIRONMENT" != "dev" && "$ENVIRONMENT" != "prod" ]]; then
   echo -e "${RED}Invalid environment: $ENVIRONMENT${NC}"
   usage
@@ -42,7 +38,6 @@ fi
 clear
 echo -e "${GREEN}Selected environment: $ENVIRONMENT${NC}"
 
-# Create necessary directories
 create_directories() {
   directories=(
     "./data"
@@ -62,7 +57,7 @@ create_directories() {
         echo -e "${RED}Error setting permissions for $dir${NC}"
         exit 1
       }
-      chown -R "$(id -u):$(id -g)" "$dir" || { # Asegurar que el usuario tenga acceso
+      chown -R "$(id -u):$(id -g)" "$dir" || {
         echo -e "${RED}Error setting ownership for $dir${NC}"
         exit 1
       }
@@ -73,7 +68,6 @@ create_directories() {
   done
 }
 
-# Set a secret key
 set_key() {
   key_file="./data/secrets/secret.key"
   if [ ! -f "$key_file" ]; then
@@ -88,12 +82,10 @@ set_key() {
   fi
 }
 
-# Generate random password
 generate_random_password() {
   openssl rand -hex 16
 }
 
-# Create database credentials file
 create_db_creds_file() {
   creds_file="./data/secrets/dbcreds.env"
   if [ ! -f "$creds_file" ]; then
@@ -115,7 +107,6 @@ EOF
   fi
 }
 
-# Add MySQL host to credentials
 update_mysql_host_in_creds() {
   creds_file="./data/secrets/dbcreds.env"
   if grep -q "^MYSQL_HOST=" "$creds_file"; then
@@ -132,7 +123,6 @@ update_mysql_host_in_creds() {
   echo -e "${GREEN}Updated MYSQL_HOST in credentials file.${NC}"
 }
 
-# Create initialization indicator
 create_init_indicator() {
   indicator_file="./data/init/initialized.txt"
   if [ ! -f "$indicator_file" ]; then
@@ -146,7 +136,6 @@ create_init_indicator() {
   fi
 }
 
-# Set MySQL host based on environment
 set_mysql_host() {
   if [ "$1" == "container" ]; then
     MYSQL_HOST="liberteis-db"
@@ -155,7 +144,6 @@ set_mysql_host() {
   fi
 }
 
-# Stop and remove all containers
 stop_and_remove_containers() {
   echo -e "${BLUE}Stopping and removing all containers...${NC}"
   docker compose -f docker-compose.yml down || {
@@ -165,7 +153,6 @@ stop_and_remove_containers() {
   echo -e "${GREEN}All containers stopped and removed.${NC}"
 }
 
-# Stop, remove containers, and delete volumes
 stop_remove_and_clean_volumes() {
   echo -e "${BLUE}Stopping and removing all containers and volumes...${NC}"
   docker compose down -v || {
@@ -175,7 +162,6 @@ stop_remove_and_clean_volumes() {
   echo -e "${GREEN}All containers and volumes removed.${NC}"
 }
 
-# Generar contraseña aleatoria para la cuenta admin y crear el archivo adminaccount.key
 create_admin_account_key() {
   admin_key_file="./data/secrets/adminaccount.key"
   if [ ! -f "$admin_key_file" ]; then
@@ -190,7 +176,6 @@ create_admin_account_key() {
   fi
 }
 
-# Export environment variables from dbcreds.env
 export_env_variables() {
   creds_file="./data/secrets/dbcreds.env"
   if [ -f "$creds_file" ]; then
@@ -204,23 +189,24 @@ export_env_variables() {
   fi
 }
 
-# Grant MySQL user permissions for any host
 grant_mysql_permissions() {
-  # Check if container exists
   if ! docker ps --format '{{.Names}}' | grep -q "^liberteis-db$"; then
-    echo -e "${YELLOW}MySQL container 'liberteis-db' not found. Skipping granting permissions for now.${NC}"
+    echo -e "${YELLOW}MySQL container 'liberteis-db' not found. Skipping granting permissions.${NC}"
     return 0
   fi
 
-  # Try to run the grant command; if it fails, warn but don't abort the whole script
-  if docker exec liberteis-db mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'; FLUSH PRIVILEGES;"; then
+  SQL_COMMAND="CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'; \
+               ALTER USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'; \
+               GRANT ALL PRIVILEGES ON \`$MYSQL_DATABASE\`.* TO '$MYSQL_USER'@'%'; \
+               FLUSH PRIVILEGES;"
+
+  if docker exec liberteis-db mysql -u root -p"$MYSQL_ROOT_PASSWORD" mysql -e "$SQL_COMMAND"; then
     echo -e "${GREEN}Granted MySQL user permissions for any host.${NC}"
   else
     echo -e "${RED}Warning: could not grant MySQL user permissions. You may retry manually once MySQL is ready.${NC}"
   fi
 }
 
-# Main initialization logic
 initialize() {
   if [ ! -f "./data/init/initialized.txt" ]; then
     echo -e "${BLUE}Running initialization...${NC}"
@@ -229,7 +215,6 @@ initialize() {
     create_db_creds_file
     create_admin_account_key
     export_env_variables
-    # No intentar otorgar permisos aún: MySQL puede no estar levantado.
     echo -e "${GREEN}Initialization complete. MySQL permission grant will run after the DB is started.${NC}"
   else
     echo -e "${YELLOW}Initialization already completed. Skipping.${NC}"
@@ -240,7 +225,6 @@ initialize() {
 initialize
 create_init_indicator
 
-# Environment-specific configuration
 if [ "$ENVIRONMENT" == "dev" ]; then
   clear
   echo -e "${BLUE}Setting up development environment...${NC}"
@@ -264,11 +248,9 @@ if [ "$ENVIRONMENT" == "dev" ]; then
       }
       echo -e "${BLUE}Waiting for MySQL to become healthy...${NC}"
       until [ "$(docker inspect --format='{{.State.Health.Status}}' liberteis-db 2>/dev/null)" == "healthy" ]; do
-        # If the container doesn't exist yet, wait a bit
         sleep 5
       done
       echo -e "${GREEN}MySQL is healthy.${NC}"
-      # Export credentials and attempt to grant permissions now that DB is up
       export_env_variables
       grant_mysql_permissions
       npm run dev || {
@@ -286,7 +268,6 @@ if [ "$ENVIRONMENT" == "dev" ]; then
         echo -e "${RED}Error starting Docker Compose${NC}"
         exit 1
       }
-      # Esperar a que MySQL esté listo si existe
       echo -e "${BLUE}Waiting for MySQL to become healthy (if present)...${NC}"
       until [ "$(docker inspect --format='{{.State.Health.Status}}' liberteis-db 2>/dev/null)" == "healthy" ] || ! docker ps --format '{{.Names}}' | grep -q "^liberteis-db$"; do
         sleep 5
@@ -316,6 +297,5 @@ elif [ "$ENVIRONMENT" == "prod" ]; then
     echo -e "${RED}Error starting Docker Compose${NC}"
     exit 1
   }
-  # Intentar otorgar permisos si hay un contenedor DB
   grant_mysql_permissions
 fi
