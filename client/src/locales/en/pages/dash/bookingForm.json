@@ -15,7 +15,8 @@
   "form": {
     "sections": {
       "basicInfo": "Basic information",
-      "bookingDetails": "Booking details"
+      "bookingDetails": "Booking details",
+      "recurrence": "Recurrence"
     },
     "labels": {
       "event": "Event",
@@ -25,7 +26,13 @@
       "eventTitle": "Event",
       "eventCategory": "Category",
       "eventDuration": "Duration",
-      "eventCover": "Cover image"
+      "eventCover": "Cover image",
+      "repeat": "Repeat booking",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "days": "Days of week",
+      "time": "Time",
+      "updateScope": "Update scope"
     },
     "placeholders": {
       "selectEvent": "Select an event...",
@@ -42,6 +49,10 @@
       "updating": "Updating...",
       "createEvent": "Can't find your event? Create a new one",
       "createEventDesc": "If the event you need doesn't exist, you can create it now."
+    },
+    "options": {
+      "updateSingle": "Update only this booking",
+      "updateGroup": "Update all bookings in series"
     }
   },
   "common": {
@@ -66,7 +77,10 @@
     "unknown": "Unknown error",
     "noResponse": "No response from server",
     "requestSetup": "Error setting up request",
-    "spaceNotAvailable": "The space is not available at that date and time"
+    "spaceNotAvailable": "The space is not available at that date and time",
+    "datesRequired": "Start and end dates are required for recurrence",
+    "daysRequired": "Select at least one day",
+    "timeRequired": "Time required for selected day"
   },
   "notifications": {
     "createSuccess": "Booking created successfully",

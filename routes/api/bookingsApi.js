@@ -12,7 +12,7 @@ export default api;
 
 /**
  * @name POST /api/bookings
- * @description Creates a new booking
+ * @description Creates a new booking (single or recurring)
  * @param {object} req - Express request object.
  * @param {object} req.body - Booking data to add.
  * @param {object} res - Express response object.
@@ -22,13 +22,7 @@ api.post("/", async (req, res) => {
   try {
     const bookingData = req.body;
 
-    if (
-      !bookingData ||
-      !bookingData.eventId ||
-      !bookingData.space ||
-      !bookingData.bookingDate ||
-      !bookingData.bookedBy
-    ) {
+    if (!bookingData || !bookingData.eventId || !bookingData.space || !bookingData.bookedBy) {
       logger.error("Invalid booking data - missing required fields");
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
@@ -49,21 +43,22 @@ api.post("/", async (req, res) => {
  * @param {object} req - Express request object.
  * @param {object} req.query - The query parameters.
  * @param {string} req.query.id - The ID of the booking to update.
+ * @param {string} [req.query.scope='single'] - Scope of update ('single' or 'group').
  * @param {object} req.body - The booking data to update.
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and update result.
  */
 api.put("/", async (req, res) => {
   try {
-    const { id } = req.query;
+    const { id, scope } = req.query;
     const bookingData = req.body;
 
     if (!id) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Updating booking with ID:", id);
-    const result = await bookings.updateBooking(id, bookingData);
+    logger.info("Updating booking with ID:", id, "Scope:", scope);
+    const result = await bookings.updateBooking(id, bookingData, scope);
     return res.status(result.code).json(result);
   } catch (error) {
     logger.error("Error en /api/bookings/ [PUT]:", error);
@@ -78,22 +73,51 @@ api.put("/", async (req, res) => {
  * @param {object} req - Express request object.
  * @param {object} req.query - The query parameters.
  * @param {string} req.query.id - The ID of the booking to toggle.
+ * @param {string} [req.query.scope='single'] - Scope ('single' or 'group').
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and toggle result.
  */
 api.patch("/toggle", async (req, res) => {
   try {
-    const { id } = req.query;
+    const { id, scope } = req.query;
 
     if (!id) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Toggling booking with ID:", id);
-    const result = await bookings.changeBookingStatus(id);
+    logger.info("Toggling booking with ID:", id, "Scope:", scope);
+    const result = await bookings.changeBookingStatus(id, scope);
     return res.status(result.code).json(result);
   } catch (error) {
     logger.error("Error en /api/bookings/toggle [PATCH]:", error);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
+  }
+});
+
+/**
+ * @name DELETE /api/bookings/
+ * @description Deletes a booking by ID.
+ * @param {object} req - Express request object.
+ * @param {object} req.query - The query parameters.
+ * @param {string} req.query.id - The ID of the booking to delete.
+ * @param {string} [req.query.scope='single'] - Scope ('single' or 'group').
+ * @param {object} res - Express response object.
+ * @returns {object} JSON with status code and result.
+ */
+api.delete("/", async (req, res) => {
+  try {
+    const { id, scope } = req.query;
+
+    if (!id) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    logger.info("Deleting booking with ID:", id, "Scope:", scope);
+    const result = await bookings.deleteBooking(id, scope);
+    return res.status(result.code).json(result);
+  } catch (error) {
+    logger.error("Error en /api/bookings/ [DELETE]:", error);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -188,7 +212,7 @@ api.get("/user", async (req, res) => {
  */
 api.get("/", async (req, res) => {
   try {
-    const { id, status, includeInactive, startMonth, endMonth } = req.query;
+    const { id, status, includeInactive, startMonth, endMonth, startDate, endDate } = req.query;
     const userRole = req._reqUser?.role;
     const userId = req._reqUser?.id;
 
@@ -206,6 +230,9 @@ api.get("/", async (req, res) => {
       const filters = {};
       if (startMonth) filters.startMonth = startMonth;
       if (endMonth) filters.endMonth = endMonth;
+      if (startDate) filters.startDate = startDate;
+      if (endDate) filters.endDate = endDate;
+
       const result = await bookings.getBookings(status || "active", filterUserId, filters);
       return res.status(result.code).json(result);
     }

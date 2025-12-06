@@ -14,6 +14,11 @@
     "category": "Categoría",
     "bookedBy": "Reservado por",
     "edit": "Editar",
-    "deactivate": "Desactivar"
+    "deactivate": "Desactivar",
+    "deactivateSingle": "Eliminar só esta reserva",
+    "deactivateGroup": "Eliminar todas as reservas",
+    "deactivateTitle": "Eliminar reserva",
+    "deactivateMessage": "Estás seguro de que desexas eliminar esta reserva?",
+    "deactivateGroupMessage": "Estás seguro de que desexas eliminar todas as reservas desta serie?"
   }
 }

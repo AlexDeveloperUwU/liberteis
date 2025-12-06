@@ -158,7 +158,14 @@ export async function dbCreateTables() {
         col.defaultTo("active").check(sql`status IN ('active', 'cancelled')`),
       )
       .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
+      .addColumn("groupId", "varchar(50)")
       .execute();
+
+    try {
+      await trx.schema.alterTable("bookings").addColumn("groupId", "varchar(50)").execute();
+    } catch (e) {
+      // Column might already exist
+    }
 
     const configRows = await trx.selectFrom("config").selectAll().execute();
 
@@ -263,6 +270,22 @@ export async function dbSaveData(table, data) {
 export async function dbUpdateData(table, id, data) {
   return await db.transaction().execute(async (trx) => {
     return await trx.updateTable(table).set(data).where("id", "=", id).execute();
+  });
+}
+
+/**
+ * Updates data based on a where clause (e.g. for group updates)
+ */
+export async function dbUpdateWhere(table, conditions, data) {
+  return await db.transaction().execute(async (trx) => {
+    if (!Array.isArray(conditions)) {
+      conditions = [conditions];
+    }
+    let query = trx.updateTable(table).set(data);
+    conditions.forEach((condition) => {
+      query = query.where(condition.field, condition.operator, condition.value);
+    });
+    return await query.execute();
   });
 }
 

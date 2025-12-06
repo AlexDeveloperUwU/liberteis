@@ -15,7 +15,8 @@
   "form": {
     "sections": {
       "basicInfo": "Información básica",
-      "bookingDetails": "Detalles da reserva"
+      "bookingDetails": "Detalles da reserva",
+      "recurrence": "Recurrencia"
     },
     "labels": {
       "event": "Evento",
@@ -25,7 +26,13 @@
       "eventTitle": "Evento",
       "eventCategory": "Categoría",
       "eventDuration": "Duración",
-      "eventCover": "Imaxe de portada"
+      "eventCover": "Imaxe de portada",
+      "repeat": "Repetir reserva",
+      "startDate": "Data inicio",
+      "endDate": "Data fin",
+      "days": "Días da semana",
+      "time": "Hora",
+      "updateScope": "Alcance da actualización"
     },
     "placeholders": {
       "selectEvent": "Selecciona un evento...",
@@ -42,6 +49,10 @@
       "updating": "Actualizando...",
       "createEvent": "Non atopas o teu evento? Créao agora",
       "createEventDesc": "Se o evento que buscas non existe, podes crealo agora."
+    },
+    "options": {
+      "updateSingle": "Actualizar só esta reserva",
+      "updateGroup": "Actualizar todas as reservas da serie"
     }
   },
   "common": {
@@ -66,7 +77,10 @@
     "unknown": "Erro descoñecido",
     "noResponse": "Sen resposta do servidor",
     "requestSetup": "Erro ao configurar a solicitude",
-    "spaceNotAvailable": "O espazo non está dispoñible nesa data e hora"
+    "spaceNotAvailable": "O espazo non está dispoñible nesa data e hora",
+    "datesRequired": "Datas de inicio e fin requiridas para recurrencia",
+    "daysRequired": "Selecciona polo menos un día",
+    "timeRequired": "Hora requirida para o día seleccionado"
   },
   "notifications": {
     "createSuccess": "Reserva creada exitosamente",

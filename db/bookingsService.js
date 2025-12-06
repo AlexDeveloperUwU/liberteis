@@ -2,11 +2,13 @@ import * as dbc from "./dbController.js";
 import * as id from "../utils/idGen.js";
 import { logger } from "../utils/logger.js";
 import ErrorManager from "../errors/errorManager.js";
+import crypto from "crypto";
 
 //! Basic CRUD operations
 
 /**
  * Adds a booking to the database.
+ * Supports single booking and recurring bookings.
  * @param {object} booking - The booking object to add.
  * @returns {Promise<object>} The result of the operation or an error message.
  */
@@ -15,24 +17,75 @@ export async function addBooking(booking) {
     return ErrorManager.returnError("invalidParameters");
   }
 
-  // Validar que el espacio pertenezca a la categoría del evento
   const spaceValidation = await validateSpaceForEvent(booking.eventId, booking.space);
   if (!spaceValidation.success) {
     return spaceValidation;
   }
 
-  // Verificar disponibilidad del espacio en la fecha
-  const availability = await checkSpaceAvailability(booking.space, booking.bookingDate, booking.eventId);
-  if (!availability.success) {
-    return availability;
+  let bookingsToSave = [];
+  let groupId = null;
+
+  if (booking.recurrence) {
+    if (!booking.recurrence.startDate || !booking.recurrence.endDate) {
+      return ErrorManager.returnError("invalidParameters", "Recurrence missing start or end date");
+    }
+
+    groupId = crypto.randomUUID();
+    const startDate = new Date(booking.recurrence.startDate);
+    const endDate = new Date(booking.recurrence.endDate);
+    const daysConfig = booking.recurrence.days || [];
+
+    for (let dt = new Date(startDate); dt <= endDate; dt.setDate(dt.getDate() + 1)) {
+      const jsDay = dt.getDay();
+
+      const dayConfig = daysConfig.find((d) => parseInt(d.day) === jsDay);
+
+      if (dayConfig && dayConfig.time) {
+        const [hours, minutes] = dayConfig.time.split(":");
+        const bookingDate = new Date(dt);
+        bookingDate.setHours(hours, minutes, 0, 0);
+
+        const newBooking = {
+          eventId: booking.eventId,
+          space: booking.space,
+          info: booking.info,
+          bookedBy: booking.bookedBy,
+          bookingDate: toMySQLDateTime(bookingDate),
+          id: await id.generateId("booking"),
+          deleted: false,
+          groupId: groupId,
+        };
+        bookingsToSave.push(newBooking);
+      }
+    }
+
+    if (bookingsToSave.length === 0) {
+      return ErrorManager.returnError("invalidParameters", "No bookings generated from recurrence pattern");
+    }
+  } else {
+    if (!booking.bookingDate) {
+      return ErrorManager.returnError("invalidParameters", "Missing booking date");
+    }
+    booking.id = await id.generateId("booking");
+    booking.deleted = false;
+    bookingsToSave.push(booking);
   }
 
-  booking.id = await id.generateId("booking");
-  booking.deleted = false;
+  for (const b of bookingsToSave) {
+    const availability = await checkSpaceAvailability(b.space, b.bookingDate, b.eventId);
+    if (!availability.success) {
+      return availability;
+    }
+  }
 
   try {
-    await dbc.dbSaveData("bookings", booking);
-    return ErrorManager.returnSuccess(201, "Booking created successfully", { code: 201 });
+    for (const b of bookingsToSave) {
+      await dbc.dbSaveData("bookings", b);
+    }
+    return ErrorManager.returnSuccess(201, "Booking(s) created successfully", {
+      code: 201,
+      count: bookingsToSave.length,
+    });
   } catch (error) {
     logger.error(`Error saving booking to the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -41,43 +94,78 @@ export async function addBooking(booking) {
 
 /**
  * Updates a booking in the database.
+ * Can update a single booking or a group of bookings (metadata only).
  * @param {string} id - The ID of the booking to update.
  * @param {object} booking - The updated booking object.
+ * @param {string} [scope='single'] - 'single' or 'group'.
  * @returns {Promise<object>} The result of the operation or an error message.
  */
-export async function updateBooking(id, booking) {
+export async function updateBooking(id, booking, scope = "single") {
   if (!id || !booking) {
     return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    const existingBooking = await getBooking(id, true);
-    if (!existingBooking.success) {
+    const existingBookingResult = await getBooking(id, true);
+    if (!existingBookingResult.success) {
       return ErrorManager.returnError("bookingNotFound");
     }
+    const existingBooking = existingBookingResult.data;
 
-    // Si se cambia el espacio o evento, validar nuevamente
+    const eventId = booking.eventId || existingBooking.eventId;
+    const space = booking.space || existingBooking.space;
+
     if (booking.eventId || booking.space) {
-      const eventId = booking.eventId || existingBooking.data.eventId;
-      const space = booking.space || existingBooking.data.space;
-
       const spaceValidation = await validateSpaceForEvent(eventId, space);
       if (!spaceValidation.success) {
         return spaceValidation;
       }
+    }
 
-      // Verificar disponibilidad si cambia fecha o espacio
-      if (booking.bookingDate || booking.space) {
-        const bookingDate = booking.bookingDate || existingBooking.data.bookingDate;
+    if (scope === "group" && existingBooking.groupId) {
+      const fieldsToUpdate = {};
+      if (booking.eventId) fieldsToUpdate.eventId = booking.eventId;
+      if (booking.space) fieldsToUpdate.space = booking.space;
+      if (booking.info !== undefined) fieldsToUpdate.info = booking.info;
+      if (booking.bookedBy) fieldsToUpdate.bookedBy = booking.bookedBy;
+
+      if (Object.keys(fieldsToUpdate).length === 0) {
+        return ErrorManager.returnSuccess(200, "No fields to update");
+      }
+
+      if (booking.space || booking.eventId) {
+        const groupBookings = await dbc.dbGetWhere("bookings", [
+          { field: "groupId", operator: "=", value: existingBooking.groupId },
+          { field: "deleted", operator: "=", value: false },
+        ]);
+
+        for (const gb of groupBookings) {
+          const checkDate = gb.bookingDate;
+          const availability = await checkSpaceAvailability(space, checkDate, eventId, gb.id);
+          if (!availability.success) {
+            return availability;
+          }
+        }
+      }
+
+      await dbc.dbUpdateWhere(
+        "bookings",
+        [{ field: "groupId", operator: "=", value: existingBooking.groupId }],
+        fieldsToUpdate,
+      );
+      return ErrorManager.returnSuccess(200, "Booking group updated successfully", { code: 200 });
+    } else {
+      if (booking.bookingDate || booking.space || booking.eventId) {
+        const bookingDate = booking.bookingDate || existingBooking.bookingDate;
         const availability = await checkSpaceAvailability(space, bookingDate, eventId, id);
         if (!availability.success) {
           return availability;
         }
       }
-    }
 
-    await dbc.dbUpdateData("bookings", id, booking);
-    return ErrorManager.returnSuccess(200, "Booking updated successfully", { code: 200 });
+      await dbc.dbUpdateData("bookings", id, booking);
+      return ErrorManager.returnSuccess(200, "Booking updated successfully", { code: 200 });
+    }
   } catch (error) {
     logger.error(`Error updating booking in the database: ${error.message}`);
     return ErrorManager.handleError(error);
@@ -87,23 +175,68 @@ export async function updateBooking(id, booking) {
 /**
  * Toggles the status of a booking (enabled/disabled).
  * @param {string} id - The ID of the booking to change status.
+ * @param {string} [scope='single'] - 'single' or 'group'.
  * @returns {Promise<object>} The result of the operation or an error message.
  */
-export async function changeBookingStatus(id) {
+export async function changeBookingStatus(id, scope = "single") {
   if (!id) {
     return ErrorManager.returnError("invalidParameters");
   }
 
   try {
-    const bookingStatus = await getBookingStatus(id);
-    if (typeof bookingStatus !== "boolean") {
-      return bookingStatus; // Return error if any
+    const existingBookingResult = await getBooking(id, true);
+    if (!existingBookingResult.success) {
+      return ErrorManager.returnError("bookingNotFound");
+    }
+    const existingBooking = existingBookingResult.data;
+    const newStatus = !existingBooking.deleted;
+
+    if (scope === "group" && existingBooking.groupId) {
+      await dbc.dbUpdateWhere(
+        "bookings",
+        [{ field: "groupId", operator: "=", value: existingBooking.groupId }],
+        { deleted: newStatus },
+      );
+    } else {
+      await dbc.dbUpdateData("bookings", id, { deleted: newStatus });
     }
 
-    await dbc.dbUpdateData("bookings", id, { deleted: !bookingStatus });
     return ErrorManager.returnSuccess(200, "Booking status changed successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error changing booking status in the database: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Deletes a booking or group of bookings permanently or logically.
+ * For this app, we use logical delete (toggle status), but providing DELETE method as requested.
+ * @param {string} id
+ * @param {string} scope
+ */
+export async function deleteBooking(id, scope = "single") {
+  if (!id) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+  try {
+    const existingBookingResult = await getBooking(id, true);
+    if (!existingBookingResult.success) {
+      return ErrorManager.returnError("bookingNotFound");
+    }
+    const existingBooking = existingBookingResult.data;
+
+    if (scope === "group" && existingBooking.groupId) {
+      await dbc.dbUpdateWhere(
+        "bookings",
+        [{ field: "groupId", operator: "=", value: existingBooking.groupId }],
+        { deleted: true },
+      );
+    } else {
+      await dbc.dbUpdateData("bookings", id, { deleted: true });
+    }
+    return ErrorManager.returnSuccess(200, "Booking deleted successfully", { code: 200 });
+  } catch (error) {
+    logger.error(`Error deleting booking: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }
@@ -235,7 +368,7 @@ export async function getBookingByEventAndDate(eventId, bookingDate, includeInac
  * Retrieves bookings from the database based on their status and optional filters.
  * @param {string} [status="active"] - The status of bookings to retrieve ("all", "active", "inactive").
  * @param {string} [userId=null] - Optional user ID to filter bookings by specific user.
- * @param {object} [filters={}] - Optional filters: { startMonth, endMonth }
+ * @param {object} [filters={}] - Optional filters: { startMonth, endMonth, startDate, endDate }
  * @returns {Promise<object[]>} An array of bookings or an error message.
  */
 export async function getBookings(status = "active", userId = null, filters = {}) {
@@ -271,26 +404,37 @@ export async function getBookings(status = "active", userId = null, filters = {}
         return ErrorManager.returnError("invalidParameters");
     }
 
-    if (filters.startMonth || filters.endMonth) {
-      let startDate = null;
-      let endDate = null;
+    if (filters.startDate) {
+      conditions.push({ field: "bookingDate", operator: ">=", value: filters.startDate });
+    }
+    if (filters.endDate) {
+      conditions.push({ field: "bookingDate", operator: "<=", value: filters.endDate });
+    }
+
+    if (!filters.startDate && !filters.endDate && (filters.startMonth || filters.endMonth)) {
+      let startDateMonth = null;
+      let endDateMonth = null;
       if (filters.startMonth) {
         const [sm, sy] = filters.startMonth.split("/");
-        startDate = new Date(Number(`20${sy.length === 2 ? sy : "0" + sy}`), Number(sm) - 1, 1, 0, 0, 0, 0);
+        startDateMonth = new Date(Number(`20${sy.length === 2 ? sy : "0" + sy}`), Number(sm) - 1, 1, 0, 0, 0, 0);
       }
       if (filters.endMonth) {
         const [em, ey] = filters.endMonth.split("/");
-        endDate = new Date(Number(`20${ey.length === 2 ? ey : "0" + ey}`), Number(em), 0, 23, 59, 59, 999);
+        endDateMonth = new Date(Number(`20${ey.length === 2 ? ey : "0" + ey}`), Number(em), 0, 23, 59, 59, 999);
       }
-      if (startDate) {
-        conditions.push({ field: "bookingDate", operator: ">=", value: startDate.toISOString() });
+      if (startDateMonth) {
+        conditions.push({ field: "bookingDate", operator: ">=", value: startDateMonth.toISOString() });
       }
-      if (endDate) {
-        conditions.push({ field: "bookingDate", operator: "<=", value: endDate.toISOString() });
+      if (endDateMonth) {
+        conditions.push({ field: "bookingDate", operator: "<=", value: endDateMonth.toISOString() });
       }
     }
 
-    result = await dbc.dbGetWhere("bookings", conditions);
+    if (conditions.length > 0) {
+      result = await dbc.dbGetWhere("bookings", conditions);
+    } else {
+      result = await dbc.dbGetAll("bookings");
+    }
 
     if (result.length === 0) {
       return ErrorManager.returnSuccess(200, "No bookings found", []);
@@ -568,4 +712,24 @@ export async function getBookingsCount(userId = null, type = null) {
     logger.error(`Error retrieving bookings summary: ${error.message}`);
     return ErrorManager.handleError(error);
   }
+}
+
+/**
+ * Helper: format ISO string to MySQL DateTime
+ */
+function toMySQLDateTime(date) {
+  const pad = (n) => (n < 10 ? "0" + n : n);
+  return (
+    date.getFullYear() +
+    "-" +
+    pad(date.getMonth() + 1) +
+    "-" +
+    pad(date.getDate()) +
+    " " +
+    pad(date.getHours()) +
+    ":" +
+    pad(date.getMinutes()) +
+    ":" +
+    pad(date.getSeconds())
+  );
 }
