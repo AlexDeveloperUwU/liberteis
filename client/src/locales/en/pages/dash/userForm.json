@@ -47,7 +47,9 @@
     "userPermissions": "User permissions",
     "createdBy": "Created by",
     "lastAccess": "Last access",
-    "neverLoggedIn": "User has never logged in"
+    "neverLoggedIn": "User has never logged in",
+    "loading": "Loading...",
+    "errorLoading": "Error loading data"
   },
   "permissions": {
     "manageOwnEvents": "Manage its own events",
@@ -69,7 +71,8 @@
     "requestSetup": "Error setting up request. Please try again",
     "bigIntError": "Server error: Cannot process large numeric values",
     "cantChangeName": "The user name cannot be changed",
-    "cantChangeRole": "The user role cannot be changed"
+    "cantChangeRole": "The user role cannot be changed",
+    "unknown": "An unknown error occurred"
   },
   "notifications": {
     "createSuccess": "User created successfully!",

@@ -29,7 +29,6 @@
     },
     "labels": {
       "title": "Título do evento",
-      "date": "Data e hora",
       "category": "Categoría",
       "info": "Descrición",
       "duration": "Duración",
@@ -45,8 +44,6 @@
     },
     "placeholders": {
       "title": "Introduce un título para o evento",
-      "date": "Data e hora do evento",
-      "noDate": "Sen data seleccionada",
       "selectCategory": "Selecciona unha categoría",
       "noCategory": "Sen categoría seleccionada",
       "info": "Describe o evento...",
@@ -66,7 +63,6 @@
   },
   "errors": {
     "titleLength": "O título debe ter entre 3 e 200 caracteres",
-    "dateRequired": "A data é obrigatoria",
     "categoryRequired": "Debes seleccionar unha categoría",
     "infoLength": "A descrición debe ter entre {min} e {max} caracteres",
     "durationRequired": "A duración debe ser maior que cero",

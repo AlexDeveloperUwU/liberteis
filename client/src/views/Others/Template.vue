@@ -1,14 +1,14 @@
 <template>
   <div class="h-full w-full p-6">
-    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.home.title") }}</h1>
-    <p class="text-text-800 mb-6">{{ t("pages.home.description") }}</p>
+    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">{{ t("pages.dash.home.page.title") }}</h1>
+    <p class="text-text-800 mb-6">{{ t("pages.dash.home.page.description") }}</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
       <div
         class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <CalendarDays class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.home.totals") }}</p>
+          <p class="font-medium text-text-800">{{ t("pages.dash.home.metrics.totals") }}</p>
         </div>
         <h2 class="text-2xl font-bold text-text-950">{{ metrics.totales }}</h2>
       </div>
@@ -17,7 +17,7 @@
         class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <CalendarCheck2 class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.home.done") }}</p>
+          <p class="font-medium text-text-800">{{ t("pages.dash.home.metrics.done") }}</p>
         </div>
         <h2 class="text-2xl font-bold text-text-950">{{ metrics.hechos }}</h2>
       </div>
@@ -26,7 +26,7 @@
         class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <Calendar1 class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.home.upcoming") }}</p>
+          <p class="font-medium text-text-800">{{ t("pages.dash.home.metrics.upcoming") }}</p>
         </div>
         <h2 class="text-2xl font-bold text-text-950">01/01/1999</h2>
       </div>
@@ -35,7 +35,7 @@
         class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-300 transition-all duration-200">
         <div class="flex items-center gap-2 mb-2">
           <CalendarCog class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.home.toBeDone") }}</p>
+          <p class="font-medium text-text-800">{{ t("pages.dash.home.metrics.toBeDone") }}</p>
         </div>
         <h2 class="text-2xl font-bold text-text-950">{{ metrics.porHacer }}</h2>
       </div>

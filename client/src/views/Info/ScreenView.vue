@@ -59,8 +59,7 @@
                   <p class="text-(--text-700) whitespace-pre-wrap wrap-break-word">{{ currentEvent.bookingInfo }}</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div
-                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
+                  <div class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-(--primary-100) p-2 rounded-full mr-3">
                         <Clock class="w-5 h-5 text-(--primary-600)" />
@@ -71,8 +70,7 @@
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
+                  <div class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-(--primary-100) p-2 rounded-full mr-3">
                         <Clock class="w-5 h-5 text-(--primary-600)" />
@@ -83,8 +81,7 @@
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
+                  <div class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-(--primary-100) p-2 rounded-full mr-3">
                         <MapPin class="w-5 h-5 text-(--primary-600)" />
@@ -95,8 +92,7 @@
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
+                  <div class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-(--primary-100) p-2 rounded-full mr-3">
                         <Tag class="w-5 h-5 text-(--primary-600)" />
@@ -107,8 +103,7 @@
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
+                  <div class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-(--primary-100) p-2 rounded-full mr-3">
                         <CalendarDays class="w-5 h-5 text-(--primary-600)" />
@@ -119,8 +114,7 @@
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
+                  <div class="bg-(--background-100) rounded-lg p-4 border border-(--background-200) shadow-sm">
                     <div class="flex items-center">
                       <div class="bg-(--primary-100) p-2 rounded-full mr-3">
                         <User class="w-5 h-5 text-(--primary-600)" />

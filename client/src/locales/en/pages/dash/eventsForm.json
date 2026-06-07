@@ -29,7 +29,6 @@
     },
     "labels": {
       "title": "Event title",
-      "date": "Date and time",
       "category": "Category",
       "info": "Description",
       "duration": "Duration",
@@ -45,8 +44,6 @@
     },
     "placeholders": {
       "title": "Enter a title for the event",
-      "date": "Event date and time",
-      "noDate": "No date selected",
       "selectCategory": "Select a category",
       "noCategory": "No category selected",
       "info": "Describe the event...",
@@ -66,7 +63,6 @@
   },
   "errors": {
     "titleLength": "The title must be between 3 and 200 characters",
-    "dateRequired": "Date is required",
     "categoryRequired": "You must select a category",
     "infoLength": "Description must be between {min} and {max} characters",
     "durationRequired": "Duration must be greater than zero",

@@ -47,7 +47,9 @@
     "userPermissions": "Permisos de usuario",
     "createdBy": "Creado por",
     "lastAccess": "Último acceso",
-    "neverLoggedIn": "O usuario nunca iniciou sesión"
+    "neverLoggedIn": "O usuario nunca iniciou sesión",
+    "loading": "Cargando...",
+    "errorLoading": "Erro ao cargar os datos"
   },
   "permissions": {
     "manageOwnEvents": "Xestionar os seus propios eventos",
@@ -69,7 +71,8 @@
     "requestSetup": "Erro ao configurar a solicitude. Por favor, inténteo de novo",
     "bigIntError": "Erro do servidor: Non se poden procesar valores numéricos grandes",
     "cantChangeName": "Non se pode cambiar o nome do usuario",
-    "cantChangeRole": "Non se pode cambiar o rol do usuario"
+    "cantChangeRole": "Non se pode cambiar o rol do usuario",
+    "unknown": "Produciuse un erro descoñecido"
   },
   "notifications": {
     "createSuccess": "Usuario creado con éxito!",

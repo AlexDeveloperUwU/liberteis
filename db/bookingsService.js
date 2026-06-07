@@ -192,11 +192,9 @@ export async function changeBookingStatus(id, scope = "single") {
     const newStatus = !existingBooking.deleted;
 
     if (scope === "group" && existingBooking.groupId) {
-      await dbc.dbUpdateWhere(
-        "bookings",
-        [{ field: "groupId", operator: "=", value: existingBooking.groupId }],
-        { deleted: newStatus },
-      );
+      await dbc.dbUpdateWhere("bookings", [{ field: "groupId", operator: "=", value: existingBooking.groupId }], {
+        deleted: newStatus,
+      });
     } else {
       await dbc.dbUpdateData("bookings", id, { deleted: newStatus });
     }
@@ -226,11 +224,9 @@ export async function deleteBooking(id, scope = "single") {
     const existingBooking = existingBookingResult.data;
 
     if (scope === "group" && existingBooking.groupId) {
-      await dbc.dbUpdateWhere(
-        "bookings",
-        [{ field: "groupId", operator: "=", value: existingBooking.groupId }],
-        { deleted: true },
-      );
+      await dbc.dbUpdateWhere("bookings", [{ field: "groupId", operator: "=", value: existingBooking.groupId }], {
+        deleted: true,
+      });
     } else {
       await dbc.dbUpdateData("bookings", id, { deleted: true });
     }

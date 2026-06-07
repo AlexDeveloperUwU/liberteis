@@ -42,7 +42,6 @@
   },
   "errors": {
     "nameLength": "O nome debe ter polo menos 3 caracteres e máximo 100",
-    "typeLength": "O tipo debe ter polo menos 3 caracteres",
     "unknown": "Ocorreu un erro descoñecido",
     "noResponse": "Non se recibiu resposta do servidor",
     "requestSetup": "Erro ao preparar a solicitude",

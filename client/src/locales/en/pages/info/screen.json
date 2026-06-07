@@ -12,5 +12,6 @@
   "category": "Category",
   "noDuration": "Duration not specified",
   "addedBy": "Added by",
-  "date": "Date"
+  "date": "Date",
+  "noImage": "No image available"
 }

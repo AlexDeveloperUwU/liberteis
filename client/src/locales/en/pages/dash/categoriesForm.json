@@ -42,7 +42,6 @@
   },
   "errors": {
     "nameLength": "Name must be at least 3 characters and maximum 100",
-    "typeLength": "Type must be at least 3 characters",
     "unknown": "An unknown error has occurred",
     "noResponse": "No response received from server",
     "requestSetup": "Error preparing request",

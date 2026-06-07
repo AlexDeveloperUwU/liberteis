@@ -51,5 +51,8 @@
     "placeholder": "Buscar...",
     "noResults": "Sen resultados"
   },
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+  "errors": {
+    "generic": "Produciuse un erro inesperado."
+  }
 }

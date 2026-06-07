@@ -6,5 +6,10 @@
   "successTitle": "Inicio de sesión correcto",
   "successMessage": "Iniciaches sesión correctamente.",
   "errorTitle": "Erro ao iniciar sesión",
-  "errorMessage": "Correo ou contrasinal incorrectos."
+  "errorMessage": "Correo ou contrasinal incorrectos.",
+  "errors": {
+    "emailRequired": "O correo electrónico é obrigatorio.",
+    "emailInvalid": "Enderezo de correo inválido.",
+    "passwordRequired": "O contrasinal é obrigatorio."
+  }
 }

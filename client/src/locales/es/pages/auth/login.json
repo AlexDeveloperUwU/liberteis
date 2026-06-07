@@ -6,5 +6,10 @@
   "successTitle": "Inicio de sesión exitoso",
   "successMessage": "Has iniciado sesión correctamente.",
   "errorTitle": "Error al iniciar sesión",
-  "errorMessage": "Correo o contraseña incorrectos."
+  "errorMessage": "Correo o contraseña incorrectos.",
+  "errors": {
+    "emailRequired": "El correo electrónico es obligatorio.",
+    "emailInvalid": "Dirección de correo inválida.",
+    "passwordRequired": "La contraseña es obligatoria."
+  }
 }

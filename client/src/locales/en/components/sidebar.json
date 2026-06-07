@@ -1,12 +1,9 @@
 {
   "home": "Home",
-  "analytics": "Analytics",
   "users": "Users",
   "spaces": "Spaces",
   "categories": "Categories",
   "events": "Events",
-  "team": "Team",
-  "reports": "Reports",
   "settings": "Settings",
   "close": "Close"
 }

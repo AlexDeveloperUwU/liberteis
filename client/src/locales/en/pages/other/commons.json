@@ -51,5 +51,8 @@
     "placeholder": "Search...",
     "noResults": "No results"
   },
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "errors": {
+    "generic": "An unexpected error occurred."
+  }
 }

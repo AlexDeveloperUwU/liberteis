@@ -6,5 +6,10 @@
   "successTitle": "Login successful",
   "successMessage": "You have logged in successfully.",
   "errorTitle": "Login failed",
-  "errorMessage": "Invalid email or password."
+  "errorMessage": "Invalid email or password.",
+  "errors": {
+    "emailRequired": "Email is required.",
+    "emailInvalid": "Invalid email address.",
+    "passwordRequired": "Password is required."
+  }
 }

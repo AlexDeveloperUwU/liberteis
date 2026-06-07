@@ -18,15 +18,12 @@
     },
     "labels": {
       "name": "Nombre",
-      "spaces": "Espacios asociados",
-      "description": "Información adicional"
+      "spaces": "Espacios asociados"
     },
     "placeholders": {
       "name": "Nombre de la categoría",
       "spaces": "Selecciona los espacios para esta categoría",
-      "description": "Describe esta categoría (uso, propósito, etc.)",
-      "noSpaces": "Sin espacios asignados",
-      "noDescription": "Sin información adicional"
+      "noSpaces": "Sin espacios asignados"
     },
     "actions": {
       "submitting": "Guardando...",
@@ -45,7 +42,6 @@
   },
   "errors": {
     "nameLength": "El nombre debe tener al menos 3 caracteres y máximo 100",
-    "typeLength": "El tipo debe tener al menos 3 caracteres",
     "unknown": "Ha ocurrido un error desconocido",
     "noResponse": "No se recibió respuesta del servidor",
     "requestSetup": "Error al preparar la solicitud",
