@@ -29,7 +29,7 @@ const userMiddleware = async (req, res, next) => {
       }
     }
   } catch (error) {
-    logger.error("Error in user middleware:", error);
+    logger.error(`Error in user middleware: ${error.message}`);
   }
   next();
 };

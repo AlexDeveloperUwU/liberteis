@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as config from "../../db/configService.js";
 import ErrorManager from "../../errors/errorManager.js";
+import { logger } from "../../utils/logger.js";
 
 const api = Router();
 export default api;
@@ -35,7 +36,7 @@ api.get("/", async (req, res) => {
       return res.status(result.code).json(result);
     }
   } catch (error) {
-    console.error("Error fetching config:", error);
+    logger.error(`Error fetching config: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -71,7 +72,7 @@ api.post("/", async (req, res) => {
     const result = await config.setConfig(key, value);
     return res.status(result.code).json(result);
   } catch (error) {
-    console.error("Error creating config:", error);
+    logger.error(`Error creating config: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -107,7 +108,7 @@ api.put("/", async (req, res) => {
     const result = await config.updateConfig(key, value);
     return res.status(result.code).json(result);
   } catch (error) {
-    console.error("Error updating config:", error);
+    logger.error(`Error updating config: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -142,7 +143,7 @@ api.delete("/", async (req, res) => {
     const result = await config.deleteConfig(key);
     return res.status(result.code).json(result);
   } catch (error) {
-    console.error("Error deleting config:", error);
+    logger.error(`Error deleting config: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }

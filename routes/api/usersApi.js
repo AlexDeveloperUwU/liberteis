@@ -28,11 +28,11 @@ api.post("/", async (req, res) => {
 
     userData.password = generatePass();
 
-    logger.info("Creating user with email:", userData.email);
+    logger.info(`Creating user with email: ${userData.email}`);
     const result = await users.addUser(userData);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/users/ [POST]:", error);
+    logger.error(`Error in /api/users/ [POST]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -76,7 +76,7 @@ api.put("/", async (req, res) => {
     let updateResult;
     const userDataKeys = Object.keys(userData).filter((key) => key !== "password");
     if (userDataKeys.length > 0) {
-      logger.info("Updating user with ID:", id);
+      logger.info(`Updating user with ID: ${id}`);
       updateResult = await users.updateUser(id, userData);
 
       if (!updateResult.success) {
@@ -91,7 +91,7 @@ api.put("/", async (req, res) => {
       }),
     );
   } catch (error) {
-    logger.error("Error en /api/users/ [PUT]:", error);
+    logger.error(`Error in /api/users/ [PUT]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -117,7 +117,7 @@ api.patch("/toggle", async (req, res) => {
     const result = await users.toggleUserStatus(id);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/users/toggle [PATCH]:", error);
+    logger.error(`Error in /api/users/toggle [PATCH]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -138,7 +138,7 @@ api.get("/count", async (req, res) => {
     const result = await users.getUsersCount(type);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error in /api/users/count:", error);
+    logger.error(`Error in /api/users/count: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -168,7 +168,7 @@ api.get("/", async (req, res) => {
     const result = await users.getUsers(status || "active");
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error in /api/users/:", error);
+    logger.error(`Error in /api/users/: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -189,7 +189,7 @@ api.get("/emailCheck", async (req, res) => {
     const exists = await users.checkUserExists(email);
     return res.status(200).json(exists);
   } catch (error) {
-    logger.error("Error in /api/users/:email/exists:", error);
+    logger.error(`Error in /api/users/:email/exists: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }

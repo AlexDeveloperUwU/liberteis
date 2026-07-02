@@ -38,7 +38,7 @@ const dbPool = mysql.createPool({
  * Event triggered when a connection is established with the database.
  */
 dbPool.on("connection", () => {
-  logger.info(`Conexión establecida con la base de datos`);
+  logger.info(`Connection established with the database`);
 });
 
 /**
@@ -47,9 +47,9 @@ dbPool.on("connection", () => {
  */
 dbPool.on("error", (err) => {
   if (err instanceof AggregateError) {
-    logger.error(`AggregateError en la conexión a la base de datos: ${err.errors}`);
+    logger.error(`AggregateError in database connection: ${err.errors}`);
   } else {
-    logger.error(`Error en la conexión a la base de datos: ${err}`);
+    logger.error(`Database connection error: ${err.message || err}`);
   }
 });
 
@@ -61,11 +61,9 @@ dbPool.on("error", (err) => {
 dbPool.getConnection((err, connection) => {
   if (err) {
     if (err.code === "ECONNREFUSED") {
-      logger.error(
-        "La conexión a la base de datos fue rechazada. Verifica que el servidor de MySQL esté en funcionamiento.",
-      );
+      logger.error("Database connection refused. Verify that the MySQL server is running.");
     } else {
-      logger.error(`Error al conectar con la base de datos: ${err.message}`);
+      logger.error(`Error connecting to the database: ${err.message}`);
     }
     process.exit(1);
   }
@@ -389,7 +387,7 @@ async function createAdminUser() {
         userService.addUser(adminUser);
       });
     } catch (error) {
-      logger.error(`Error creando usuario admin: ${error.message}`);
+      logger.error(`Error creating admin user: ${error.message}`);
     }
   }
 }

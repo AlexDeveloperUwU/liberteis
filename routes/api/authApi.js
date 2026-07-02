@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as users from "../../db/userService.js";
 import { validatePass } from "../../utils/dataSecurity.js";
 import ErrorManager from "../../errors/errorManager.js";
+import { logger } from "../../utils/logger.js";
 
 /**
  * Express router for authentication related endpoints.
@@ -44,7 +45,7 @@ api.post("/login", async (req, res) => {
     req.session.userId = user.id;
     const loginUpdate = await users.updateUserLastLogin(user.id);
     if (!loginUpdate.success) {
-      console.warn("Failed to update last login time:", loginUpdate.message);
+      logger.warn(`Failed to update last login time: ${loginUpdate.message}`);
     }
 
     const responseUser = {
@@ -57,7 +58,7 @@ api.post("/login", async (req, res) => {
 
     return res.status(200).json(ErrorManager.returnSuccess(200, "Login successful", { user: responseUser }));
   } catch (error) {
-    console.error("Error in /api/auth/login:", error);
+    logger.error(`Error in /api/auth/login: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -76,7 +77,7 @@ api.post("/logout", (req, res) => {
 
   req.session.destroy((err) => {
     if (err) {
-      console.error("Error destroying session:", err);
+      logger.error(`Error destroying session: ${err.message}`);
       return res.status(500).json(ErrorManager.returnError("unknownError"));
     }
 

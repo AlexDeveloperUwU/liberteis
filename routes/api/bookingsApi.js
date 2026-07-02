@@ -27,11 +27,11 @@ api.post("/", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Creating booking for event:", bookingData.eventId, "by user:", bookingData.bookedBy);
+    logger.info(`Creating booking for event: ${bookingData.eventId} by user: ${bookingData.bookedBy}`);
     const result = await bookings.addBooking(bookingData);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/bookings/ [POST]:", error);
+    logger.error(`Error in /api/bookings/ [POST]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -57,11 +57,11 @@ api.put("/", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Updating booking with ID:", id, "Scope:", scope);
+    logger.info(`Updating booking with ID: ${id} Scope: ${scope}`);
     const result = await bookings.updateBooking(id, bookingData, scope);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/bookings/ [PUT]:", error);
+    logger.error(`Error in /api/bookings/ [PUT]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -85,11 +85,11 @@ api.patch("/toggle", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Toggling booking with ID:", id, "Scope:", scope);
+    logger.info(`Toggling booking with ID: ${id} Scope: ${scope}`);
     const result = await bookings.changeBookingStatus(id, scope);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/bookings/toggle [PATCH]:", error);
+    logger.error(`Error in /api/bookings/toggle [PATCH]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -113,11 +113,11 @@ api.delete("/", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Deleting booking with ID:", id, "Scope:", scope);
+    logger.info(`Deleting booking with ID: ${id} Scope: ${scope}`);
     const result = await bookings.deleteBooking(id, scope);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/bookings/ [DELETE]:", error);
+    logger.error(`Error in /api/bookings/ [DELETE]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -137,7 +137,7 @@ api.get("/count", async (req, res) => {
     const result = await bookings.getBookingsCount(userId, type);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error in /api/bookings/count:", error);
+    logger.error(`Error in /api/bookings/count: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -165,7 +165,7 @@ api.get("/event", async (req, res) => {
     const result = await bookings.getBookingsByEvent(eventId, include);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error in /api/bookings/event [GET]:", error);
+    logger.error(`Error in /api/bookings/event [GET]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -193,7 +193,7 @@ api.get("/user", async (req, res) => {
     const result = await bookings.getBookingsByUser(userId, include);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error in /api/bookings/user [GET]:", error);
+    logger.error(`Error in /api/bookings/user [GET]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -237,7 +237,7 @@ api.get("/", async (req, res) => {
       return res.status(result.code).json(result);
     }
   } catch (error) {
-    logger.error("Error in /api/bookings/ [GET]:", error);
+    logger.error(`Error in /api/bookings/ [GET]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }

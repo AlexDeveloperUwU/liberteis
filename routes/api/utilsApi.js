@@ -32,7 +32,7 @@ api.get("/version", (req, res) => {
 
     logger.info("Version requested successfully");
   } catch (error) {
-    logger.error("Error reading package.json:", error);
+    logger.error(`Error reading package.json: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }

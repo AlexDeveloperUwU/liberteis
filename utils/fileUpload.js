@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import fs from "fs";
 import sharp from "sharp";
+import { logger } from "./logger.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -46,7 +47,7 @@ const convertToAvif = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error("Error al convertir a AVIF:", error);
+    logger.error(`Error converting to AVIF: ${error.message}`);
     next(error);
   }
 };
@@ -61,9 +62,9 @@ export const deleteEventImage = (filename) => {
   if (fs.existsSync(filePath)) {
     try {
       fs.unlinkSync(filePath);
-      console.log(`Imagen eliminada: ${filename}`);
+      logger.info(`Image deleted: ${filename}`);
     } catch (error) {
-      console.error(`Error al eliminar imagen ${filename}:`, error);
+      logger.error(`Error deleting image ${filename}: ${error.message}`);
     }
   }
 };

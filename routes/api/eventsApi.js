@@ -31,14 +31,14 @@ api.post("/", uploadEventImage, async (req, res) => {
     if (req.file) {
       eventData.coverUrl = `/uploads/${req.file.filename}`;
       delete eventData.image;
-      logger.info("Image uploaded:", req.file.filename);
+      logger.info(`Image uploaded: ${req.file.filename}`);
     }
 
-    logger.info("Creating event with title:", eventData.title);
+    logger.info(`Creating event with title: ${eventData.title}`);
     const result = await events.addEvent(eventData);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/events/ [POST]:", error);
+    logger.error(`Error in /api/events/ [POST]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -69,19 +69,19 @@ api.put("/", uploadEventImage, async (req, res) => {
       if (currentEventResult.code === 200 && currentEventResult.data && currentEventResult.data.coverUrl) {
         const oldFilename = currentEventResult.data.coverUrl.replace("/uploads/", "");
         deleteEventImage(oldFilename);
-        logger.info("Previous image deleted:", oldFilename);
+        logger.info(`Previous image deleted: ${oldFilename}`);
       }
 
       eventData.coverUrl = `/uploads/${req.file.filename}`;
       delete eventData.image;
-      logger.info("New image uploaded:", req.file.filename);
+      logger.info(`New image uploaded: ${req.file.filename}`);
     }
 
-    logger.info("Updating event with ID:", id);
+    logger.info(`Updating event with ID: ${id}`);
     const result = await events.updateEvent(id, eventData);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/events/ [PUT]:", error);
+    logger.error(`Error in /api/events/ [PUT]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -104,11 +104,11 @@ api.patch("/toggle", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Toggling event with ID:", id);
+    logger.info(`Toggling event with ID: ${id}`);
     const result = await events.changeEventStatus(id);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/events/toggle [PATCH]:", error);
+    logger.error(`Error in /api/events/toggle [PATCH]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -129,7 +129,7 @@ api.get("/count", async (req, res) => {
     const result = await events.getEventsCount(type);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error in /api/events/count:", error);
+    logger.error(`Error in /api/events/count: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -157,7 +157,7 @@ api.get("/category", async (req, res) => {
     const result = await events.getEventsByCategory(categoryId, include);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error in /api/events/category [GET]:", error);
+    logger.error(`Error in /api/events/category [GET]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -197,7 +197,7 @@ api.get("/", async (req, res) => {
       return res.status(result.code).json(result);
     }
   } catch (error) {
-    logger.error("Error in /api/events/ [GET]:", error);
+    logger.error(`Error in /api/events/ [GET]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }

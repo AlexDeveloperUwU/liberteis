@@ -100,6 +100,5 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error("Error starting the application:", err);
-  logs.logger.error("Failed to start the application:", err);
+  logs.logger.error(`Failed to start the application: ${err.message}`);
 });

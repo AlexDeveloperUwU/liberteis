@@ -25,11 +25,11 @@ api.post("/", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Creating space with name:", spaceData.name);
+    logger.info(`Creating space with name: ${spaceData.name}`);
     const result = await spaces.addSpace(spaceData);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/spaces/ [POST]:", error);
+    logger.error(`Error in /api/spaces/ [POST]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -54,11 +54,11 @@ api.put("/", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Updating space with ID:", id);
+    logger.info(`Updating space with ID: ${id}`);
     const result = await spaces.updateSpace(id, spaceData);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/spaces/ [PUT]:", error);
+    logger.error(`Error in /api/spaces/ [PUT]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -81,11 +81,11 @@ api.patch("/toggle", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Toggling space with ID:", id);
+    logger.info(`Toggling space with ID: ${id}`);
     const result = await spaces.toggleSpaceStatus(id);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/spaces/toggle [PATCH]:", error);
+    logger.error(`Error in /api/spaces/toggle [PATCH]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -106,7 +106,7 @@ api.get("/count", async (req, res) => {
     const result = await spaces.getSpacesCount(type);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error in /api/spaces/count:", error);
+    logger.error(`Error in /api/spaces/count: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -135,7 +135,7 @@ api.get("/", async (req, res) => {
       return res.status(result.code).json(result);
     }
   } catch (error) {
-    logger.error("Error in /api/spaces/ [GET]:", error);
+    logger.error(`Error in /api/spaces/ [GET]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }

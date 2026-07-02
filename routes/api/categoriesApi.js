@@ -29,16 +29,16 @@ api.post("/", async (req, res) => {
 
     try {
       categoryData.spaces = JSON.stringify(categoryData.spaces);
-      logger.info("Creating category with name:", categoryData.name);
+      logger.info(`Creating category with name: ${categoryData.name}`);
     } catch (err) {
-      logger.error("Error converting spaces to JSON:", err);
+      logger.error(`Error converting spaces to JSON: ${err.message}`);
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
     const result = await categories.addCategory(categoryData);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/categories/ [POST]:", error);
+    logger.error(`Error in /api/categories/ [POST]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -67,16 +67,16 @@ api.put("/", async (req, res) => {
       try {
         categoryData.spaces = JSON.stringify(categoryData.spaces);
       } catch (err) {
-        logger.error("Error converting spaces to JSON (PUT):", err);
+        logger.error(`Error converting spaces to JSON (PUT): ${err.message}`);
         return res.status(400).json(ErrorManager.returnError("invalidParameters"));
       }
     }
 
-    logger.info("Updating category with ID:", id);
+    logger.info(`Updating category with ID: ${id}`);
     const result = await categories.updateCategory(id, categoryData);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/categories/ [PUT]:", error);
+    logger.error(`Error in /api/categories/ [PUT]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -99,11 +99,11 @@ api.patch("/toggle", async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info("Toggling category with ID:", id);
+    logger.info(`Toggling category with ID: ${id}`);
     const result = await categories.changeCategoryStatus(id);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error en /api/categories/toggle [PATCH]:", error);
+    logger.error(`Error in /api/categories/toggle [PATCH]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -124,7 +124,7 @@ api.get("/count", async (req, res) => {
     const result = await categories.getCategoriesCount(type);
     return res.status(result.code).json(result);
   } catch (error) {
-    logger.error("Error in /api/categories/count:", error);
+    logger.error(`Error in /api/categories/count: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }
@@ -153,7 +153,7 @@ api.get("/", async (req, res) => {
       return res.status(result.code).json(result);
     }
   } catch (error) {
-    logger.error("Error in /api/categories/ [GET]:", error);
+    logger.error(`Error in /api/categories/ [GET]: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }

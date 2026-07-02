@@ -16,18 +16,18 @@ export async function addCategory(category) {
   category.id = await id.generateId("category");
   category.deleted = false;
 
-  logger.info("Category data before saving:", JSON.stringify(category));
+  logger.info(`Category data before saving: ${JSON.stringify(category)}`);
 
   if (typeof category.spaces === "string") {
     try {
       JSON.parse(category.spaces);
-      logger.info("Spaces field is valid JSON string:", category.spaces);
+      logger.info(`Spaces field is valid JSON string: ${category.spaces}`);
     } catch (err) {
-      logger.error("Invalid JSON in spaces field:", category.spaces, err.message);
+      logger.error(`Invalid JSON in spaces field: ${category.spaces} - ${err.message}`);
       return ErrorManager.returnError("invalidParameters");
     }
   } else {
-    logger.error("Spaces field is not a string:", typeof category.spaces, category.spaces);
+    logger.error(`Spaces field is not a string: ${typeof category.spaces} - ${category.spaces}`);
     return ErrorManager.returnError("invalidParameters");
   }
 
