@@ -586,7 +586,7 @@ export async function validateSpaceForEvent(eventId, spaceId) {
     try {
       categorySpaces = typeof category.spaces === "string" ? JSON.parse(category.spaces) : category.spaces;
     } catch (error) {
-      logger.error("Error parsing category spaces:", error);
+      logger.error(`Error parsing category spaces: ${error.message}`);
       return ErrorManager.returnError("invalidCategoryData");
     }
 
