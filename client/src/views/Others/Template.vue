@@ -52,6 +52,10 @@
   </div>
 </template>
 
+<script>
+export default { name: "PageTemplate" };
+</script>
+
 <script setup>
 import { CalendarDays, CalendarCog, CalendarCheck2, Calendar1 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";

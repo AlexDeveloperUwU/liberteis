@@ -56,7 +56,7 @@
               type="text"
               v-model="searchTerm"
               class="block w-full h-10 pl-10 pr-3 py-2 rounded-lg text-sm bg-background-50 border border-background-300 placeholder-text-500 text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
-              :placeholder="t('pages.other.commons.search.placeholder') || 'Buscar...'" />
+              :placeholder="t('pages.other.commons.search.placeholder')" />
             <div
               v-if="searchTerm"
               @click="searchTerm = ''"
@@ -119,7 +119,7 @@
               @click="$router.push({ name: 'dashCategoriesNew' })"
               class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer whitespace-nowrap w-full sm:w-auto">
               <BookmarkPlus class="w-4 h-4 mr-2" />
-              <span>{{ t("pages.dash.categories.actions.add") || "Añadir categoría" }}</span>
+              <span>{{ t("pages.dash.categories.actions.add") }}</span>
             </button>
           </div>
         </div>
@@ -131,7 +131,9 @@
                 <th scope="col" class="px-6 py-4 text-left sticky-column sticky left-0 bg-background-50 z-10">
                   <div class="flex items-center gap-2 cursor-pointer" @click="toggleSort('id')">
                     <Hash class="w-4 h-4 text-primary-600" />
-                    <span class="text-sm font-bold text-text-800 uppercase tracking-wider">ID</span>
+                    <span class="text-sm font-bold text-text-800 uppercase tracking-wider">{{
+                      t("pages.other.commons.table.idHeader")
+                    }}</span>
                     <SortIcon :active="sortColumn === 'id'" :direction="sortDirection" />
                   </div>
                 </th>
@@ -189,7 +191,7 @@
                   <div class="text-sm text-text-800">
                     <div v-if="category.spaces && category.spaces.length" class="flex flex-wrap gap-1">
                       <div
-                        v-for="(spaceId, index) in category.spaces.slice(0, 3)"
+                        v-for="spaceId in category.spaces.slice(0, 3)"
                         :key="spaceId"
                         class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-primary-100 text-primary-800 border border-primary-200">
                         {{ getSpaceName(spaceId) }}
@@ -250,7 +252,7 @@
                   ? 'bg-background-100 text-text-400 border border-background-300 cursor-not-allowed'
                   : 'bg-background-50 text-text-700 border border-background-300 hover:bg-background-200 cursor-pointer',
               ]"
-              aria-label="Previous page">
+              :aria-label="t('pages.other.commons.pagination.previous')">
               <ChevronLeft class="w-4 h-4" />
             </button>
 
@@ -269,7 +271,7 @@
                   ? 'bg-background-100 text-text-400 border border-background-300 cursor-not-allowed'
                   : 'bg-background-50 text-text-700 border border-background-300 hover:bg-background-200 cursor-pointer',
               ]"
-              aria-label="Next page">
+              :aria-label="t('pages.other.commons.pagination.next')">
               <ChevronRight class="w-4 h-4" />
             </button>
           </div>

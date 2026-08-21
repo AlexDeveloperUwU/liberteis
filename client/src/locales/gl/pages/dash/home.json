@@ -15,5 +15,8 @@
     "noEvents": "Non hai eventos hoxe",
     "tryAnotherMonth": "Tenta ver outro mes",
     "close": "Pechar"
+  },
+  "errors": {
+    "loadingData": "Erro ao cargar os datos"
   }
 }

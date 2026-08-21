@@ -120,7 +120,7 @@
                       :class="{
                         'border-accent-500 ring-1 ring-accent-300': errors.name && !formSubmitted,
                       }"
-                      :placeholder="t('pages.dash.spacesForm.form.placeholders.name') || 'Nombre del espacio'"
+                      :placeholder="t('pages.dash.spacesForm.form.placeholders.name')"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
                       <CheckCircle2
@@ -148,7 +148,7 @@
                       type="text"
                       class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
                       :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.location && !formSubmitted }"
-                      :placeholder="t('pages.dash.spacesForm.form.placeholders.location') || 'Localización del espacio'"
+                      :placeholder="t('pages.dash.spacesForm.form.placeholders.location')"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
                       <CheckCircle2
@@ -171,9 +171,7 @@
                       id="info"
                       rows="5"
                       class="block w-full p-3 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950"
-                      :placeholder="
-                        t('pages.dash.spacesForm.form.placeholders.info') || 'Información del espacio'
-                      "></textarea>
+                      :placeholder="t('pages.dash.spacesForm.form.placeholders.info')"></textarea>
                   </div>
                 </div>
               </div>
@@ -231,20 +229,7 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import {
-  Map,
-  MapPin,
-  Info,
-  Mail,
-  Loader2,
-  ClipboardList,
-  CheckCircle2,
-  X,
-  Save,
-  Calendar,
-  XCircle,
-  FileText,
-} from "lucide-vue-next";
+import { Map, MapPin, Mail, Loader2, ClipboardList, CheckCircle2, X, Save, XCircle, FileText } from "lucide-vue-next";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
@@ -321,10 +306,6 @@ const isSubmitting = ref(false);
 const buttonState = ref("default");
 const formSubmitted = ref(false);
 
-const currentDate = computed(() => {
-  return new Date().toLocaleDateString();
-});
-
 const getInitials = (name) => {
   if (!name) return "";
   const nameParts = name.split(" ").filter((part) => part.length > 0);
@@ -338,14 +319,16 @@ const validateFormField = (field, value) => {
   if (formSubmitted.value) return true;
 
   switch (field) {
-    case "name":
+    case "name": {
       const isNameValid = value && value.length >= 3 && value.length <= 100;
       errors.name = isNameValid ? "" : t("pages.dash.spacesForm.errors.nameLength");
       return isNameValid;
-    case "location":
+    }
+    case "location": {
       const isLocationValid = value && value.length >= 3;
       errors.location = isLocationValid ? "" : t("pages.dash.spacesForm.errors.locationLength");
       return isLocationValid;
+    }
     default:
       return true;
   }
@@ -472,13 +455,6 @@ const loadCreatorData = async (creatorId) => {
     isLoadingCreator.value = false;
   }
 };
-
-function formatDate(dateStr) {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  if (isNaN(d)) return dateStr;
-  return d.toLocaleString();
-}
 </script>
 
 <style scoped>

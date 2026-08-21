@@ -29,7 +29,7 @@
                 <img
                   :src="currentEvent.coverUrl"
                   class="max-h-full max-w-full object-contain rounded-lg shadow-md"
-                  alt="Event cover" />
+                  :alt="t('pages.other.commons.altText.eventCover')" />
               </div>
               <div
                 v-else
@@ -177,16 +177,6 @@ const updateClock = () => {
   });
 };
 
-const formatDate = (dateStr) => {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(locale.value, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
-};
-
 const formatFullDate = (dateStr) => {
   if (!dateStr) return "";
   const date = new Date(dateStr);
@@ -202,19 +192,6 @@ const formatTime = (dateStr) => {
   if (!dateStr) return "";
   const date = new Date(dateStr);
   return date.toLocaleTimeString(locale.value, {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
-const formatDateTime = (dateStr) => {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(locale.value, {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
   });

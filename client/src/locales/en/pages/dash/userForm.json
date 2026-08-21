@@ -26,6 +26,10 @@
       "userType": "User type",
       "password": "Password"
     },
+    "actionsAria": {
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
+    },
     "placeholders": {
       "name": "User",
       "email": "E-mail",
@@ -46,6 +50,7 @@
     "selectRoleForPermissions": "Select a role to view its permissions",
     "userPermissions": "User permissions",
     "createdBy": "Created by",
+    "systemUser": "System",
     "lastAccess": "Last access",
     "neverLoggedIn": "User has never logged in",
     "loading": "Loading...",

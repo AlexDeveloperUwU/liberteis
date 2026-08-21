@@ -36,7 +36,7 @@
                     <div v-if="imagePreview || formData.coverUrl" class="w-full h-full">
                       <img
                         :src="imagePreview || formData.coverUrl"
-                        alt="Event cover"
+                        :alt="t('pages.other.commons.altText.eventCover')"
                         class="w-full h-full object-cover" />
                       <div
                         class="absolute inset-0 bg-background-950/10 group-hover:bg-background-950/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
@@ -145,7 +145,7 @@
                       :class="{
                         'border-accent-500 ring-1 ring-accent-300': errors.title && !formSubmitted,
                       }"
-                      :placeholder="t('pages.dash.eventsForm.form.placeholders.title') || 'Nombre del evento'"
+                      :placeholder="t('pages.dash.eventsForm.form.placeholders.title')"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
                       <CheckCircle2
@@ -293,9 +293,7 @@
                       maxlength="500"
                       class="block w-full p-3 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950"
                       :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.info && !formSubmitted }"
-                      :placeholder="
-                        t('pages.dash.eventsForm.form.placeholders.info') || 'Información del evento'
-                      "></textarea>
+                      :placeholder="t('pages.dash.eventsForm.form.placeholders.info')"></textarea>
                     <div class="absolute bottom-3 right-3 flex items-center">
                       <span class="text-xs text-text-500 mr-2">{{ formData.info.length }}/500</span>
                       <CheckCircle2
@@ -431,7 +429,7 @@
                   <div class="p-4">
                     <img
                       :src="imagePreview || formData.coverUrl"
-                      alt="Event cover fullscreen"
+                      :alt="t('pages.other.commons.altText.eventCoverFullscreen')"
                       class="max-h-[70vh] mx-auto object-contain rounded-lg" />
                   </div>
 
@@ -467,7 +465,6 @@ import { useRouter, useRoute } from "vue-router";
 import {
   Calendar,
   MapPin,
-  Mail,
   Loader2,
   ClipboardList,
   CheckCircle2,
@@ -737,22 +734,26 @@ const updateDuration = () => {
 const validateFormField = (field, value) => {
   if (formSubmitted.value) return true;
   switch (field) {
-    case "title":
+    case "title": {
       const isTitleValid = value && value.length >= 3 && value.length <= 200;
       errors.title = isTitleValid ? "" : t("pages.dash.eventsForm.errors.titleLength");
       return isTitleValid;
-    case "category":
+    }
+    case "category": {
       const isCategoryValid = !!value;
       errors.category = isCategoryValid ? "" : t("pages.dash.eventsForm.errors.categoryRequired");
       return isCategoryValid;
-    case "info":
+    }
+    case "info": {
       const isInfoValid = value && value.length >= 100 && value.length <= 500;
       errors.info = isInfoValid ? "" : t("pages.dash.eventsForm.errors.infoLength", { min: 100, max: 500 });
       return isInfoValid;
-    case "duration":
+    }
+    case "duration": {
       const isDurationValid = value && value > 0;
       errors.duration = isDurationValid ? "" : t("pages.dash.eventsForm.errors.durationRequired");
       return isDurationValid;
+    }
     default:
       return true;
   }

@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "../stores/authStore";
 import { hasPermission } from "../utils/permissions";
-import axios from "axios";
 import {
   loadDashboardHomeData,
   loadUsersData,

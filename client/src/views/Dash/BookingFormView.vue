@@ -35,7 +35,10 @@
                     style="width: 15%; aspect-ratio: 9/16"
                     @click="openImageModal">
                     <div v-if="selectedEventInfo && selectedEventInfo.coverUrl" class="w-full h-full">
-                      <img :src="selectedEventInfo.coverUrl" alt="Event cover" class="w-full h-full object-cover" />
+                      <img
+                        :src="selectedEventInfo.coverUrl"
+                        :alt="t('pages.other.commons.altText.eventCover')"
+                        class="w-full h-full object-cover" />
                       <div
                         class="absolute inset-0 bg-background-950/10 group-hover:bg-background-950/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
                         <div class="bg-background-50/90 p-2 rounded-full">
@@ -87,7 +90,7 @@
                         {{ t("pages.dash.bookingForm.form.labels.eventCategory") }}
                       </p>
                       <p class="text-text-800 font-medium">
-                        {{ selectedEventCategoryName || "Sin categoría" }}
+                        {{ selectedEventCategoryName || t("pages.dash.bookingForm.form.labels.noCategory") }}
                       </p>
                     </div>
                   </div>
@@ -600,7 +603,7 @@
                   <div class="p-4">
                     <img
                       :src="selectedEventInfo.coverUrl"
-                      alt="Event cover fullscreen"
+                      :alt="t('pages.other.commons.altText.eventCoverFullscreen')"
                       class="max-h-[70vh] mx-auto object-contain rounded-lg" />
                   </div>
 
@@ -855,7 +858,7 @@ const loadSpacesForCategory = async (category) => {
   if (category.spaces) {
     try {
       categorySpaces = typeof category.spaces === "string" ? JSON.parse(category.spaces) : category.spaces;
-    } catch (e) {
+    } catch {
       categorySpaces = [];
     }
   } else {
@@ -961,23 +964,27 @@ const formatBookingDate = (dateString) => {
 const validateFormField = (field, value) => {
   if (formSubmitted.value) return true;
   switch (field) {
-    case "event":
+    case "event": {
       const isEventValid = !!value;
       errors.event = isEventValid ? "" : t("pages.dash.bookingForm.errors.eventRequired");
       return isEventValid;
-    case "space":
+    }
+    case "space": {
       const isSpaceValid = !!value;
       errors.space = isSpaceValid ? "" : t("pages.dash.bookingForm.errors.spaceRequired");
       return isSpaceValid;
-    case "bookingDate":
+    }
+    case "bookingDate": {
       if (isRecurrent.value) return true;
       const isDateValid = !!value;
       errors.bookingDate = isDateValid ? "" : t("pages.dash.bookingForm.errors.dateRequired");
       return isDateValid;
-    case "info":
+    }
+    case "info": {
       const isInfoValid = !value || value.length <= 500;
       errors.info = isInfoValid ? "" : t("pages.dash.bookingForm.errors.infoLength");
       return isInfoValid;
+    }
     default:
       return true;
   }
@@ -1051,7 +1058,7 @@ const handleSubmit = async () => {
         startDate: formData.startDate,
         endDate: formData.endDate,
         days: Object.entries(recurrenceState)
-          .filter(([_, data]) => data.selected)
+          .filter(([, data]) => data.selected)
           .map(([dayIndex, data]) => ({
             day: parseInt(dayIndex),
             time: data.time,

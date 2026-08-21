@@ -6,5 +6,6 @@
   "events": "Events",
   "bookings": "Bookings",
   "settings": "Settings",
-  "close": "Close"
+  "close": "Close",
+  "logoAlt": "Logo"
 }

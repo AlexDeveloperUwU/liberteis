@@ -26,6 +26,10 @@
       "userType": "Tipo de usuario",
       "password": "Contrasinal"
     },
+    "actionsAria": {
+      "showPassword": "Mostrar contrasinal",
+      "hidePassword": "Ocultar contrasinal"
+    },
     "placeholders": {
       "name": "Usuario",
       "email": "Correo electrónico",
@@ -46,6 +50,7 @@
     "selectRoleForPermissions": "Seleccione un rol para ver os seus permisos",
     "userPermissions": "Permisos de usuario",
     "createdBy": "Creado por",
+    "systemUser": "Sistema",
     "lastAccess": "Último acceso",
     "neverLoggedIn": "O usuario nunca iniciou sesión",
     "loading": "Cargando...",

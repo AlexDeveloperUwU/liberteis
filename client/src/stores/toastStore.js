@@ -38,7 +38,7 @@ export const useToastStore = defineStore("toast", () => {
     toasts.value = [];
   };
 
-  const success = (message, title = "Éxito", options = {}) => {
+  const success = (message, title = null, options = {}) => {
     return addToast({
       type: "success",
       title,
@@ -47,7 +47,7 @@ export const useToastStore = defineStore("toast", () => {
     });
   };
 
-  const error = (message, title = "Error", options = {}) => {
+  const error = (message, title = null, options = {}) => {
     return addToast({
       type: "error",
       title,
@@ -56,7 +56,7 @@ export const useToastStore = defineStore("toast", () => {
     });
   };
 
-  const warning = (message, title = "Advertencia", options = {}) => {
+  const warning = (message, title = null, options = {}) => {
     return addToast({
       type: "warning",
       title,
@@ -65,7 +65,7 @@ export const useToastStore = defineStore("toast", () => {
     });
   };
 
-  const info = (message, title = "Información", options = {}) => {
+  const info = (message, title = null, options = {}) => {
     return addToast({
       type: "info",
       title,

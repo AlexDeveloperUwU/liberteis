@@ -25,6 +25,7 @@
       "info": "Additional information",
       "eventTitle": "Event",
       "eventCategory": "Category",
+      "noCategory": "No category",
       "eventDuration": "Duration",
       "eventCover": "Cover image",
       "repeat": "Repeat booking",

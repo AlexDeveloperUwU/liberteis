@@ -104,7 +104,7 @@ const handleLogin = async () => {
     } else {
       throw new Error("Login failed");
     }
-  } catch (error) {
+  } catch {
     toast.error(t("pages.auth.login.errorMessage"), t("pages.auth.login.errorTitle"));
   }
 };

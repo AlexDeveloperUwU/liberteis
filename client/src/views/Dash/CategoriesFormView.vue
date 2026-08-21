@@ -103,7 +103,7 @@
                       :class="{
                         'border-accent-500 ring-1 ring-accent-300': errors.name && !formSubmitted,
                       }"
-                      :placeholder="t('pages.dash.categoriesForm.form.placeholders.name') || 'Nombre de la categoría'"
+                      :placeholder="t('pages.dash.categoriesForm.form.placeholders.name')"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
                       <CheckCircle2
@@ -379,10 +379,11 @@ const validateFormField = (field, value) => {
   if (formSubmitted.value) return true;
 
   switch (field) {
-    case "name":
+    case "name": {
       const isNameValid = value && value.length >= 3 && value.length <= 100;
       errors.name = isNameValid ? "" : t("pages.dash.categoriesForm.errors.nameLength");
       return isNameValid;
+    }
     default:
       return true;
   }

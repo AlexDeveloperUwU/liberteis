@@ -52,6 +52,13 @@
     "noResults": "Sen resultados"
   },
   "cancel": "Cancelar",
+  "table": {
+    "idHeader": "ID"
+  },
+  "altText": {
+    "eventCover": "Imaxe de portada do evento",
+    "eventCoverFullscreen": "Imaxe de portada do evento a pantalla completa"
+  },
   "errors": {
     "generic": "Produciuse un erro inesperado."
   }

@@ -1,7 +1,8 @@
 {
   "common": {
     "close": "Pechar",
-    "notAvailable": "Non dispoñible"
+    "notAvailable": "Non dispoñible",
+    "eventImageAlt": "Imaxe do evento"
   },
   "bookingDetails": {
     "title": "Detalles da reserva",

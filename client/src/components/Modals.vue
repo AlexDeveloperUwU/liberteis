@@ -47,7 +47,7 @@
                           style="max-width: 15%; height: auto">
                           <img
                             :src="modal.data.coverUrl"
-                            alt="Imagen del evento"
+                            :alt="$t('components.modals.common.eventImageAlt')"
                             class="w-full object-contain aspect-9/16" />
                         </div>
                       </div>
@@ -358,6 +358,10 @@
   </Teleport>
 </template>
 
+<script>
+export default { name: "AppModals" };
+</script>
+
 <script setup>
 import { useModalStore } from "@/stores/modalStore";
 import { useRouter } from "vue-router";
@@ -399,7 +403,9 @@ const handleAction = async (action, modal) => {
       if (!action.keepOpen) {
         modalStore.removeModal(modal.id);
       }
-    } catch (e) {}
+    } catch {
+      // ignore action errors, modal stays open for the user to retry
+    }
   } else {
     modalStore.removeModal(modal.id);
   }

@@ -79,7 +79,7 @@
                         {{
                           initialUserData.lastLogin
                             ? formatDate(initialUserData.lastLogin)
-                            : t("pages.dash.userForm.profile.neverLoggedIn") || "Nunca"
+                            : t("pages.dash.userForm.profile.neverLoggedIn")
                         }}
                       </p>
                     </div>
@@ -89,7 +89,9 @@
                     <div>
                       <p class="text-xs text-text-600">{{ t("pages.dash.userForm.profile.createdBy") }}</p>
                       <p class="text-text-800 font-medium">
-                        <span v-if="initialUserData.createdBy === 'System'">System</span>
+                        <span v-if="initialUserData.createdBy === 'System'">{{
+                          t("pages.dash.userForm.profile.systemUser")
+                        }}</span>
                         <span v-else-if="isLoadingCreator">{{ t("pages.dash.userForm.profile.loading") }}</span>
                         <span v-else-if="creatorError">{{ t("pages.dash.userForm.profile.errorLoading") }}</span>
                         <span v-else-if="creatorData">{{ creatorData.name }}</span>
@@ -170,7 +172,7 @@
                         'border-accent-500 ring-1 ring-accent-300': errors.name && !formSubmitted,
                         'bg-background-100 cursor-not-allowed': isAdminAccount,
                       }"
-                      :placeholder="t('pages.dash.userForm.form.placeholders.name') || 'Nombre de la cuenta'"
+                      :placeholder="t('pages.dash.userForm.form.placeholders.name')"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
                       <CheckCircle2
@@ -206,7 +208,7 @@
                       type="email"
                       class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
                       :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.email && !formSubmitted }"
-                      :placeholder="t('pages.dash.userForm.form.placeholders.email') || 'E-Mail de la cuenta'"
+                      :placeholder="t('pages.dash.userForm.form.placeholders.email')"
                       required />
                     <div class="absolute inset-y-0 right-3 flex items-center">
                       <CheckCircle2
@@ -221,7 +223,7 @@
 
                 <div v-if="isEditMode" class="mb-4">
                   <label class="block text-text-700 text-sm font-medium mb-2" for="password">
-                    {{ t("pages.dash.userForm.form.labels.password") || "Contraseña" }}
+                    {{ t("pages.dash.userForm.form.labels.password") }}
                   </label>
                   <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -235,15 +237,17 @@
                       autocomplete="new-password"
                       class="block w-full pl-10 pr-20 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
                       :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.password && !formSubmitted }"
-                      :placeholder="
-                        t('pages.dash.userForm.form.placeholders.password') || 'Dejar vacío para no cambiar'
-                      " />
+                      :placeholder="t('pages.dash.userForm.form.placeholders.password')" />
                     <div class="absolute inset-y-0 right-3 flex items-center gap-2">
                       <button
                         type="button"
                         @click="showPassword = !showPassword"
                         class="p-1 hover:bg-background-100 rounded-md transition-colors duration-150"
-                        :title="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                        :title="
+                          showPassword
+                            ? t('pages.dash.userForm.form.actionsAria.hidePassword')
+                            : t('pages.dash.userForm.form.actionsAria.showPassword')
+                        ">
                         <component :is="showPassword ? EyeOff : Eye" class="w-4 h-4 text-text-500" />
                       </button>
                       <div v-if="isValidatingPassword" class="w-5 h-5">

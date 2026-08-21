@@ -15,5 +15,8 @@
     "noEvents": "No hay eventos hoy",
     "tryAnotherMonth": "Intenta ver otro mes",
     "close": "Cerrar"
+  },
+  "errors": {
+    "loadingData": "Error al cargar los datos"
   }
 }

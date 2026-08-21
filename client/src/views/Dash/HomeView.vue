@@ -242,7 +242,6 @@ import {
   Calendar,
   List,
   Clock,
-  X,
   CalendarX,
 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
@@ -591,7 +590,7 @@ const performDeactivate = async (id, scope, modalId, title) => {
       modalStore.removeModal(modalId); // Remove details modal
       await reloadDashboardData();
     }
-  } catch (e) {
+  } catch {
     toast.error(t("pages.other.commons.errors.generic"));
   }
 };
@@ -740,7 +739,7 @@ const loadBookings = async () => {
     updateNextBooking();
   } catch (error) {
     console.error("Error al cargar los bookings:", error);
-    loadingError.value = error.message || "Error al cargar los datos";
+    loadingError.value = error.message || t("pages.dash.home.errors.loadingData");
   } finally {
     isLoadingEvents.value = false;
   }
@@ -826,7 +825,7 @@ onMounted(async () => {
 
 watch(
   () => currentDate.value,
-  (newValue) => {
+  () => {
     loadBookings();
   },
 );

@@ -25,7 +25,7 @@
       :style="sidebarStyle">
       <div class="flex items-center w-full justify-center">
         <div class="sidebar-logo">
-          <img :src="logoImg" alt="Logo" class="w-4 h-4" />
+          <img :src="logoImg" :alt="t('components.sidebar.logoAlt')" class="w-4 h-4" />
         </div>
         <div v-if="!isCollapsed || isMobile" class="sidebar-version text-xs text-text-600">
           <span>{{ mainStore.version || "..." }}</span>

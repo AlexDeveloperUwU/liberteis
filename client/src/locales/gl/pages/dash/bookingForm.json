@@ -25,6 +25,7 @@
       "info": "Información adicional",
       "eventTitle": "Evento",
       "eventCategory": "Categoría",
+      "noCategory": "Sen categoría",
       "eventDuration": "Duración",
       "eventCover": "Imaxe de portada",
       "repeat": "Repetir reserva",

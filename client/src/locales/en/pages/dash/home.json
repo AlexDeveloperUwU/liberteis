@@ -15,5 +15,8 @@
     "noEvents": "No events today",
     "tryAnotherMonth": "Try seeing another month",
     "close": "Close"
+  },
+  "errors": {
+    "loadingData": "Error loading data"
   }
 }

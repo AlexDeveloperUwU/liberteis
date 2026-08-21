@@ -1,7 +1,8 @@
 {
   "common": {
     "close": "Cerrar",
-    "notAvailable": "No disponible"
+    "notAvailable": "No disponible",
+    "eventImageAlt": "Imagen del evento"
   },
   "bookingDetails": {
     "title": "Detalles de la reserva",

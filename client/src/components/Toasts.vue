@@ -12,7 +12,7 @@
             </div>
 
             <div class="flex-1 pt-0.5">
-              <div v-if="toast.title" class="text-sm font-medium k2d" :class="getTitleClasses(toast.type)">
+              <div class="text-sm font-medium k2d" :class="getTitleClasses(toast.type)">
                 {{ toast.title || $t(`components.toast.titles.${toast.type}`) }}
               </div>
               <div class="text-sm" :class="getMessageClasses(toast.type)">
@@ -41,6 +41,10 @@
     </div>
   </Teleport>
 </template>
+
+<script>
+export default { name: "AppToasts" };
+</script>
 
 <script setup>
 import { CheckCircle, XCircle, AlertTriangle, AlertCircle, X } from "lucide-vue-next";
