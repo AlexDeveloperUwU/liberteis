@@ -1,0 +1,40 @@
+{
+  "page": {
+    "title": "Xestión de reservas",
+    "description": "Xestiona as reservas realizadas para eventos e espazos.",
+    "tableTitle": "Lista de reservas"
+  },
+  "metrics": {
+    "totals": "Total de reservas",
+    "done": "Reservas pasadas",
+    "todo": "Reservas próximas"
+  },
+  "table": {
+    "event": "Evento",
+    "space": "Espazo",
+    "bookingDate": "Data e hora",
+    "bookedBy": "Reservado por",
+    "actions": "Accións"
+  },
+  "actions": {
+    "add": "Engadir reserva",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "reactivate": "Reactivar",
+    "deactivate": "Desactivar"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Desactivar reserva",
+      "text": "Estás seguro de que queres desactivar a reserva de '{name}'? Deixará de estar activa."
+    },
+    "reactivate": {
+      "title": "Reactivar reserva",
+      "text": "Estás seguro de que queres reactivar a reserva de '{name}'? Volverá estar activa."
+    }
+  },
+  "toasts": {
+    "deactivated": "A reserva de '{name}' foi desactivada correctamente",
+    "reactivated": "A reserva de '{name}' foi reactivada correctamente"
+  }
+}

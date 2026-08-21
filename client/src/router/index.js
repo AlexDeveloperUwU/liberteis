@@ -14,6 +14,7 @@ import {
   loadEventsData,
   loadEventCreateData,
   loadEventEditData,
+  loadBookingsData,
   loadBookingCreateData,
   loadBookingEditData,
   loadScreenData,
@@ -157,7 +158,6 @@ const routes = [
         props: true,
         beforeEnter: loadEventEditData,
       },
-      /*
       {
         path: "bookings",
         name: "dashBookings",
@@ -165,7 +165,6 @@ const routes = [
         meta: { allow: "normalUser", layout: "dashboard" },
         beforeEnter: loadBookingsData,
       },
-      */
       {
         path: "bookings/new",
         name: "dashBookingsNew",

@@ -1,0 +1,40 @@
+{
+  "page": {
+    "title": "Gestión de reservas",
+    "description": "Gestiona las reservas realizadas para eventos y espacios.",
+    "tableTitle": "Lista de reservas"
+  },
+  "metrics": {
+    "totals": "Total de reservas",
+    "done": "Reservas pasadas",
+    "todo": "Reservas próximas"
+  },
+  "table": {
+    "event": "Evento",
+    "space": "Espacio",
+    "bookingDate": "Fecha y hora",
+    "bookedBy": "Reservado por",
+    "actions": "Acciones"
+  },
+  "actions": {
+    "add": "Añadir reserva",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "reactivate": "Reactivar",
+    "deactivate": "Desactivar"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Desactivar reserva",
+      "text": "¿Estás seguro de que quieres desactivar la reserva de '{name}'? Dejará de estar activa."
+    },
+    "reactivate": {
+      "title": "Reactivar reserva",
+      "text": "¿Estás seguro de que quieres reactivar la reserva de '{name}'? Volverá a estar activa."
+    }
+  },
+  "toasts": {
+    "deactivated": "La reserva de '{name}' ha sido desactivada correctamente",
+    "reactivated": "La reserva de '{name}' ha sido reactivada correctamente"
+  }
+}

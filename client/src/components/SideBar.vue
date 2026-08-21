@@ -47,6 +47,7 @@ import {
   MapPin as LucideMapPin,
   Bookmark as LucideBookmark,
   CalendarDays as LucideCalendarDays,
+  CalendarClock as LucideCalendarClock,
 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import { ref, onMounted, computed } from "vue";
@@ -67,6 +68,7 @@ export default {
     LucideMapPin,
     LucideBookmark,
     LucideCalendarDays,
+    LucideCalendarClock,
   },
   props: {
     isCollapsed: {
@@ -105,6 +107,12 @@ export default {
           icon: "LucideCalendarDays",
           route: "/dash/events",
           permission: "managerUser",
+        },
+        {
+          titleKey: "components.sidebar.bookings",
+          icon: "LucideCalendarClock",
+          route: "/dash/bookings",
+          permission: "normalUser",
         },
         {
           titleKey: "components.sidebar.categories",

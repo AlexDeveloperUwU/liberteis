@@ -1,0 +1,40 @@
+{
+  "page": {
+    "title": "Bookings management",
+    "description": "Manage the bookings made for events and spaces.",
+    "tableTitle": "Bookings list"
+  },
+  "metrics": {
+    "totals": "Total bookings",
+    "done": "Past bookings",
+    "todo": "Upcoming bookings"
+  },
+  "table": {
+    "event": "Event",
+    "space": "Space",
+    "bookingDate": "Date and time",
+    "bookedBy": "Booked by",
+    "actions": "Actions"
+  },
+  "actions": {
+    "add": "Add booking",
+    "edit": "Edit",
+    "delete": "Delete",
+    "reactivate": "Reactivate",
+    "deactivate": "Deactivate"
+  },
+  "modals": {
+    "deactivate": {
+      "title": "Deactivate booking",
+      "text": "Are you sure you want to deactivate the booking for '{name}'? It will no longer be active."
+    },
+    "reactivate": {
+      "title": "Reactivate booking",
+      "text": "Are you sure you want to reactivate the booking for '{name}'? It will become active again."
+    }
+  },
+  "toasts": {
+    "deactivated": "The booking for '{name}' has been deactivated successfully",
+    "reactivated": "The booking for '{name}' has been reactivated successfully"
+  }
+}
