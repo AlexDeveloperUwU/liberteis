@@ -170,6 +170,7 @@ export async function dbCreateTables() {
     const hasEnableWeekends = configRows.some((row) => row.id === "enableWeekends");
     const hasAppName = configRows.some((row) => row.id === "appName");
     const domain = configRows.some((row) => row.id === "domain");
+    const hasFavicon = configRows.some((row) => row.id === "favicon");
 
     if (!hasEnableWeekends) {
       await trx.insertInto("config").values({ id: "enableWeekends", value: "false" }).execute();
@@ -179,6 +180,9 @@ export async function dbCreateTables() {
     }
     if (!domain) {
       await trx.insertInto("config").values({ id: "domain", value: "http://localhost:3000" }).execute();
+    }
+    if (!hasFavicon) {
+      await trx.insertInto("config").values({ id: "favicon", value: "" }).execute();
     }
 
     await createAdminUser();

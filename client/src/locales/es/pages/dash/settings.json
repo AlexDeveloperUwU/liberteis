@@ -1,0 +1,51 @@
+{
+  "page": {
+    "title": "Ajustes de la aplicación",
+    "description": "Gestiona la configuración general de la aplicación"
+  },
+  "preview": {
+    "title": "Ajustes actuales"
+  },
+  "form": {
+    "sections": {
+      "general": "General"
+    },
+    "labels": {
+      "appName": "Nombre de la aplicación",
+      "domain": "Dominio",
+      "enableWeekends": "Habilitar fines de semana",
+      "favicon": "Favicon"
+    },
+    "placeholders": {
+      "appName": "Nombre de la aplicación",
+      "domain": "https://ejemplo.com",
+      "enableWeekends": "Mostrar sábados y domingos en el calendario",
+      "favicon": "https://ejemplo.com/favicon.png"
+    },
+    "hints": {
+      "favicon": "URL del icono que se muestra en la pestaña del navegador. Déjalo vacío para usar el icono por defecto."
+    },
+    "actions": {
+      "updating": "Actualizando..."
+    }
+  },
+  "common": {
+    "edit": "Editar ajustes",
+    "update": "Guardar cambios",
+    "reset": "Restablecer",
+    "enabled": "Habilitado",
+    "disabled": "Deshabilitado",
+    "default": "Icono por defecto",
+    "status": {
+      "success": "¡Guardado!",
+      "error": "Error"
+    }
+  },
+  "notifications": {
+    "updateSuccess": "¡Ajustes actualizados correctamente!"
+  },
+  "errors": {
+    "updateFailed": "Error al actualizar los ajustes",
+    "loadingConfig": "Error al cargar los ajustes"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "page": {
+    "title": "Configuración da aplicación",
+    "description": "Xestiona a configuración xeral da aplicación"
+  },
+  "preview": {
+    "title": "Configuración actual"
+  },
+  "form": {
+    "sections": {
+      "general": "Xeral"
+    },
+    "labels": {
+      "appName": "Nome da aplicación",
+      "domain": "Dominio",
+      "enableWeekends": "Activar fins de semana",
+      "favicon": "Favicon"
+    },
+    "placeholders": {
+      "appName": "Nome da aplicación",
+      "domain": "https://exemplo.com",
+      "enableWeekends": "Mostrar sábados e domingos no calendario",
+      "favicon": "https://exemplo.com/favicon.png"
+    },
+    "hints": {
+      "favicon": "URL da icona que se mostra na pestana do navegador. Déixao baleiro para usar a icona por defecto."
+    },
+    "actions": {
+      "updating": "Actualizando..."
+    }
+  },
+  "common": {
+    "edit": "Editar configuración",
+    "update": "Gardar cambios",
+    "reset": "Restablecer",
+    "enabled": "Activado",
+    "disabled": "Desactivado",
+    "default": "Icona por defecto",
+    "status": {
+      "success": "Gardado!",
+      "error": "Erro"
+    }
+  },
+  "notifications": {
+    "updateSuccess": "Configuración actualizada correctamente!"
+  },
+  "errors": {
+    "updateFailed": "Erro ao actualizar a configuración",
+    "loadingConfig": "Erro ao cargar a configuración"
+  }
+}

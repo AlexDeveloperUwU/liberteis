@@ -27,10 +27,19 @@ export const useConfigStore = defineStore("config", () => {
     return configs.value[key]?.value ?? defaultValue;
   };
 
+  const updateConfig = async (key, value) => {
+    const response = await axios.put("/api/config", { key, value });
+    if (response.data.success) {
+      await loadAllConfigs();
+    }
+    return response.data;
+  };
+
   return {
     configs,
     isLoaded,
     loadAllConfigs,
     getConfigValue,
+    updateConfig,
   };
 });

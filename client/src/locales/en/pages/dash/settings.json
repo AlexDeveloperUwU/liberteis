@@ -1,0 +1,51 @@
+{
+  "page": {
+    "title": "Application settings",
+    "description": "Manage the general configuration of the application"
+  },
+  "preview": {
+    "title": "Current settings"
+  },
+  "form": {
+    "sections": {
+      "general": "General"
+    },
+    "labels": {
+      "appName": "Application name",
+      "domain": "Domain",
+      "enableWeekends": "Enable weekends",
+      "favicon": "Favicon"
+    },
+    "placeholders": {
+      "appName": "Application name",
+      "domain": "https://example.com",
+      "enableWeekends": "Show Saturdays and Sundays in the calendar",
+      "favicon": "https://example.com/favicon.png"
+    },
+    "hints": {
+      "favicon": "URL of the icon shown in the browser tab. Leave blank to use the default icon."
+    },
+    "actions": {
+      "updating": "Updating..."
+    }
+  },
+  "common": {
+    "edit": "Edit settings",
+    "update": "Save changes",
+    "reset": "Reset",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "default": "Default icon",
+    "status": {
+      "success": "Saved!",
+      "error": "Error"
+    }
+  },
+  "notifications": {
+    "updateSuccess": "Settings updated successfully!"
+  },
+  "errors": {
+    "updateFailed": "Error updating settings",
+    "loadingConfig": "Error loading settings"
+  }
+}

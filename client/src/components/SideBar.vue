@@ -132,6 +132,12 @@ export default {
           route: "/dash/users",
           permission: "managerUser",
         },
+        {
+          titleKey: "components.sidebar.settings",
+          icon: "LucideSettings",
+          route: "/dash/settings",
+          permission: "adminUser",
+        },
       ];
 
       return items.filter((item) => hasPermission(authStore.userType, item.permission));

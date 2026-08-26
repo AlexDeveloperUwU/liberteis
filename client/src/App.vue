@@ -79,24 +79,40 @@ watch(
   },
 );
 
-onMounted(async () => {
-  // Configurar el favicon dinámicamente
-  const favicon = document.querySelector('link[rel="icon"]');
-  if (favicon) {
-    favicon.href = iconUrl;
-  } else {
-    const newFavicon = document.createElement("link");
-    newFavicon.rel = "icon";
-    newFavicon.href = iconUrl;
-    document.head.appendChild(newFavicon);
+const applyFavicon = (href) => {
+  let favicon = document.querySelector('link[rel="icon"]');
+  if (!favicon) {
+    favicon = document.createElement("link");
+    favicon.rel = "icon";
+    document.head.appendChild(favicon);
   }
+  favicon.href = href;
+};
+
+onMounted(async () => {
+  // Configurar el favicon con el valor por defecto empaquetado
+  applyFavicon(iconUrl);
 
   isSidebarCollapsed.value = mainStore.sidebarCollapsed;
 
   detectMobile();
   window.addEventListener("resize", detectMobile);
   await configStore.loadAllConfigs();
+
+  // Sobrescribir con el favicon personalizado si está configurado
+  const customFavicon = configStore.getConfigValue("favicon", "");
+  if (customFavicon) {
+    applyFavicon(customFavicon);
+  }
 });
+
+// Reaccionar a cambios del favicon configurado (p. ej. desde la vista de ajustes)
+watch(
+  () => configStore.getConfigValue("favicon", ""),
+  (newFavicon) => {
+    applyFavicon(newFavicon || iconUrl);
+  },
+);
 </script>
 
 <style scoped>

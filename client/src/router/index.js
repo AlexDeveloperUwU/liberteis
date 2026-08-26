@@ -89,6 +89,12 @@ const routes = [
         },
         beforeEnter: loadUserConfigData,
       },
+      {
+        path: "settings",
+        name: "dashSettings",
+        component: () => import("../views/Dash/SettingsView.vue"),
+        meta: { allow: "adminUser", layout: "dashboard" },
+      },
 
       {
         path: "spaces",
