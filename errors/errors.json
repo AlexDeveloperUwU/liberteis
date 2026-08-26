@@ -134,5 +134,13 @@
   "userDisabled": {
     "code": 403,
     "message": "pages.other.errors.userDisabled"
+  },
+  "forbiddenAdminOnly": {
+    "code": 403,
+    "message": "pages.other.errors.forbiddenAdminOnly"
+  },
+  "unauthorized": {
+    "code": 401,
+    "message": "pages.other.errors.unauthorized"
   }
 }

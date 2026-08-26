@@ -14,8 +14,8 @@ export async function setConfig(key, value) {
   }
 
   try {
-    const result = await dbc.dbSaveData("config", { id: key, value: value });
-    return ErrorManager.returnSuccess(201, "Configuration created successfully", result);
+    await dbc.dbSaveData("config", { id: key, value: value });
+    return ErrorManager.returnSuccess(201, "Configuration created successfully", { key, value });
   } catch (error) {
     logger.error(`Error saving config to the database: ${error.message}`);
     return ErrorManager.returnError("configSaveError");
@@ -34,8 +34,8 @@ export async function updateConfig(key, value) {
   }
 
   try {
-    const result = await dbc.dbUpdateData("config", key, { value: value });
-    return ErrorManager.returnSuccess(200, "Configuration updated successfully", result);
+    await dbc.dbUpdateData("config", key, { value: value });
+    return ErrorManager.returnSuccess(200, "Configuration updated successfully", { key, value });
   } catch (error) {
     logger.error(`Error updating config in the database: ${error.message}`);
     return ErrorManager.returnError("configUpdateError");
@@ -53,8 +53,8 @@ export async function deleteConfig(key) {
   }
 
   try {
-    const result = await dbc.dbDeleteData("config", key);
-    return ErrorManager.returnSuccess(200, "Configuration deleted successfully", result);
+    await dbc.dbDeleteData("config", key);
+    return ErrorManager.returnSuccess(200, "Configuration deleted successfully", { key });
   } catch (error) {
     logger.error(`Error deleting config from the database: ${error.message}`);
     return ErrorManager.returnError("configDeleteError");

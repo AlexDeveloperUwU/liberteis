@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as config from "../../db/configService.js";
 import ErrorManager from "../../errors/errorManager.js";
+import { requireAdmin } from "../middleware/requireAdmin.js";
 import { logger } from "../../utils/logger.js";
 
 const api = Router();
@@ -52,7 +53,7 @@ api.get("/", async (req, res) => {
  * @param {object} res - Express response object
  * @returns {object} JSON response with success or error message
  */
-api.post("/", async (req, res) => {
+api.post("/", requireAdmin, async (req, res) => {
   try {
     const { key, value } = req.body;
 
@@ -88,7 +89,7 @@ api.post("/", async (req, res) => {
  * @param {object} res - Express response object
  * @returns {object} JSON response with success or error message
  */
-api.put("/", async (req, res) => {
+api.put("/", requireAdmin, async (req, res) => {
   try {
     const { key, value } = req.body;
 
@@ -123,7 +124,7 @@ api.put("/", async (req, res) => {
  * @param {object} res - Express response object
  * @returns {object} JSON response with success or error message
  */
-api.delete("/", async (req, res) => {
+api.delete("/", requireAdmin, async (req, res) => {
   try {
     const { key } = req.query;
 
