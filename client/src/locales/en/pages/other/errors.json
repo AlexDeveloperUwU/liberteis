@@ -32,5 +32,7 @@
   "categoryUpdateError": "Error updating category.",
   "categoryStatusChangeError": "Error changing category status.",
   "passwordUpdateError": "Error updating password.",
-  "userDisabled": "User is disabled."
+  "userDisabled": "User is disabled.",
+  "forbiddenAdminOnly": "Only administrators can perform this action.",
+  "unauthorized": "Your session has expired. Please log in again."
 }
