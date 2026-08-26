@@ -3,6 +3,7 @@ import * as events from "../../db/eventsService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { logger } from "../../utils/logger.js";
 import { uploadEventImage, deleteEventImage } from "../../utils/fileUpload.js";
+import { requireAuth } from "../middleware/requireAdmin.js";
 
 /**
  * Express router for event related endpoints.
@@ -12,6 +13,20 @@ const api = Router();
 export default api;
 
 /**
+ * Whether the current user may modify the given event.
+ * Managers and admins may modify any event; a normal user only their own.
+ * @param {object} req - Express request object (must have req._reqUser).
+ * @param {string} id - Event ID.
+ * @returns {Promise<boolean>}
+ */
+async function canModifyEvent(req, id) {
+  const type = req._reqUser?.type;
+  if (type === "managerUser" || type === "adminUser") return true;
+  const result = await events.getEvent(id, true);
+  return result.success && result.data.createdBy === req._reqUser?.id;
+}
+
+/**
  * @name POST /api/events
  * @description Creates a new event
  * @param {object} req - Express request object.
@@ -19,13 +34,20 @@ export default api;
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and result message.
  */
-api.post("/", uploadEventImage, async (req, res) => {
+api.post("/", requireAuth, uploadEventImage, async (req, res) => {
   try {
     const eventData = req.body;
 
     if (!eventData || !eventData.title || !eventData.info || !eventData.category) {
       logger.error("Invalid event data - missing required fields");
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    const type = req._reqUser.type;
+    if (type !== "managerUser" && type !== "adminUser") {
+      eventData.createdBy = req._reqUser.id;
+    } else if (!eventData.createdBy) {
+      eventData.createdBy = req._reqUser.id;
     }
 
     if (req.file) {
@@ -54,7 +76,7 @@ api.post("/", uploadEventImage, async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and update result.
  */
-api.put("/", uploadEventImage, async (req, res) => {
+api.put("/", requireAuth, uploadEventImage, async (req, res) => {
   try {
     const { id } = req.query;
     const eventData = req.body;
@@ -62,6 +84,12 @@ api.put("/", uploadEventImage, async (req, res) => {
     if (!id) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+
+    if (!(await canModifyEvent(req, id))) {
+      return res.status(403).json(ErrorManager.returnError("forbidden"));
+    }
+
+    delete eventData.createdBy;
 
     if (req.file) {
       const currentEventResult = await events.getEvent(id, true);
@@ -96,12 +124,16 @@ api.put("/", uploadEventImage, async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and toggle result.
  */
-api.patch("/toggle", async (req, res) => {
+api.patch("/toggle", requireAuth, async (req, res) => {
   try {
     const { id } = req.query;
 
     if (!id) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    if (!(await canModifyEvent(req, id))) {
+      return res.status(403).json(ErrorManager.returnError("forbidden"));
     }
 
     logger.info(`Toggling event with ID: ${id}`);
@@ -177,7 +209,7 @@ api.get("/category", async (req, res) => {
 api.get("/", async (req, res) => {
   try {
     const { id, status, includeInactive } = req.query;
-    const userRole = req._reqUser?.role;
+    const userRole = req._reqUser?.type;
     const userId = req._reqUser?.id;
 
     if (id) {

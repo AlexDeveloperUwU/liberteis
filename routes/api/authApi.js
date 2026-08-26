@@ -12,6 +12,39 @@ const api = Router();
 export default api;
 
 /**
+ * Simple in-memory fixed-window rate limiter for the login endpoint.
+ * Limits attempts per client IP to mitigate brute-force attacks.
+ */
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+const LOGIN_MAX_ATTEMPTS = 10;
+const loginAttempts = new Map();
+
+const loginRateLimiter = (req, res, next) => {
+  const now = Date.now();
+  const ip = req.ip || req.connection?.remoteAddress || "unknown";
+  const entry = loginAttempts.get(ip);
+
+  if (!entry || now - entry.start > LOGIN_WINDOW_MS) {
+    loginAttempts.set(ip, { start: now, count: 1 });
+    return next();
+  }
+
+  entry.count += 1;
+  if (entry.count > LOGIN_MAX_ATTEMPTS) {
+    logger.warn(`Login rate limit exceeded for IP: ${ip}`);
+    return res.status(429).json(ErrorManager.returnError("tooManyRequests"));
+  }
+  next();
+};
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of loginAttempts) {
+    if (now - entry.start > LOGIN_WINDOW_MS) loginAttempts.delete(ip);
+  }
+}, LOGIN_WINDOW_MS).unref();
+
+/**
  * @name POST /api/auth/login
  * @description Logs in an existing user.
  * @param {object} req - Express request object.
@@ -20,7 +53,7 @@ export default api;
  * @param {string} req.body.password - User's password.
  * @param {object} res - Express response object.
  */
-api.post("/login", async (req, res) => {
+api.post("/login", loginRateLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -41,6 +74,10 @@ api.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json(ErrorManager.returnError("invalidParameters"));
     }
+
+    await new Promise((resolve, reject) => {
+      req.session.regenerate((err) => (err ? reject(err) : resolve()));
+    });
 
     req.session.userId = user.id;
     const loginUpdate = await users.updateUserLastLogin(user.id);
@@ -81,7 +118,7 @@ api.post("/logout", (req, res) => {
       return res.status(500).json(ErrorManager.returnError("unknownError"));
     }
 
-    res.clearCookie("session_id");
+    res.clearCookie("session_cookie");
     return res.status(200).json(ErrorManager.returnSuccess(200, "Logout successful"));
   });
 });

@@ -56,8 +56,22 @@ export async function updateUser(id, user) {
     return ErrorManager.returnError("passwordUpdateError");
   }
 
+  const allowedFields = ["name", "email", "type", "lang"];
+  const sanitized = {};
+  for (const field of allowedFields) {
+    if (user[field] !== undefined) sanitized[field] = user[field];
+  }
+
+  if (sanitized.type !== undefined && !["normalUser", "managerUser", "adminUser"].includes(sanitized.type)) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  if (Object.keys(sanitized).length === 0) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
   try {
-    await dbc.dbUpdateData("users", id, user);
+    await dbc.dbUpdateData("users", id, sanitized);
     return ErrorManager.returnSuccess(200, "User updated successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error updating user in the database: ${error.message}`);

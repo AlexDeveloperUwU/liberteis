@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as spaces from "../../db/spacesService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { logger } from "../../utils/logger.js";
+import { requireRole } from "../middleware/requireAdmin.js";
 
 /**
  * Express router for space related endpoints.
@@ -18,7 +19,7 @@ export default api;
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and result message.
  */
-api.post("/", async (req, res) => {
+api.post("/", requireRole("managerUser"), async (req, res) => {
   try {
     const spaceData = req.body;
     if (!spaceData) {
@@ -45,7 +46,7 @@ api.post("/", async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and update result.
  */
-api.put("/", async (req, res) => {
+api.put("/", requireRole("managerUser"), async (req, res) => {
   try {
     const { id } = req.query;
     const spaceData = req.body;
@@ -73,7 +74,7 @@ api.put("/", async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and toggle result.
  */
-api.patch("/toggle", async (req, res) => {
+api.patch("/toggle", requireRole("managerUser"), async (req, res) => {
   try {
     const { id } = req.query;
 

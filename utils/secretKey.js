@@ -11,7 +11,7 @@ function setKey() {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
-  fs.writeFileSync(keyPath, crypto.randomBytes(32).toString("hex"));
+  fs.writeFileSync(keyPath, crypto.randomBytes(32).toString("hex"), { mode: 0o600 });
 }
 
 export function getKey() {

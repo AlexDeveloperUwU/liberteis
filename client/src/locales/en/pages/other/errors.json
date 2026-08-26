@@ -34,5 +34,7 @@
   "passwordUpdateError": "Error updating password.",
   "userDisabled": "User is disabled.",
   "forbiddenAdminOnly": "Only administrators can perform this action.",
-  "unauthorized": "Your session has expired. Please log in again."
+  "unauthorized": "Your session has expired. Please log in again.",
+  "forbidden": "You do not have permission to perform this action.",
+  "tooManyRequests": "Too many attempts. Please try again later."
 }

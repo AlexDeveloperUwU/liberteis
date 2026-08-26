@@ -41,6 +41,22 @@ async function main() {
   app.use(helmet.noSniff());
   app.use(helmet.frameguard({ action: "deny" }));
   app.use(helmet.hsts({ maxAge: 63072000, includeSubDomains: true, preload: true }));
+  app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:"],
+        fontSrc: ["'self'", "data:"],
+        connectSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+      },
+    }),
+  );
 
   const sessionOptions = {
     host: envConfig.MYSQL_HOST,
@@ -77,8 +93,8 @@ async function main() {
   app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
   app.use(logs.httpLogger);
   app.use(cookieParser());
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json({ limit: "15mb" }));
+  app.use(bodyParser.urlencoded({ extended: true, limit: "15mb" }));
 
   app.use("/", e.static(path.join(__dirname, "views")));
   app.use("/uploads", e.static(path.join(__dirname, "data", "uploads")));

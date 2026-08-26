@@ -57,7 +57,13 @@ export const uploadEventImage = [upload.single("image"), convertToAvif];
 export const deleteEventImage = (filename) => {
   if (!filename) return;
 
-  const filePath = path.join(__dirname, "../data/uploads", filename);
+  const uploadsDir = path.resolve(__dirname, "../data/uploads");
+  const filePath = path.resolve(uploadsDir, filename);
+
+  if (filePath !== uploadsDir && !filePath.startsWith(uploadsDir + path.sep)) {
+    logger.error(`Refused to delete image outside uploads dir: ${filename}`);
+    return;
+  }
 
   if (fs.existsSync(filePath)) {
     try {

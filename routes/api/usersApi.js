@@ -3,6 +3,7 @@ import * as users from "../../db/userService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { generatePass } from "../../utils/password.js";
 import { logger } from "../../utils/logger.js";
+import { requireAdmin, requireRole } from "../middleware/requireAdmin.js";
 
 /**
  * Express router for authentication related endpoints.
@@ -19,7 +20,7 @@ export default api;
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and result message.
  */
-api.post("/", async (req, res) => {
+api.post("/", requireAdmin, async (req, res) => {
   try {
     const userData = req.body;
     if (!userData) {
@@ -48,7 +49,7 @@ api.post("/", async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and update result.
  */
-api.put("/", async (req, res) => {
+api.put("/", requireAdmin, async (req, res) => {
   try {
     const { id } = req.query;
     const userData = req.body;
@@ -106,7 +107,7 @@ api.put("/", async (req, res) => {
  * @param {object} res - Express response object
  * @returns {object} JSON with status code and toggle result
  */
-api.patch("/toggle", async (req, res) => {
+api.patch("/toggle", requireAdmin, async (req, res) => {
   try {
     const { id } = req.query;
 
@@ -132,7 +133,7 @@ api.patch("/toggle", async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON object containing the users count.
  */
-api.get("/count", async (req, res) => {
+api.get("/count", requireRole("managerUser"), async (req, res) => {
   try {
     const { type } = req.query;
     const result = await users.getUsersCount(type);
@@ -165,6 +166,10 @@ api.get("/", async (req, res) => {
       return res.status(result.code).json(result);
     }
 
+    if (!req._reqUser || (req._reqUser.type !== "managerUser" && req._reqUser.type !== "adminUser")) {
+      return res.status(403).json(ErrorManager.returnError("forbidden"));
+    }
+
     const result = await users.getUsers(status || "active");
     return res.status(result.code).json(result);
   } catch (error) {
@@ -183,7 +188,7 @@ api.get("/", async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and check result.
  */
-api.get("/emailCheck", async (req, res) => {
+api.get("/emailCheck", requireRole("managerUser"), async (req, res) => {
   try {
     const { email } = req.query;
     const exists = await users.checkUserExists(email);

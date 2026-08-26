@@ -34,5 +34,7 @@
   "passwordUpdateError": "Erro ao actualizar o contrasinal.",
   "userDisabled": "O usuario está deshabilitado.",
   "forbiddenAdminOnly": "Só os administradores poden realizar esta acción.",
-  "unauthorized": "A túa sesión caducou. Por favor, inicia sesión de novo."
+  "unauthorized": "A túa sesión caducou. Por favor, inicia sesión de novo.",
+  "forbidden": "Non tes permiso para realizar esta acción.",
+  "tooManyRequests": "Demasiados intentos. Por favor, ténteo de novo máis tarde."
 }

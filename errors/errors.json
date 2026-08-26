@@ -142,5 +142,13 @@
   "unauthorized": {
     "code": 401,
     "message": "pages.other.errors.unauthorized"
+  },
+  "forbidden": {
+    "code": 403,
+    "message": "pages.other.errors.forbidden"
+  },
+  "tooManyRequests": {
+    "code": 429,
+    "message": "pages.other.errors.tooManyRequests"
   }
 }

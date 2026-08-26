@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as bookings from "../../db/bookingsService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { logger } from "../../utils/logger.js";
+import { requireAuth } from "../middleware/requireAdmin.js";
 
 /**
  * Express router for bookings related endpoints.
@@ -11,6 +12,20 @@ const api = Router();
 export default api;
 
 /**
+ * Whether the current user may modify the given booking.
+ * Managers and admins may modify any booking; a normal user only their own.
+ * @param {object} req - Express request object (must have req._reqUser).
+ * @param {string} id - Booking ID.
+ * @returns {Promise<boolean>}
+ */
+async function canModifyBooking(req, id) {
+  const type = req._reqUser?.type;
+  if (type === "managerUser" || type === "adminUser") return true;
+  const result = await bookings.getBooking(id, true);
+  return result.success && result.data.bookedBy === req._reqUser?.id;
+}
+
+/**
  * @name POST /api/bookings
  * @description Creates a new booking (single or recurring)
  * @param {object} req - Express request object.
@@ -18,9 +33,14 @@ export default api;
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and result message.
  */
-api.post("/", async (req, res) => {
+api.post("/", requireAuth, async (req, res) => {
   try {
     const bookingData = req.body;
+
+    const type = req._reqUser.type;
+    if (type !== "managerUser" && type !== "adminUser") {
+      bookingData.bookedBy = req._reqUser.id;
+    }
 
     if (!bookingData || !bookingData.eventId || !bookingData.space || !bookingData.bookedBy) {
       logger.error("Invalid booking data - missing required fields");
@@ -48,7 +68,7 @@ api.post("/", async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and update result.
  */
-api.put("/", async (req, res) => {
+api.put("/", requireAuth, async (req, res) => {
   try {
     const { id, scope } = req.query;
     const bookingData = req.body;
@@ -56,6 +76,12 @@ api.put("/", async (req, res) => {
     if (!id) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+
+    if (!(await canModifyBooking(req, id))) {
+      return res.status(403).json(ErrorManager.returnError("forbidden"));
+    }
+
+    delete bookingData.bookedBy;
 
     logger.info(`Updating booking with ID: ${id} Scope: ${scope}`);
     const result = await bookings.updateBooking(id, bookingData, scope);
@@ -77,12 +103,16 @@ api.put("/", async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and toggle result.
  */
-api.patch("/toggle", async (req, res) => {
+api.patch("/toggle", requireAuth, async (req, res) => {
   try {
     const { id, scope } = req.query;
 
     if (!id) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    if (!(await canModifyBooking(req, id))) {
+      return res.status(403).json(ErrorManager.returnError("forbidden"));
     }
 
     logger.info(`Toggling booking with ID: ${id} Scope: ${scope}`);
@@ -105,12 +135,16 @@ api.patch("/toggle", async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and result.
  */
-api.delete("/", async (req, res) => {
+api.delete("/", requireAuth, async (req, res) => {
   try {
     const { id, scope } = req.query;
 
     if (!id) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    if (!(await canModifyBooking(req, id))) {
+      return res.status(403).json(ErrorManager.returnError("forbidden"));
     }
 
     logger.info(`Deleting booking with ID: ${id} Scope: ${scope}`);
@@ -213,7 +247,7 @@ api.get("/user", async (req, res) => {
 api.get("/", async (req, res) => {
   try {
     const { id, status, includeInactive, startMonth, endMonth, startDate, endDate } = req.query;
-    const userRole = req._reqUser?.role;
+    const userRole = req._reqUser?.type;
     const userId = req._reqUser?.id;
 
     if (id) {
