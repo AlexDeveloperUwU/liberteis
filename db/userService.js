@@ -1,8 +1,12 @@
 import * as dbc from "./dbController.js";
 import * as ds from "../utils/dataSecurity.js";
 import * as id from "../utils/idGen.js";
+import * as configService from "./configService.js";
+import * as mailer from "../utils/mailer.js";
 import { logger } from "../utils/logger.js";
 import ErrorManager from "../errors/errorManager.js";
+
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 //! Operaciones CRUD básicas
 
@@ -131,21 +135,141 @@ export async function updateUserLastLogin(id) {
  * Updates a user's password in the database.
  * @param {string} id - User ID.
  * @param {string} pass - New user password.
+ * @param {boolean} [invalidateOtherSessions=true] - Whether to bump the user's session version,
+ *   logging out every other active session.
  * @returns {Promise<Object>} Operation result.
  */
-export async function updateUserPassword(id, pass) {
+export async function updateUserPassword(id, pass, invalidateOtherSessions = true) {
   if (!id || !pass) {
     return ErrorManager.returnError("invalidParameters");
   }
 
-  const hashedPass = ds.encryptPass(pass);
+  const updateData = { hashedPassword: ds.encryptPass(pass) };
 
   try {
-    const result = await dbc.dbUpdateData("users", id, { hashedPassword: hashedPass });
-    return ErrorManager.returnSuccess(200, "User password updated successfully", result);
+    if (invalidateOtherSessions) {
+      const userResult = await dbc.dbGetOne("users", id);
+      const user = userResult[0];
+      if (user) {
+        updateData.sessionVersion = (user.sessionVersion || 0) + 1;
+      }
+    }
+
+    await dbc.dbUpdateData("users", id, updateData);
+    return ErrorManager.returnSuccess(200, "User password updated successfully", {
+      sessionVersion: updateData.sessionVersion,
+    });
   } catch (error) {
     logger.error(`Error updating user password in the database: ${error.message}`);
     return ErrorManager.returnError("passwordUpdateError");
+  }
+}
+
+//! Recuperación de contraseña
+
+/**
+ * Requests a password reset for the given email: issues a single-use, time-limited token and
+ * emails a reset link. Always succeeds when the account isn't found, so the route can hide that
+ * from the client (anti-enumeration) — only a genuine failure (e.g. DB error) returns an error.
+ * @param {string} email - The account's email.
+ * @returns {Promise<Object>} Operation result.
+ */
+export async function requestPasswordReset(email) {
+  if (!email) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  try {
+    const userResult = await getUserByEmail(email);
+    if (!userResult.success) {
+      return userResult;
+    }
+    const user = userResult.data;
+
+    const token = ds.generateResetToken();
+    const tokenHash = ds.hashToken(token);
+    const expiresAt = new Date(Date.now() + RESET_TOKEN_TTL_MS);
+
+    await dbc.dbSaveData("passwordresets", {
+      id: await id.generateId("passwordReset"),
+      userId: user.id,
+      tokenHash,
+      expiresAt,
+      used: false,
+    });
+
+    const domainResult = await configService.getConfig("domain");
+    const domain = domainResult.success ? domainResult.data.value : "";
+    const resetLink = `${domain}/auth/resetPassword/${token}`;
+
+    await mailer.sendPasswordResetEmail(user, resetLink);
+
+    return ErrorManager.returnSuccess(200, "Password reset requested", { code: 200 });
+  } catch (error) {
+    logger.error(`Error requesting password reset: ${error.message}`);
+    return ErrorManager.returnError("passwordResetError");
+  }
+}
+
+/**
+ * Validates a password reset token without consuming it.
+ * @param {string} token - The raw token from the reset link.
+ * @returns {Promise<Object>} Success with `{userId}`, or `resetTokenInvalid`/`resetTokenExpired`.
+ */
+export async function validateResetToken(token) {
+  if (!token) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  try {
+    const tokenHash = ds.hashToken(token);
+    const result = await dbc.dbGetWhere("passwordresets", { field: "tokenHash", operator: "=", value: tokenHash });
+    const record = result[0];
+
+    if (!record || record.used) {
+      return ErrorManager.returnError("resetTokenInvalid");
+    }
+    if (new Date(record.expiresAt) < new Date()) {
+      return ErrorManager.returnError("resetTokenExpired");
+    }
+
+    return ErrorManager.returnSuccess(200, "Reset token is valid", { userId: record.userId });
+  } catch (error) {
+    logger.error(`Error validating password reset token: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Resets a user's password using a valid reset token: sets the new password, invalidates every
+ * existing session for the account, and marks all of its reset tokens used.
+ * @param {string} token - The raw token from the reset link.
+ * @param {string} newPassword - The new password.
+ * @returns {Promise<Object>} Operation result.
+ */
+export async function resetPassword(token, newPassword) {
+  if (!token || !newPassword) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  try {
+    const validation = await validateResetToken(token);
+    if (!validation.success) {
+      return validation;
+    }
+    const { userId } = validation.data;
+
+    const passwordResult = await updateUserPassword(userId, newPassword, true);
+    if (!passwordResult.success) {
+      return passwordResult;
+    }
+
+    await dbc.dbUpdateWhere("passwordresets", { field: "userId", operator: "=", value: userId }, { used: true });
+
+    return ErrorManager.returnSuccess(200, "Password reset successfully", { code: 200 });
+  } catch (error) {
+    logger.error(`Error resetting password: ${error.message}`);
+    return ErrorManager.returnError("passwordResetError");
   }
 }
 

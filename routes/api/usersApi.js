@@ -76,13 +76,21 @@ api.put("/", requireAuth, async (req, res) => {
 
     let passwordResult;
     if (userData.password) {
-      passwordResult = await users.updateUserPassword(id, userData.password);
+      const invalidateOtherSessions = userData.invalidateOtherSessions !== false;
+      passwordResult = await users.updateUserPassword(id, userData.password, invalidateOtherSessions);
 
       if (!passwordResult.success) {
         return res.status(passwordResult.code).json(passwordResult);
       }
       delete userData.password;
+
+      // Changing your own password bumps sessionVersion for every session, including this
+      // request's own — restamp it here so the session making the change isn't logged out too.
+      if (req._reqUser.id === id && passwordResult.data.sessionVersion !== undefined) {
+        req.session.sessionVersion = passwordResult.data.sessionVersion;
+      }
     }
+    delete userData.invalidateOtherSessions;
 
     let updateResult;
     const userDataKeys = Object.keys(userData).filter((key) => key !== "password");

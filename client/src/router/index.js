@@ -38,6 +38,19 @@ const routes = [
         component: () => import("../views/Auth/LoginView.vue"),
         meta: { allow: "any", layout: "auth" },
       },
+      {
+        path: "forgotPassword",
+        name: "authForgotPassword",
+        component: () => import("../views/Auth/ForgotPasswordView.vue"),
+        meta: { allow: "any", layout: "auth" },
+      },
+      {
+        path: "resetPassword/:token",
+        name: "authResetPassword",
+        component: () => import("../views/Auth/ResetPasswordView.vue"),
+        meta: { allow: "any", layout: "auth" },
+        props: true,
+      },
     ],
   },
 
@@ -222,7 +235,7 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  if (to.path === "/" && authStore.isAuthenticated) {
+  if (authStore.isAuthenticated && (to.path === "/" || to.path.startsWith("/auth"))) {
     return next({ name: "dashHome" });
   }
 

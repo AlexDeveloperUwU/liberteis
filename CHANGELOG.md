@@ -5,6 +5,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-09-04
+
+### Added
+
+- Self-service password reset: a "Forgot your password?" link on the login page leads to
+  `/auth/forgotPassword`, which emails a single-use, one-hour reset link (via the mailer added in
+  2.4.0) to `/auth/resetPassword/:token`. A successful reset invalidates every other active session
+  on the account and requires logging in again.
+- "Log out other sessions" option (on by default) when changing a password from the profile page or
+  the admin user form, using the same session-invalidation mechanism as the reset flow.
+
+[2.5.0]: https://github.com/AlexDeveloperUwU/liberteis/releases/tag/v2.5.0
+
 ## [2.4.0] - 2026-09-04
 
 ### Added

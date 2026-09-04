@@ -20,6 +20,7 @@
       "name": "Nome",
       "email": "Correo electrónico",
       "password": "Contrasinal",
+      "logoutOtherSessions": "Pechar outras sesións",
       "theme": "Tema",
       "language": "Idioma"
     },

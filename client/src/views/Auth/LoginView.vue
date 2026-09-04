@@ -10,11 +10,20 @@
         <form @submit.prevent="handleLogin" class="space-y-6">
           <div class="space-y-2">
             <label class="block text-sm font-medium text-text-800">{{ t("pages.auth.login.email") }}</label>
-            <input
-              type="email"
-              v-model="credentials.email"
-              class="w-full px-3 py-2 bg-background-50 dark:bg-background-300 border border-background-400 dark:border-background-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-950"
-              required />
+            <div class="relative">
+              <input
+                type="email"
+                v-model="credentials.email"
+                @blur="validateEmail(credentials.email)"
+                @input="clearEmailError"
+                class="w-full px-3 py-2 bg-background-50 dark:bg-background-300 border border-background-400 dark:border-background-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-950 transition-colors"
+                :class="{ 'border-accent-500 ring-accent-500': errors.email }"
+                required />
+              <CheckCircle2
+                v-if="credentials.email && !errors.email"
+                class="absolute inset-y-0 right-3 w-5 h-5 text-primary-500 my-auto" />
+            </div>
+            <p v-if="errors.email" class="text-sm text-accent-600">{{ errors.email }}</p>
           </div>
 
           <div class="space-y-2">
@@ -23,8 +32,10 @@
               <input
                 :type="showPassword ? 'text' : 'password'"
                 v-model="credentials.password"
-                class="w-full px-3 py-2 pr-10 bg-background-50 dark:bg-background-300 border border-background-400 dark:border-background-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-950"
-                :class="{ 'border-accent-500': errors.password }"
+                @blur="validatePassword(credentials.password)"
+                @input="clearPasswordError"
+                class="w-full px-3 py-2 pr-10 bg-background-50 dark:bg-background-300 border border-background-400 dark:border-background-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-950 transition-colors"
+                :class="{ 'border-accent-500 ring-accent-500': errors.password }"
                 required />
               <button
                 type="button"
@@ -36,9 +47,17 @@
             <p v-if="errors.password" class="text-sm text-accent-600">{{ errors.password }}</p>
           </div>
 
+          <router-link
+            :to="{ name: 'authForgotPassword' }"
+            class="block text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 transition-colors">
+            {{ t("pages.auth.login.forgotPassword") }}
+          </router-link>
+
           <button
             type="submit"
-            class="w-full bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white py-2 rounded-lg transition-colors font-medium cursor-pointer">
+            :disabled="loading || !credentials.email || !credentials.password || Object.values(errors).some((e) => e)"
+            class="w-full bg-primary-600 hover:bg-primary-700 disabled:opacity-60 disabled:cursor-not-allowed dark:bg-primary-500 dark:hover:bg-primary-600 text-white py-2 rounded-lg transition-colors font-medium cursor-pointer flex items-center justify-center gap-2">
+            <Loader2 v-if="loading" class="w-5 h-5 animate-spin" />
             {{ t("pages.auth.login.submit") }}
           </button>
         </form>
@@ -51,7 +70,7 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/authStore";
-import { Eye, EyeOff } from "lucide-vue-next";
+import { Eye, EyeOff, CheckCircle2, Loader2 } from "lucide-vue-next";
 import { useToast } from "@/composables/useToast";
 import { useRouter } from "vue-router";
 
@@ -64,6 +83,7 @@ const credentials = ref({
   password: "",
 });
 const showPassword = ref(false);
+const loading = ref(false);
 const errors = ref({
   email: "",
   password: "",
@@ -92,10 +112,19 @@ const validatePassword = (password) => {
   return true;
 };
 
+const clearEmailError = () => {
+  if (errors.value.email) errors.value.email = "";
+};
+
+const clearPasswordError = () => {
+  if (errors.value.password) errors.value.password = "";
+};
+
 const handleLogin = async () => {
   if (!validateEmail(credentials.value.email) || !validatePassword(credentials.value.password)) {
     return;
   }
+  loading.value = true;
   try {
     const success = await authStore.login(credentials.value.email, credentials.value.password);
     if (success) {
@@ -106,6 +135,8 @@ const handleLogin = async () => {
     }
   } catch {
     toast.error(t("pages.auth.login.errorMessage"), t("pages.auth.login.errorTitle"));
+  } finally {
+    loading.value = false;
   }
 };
 </script>

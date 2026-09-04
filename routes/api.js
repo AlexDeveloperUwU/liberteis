@@ -25,7 +25,17 @@ const userMiddleware = async (req, res, next) => {
     if (req.session && req.session.userId) {
       const userResult = await dbc.dbGetOne("users", req.session.userId);
       if (userResult.length > 0) {
-        req._reqUser = userResult[0];
+        const user = userResult[0];
+        if ((req.session.sessionVersion ?? 0) === (user.sessionVersion ?? 0)) {
+          req._reqUser = user;
+        } else {
+          await new Promise((resolve) => {
+            req.session.destroy((err) => {
+              if (err) logger.error(`Error destroying stale session: ${err.message}`);
+              resolve();
+            });
+          });
+        }
       }
     }
   } catch (error) {

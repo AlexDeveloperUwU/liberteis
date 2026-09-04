@@ -106,6 +106,27 @@ export async function dbCreateTables() {
       .addColumn("lang", "varchar(2)", (col) => col.defaultTo("gl"))
       .addColumn("theme", "varchar(5)", (col) => col.defaultTo("light"))
       .addColumn("deleted", "boolean", (col) => col.defaultTo(false).notNull())
+      .addColumn("sessionVersion", "integer", (col) => col.defaultTo(0).notNull())
+      .execute();
+
+    try {
+      await trx.schema
+        .alterTable("users")
+        .addColumn("sessionVersion", "integer", (col) => col.defaultTo(0).notNull())
+        .execute();
+    } catch (e) {
+      // Column might already exist
+    }
+
+    await trx.schema
+      .createTable("passwordresets")
+      .ifNotExists()
+      .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey())
+      .addColumn("userId", "varchar(50)", (col) => col.references("users.id").notNull())
+      .addColumn("tokenHash", "varchar(255)", (col) => col.notNull().unique())
+      .addColumn("expiresAt", "timestamp", (col) => col.notNull())
+      .addColumn("used", "boolean", (col) => col.defaultTo(false).notNull())
+      .addColumn("createdAt", "timestamp", (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`))
       .execute();
 
     await trx.schema
@@ -379,6 +400,7 @@ export async function clearDb() {
     await trx.deleteFrom("events").execute();
     await trx.deleteFrom("categories").execute();
     await trx.deleteFrom("spaces").execute();
+    await trx.deleteFrom("passwordresets").execute();
     await trx.deleteFrom("users").execute();
     await trx.deleteFrom("config").execute();
   });

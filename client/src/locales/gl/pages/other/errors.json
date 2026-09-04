@@ -36,5 +36,8 @@
   "forbiddenAdminOnly": "Só os administradores poden realizar esta acción.",
   "unauthorized": "A túa sesión caducou. Por favor, inicia sesión de novo.",
   "forbidden": "Non tes permiso para realizar esta acción.",
-  "tooManyRequests": "Demasiados intentos. Por favor, ténteo de novo máis tarde."
+  "tooManyRequests": "Demasiados intentos. Por favor, ténteo de novo máis tarde.",
+  "resetTokenInvalid": "Esta ligazón de restablecemento de contrasinal non é válida.",
+  "resetTokenExpired": "Esta ligazón de restablecemento de contrasinal caducou.",
+  "passwordResetError": "Erro ao restablecer o contrasinal."
 }

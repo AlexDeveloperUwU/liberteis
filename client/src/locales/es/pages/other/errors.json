@@ -36,5 +36,8 @@
   "forbiddenAdminOnly": "Solo los administradores pueden realizar esta acción.",
   "unauthorized": "Tu sesión ha caducado. Por favor, inicia sesión de nuevo.",
   "forbidden": "No tienes permiso para realizar esta acción.",
-  "tooManyRequests": "Demasiados intentos. Por favor, inténtalo de nuevo más tarde."
+  "tooManyRequests": "Demasiados intentos. Por favor, inténtalo de nuevo más tarde.",
+  "resetTokenInvalid": "Este enlace de restablecimiento de contraseña no es válido.",
+  "resetTokenExpired": "Este enlace de restablecimiento de contraseña ha caducado.",
+  "passwordResetError": "Error al restablecer la contraseña."
 }

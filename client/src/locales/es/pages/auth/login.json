@@ -3,6 +3,7 @@
   "email": "Correo electrónico",
   "password": "Contraseña",
   "submit": "Entrar",
+  "forgotPassword": "¿Olvidaste tu contraseña?",
   "successTitle": "Inicio de sesión exitoso",
   "successMessage": "Has iniciado sesión correctamente.",
   "errorTitle": "Error al iniciar sesión",

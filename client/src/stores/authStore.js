@@ -57,6 +57,30 @@ export const useAuthStore = defineStore("auth", {
         return true;
       }
     },
+    async requestPasswordReset(email) {
+      try {
+        const response = await axios.post("/api/auth/forgotPassword", { email });
+        return response.data;
+      } catch (error) {
+        return error.response?.data || { success: false };
+      }
+    },
+    async validateResetToken(token) {
+      try {
+        const response = await axios.get(`/api/auth/resetPassword/${token}`);
+        return response.data;
+      } catch (error) {
+        return error.response?.data || { success: false };
+      }
+    },
+    async resetPassword(token, newPassword) {
+      try {
+        const response = await axios.post("/api/auth/resetPassword", { token, password: newPassword });
+        return response.data;
+      } catch (error) {
+        return error.response?.data || { success: false };
+      }
+    },
     async updateUserProfile(userData) {
       if (!this.isAuthenticated || !this.userId) return false;
 
@@ -65,7 +89,9 @@ export const useAuthStore = defineStore("auth", {
 
         if (response.data.success) {
           // Merge the sent fields locally; the PUT response carries no user data.
-          const { password, ...safeFields } = userData;
+          const safeFields = { ...userData };
+          delete safeFields.password;
+          delete safeFields.invalidateOtherSessions;
           this.user = { ...this.user, ...safeFields };
           localStorage.setItem("auth_user", JSON.stringify(this.user));
           return true;

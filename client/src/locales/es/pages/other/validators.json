@@ -3,6 +3,10 @@
     "pwned": "Esta contraseña ha sido comprometida en una filtración de datos. Por favor, elige una contraseña diferente.",
     "singular": "vez",
     "plural": "{count} veces",
-    "checkError": "Ocurrió un error al verificar la contraseña."
+    "checkError": "Ocurrió un error al verificar la contraseña.",
+    "strength": "Fortaleza de la contraseña",
+    "weak": "Débil",
+    "medium": "Media",
+    "strong": "Fuerte"
   }
 }

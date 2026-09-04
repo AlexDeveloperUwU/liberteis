@@ -7,6 +7,7 @@ export async function generateId(type) {
     booking: "B",
     space: "S",
     category: "C",
+    passwordReset: "R",
   };
 
   const typeToTableMap = {
@@ -15,6 +16,7 @@ export async function generateId(type) {
     booking: "bookings",
     space: "spaces",
     category: "categories",
+    passwordReset: "passwordresets",
   };
 
   const letter = typeToLetterMap[type];

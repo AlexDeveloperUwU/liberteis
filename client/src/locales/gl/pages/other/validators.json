@@ -3,6 +3,10 @@
     "pwned": "Este contrasinal foi comprometido nunha filtración de datos. Por favor, escolle un contrasinal diferente.",
     "singular": "unha vez",
     "plural": "{count} veces",
-    "checkError": "Produciuse un erro ao comprobar o contrasinal."
+    "checkError": "Produciuse un erro ao comprobar o contrasinal.",
+    "strength": "Forza do contrasinal",
+    "weak": "Débil",
+    "medium": "Media",
+    "strong": "Forte"
   }
 }

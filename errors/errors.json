@@ -150,5 +150,17 @@
   "tooManyRequests": {
     "code": 429,
     "message": "pages.other.errors.tooManyRequests"
+  },
+  "resetTokenInvalid": {
+    "code": 400,
+    "message": "pages.other.errors.resetTokenInvalid"
+  },
+  "resetTokenExpired": {
+    "code": 400,
+    "message": "pages.other.errors.resetTokenExpired"
+  },
+  "passwordResetError": {
+    "code": 500,
+    "message": "pages.other.errors.passwordResetError"
   }
 }

@@ -55,3 +55,4 @@ Infra: `docker-compose.yml` defines a MySQL 9.3 service plus `dev`/`prod` profil
 - API responses are always `{success, code, message, data}` (see `errorManager.js`); route handlers follow the pattern `try { ...call service...; return res.status(result.code).json(result) } catch (error) { return res.status(errorResponse.code).json(ErrorManager.handleError(error)) }`.
 - Auth is session-based (`express-session` + `express-mysql-session`), not JWT-based, despite `jsonwebtoken` being a dependency — check current usage before assuming JWT flows.
 - Booking `groupId` links recurring bookings created together; update/toggle endpoints take a `scope` query param (`single` vs `group`) to act on one booking or the whole series.
+- Route path segments (both `/api/*` and the frontend router) are camelCase, never hyphenated — e.g. `/emailCheck`, `users/edit/:id`.

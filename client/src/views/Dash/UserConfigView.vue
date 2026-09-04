@@ -241,6 +241,45 @@
                     </div>
                   </div>
                   <p v-if="passwordErrorMessage" class="mt-1.5 text-xs text-accent-600">{{ passwordErrorMessage }}</p>
+                  <div v-if="formData.password" class="space-y-2 mt-2">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-medium text-text-600">{{
+                        t("pages.other.validators.password.strength")
+                      }}</span>
+                      <span
+                        class="text-xs font-medium px-2 py-1 rounded"
+                        :class="[
+                          passwordStrength === 'weak'
+                            ? 'bg-accent-100 text-accent-700'
+                            : passwordStrength === 'medium'
+                              ? 'bg-yellow-100 text-yellow-700'
+                              : 'bg-primary-100 text-primary-700',
+                        ]">
+                        {{
+                          passwordStrength === "weak"
+                            ? t("pages.other.validators.password.weak")
+                            : passwordStrength === "medium"
+                              ? t("pages.other.validators.password.medium")
+                              : t("pages.other.validators.password.strong")
+                        }}
+                      </span>
+                    </div>
+                    <div class="h-2 bg-background-300 rounded-full overflow-hidden">
+                      <div
+                        class="h-full transition-all"
+                        :class="[
+                          passwordStrength === 'weak'
+                            ? 'bg-accent-500 w-1/3'
+                            : passwordStrength === 'medium'
+                              ? 'bg-yellow-500 w-2/3'
+                              : 'bg-primary-500 w-full',
+                        ]"></div>
+                    </div>
+                  </div>
+                  <label v-if="formData.password" class="flex items-center gap-2 mt-3 text-sm text-text-700">
+                    <input type="checkbox" v-model="formData.invalidateOtherSessions" class="rounded" />
+                    {{ t("pages.dash.userConfig.form.labels.logoutOtherSessions") }}
+                  </label>
                 </div>
               </div>
 
@@ -526,6 +565,7 @@ const formData = reactive({
   name: "",
   email: "",
   password: "",
+  invalidateOtherSessions: true,
   theme: "system",
   language: "es",
 });
@@ -623,6 +663,19 @@ const passwordErrorMessage = computed(() => {
   }
 
   return "";
+});
+
+const passwordStrength = computed(() => {
+  if (!formData.password) return "weak";
+  if (formData.password.length < 10) return "weak";
+  if (formData.password.length < 16) return "medium";
+  const hasUppercase = /[A-Z]/.test(formData.password);
+  const hasLowercase = /[a-z]/.test(formData.password);
+  const hasNumbers = /\d/.test(formData.password);
+  const hasSpecialChars = /[^A-Za-z0-9]/.test(formData.password);
+  const charTypes = [hasUppercase, hasLowercase, hasNumbers, hasSpecialChars].filter(Boolean).length;
+  if (charTypes >= 3) return "strong";
+  return "medium";
 });
 
 const validateFormField = async (field, value) => {
@@ -817,7 +870,10 @@ const handleSubmit = async () => {
 
     if (formData.name !== userData.value.name) userUpdate.name = formData.name;
     if (formData.email !== userData.value.email) userUpdate.email = formData.email;
-    if (formData.password) userUpdate.password = formData.password;
+    if (formData.password) {
+      userUpdate.password = formData.password;
+      userUpdate.invalidateOtherSessions = formData.invalidateOtherSessions;
+    }
     if (formData.theme !== userData.value.theme) userUpdate.theme = formData.theme;
     if (formData.language !== userData.value.language) userUpdate.lang = formData.language;
 

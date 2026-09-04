@@ -20,6 +20,15 @@ export function validatePass(pass, storedHash) {
   return crypto.timingSafeEqual(hashBuffer, originalBuffer);
 }
 
+//! Tokens de un solo uso (recuperación de contraseña)
+export function generateResetToken() {
+  return crypto.randomBytes(32).toString("hex");
+}
+
+export function hashToken(token) {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
+
 //! Datos Cifrados
 export function encryptData(data) {
   const key = Buffer.from(getKey(), "hex");

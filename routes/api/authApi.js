@@ -12,37 +12,46 @@ const api = Router();
 export default api;
 
 /**
- * Simple in-memory fixed-window rate limiter for the login endpoint.
- * Limits attempts per client IP to mitigate brute-force attacks.
+ * Builds a simple in-memory fixed-window rate limiter, keyed per client IP, to mitigate
+ * brute-force/enumeration/abuse attacks.
+ * @param {number} windowMs - Length of the rate-limiting window, in milliseconds.
+ * @param {number} maxAttempts - Maximum attempts allowed per IP within the window.
+ * @returns {import('express').RequestHandler}
  */
-const LOGIN_WINDOW_MS = 15 * 60 * 1000;
-const LOGIN_MAX_ATTEMPTS = 10;
-const loginAttempts = new Map();
+function createRateLimiter(windowMs, maxAttempts) {
+  const attempts = new Map();
 
-const loginRateLimiter = (req, res, next) => {
-  const now = Date.now();
-  const ip = req.ip || req.connection?.remoteAddress || "unknown";
-  const entry = loginAttempts.get(ip);
+  const limiter = (req, res, next) => {
+    const now = Date.now();
+    const ip = req.ip || req.connection?.remoteAddress || "unknown";
+    const entry = attempts.get(ip);
 
-  if (!entry || now - entry.start > LOGIN_WINDOW_MS) {
-    loginAttempts.set(ip, { start: now, count: 1 });
-    return next();
-  }
+    if (!entry || now - entry.start > windowMs) {
+      attempts.set(ip, { start: now, count: 1 });
+      return next();
+    }
 
-  entry.count += 1;
-  if (entry.count > LOGIN_MAX_ATTEMPTS) {
-    logger.warn(`Login rate limit exceeded for IP: ${ip}`);
-    return res.status(429).json(ErrorManager.returnError("tooManyRequests"));
-  }
-  next();
-};
+    entry.count += 1;
+    if (entry.count > maxAttempts) {
+      logger.warn(`Rate limit exceeded for IP: ${ip}`);
+      return res.status(429).json(ErrorManager.returnError("tooManyRequests"));
+    }
+    next();
+  };
 
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, entry] of loginAttempts) {
-    if (now - entry.start > LOGIN_WINDOW_MS) loginAttempts.delete(ip);
-  }
-}, LOGIN_WINDOW_MS).unref();
+  setInterval(() => {
+    const now = Date.now();
+    for (const [ip, entry] of attempts) {
+      if (now - entry.start > windowMs) attempts.delete(ip);
+    }
+  }, windowMs).unref();
+
+  return limiter;
+}
+
+const loginRateLimiter = createRateLimiter(15 * 60 * 1000, 10);
+const forgotPasswordRateLimiter = createRateLimiter(15 * 60 * 1000, 5);
+const resetPasswordRateLimiter = createRateLimiter(15 * 60 * 1000, 10);
 
 /**
  * @name POST /api/auth/login
@@ -80,6 +89,7 @@ api.post("/login", loginRateLimiter, async (req, res) => {
     });
 
     req.session.userId = user.id;
+    req.session.sessionVersion = user.sessionVersion ?? 0;
     const loginUpdate = await users.updateUserLastLogin(user.id);
     if (!loginUpdate.success) {
       logger.warn(`Failed to update last login time: ${loginUpdate.message}`);
@@ -121,4 +131,82 @@ api.post("/logout", (req, res) => {
     res.clearCookie("session_cookie");
     return res.status(200).json(ErrorManager.returnSuccess(200, "Logout successful"));
   });
+});
+
+/**
+ * @name POST /api/auth/forgotPassword
+ * @description Requests a password reset email for the given address. Always responds with a
+ * generic success message, regardless of whether the address is registered, to avoid leaking
+ * which emails have an account.
+ * @param {object} req - Express request object.
+ * @param {object} req.body - The request body.
+ * @param {string} req.body.email - The account's email.
+ * @param {object} res - Express response object.
+ */
+api.post("/forgotPassword", forgotPasswordRateLimiter, async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    const result = await users.requestPasswordReset(email);
+    if (!result.success) {
+      logger.info(`Password reset request for ${email} did not succeed: ${result.message}`);
+    }
+
+    return res
+      .status(200)
+      .json(ErrorManager.returnSuccess(200, "If that email is registered, a reset link has been sent"));
+  } catch (error) {
+    logger.error(`Error in /api/auth/forgotPassword: ${error.message}`);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
+  }
+});
+
+/**
+ * @name GET /api/auth/resetPassword/:token
+ * @description Validates a password reset token without consuming it.
+ * @param {object} req - Express request object.
+ * @param {object} req.params - The request params.
+ * @param {string} req.params.token - The raw token from the reset link.
+ * @param {object} res - Express response object.
+ */
+api.get("/resetPassword/:token", resetPasswordRateLimiter, async (req, res) => {
+  try {
+    const result = await users.validateResetToken(req.params.token);
+    return res.status(result.code).json(result);
+  } catch (error) {
+    logger.error(`Error in GET /api/auth/resetPassword: ${error.message}`);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
+  }
+});
+
+/**
+ * @name POST /api/auth/resetPassword
+ * @description Resets a user's password using a valid reset token.
+ * @param {object} req - Express request object.
+ * @param {object} req.body - The request body.
+ * @param {string} req.body.token - The raw token from the reset link.
+ * @param {string} req.body.password - The new password.
+ * @param {object} res - Express response object.
+ */
+api.post("/resetPassword", resetPasswordRateLimiter, async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    const result = await users.resetPassword(token, password);
+    return res.status(result.code).json(result);
+  } catch (error) {
+    logger.error(`Error in POST /api/auth/resetPassword: ${error.message}`);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
+  }
 });

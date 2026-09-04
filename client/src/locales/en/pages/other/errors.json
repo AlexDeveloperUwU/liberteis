@@ -36,5 +36,8 @@
   "forbiddenAdminOnly": "Only administrators can perform this action.",
   "unauthorized": "Your session has expired. Please log in again.",
   "forbidden": "You do not have permission to perform this action.",
-  "tooManyRequests": "Too many attempts. Please try again later."
+  "tooManyRequests": "Too many attempts. Please try again later.",
+  "resetTokenInvalid": "This password reset link is invalid.",
+  "resetTokenExpired": "This password reset link has expired.",
+  "passwordResetError": "Error resetting the password."
 }
