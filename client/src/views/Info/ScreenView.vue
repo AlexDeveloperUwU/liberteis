@@ -141,6 +141,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import { Clock, MapPin, Tag, CalendarDays, User } from "lucide-vue-next";
+import { mapBookingToEvent } from "@/router/fetchers";
 
 const route = useRoute();
 const { t, locale } = useI18n();
@@ -223,46 +224,13 @@ const loadEvents = async () => {
     nextWeek.setDate(now.getDate() + 7);
     const startDate = now.toISOString();
     const endDate = nextWeek.toISOString();
-    const response = await axios.get(`/api/bookings?startDate=${startDate}&endDate=${endDate}`);
+    const response = await axios.get(`/api/bookings/dashboard?startDate=${startDate}&endDate=${endDate}`);
     if (response.data.success) {
-      const bookings = response.data.data;
-      const calendarEvents = [];
-      for (const booking of bookings) {
-        try {
-          const eventResponse = await axios.get(`/api/events?id=${booking.eventId}`);
-          const spaceResponse = await axios.get(`/api/spaces?id=${booking.space}`);
-          const userResponse = await axios.get(`/api/users?id=${booking.bookedBy}`);
-          let categoryName = "";
-          if (eventResponse.data.success && eventResponse.data.data.category) {
-            const categoryResponse = await axios.get(`/api/categories?id=${eventResponse.data.data.category}`);
-            if (categoryResponse.data.success) {
-              categoryName = categoryResponse.data.data.name;
-            }
-          }
-          if (eventResponse.data.success && spaceResponse.data.success && userResponse.data.success) {
-            const event = eventResponse.data.data;
-            const space = spaceResponse.data.data;
-            const user = userResponse.data.data;
-            const durationStr = formatDuration(event.duration);
-            calendarEvents.push({
-              id: booking.id || booking._id,
-              title: event.title,
-              start: new Date(booking.bookingDate),
-              end: new Date(new Date(booking.bookingDate).getTime() + (event.duration || 60) * 60000),
-              description: event.info,
-              info: event.info,
-              coverUrl: event.coverUrl,
-              bookingInfo: booking.info,
-              spaceName: space.name,
-              categoryName: categoryName,
-              addedBy: user.name,
-              duration: durationStr,
-            });
-          }
-        } catch (error) {
-          console.error(`Error al obtener detalles para booking ${booking._id}:`, error);
-        }
-      }
+      const bookings = response.data.data.bookings || [];
+      const calendarEvents = bookings.map((booking) => ({
+        ...mapBookingToEvent(booking),
+        duration: formatDuration(booking.eventDuration),
+      }));
       calendarEvents.sort((a, b) => a.start - b.start);
       events.value = calendarEvents;
     }

@@ -65,6 +65,7 @@
               <div class="flex items-center space-x-2">
                 <button
                   @click="previousMonth"
+                  :aria-label="t('pages.dash.home.calendar.previousMonth')"
                   class="h-10 w-10 p-0 rounded-lg border transition-colors duration-150 flex items-center justify-center bg-background-200 border-primary-400 hover:border-primary-500 hover:bg-background-300 text-primary-700 shadow-sm cursor-pointer">
                   <ChevronLeft class="w-5 h-5" />
                 </button>
@@ -81,12 +82,14 @@
                 </button>
                 <button
                   @click="nextMonth"
+                  :aria-label="t('pages.dash.home.calendar.nextMonth')"
                   class="h-10 w-10 p-0 rounded-lg border transition-colors duration-150 flex items-center justify-center bg-background-200 border-primary-400 hover:border-primary-500 hover:bg-background-300 text-primary-700 shadow-sm cursor-pointer">
                   <ChevronRight class="w-5 h-5" />
                 </button>
                 <div class="ml-2">
                   <button
                     @click="toggleView"
+                    :aria-label="t('pages.dash.home.calendar.toggleView')"
                     class="h-10 w-10 p-0 rounded-lg border transition-colors duration-150 flex items-center justify-center bg-background-200 border-primary-400 hover:border-primary-500 hover:bg-background-300 text-primary-700 shadow-sm"
                     :class="{ 'bg-background-300': currentView === 'list' }">
                     <component :is="currentView === 'month' ? List : Calendar" class="w-5 h-5" />
@@ -253,7 +256,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { useModal } from "@/composables/useModal";
 import { useToast } from "@/composables/useToast";
-import { loadDashboardHomeData } from "@/router/fetchers";
+import { mapBookingToEvent } from "@/router/fetchers";
 
 const route = useRoute();
 const { t, locale } = useI18n();
@@ -439,17 +442,14 @@ const isToday = (date) => {
 
 const previousMonth = () => {
   currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() - 1, 1);
-  loadBookings();
 };
 
 const nextMonth = () => {
   currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() + 1, 1);
-  loadBookings();
 };
 
 const goToToday = () => {
   currentDate.value = new Date();
-  loadBookings();
 };
 
 const toggleView = () => {
@@ -493,16 +493,7 @@ const modal = useModal();
 const toast = useToast();
 
 const reloadDashboardData = async () => {
-  const dummyRoute = { meta: {} };
-  await loadDashboardHomeData(dummyRoute);
-  const initialData = dummyRoute.meta.initialData || {};
-  metrics.value = {
-    totales: initialData.metrics.total || 0,
-    hechos: initialData.metrics.done || 0,
-    porHacer: initialData.metrics.todo || 0,
-  };
-  preloadedBookings.splice(0, preloadedBookings.length, ...(initialData.bookings || []));
-  await loadBookings();
+  await loadBookings(true);
 };
 
 const showEventDetailsModal = (event) => {
@@ -650,7 +641,7 @@ const isCurrentMonth = () => {
   return currentDate.value.getMonth() === today.getMonth() && currentDate.value.getFullYear() === today.getFullYear();
 };
 
-const loadBookings = async () => {
+const loadBookings = async (forceRefresh = false) => {
   isLoadingEvents.value = true;
   loadingError.value = null;
 
@@ -661,11 +652,11 @@ const loadBookings = async () => {
     const prevMonth = month === 1 ? 12 : month - 1;
     const prevYear = month === 1 ? year - 1 : year;
 
-    const nextMonth = month === 12 ? 1 : month + 1;
+    const nextMonthVar = month === 12 ? 1 : month + 1;
     const nextYear = month === 12 ? year + 1 : year;
 
     const startMonthStr = `${prevMonth.toString().padStart(2, "0")}/${(prevYear % 100).toString().padStart(2, "0")}`;
-    const endMonthStr = `${nextMonth.toString().padStart(2, "0")}/${(nextYear % 100).toString().padStart(2, "0")}`;
+    const endMonthStr = `${nextMonthVar.toString().padStart(2, "0")}/${(nextYear % 100).toString().padStart(2, "0")}`;
 
     const today = new Date();
     const isCurrentMonth =
@@ -673,6 +664,7 @@ const loadBookings = async () => {
 
     let bookings = [];
     if (
+      !forceRefresh &&
       isCurrentMonth &&
       preloadedBookings.length > 0 &&
       initialData.startMonth === startMonthStr &&
@@ -680,88 +672,36 @@ const loadBookings = async () => {
     ) {
       bookings = preloadedBookings;
     } else {
-      const response = await axios.get(`/api/bookings?startMonth=${startMonthStr}&endMonth=${endMonthStr}`);
+      const response = await axios.get(`/api/bookings/dashboard?startMonth=${startMonthStr}&endMonth=${endMonthStr}`);
       if (response.data.success) {
-        bookings = response.data.data;
+        const data = response.data.data;
+        bookings = data.bookings || [];
+
+        metrics.value = {
+          totales: data.metrics.total || 0,
+          hechos: data.metrics.done || 0,
+          porHacer: data.metrics.todo || 0,
+        };
+
+        if (isCurrentMonth) {
+          preloadedBookings.splice(0, preloadedBookings.length, ...bookings);
+          initialData.startMonth = startMonthStr;
+          initialData.endMonth = endMonthStr;
+        }
       }
     }
 
-    const calendarEvents = [];
+    events.value = bookings.map((booking) => ({
+      ...mapBookingToEvent(booking),
+      duration: formatDuration(booking.eventDuration),
+    }));
 
-    for (const booking of bookings) {
-      if (booking.isActive === false || booking.deleted) continue;
-
-      try {
-        const eventResponse = await axios.get(`/api/events?id=${booking.eventId}`);
-        const spaceResponse = await axios.get(`/api/spaces?id=${booking.space}`);
-        const userResponse = await axios.get(`/api/users?id=${booking.bookedBy}`);
-        let categoryName = "";
-        if (eventResponse.data.success && eventResponse.data.data.category) {
-          const categoryResponse = await axios.get(`/api/categories?id=${eventResponse.data.data.category}`);
-          if (categoryResponse.data.success) {
-            categoryName = categoryResponse.data.data.name;
-          }
-        }
-
-        if (eventResponse.data.success && spaceResponse.data.success && userResponse.data.success) {
-          const event = eventResponse.data.data;
-          const space = spaceResponse.data.data;
-          const user = userResponse.data.data;
-
-          const durationStr = formatDuration(event.duration);
-
-          const bookingDate = new Date(booking.bookingDate);
-          const endDate = new Date(bookingDate);
-          endDate.setMinutes(endDate.getMinutes() + (event.duration || 60));
-
-          calendarEvents.push({
-            id: booking.id || booking._id,
-            title: event.title,
-            start: bookingDate,
-            end: endDate,
-            description: event.info,
-            info: event.info,
-            coverUrl: event.coverUrl,
-            bookingData: booking,
-            spaceName: space.name,
-            categoryName: categoryName,
-            bookedByName: user.name,
-            duration: durationStr,
-          });
-        }
-      } catch (error) {
-        console.error(`Error al obtener detalles para booking ${booking._id}:`, error);
-      }
-    }
-    events.value = calendarEvents;
-
-    await updateMetrics();
     updateNextBooking();
   } catch (error) {
     console.error("Error al cargar los bookings:", error);
     loadingError.value = error.message || t("pages.dash.home.errors.loadingData");
   } finally {
     isLoadingEvents.value = false;
-  }
-};
-
-const updateMetrics = async () => {
-  try {
-    const response = await axios.get("/api/bookings/count");
-    if (response.data.success) {
-      metrics.value = {
-        totales: response.data.data.total || 0,
-        hechos: response.data.data.done || 0,
-        porHacer: response.data.data.todo || 0,
-      };
-    }
-  } catch (error) {
-    console.error("Error al cargar métricas:", error);
-    metrics.value = {
-      totales: 0,
-      hechos: 0,
-      porHacer: 0,
-    };
   }
 };
 

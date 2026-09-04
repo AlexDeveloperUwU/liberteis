@@ -56,7 +56,7 @@ export async function updateUser(id, user) {
     return ErrorManager.returnError("passwordUpdateError");
   }
 
-  const allowedFields = ["name", "email", "type", "lang"];
+  const allowedFields = ["name", "email", "type", "lang", "theme"];
   const sanitized = {};
   for (const field of allowedFields) {
     if (user[field] !== undefined) sanitized[field] = user[field];

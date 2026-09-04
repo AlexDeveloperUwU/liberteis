@@ -4,5 +4,6 @@
   "login": "Iniciar sesión",
   "lightMode": "Modo claro",
   "darkMode": "Modo oscuro",
-  "settings": "Configuración"
+  "settings": "Configuración",
+  "toggleSidebar": "Alternar barra lateral"
 }

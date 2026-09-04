@@ -463,6 +463,7 @@ import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { isValidEmail, validateName, validateEmail, validatePassword } from "@/utils/validators";
 import { useAuthStore } from "@/stores/authStore";
+import { ensureLocaleLoaded } from "@/i18n";
 
 const { t, locale } = useI18n();
 const toast = useToast();
@@ -821,6 +822,7 @@ const handleSubmit = async () => {
     if (formData.language !== userData.value.language) userUpdate.lang = formData.language;
 
     if (formData.language !== locale.value) {
+      await ensureLocaleLoaded(formData.language);
       locale.value = formData.language;
     }
 

@@ -4,5 +4,6 @@
   "login": "Login",
   "lightMode": "Light mode",
   "darkMode": "Dark mode",
-  "settings": "Settings"
+  "settings": "Settings",
+  "toggleSidebar": "Toggle sidebar"
 }

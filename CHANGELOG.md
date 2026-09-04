@@ -5,6 +5,49 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-09-04
+
+### Added
+
+- Transactional mailer infrastructure: a generic SMTP mailer (`nodemailer`) with a
+  `{{token}}`-based templating engine and ready-to-use user-creation, password-reset,
+  and account-change email templates in `en`/`es`/`gl`. Provider is swapped by editing
+  the SMTP settings, no code changes needed. Not yet wired into any app flow.
+- Mail settings (SMTP host:port, secure connection, username, password, from address)
+  in the admin Settings page, alongside the existing app name/domain/favicon settings.
+  The SMTP username and password are hidden from non-admins and never returned by the
+  API once saved; the password is encrypted at rest.
+
+[2.4.0]: https://github.com/AlexDeveloperUwU/liberteis/releases/tag/v2.4.0
+
+## [2.3.0] - 2026-08-29
+
+### Added
+
+- Accessibility labels: `aria-label`s on the navbar sidebar-toggle button and the three calendar
+  toolbar buttons (previous month, next month, toggle view), with the new
+  `toggleSidebar` / `previousMonth` / `nextMonth` / `toggleView` translations in `en`/`es`/`gl`.
+- `robots.txt` and an `llms.txt` describing the site for crawlers and LLMs.
+- `<meta name="description">` in `index.html`.
+
+### Changed
+
+- "Enable weekends" is now the last setting in the admin settings form and its live preview card.
+- Removed the unused `izitoast` dependency.
+- Replaced the logo asset with a lighter version.
+
+### Fixed
+
+- The user theme is persisted again. The v2.2.0 `updateUser` field whitelist dropped `theme`, so
+  theme changes were never saved to the database and the preferences selector kept showing the
+  stale value. `theme` is now in the whitelist (the column already existed).
+- Non-admin users can update their own profile again (name, email, language, theme, password),
+  a capability unintentionally removed when `PUT /api/users` was made admin-only in v2.2.0.
+  Users may still only edit themselves and cannot change their own role; updating other users
+  still requires an admin.
+
+[2.3.0]: https://github.com/AlexDeveloperUwU/liberteis/releases/tag/v2.3.0
+
 ## [2.2.1] - 2026-08-26
 
 ### Security

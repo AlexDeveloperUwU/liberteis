@@ -15,7 +15,6 @@
     "axios": "^1.18.0",
     "calendarize": "^1.1.1",
     "dayjs": "^1.11.13",
-    "izitoast": "^1.4.0",
     "lucide-vue-next": "^0.511.0",
     "luxon": "^3.6.1",
     "pinia": "^3.0.1",

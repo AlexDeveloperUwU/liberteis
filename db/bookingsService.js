@@ -367,69 +367,83 @@ export async function getBookingByEventAndDate(eventId, bookingDate, includeInac
  * @param {object} [filters={}] - Optional filters: { startMonth, endMonth, startDate, endDate }
  * @returns {Promise<object[]>} An array of bookings or an error message.
  */
+/**
+ * Helper: builds the query conditions for bookings based on status, user and filters.
+ * @param {string} status - ("all", "active", "inactive").
+ * @param {string|null} userId - Optional user ID to filter by.
+ * @param {object} filters - Optional filters: { startMonth, endMonth, startDate, endDate }.
+ * @returns {object|null} { conditions, getAll } or null if the status is invalid.
+ */
+function buildBookingConditions(status, userId, filters) {
+  let conditions = [];
+  let getAll = false;
+
+  switch (status) {
+    case "all":
+      if (userId) {
+        conditions = [{ field: "bookedBy", operator: "=", value: userId }];
+      } else {
+        getAll = true;
+      }
+      break;
+    case "active":
+      conditions = [{ field: "deleted", operator: "=", value: false }];
+      if (userId) {
+        conditions.push({ field: "bookedBy", operator: "=", value: userId });
+      }
+      break;
+    case "inactive":
+      conditions = [{ field: "deleted", operator: "=", value: true }];
+      if (userId) {
+        conditions.push({ field: "bookedBy", operator: "=", value: userId });
+      }
+      break;
+    default:
+      return null;
+  }
+
+  if (filters.startDate) {
+    conditions.push({ field: "bookingDate", operator: ">=", value: filters.startDate });
+  }
+  if (filters.endDate) {
+    conditions.push({ field: "bookingDate", operator: "<=", value: filters.endDate });
+  }
+
+  if (!filters.startDate && !filters.endDate && (filters.startMonth || filters.endMonth)) {
+    let startDateMonth = null;
+    let endDateMonth = null;
+    if (filters.startMonth) {
+      const [sm, sy] = filters.startMonth.split("/");
+      startDateMonth = new Date(Number(`20${sy.length === 2 ? sy : "0" + sy}`), Number(sm) - 1, 1, 0, 0, 0, 0);
+    }
+    if (filters.endMonth) {
+      const [em, ey] = filters.endMonth.split("/");
+      endDateMonth = new Date(Number(`20${ey.length === 2 ? ey : "0" + ey}`), Number(em), 0, 23, 59, 59, 999);
+    }
+    if (startDateMonth) {
+      conditions.push({ field: "bookingDate", operator: ">=", value: startDateMonth.toISOString() });
+    }
+    if (endDateMonth) {
+      conditions.push({ field: "bookingDate", operator: "<=", value: endDateMonth.toISOString() });
+    }
+  }
+
+  return { conditions, getAll };
+}
+
 export async function getBookings(status = "active", userId = null, filters = {}) {
   let result;
 
   try {
-    let conditions = [];
-
-    switch (status) {
-      case "all":
-        if (userId) {
-          conditions = [{ field: "bookedBy", operator: "=", value: userId }];
-          result = await dbc.dbGetWhere("bookings", conditions);
-        } else {
-          result = await dbc.dbGetAll("bookings");
-        }
-        break;
-      case "active":
-        conditions = [{ field: "deleted", operator: "=", value: false }];
-        if (userId) {
-          conditions.push({ field: "bookedBy", operator: "=", value: userId });
-        }
-        result = await dbc.dbGetWhere("bookings", conditions);
-        break;
-      case "inactive":
-        conditions = [{ field: "deleted", operator: "=", value: true }];
-        if (userId) {
-          conditions.push({ field: "bookedBy", operator: "=", value: userId });
-        }
-        result = await dbc.dbGetWhere("bookings", conditions);
-        break;
-      default:
-        return ErrorManager.returnError("invalidParameters");
+    const built = buildBookingConditions(status, userId, filters);
+    if (!built) {
+      return ErrorManager.returnError("invalidParameters");
     }
 
-    if (filters.startDate) {
-      conditions.push({ field: "bookingDate", operator: ">=", value: filters.startDate });
-    }
-    if (filters.endDate) {
-      conditions.push({ field: "bookingDate", operator: "<=", value: filters.endDate });
-    }
-
-    if (!filters.startDate && !filters.endDate && (filters.startMonth || filters.endMonth)) {
-      let startDateMonth = null;
-      let endDateMonth = null;
-      if (filters.startMonth) {
-        const [sm, sy] = filters.startMonth.split("/");
-        startDateMonth = new Date(Number(`20${sy.length === 2 ? sy : "0" + sy}`), Number(sm) - 1, 1, 0, 0, 0, 0);
-      }
-      if (filters.endMonth) {
-        const [em, ey] = filters.endMonth.split("/");
-        endDateMonth = new Date(Number(`20${ey.length === 2 ? ey : "0" + ey}`), Number(em), 0, 23, 59, 59, 999);
-      }
-      if (startDateMonth) {
-        conditions.push({ field: "bookingDate", operator: ">=", value: startDateMonth.toISOString() });
-      }
-      if (endDateMonth) {
-        conditions.push({ field: "bookingDate", operator: "<=", value: endDateMonth.toISOString() });
-      }
-    }
-
-    if (conditions.length > 0) {
-      result = await dbc.dbGetWhere("bookings", conditions);
-    } else {
+    if (built.getAll && built.conditions.length === 0) {
       result = await dbc.dbGetAll("bookings");
+    } else {
+      result = await dbc.dbGetWhere("bookings", built.conditions);
     }
 
     if (result.length === 0) {
@@ -439,6 +453,86 @@ export async function getBookings(status = "active", userId = null, filters = {}
     return ErrorManager.returnSuccess(200, "Bookings retrieved successfully", result);
   } catch (error) {
     logger.error(`Error retrieving bookings from the database: ${error.message}`);
+    return ErrorManager.handleError(error);
+  }
+}
+
+/**
+ * Gets bookings together with the display data of their event, space, user and category
+ * in a constant number of queries (1 for bookings + 1 per related table), instead of the
+ * frontend doing per-booking requests. Also includes the booking metrics summary.
+ * @param {string} [status="active"] - The status of bookings to retrieve ("all", "active", "inactive").
+ * @param {string|null} [userId=null] - Optional user ID to filter bookings by specific user.
+ * @param {object} [filters={}] - Optional filters: { startMonth, endMonth, startDate, endDate }.
+ * @returns {Promise<object>} { bookings: [...enriched], metrics: { total, done, todo } }
+ */
+export async function getBookingsJoined(status = "active", userId = null, filters = {}) {
+  try {
+    const built = buildBookingConditions(status, userId, filters);
+    if (!built) {
+      return ErrorManager.returnError("invalidParameters");
+    }
+
+    let bookingRows;
+    if (built.getAll && built.conditions.length === 0) {
+      bookingRows = await dbc.dbGetAll("bookings");
+    } else {
+      bookingRows = await dbc.dbGetWhere("bookings", built.conditions);
+    }
+
+    const activeBookings = bookingRows.filter((b) => !b.deleted && b.isActive !== false);
+
+    const eventIds = [...new Set(activeBookings.map((b) => b.eventId).filter(Boolean))];
+    const spaceIds = [...new Set(activeBookings.map((b) => b.space).filter(Boolean))];
+    const userIds = [...new Set(activeBookings.map((b) => b.bookedBy).filter(Boolean))];
+
+    const byId = (rows) => new Map(rows.map((row) => [row.id, row]));
+    const inQuery = (field, ids) => [{ field, operator: "in", value: ids }];
+
+    const [eventRows, spaceRows, userRows] = await Promise.all([
+      eventIds.length ? dbc.dbGetWhere("events", inQuery("id", eventIds)) : Promise.resolve([]),
+      spaceIds.length ? dbc.dbGetWhere("spaces", inQuery("id", spaceIds)) : Promise.resolve([]),
+      userIds.length ? dbc.dbGetWhere("users", inQuery("id", userIds)) : Promise.resolve([]),
+    ]);
+
+    const categoryIds = [...new Set(eventRows.map((e) => e.category).filter(Boolean))];
+    const categoryRows = categoryIds.length ? await dbc.dbGetWhere("categories", inQuery("id", categoryIds)) : [];
+
+    const eventsById = byId(eventRows);
+    const spacesById = byId(spaceRows);
+    const usersById = byId(userRows);
+    const categoriesById = byId(categoryRows);
+
+    const bookings = activeBookings.map((booking) => {
+      const event = eventsById.get(booking.eventId);
+      const space = spacesById.get(booking.space);
+      const user = usersById.get(booking.bookedBy);
+      const category = event ? categoriesById.get(event.category) : null;
+
+      return {
+        ...booking,
+        eventTitle: event?.title ?? "",
+        eventInfo: event?.info ?? "",
+        eventCoverUrl: event?.coverUrl ?? "",
+        eventDuration: event?.duration ?? null,
+        spaceName: space?.name ?? "",
+        bookedByName: user?.name ?? "",
+        categoryName: category?.name ?? "",
+      };
+    });
+
+    // Intentionally unwindowed: metrics reflect all active bookings regardless of the
+    // startMonth/endMonth filters applied to bookingRows above — do not derive this from
+    // the (windowed) bookings fetched for this response.
+    const metricsResult = await getBookingsCount(userId, null);
+    const metrics = metricsResult.success ? metricsResult.data : { total: 0, done: 0, todo: 0 };
+
+    return ErrorManager.returnSuccess(200, "Bookings with details retrieved successfully", {
+      bookings,
+      metrics,
+    });
+  } catch (error) {
+    logger.error(`Error retrieving joined bookings from the database: ${error.message}`);
     return ErrorManager.handleError(error);
   }
 }
@@ -687,15 +781,12 @@ export async function getBookingsCount(userId = null, type = null) {
         break;
       }
       case null: {
-        const total = await dbc.dbGetWhere("bookings", baseFilters);
-        const doneFilters = [...baseFilters, { field: "bookingDate", operator: "<", value: currentDate }];
-        const hechos = await dbc.dbGetWhere("bookings", doneFilters);
-        const pendingFilters = [...baseFilters, { field: "bookingDate", operator: ">", value: currentDate }];
-        const porHacer = await dbc.dbGetWhere("bookings", pendingFilters);
+        const all = await dbc.dbGetWhere("bookings", baseFilters);
+        const now = Date.now();
         resultData = {
-          total: total.length,
-          done: hechos.length,
-          todo: porHacer.length,
+          total: all.length,
+          done: all.filter((b) => new Date(b.bookingDate).getTime() < now).length,
+          todo: all.filter((b) => new Date(b.bookingDate).getTime() > now).length,
         };
         break;
       }

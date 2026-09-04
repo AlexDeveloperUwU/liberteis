@@ -335,7 +335,7 @@ const spaces = ref({});
 const requestedSpaces = new Set();
 
 const isLoading = ref(false);
-const users = ref({});
+const allUsers = ref([]);
 
 const sortColumn = ref("");
 const sortDirection = ref("asc");
@@ -551,6 +551,8 @@ const getSpaceName = (spaceId) => {
 };
 
 onMounted(async () => {
+  loadUsers();
+
   if (route.meta.initialData) {
     if (route.meta.initialData.metrics) {
       metrics.value = route.meta.initialData.metrics;
@@ -578,25 +580,29 @@ const getCreatedByName = (createdById) => {
     return "Sistema";
   }
 
-  if (users.value[createdById]) {
-    return users.value[createdById];
-  }
-
-  loadUserName(createdById);
-  return createdById;
+  const user = allUsers.value.find((u) => u.id === createdById);
+  return user ? user.name : createdById;
 };
 
-const loadUserName = async (userId) => {
-  if (users.value[userId] !== undefined) return;
-
+const loadUsers = async () => {
   try {
-    const response = await axios.get(`/api/users?id=${userId}`);
-    if (response.data.success && response.data.data && response.data.data.name) {
-      users.value[userId] = response.data.data.name;
+    const response = await axios.get("/api/users", { params: { status: "active" } });
+    if (response.data.success) {
+      allUsers.value = response.data.data;
     }
   } catch (error) {
-    console.error(`Error cargando nombre de usuario ${userId}:`, error);
-    users.value[userId] = userId;
+    console.error("Error cargando usuarios:", error);
+  }
+};
+
+const refreshMetrics = async () => {
+  try {
+    const metricsResponse = await axios.get("/api/categories/count");
+    if (metricsResponse.data && metricsResponse.data.success) {
+      metrics.value = metricsResponse.data.data;
+    }
+  } catch (error) {
+    console.error("Error cargando métricas:", error);
   }
 };
 
@@ -636,7 +642,14 @@ const handleCategoryStatusToggle = async (category) => {
                     ? t("pages.dash.categories.toasts.deactivated")
                     : t("pages.dash.categories.toasts.reactivated"),
                 );
-                await loadCategories();
+
+                if (categoryFilter.value === "all") {
+                  category.deleted = isDeactivating;
+                } else {
+                  categories.value = categories.value.filter((c) => c.id !== category.id);
+                }
+
+                await refreshMetrics();
               }
             } catch (error) {
               toast.error(t("pages.other.commons.errors.generic"));

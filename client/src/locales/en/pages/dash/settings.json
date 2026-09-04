@@ -8,22 +8,36 @@
   },
   "form": {
     "sections": {
-      "general": "General"
+      "general": "General",
+      "mail": "Mail"
     },
     "labels": {
       "appName": "Application name",
       "domain": "Domain",
       "enableWeekends": "Enable weekends",
-      "favicon": "Favicon"
+      "favicon": "Favicon",
+      "mailHostPort": "SMTP server",
+      "mailSecure": "Secure connection (TLS)",
+      "mailUser": "SMTP username",
+      "mailPassword": "SMTP password",
+      "mailFromAddress": "From address"
     },
     "placeholders": {
       "appName": "Application name",
       "domain": "https://example.com",
       "enableWeekends": "Show Saturdays and Sundays in the calendar",
-      "favicon": "https://example.com/favicon.png"
+      "favicon": "https://example.com/favicon.png",
+      "mailHostPort": "smtp.example.com:587",
+      "mailSecure": "Encrypt the connection to the SMTP server",
+      "mailUser": "SMTP username",
+      "mailPassword": "••••••••",
+      "mailFromAddress": "no-reply\\@example.com"
     },
     "hints": {
-      "favicon": "URL of the icon shown in the browser tab. Leave blank to use the default icon."
+      "favicon": "URL of the icon shown in the browser tab. Leave blank to use the default icon.",
+      "mailPassword": "Leave blank to keep the current password.",
+      "mailPasswordSet": "A password is currently configured.",
+      "mailPasswordUnset": "No password is currently configured."
     },
     "actions": {
       "updating": "Updating..."

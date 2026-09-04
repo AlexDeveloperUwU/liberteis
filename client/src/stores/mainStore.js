@@ -80,6 +80,7 @@ export const useMainStore = defineStore("main", () => {
   };
 
   const fetchVersion = async () => {
+    if (version.value) return;
     try {
       const response = await fetch("/api/utils/version");
       const data = await response.json();

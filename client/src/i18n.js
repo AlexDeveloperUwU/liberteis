@@ -1,9 +1,22 @@
 import { createI18n } from "vue-i18n";
 
-function loadLocaleMessages() {
+// Non-eager: each locale file is only fetched when its language is actually needed,
+// instead of bundling all locales (en/es/gl) into the initial load.
+const localesGlob = import.meta.glob("./locales/**/**.json");
+
+const loadedLocales = new Set();
+
+async function loadLocaleMessages(localeCodes) {
   const messages = {};
-  const locales = import.meta.glob("./locales/**/**.json", { eager: true });
-  for (const path in locales) {
+
+  const entries = Object.entries(localesGlob).filter(([path]) => {
+    const match = path.match(/^\.\/locales\/([a-zA-Z0-9-_]+)\//);
+    return match && localeCodes.includes(match[1]);
+  });
+
+  const loaded = await Promise.all(entries.map(([path, importFn]) => importFn().then((mod) => [path, mod])));
+
+  for (const [path, mod] of loaded) {
     const matchedPages = path.match(/\.\/locales\/([a-zA-Z0-9-_]+)\/pages\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9-_]+)\.json$/);
     const matchedComponents = path.match(/\.\/locales\/([a-zA-Z0-9-_]+)\/components\/([a-zA-Z0-9-_]+)\.json$/);
 
@@ -24,7 +37,7 @@ function loadLocaleMessages() {
         messages[locale].pages[categoria] = {};
       }
 
-      messages[locale].pages[categoria][nombre] = locales[path].default;
+      messages[locale].pages[categoria][nombre] = mod.default;
     } else if (matchedComponents) {
       const locale = matchedComponents[1];
       const nombre = matchedComponents[2];
@@ -37,24 +50,40 @@ function loadLocaleMessages() {
         messages[locale].components = {};
       }
 
-      messages[locale].components[nombre] = locales[path].default;
+      messages[locale].components[nombre] = mod.default;
     }
   }
+
   return messages;
 }
 
 let i18n;
 
-function createI18nInstance(mainStore) {
+async function ensureLocaleLoaded(locale) {
+  if (loadedLocales.has(locale)) return;
+
+  const messages = await loadLocaleMessages([locale]);
+  if (messages[locale]) {
+    i18n.global.setLocaleMessage(locale, messages[locale]);
+  }
+  loadedLocales.add(locale);
+}
+
+async function createI18nInstance(mainStore) {
+  const localesToLoad = mainStore.locale === "gl" ? ["gl"] : [mainStore.locale, "gl"];
+  const messages = await loadLocaleMessages(localesToLoad);
+  localesToLoad.forEach((locale) => loadedLocales.add(locale));
+
   i18n = createI18n({
     legacy: false,
     locale: mainStore.locale,
     fallbackLocale: "gl",
-    messages: loadLocaleMessages(),
+    messages,
   });
 
-  mainStore.$subscribe((mutation, state) => {
+  mainStore.$subscribe(async (mutation, state) => {
     if (mutation.storeId === "main" && mutation.events.key === "locale") {
+      await ensureLocaleLoaded(state.locale);
       i18n.global.locale.value = state.locale;
     }
   });
@@ -62,4 +91,4 @@ function createI18nInstance(mainStore) {
   return i18n;
 }
 
-export { createI18nInstance, i18n };
+export { createI18nInstance, ensureLocaleLoaded, i18n };

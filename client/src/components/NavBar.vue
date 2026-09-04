@@ -5,6 +5,7 @@
         <button
           v-if="currentLayout === 'dashboard'"
           @click="toggleSidebar"
+          :aria-label="t('components.navbar.toggleSidebar')"
           class="flex items-center justify-center w-8 h-8 rounded-md bg-background-200 hover:bg-background-300 text-text-800 hover:shadow-md transition-all duration-200">
           <LucideMenu v-if="mainStore.sidebarCollapsed" />
           <LucideChevronLeft v-else />

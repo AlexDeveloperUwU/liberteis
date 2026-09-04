@@ -3,7 +3,7 @@ import * as users from "../../db/userService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { generatePass } from "../../utils/password.js";
 import { logger } from "../../utils/logger.js";
-import { requireAdmin, requireRole } from "../middleware/requireAdmin.js";
+import { requireAdmin, requireAuth, requireRole } from "../middleware/requireAdmin.js";
 
 /**
  * Express router for authentication related endpoints.
@@ -41,7 +41,8 @@ api.post("/", requireAdmin, async (req, res) => {
 
 /**
  * @name PUT /api/users/
- * @description Updates an existing user by ID.
+ * @description Updates an existing user by ID. Users may update their own profile;
+ *              updating other users requires an admin session.
  * @param {object} req - Express request object.
  * @param {object} req.query - The query parameters.
  * @param {string} req.query.id - The ID of the user to update.
@@ -49,13 +50,22 @@ api.post("/", requireAdmin, async (req, res) => {
  * @param {object} res - Express response object.
  * @returns {object} JSON with status code and update result.
  */
-api.put("/", requireAdmin, async (req, res) => {
+api.put("/", requireAuth, async (req, res) => {
   try {
     const { id } = req.query;
     const userData = req.body;
 
     if (!id) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    if (req._reqUser.id !== id) {
+      if (req._reqUser.type !== "adminUser") {
+        return res.status(403).json(ErrorManager.returnError("forbiddenAdminOnly"));
+      }
+    } else if (req._reqUser.type !== "adminUser") {
+      // Users editing their own profile cannot change their role
+      delete userData.type;
     }
 
     const currentUser = await users.getUser(id);

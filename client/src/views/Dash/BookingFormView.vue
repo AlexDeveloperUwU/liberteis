@@ -689,6 +689,7 @@ const initialBookingData = ref(null);
 const isLoading = ref(isEditMode.value);
 const loadError = ref(null);
 const events = ref([]);
+const allSpaces = ref([]);
 const availableSpaces = ref([]);
 const selectedEvent = ref("");
 const selectedSpace = ref("");
@@ -786,6 +787,7 @@ onMounted(async () => {
   try {
     const spacesResponse = await axios.get("/api/spaces");
     if (spacesResponse.data.success) {
+      allSpaces.value = spacesResponse.data.data;
       availableSpaces.value = spacesResponse.data.data;
     }
   } catch (error) {
@@ -851,7 +853,7 @@ const updateSelectedEventInfo = async () => {
   }
 };
 
-const loadSpacesForCategory = async (category) => {
+const loadSpacesForCategory = (category) => {
   if (!category) return;
 
   let categorySpaces;
@@ -865,32 +867,24 @@ const loadSpacesForCategory = async (category) => {
     categorySpaces = [];
   }
 
-  try {
-    const spacesResponse = await axios.get("/api/spaces");
-    if (spacesResponse.data.success) {
-      const allSpaces = spacesResponse.data.data;
-      if (categorySpaces.length > 0) {
-        availableSpaces.value = allSpaces.filter((space) => categorySpaces.includes(space.id || space._id));
-      } else {
-        availableSpaces.value = allSpaces;
-      }
+  if (categorySpaces.length > 0) {
+    availableSpaces.value = allSpaces.value.filter((space) => categorySpaces.includes(space.id || space._id));
+  } else {
+    availableSpaces.value = allSpaces.value;
+  }
 
-      if (isEditMode.value && selectedSpace.value) {
-        const spaceExists = availableSpaces.value.some(
-          (space) => space.id === selectedSpace.value || space._id === selectedSpace.value,
-        );
-        if (!spaceExists) {
-          const selectedSpaceData = allSpaces.find(
-            (space) => space.id === selectedSpace.value || space._id === selectedSpace.value,
-          );
-          if (selectedSpaceData) {
-            availableSpaces.value.push(selectedSpaceData);
-          }
-        }
+  if (isEditMode.value && selectedSpace.value) {
+    const spaceExists = availableSpaces.value.some(
+      (space) => space.id === selectedSpace.value || space._id === selectedSpace.value,
+    );
+    if (!spaceExists) {
+      const selectedSpaceData = allSpaces.value.find(
+        (space) => space.id === selectedSpace.value || space._id === selectedSpace.value,
+      );
+      if (selectedSpaceData) {
+        availableSpaces.value.push(selectedSpaceData);
       }
     }
-  } catch (error) {
-    console.error("Error loading spaces:", error);
   }
 };
 

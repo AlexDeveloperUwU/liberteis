@@ -1,6 +1,6 @@
 {
   "name": "liberteis",
-  "version": "2.2.1",
+  "version": "2.4.0",
   "description": "La aplicación oficial de gestión de eventos de Teis",
   "main": "index.js",
   "type": "module",
@@ -36,6 +36,7 @@
     "luxon": "^3.7.2",
     "multer": "^2.2.0",
     "mysql2": "^3.15.3",
+    "nodemailer": "^10.0.0",
     "pino": "^10.1.0",
     "pino-http": "^11.0.0",
     "pino-http-print": "^4.0.0",

@@ -185,6 +185,28 @@ export async function dbCreateTables() {
       await trx.insertInto("config").values({ id: "favicon", value: "" }).execute();
     }
 
+    const hasMailHostPort = configRows.some((row) => row.id === "mailHostPort");
+    const hasMailSecure = configRows.some((row) => row.id === "mailSecure");
+    const hasMailUser = configRows.some((row) => row.id === "mailUser");
+    const hasMailPassword = configRows.some((row) => row.id === "mailPassword");
+    const hasMailFromAddress = configRows.some((row) => row.id === "mailFromAddress");
+
+    if (!hasMailHostPort) {
+      await trx.insertInto("config").values({ id: "mailHostPort", value: "" }).execute();
+    }
+    if (!hasMailSecure) {
+      await trx.insertInto("config").values({ id: "mailSecure", value: "false" }).execute();
+    }
+    if (!hasMailUser) {
+      await trx.insertInto("config").values({ id: "mailUser", value: "" }).execute();
+    }
+    if (!hasMailPassword) {
+      await trx.insertInto("config").values({ id: "mailPassword", value: "" }).execute();
+    }
+    if (!hasMailFromAddress) {
+      await trx.insertInto("config").values({ id: "mailFromAddress", value: "" }).execute();
+    }
+
     await createAdminUser();
   });
 }

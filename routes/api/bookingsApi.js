@@ -178,6 +178,42 @@ api.get("/count", async (req, res) => {
 });
 
 /**
+ * @name GET /api/bookings/dashboard
+ * @description Gets bookings for a date range together with their event, space, user and
+ * category display data, plus the booking metrics summary, in a single request.
+ * @param {object} req - Express request object.
+ * @param {object} req.query - Query parameters.
+ * @param {string} [req.query.startMonth] - Start month filter (MM/YY).
+ * @param {string} [req.query.endMonth] - End month filter (MM/YY).
+ * @param {string} [req.query.startDate] - Start date filter (ISO).
+ * @param {string} [req.query.endDate] - End date filter (ISO).
+ * @param {('all'|'active'|'inactive')} [req.query.status='active'] - Status to filter bookings.
+ * @param {object} res - Express response object.
+ * @returns {object} JSON with status code and { bookings, metrics } or error message.
+ */
+api.get("/dashboard", async (req, res) => {
+  try {
+    const { startMonth, endMonth, startDate, endDate, status } = req.query;
+    const userRole = req._reqUser?.type;
+    const userId = req._reqUser?.id;
+
+    const filterUserId = userRole === "normalUser" ? userId : null;
+    const filters = {};
+    if (startMonth) filters.startMonth = startMonth;
+    if (endMonth) filters.endMonth = endMonth;
+    if (startDate) filters.startDate = startDate;
+    if (endDate) filters.endDate = endDate;
+
+    const result = await bookings.getBookingsJoined(status || "active", filterUserId, filters);
+    return res.status(result.code).json(result);
+  } catch (error) {
+    logger.error(`Error in /api/bookings/dashboard [GET]: ${error.message}`);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
+  }
+});
+
+/**
  * @name GET /api/bookings/event
  * @description Gets bookings filtered by event ID.
  * @param {object} req - Express request object.

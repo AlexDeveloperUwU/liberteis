@@ -11,6 +11,9 @@
   },
   "calendar": {
     "today": "Today",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "toggleView": "Toggle calendar view",
     "noEventsMonth": "No events for this month",
     "noEvents": "No events today",
     "tryAnotherMonth": "Try seeing another month",

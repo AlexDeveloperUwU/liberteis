@@ -11,6 +11,9 @@
   },
   "calendar": {
     "today": "Hoxe",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes seguinte",
+    "toggleView": "Alternar vista do calendario",
     "noEventsMonth": "Non hai eventos para este mes",
     "noEvents": "Non hai eventos hoxe",
     "tryAnotherMonth": "Tenta ver outro mes",

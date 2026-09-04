@@ -11,6 +11,9 @@
   },
   "calendar": {
     "today": "Hoy",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "toggleView": "Alternar vista del calendario",
     "noEventsMonth": "No hay eventos para este mes",
     "noEvents": "No hay eventos hoy",
     "tryAnotherMonth": "Intenta ver otro mes",

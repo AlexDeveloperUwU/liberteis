@@ -1,0 +1,23 @@
+# LiberTeis
+
+> LiberTeis is a booking and event management app for the IES de Teis school library. Staff and users can reserve spaces, browse and register for events, and manage library-related bookings from a single dashboard. Auth is session-based; roles are normalUser < managerUser < adminUser.
+
+## Dashboard
+
+- [Home](/dash/home): calendar overview of bookings and events, with pending/finished/upcoming totals.
+- [Users](/dash/users): staff/user account management (list, create, edit).
+- [User settings](/dash/config): the signed-in user's own profile and preferences.
+- [App settings](/dash/settings): admin-level app configuration.
+- [Spaces](/dash/spaces): rooms/areas that can be booked (list, create, edit).
+- [Categories](/dash/categories): tagging/grouping used by events and bookings (list, create, edit).
+- [Events](/dash/events): library events (list, create, edit); events can recur via a shared `groupId`.
+- [Bookings](/dash/bookings): reservations of spaces (list, create, edit); bookings can recur via a shared `groupId`.
+
+## Other
+
+- [Login](/auth/login): session-based sign-in.
+- [Info screen](/info/screen): a read-only public display view (e.g. for a lobby screen), not part of the dashboard.
+
+## API
+
+All endpoints are under `/api` and return `{success, code, message, data}`. Resources: `auth`, `users`, `spaces`, `categories`, `events`, `bookings`, `config`, `utils`. Bookings/events support a `scope` query param (`single` or `group`) on update/toggle to act on one item or a whole recurring series.

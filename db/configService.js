@@ -1,6 +1,22 @@
 import * as dbc from "./dbController.js";
 import { logger } from "../utils/logger.js";
 import ErrorManager from "../errors/errorManager.js";
+import { encryptData } from "../utils/dataSecurity.js";
+
+/**
+ * Encrypts sensitive config values before they're persisted. Currently only
+ * `mailPassword` is treated as sensitive; empty values are left as-is so
+ * "not configured" stays a plain falsy check.
+ * @param {string} key - The config key being written.
+ * @param {any} value - The value to potentially encrypt.
+ * @returns {any} The value to persist.
+ */
+function encryptIfSensitive(key, value) {
+  if (key === "mailPassword" && value) {
+    return encryptData(value);
+  }
+  return value;
+}
 
 /**
  * Adds a configuration to the database.
@@ -14,7 +30,7 @@ export async function setConfig(key, value) {
   }
 
   try {
-    await dbc.dbSaveData("config", { id: key, value: value });
+    await dbc.dbSaveData("config", { id: key, value: encryptIfSensitive(key, value) });
     return ErrorManager.returnSuccess(201, "Configuration created successfully", { key, value });
   } catch (error) {
     logger.error(`Error saving config to the database: ${error.message}`);
@@ -34,7 +50,7 @@ export async function updateConfig(key, value) {
   }
 
   try {
-    await dbc.dbUpdateData("config", key, { value: value });
+    await dbc.dbUpdateData("config", key, { value: encryptIfSensitive(key, value) });
     return ErrorManager.returnSuccess(200, "Configuration updated successfully", { key, value });
   } catch (error) {
     logger.error(`Error updating config in the database: ${error.message}`);

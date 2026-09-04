@@ -8,6 +8,25 @@ const api = Router();
 export default api;
 
 /**
+ * Config keys that must never be exposed to a non-admin caller of GET /api/config.
+ */
+const SENSITIVE_CONFIG_KEYS = ["mailUser", "mailPassword"];
+
+/**
+ * Redacts a config row before it's sent to the client. `mailPassword` is never
+ * returned in full (even to an admin) since it's encrypted at rest and only meant
+ * to be overwritten, not read back.
+ * @param {{id: string, value: string}} row - The config row.
+ * @returns {{id: string, value: string}} The (possibly redacted) row.
+ */
+function redactConfigRow(row) {
+  if (row.id === "mailPassword") {
+    return { ...row, value: row.value ? "set" : "" };
+  }
+  return row;
+}
+
+/**
  * @name GET /api/configs
  * @description Gets all configs or a specific config by key
  * @param {object} req - Express request object
@@ -19,8 +38,13 @@ export default api;
 api.get("/", async (req, res) => {
   try {
     const { key } = req.query;
+    const isAdmin = req._reqUser?.type === "adminUser";
 
     if (key) {
+      if (SENSITIVE_CONFIG_KEYS.includes(key) && !isAdmin) {
+        return res.status(403).json(ErrorManager.returnError("forbiddenAdminOnly"));
+      }
+
       const existsResult = await config.checkConfigExistence(key);
       if (!existsResult.success) {
         return res.status(existsResult.code).json(existsResult);
@@ -31,9 +55,17 @@ api.get("/", async (req, res) => {
       }
 
       const result = await config.getConfig(key);
+      if (result.success) {
+        result.data = redactConfigRow(result.data);
+      }
       return res.status(result.code).json(result);
     } else {
       const result = await config.getConfigs();
+      if (result.success) {
+        result.data = result.data
+          .filter((row) => isAdmin || !SENSITIVE_CONFIG_KEYS.includes(row.id))
+          .map(redactConfigRow);
+      }
       return res.status(result.code).json(result);
     }
   } catch (error) {

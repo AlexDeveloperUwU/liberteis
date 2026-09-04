@@ -1,66 +1,82 @@
 import axios from "axios";
 
+/**
+ * Maps a booking row enriched by GET /api/bookings/dashboard (eventTitle, spaceName,
+ * bookedByName, ...) to the calendar-event shape used by the dashboard and the info screen.
+ * @param {object} booking - Enriched booking object.
+ * @returns {object} Calendar event object.
+ */
+export const mapBookingToEvent = (booking) => {
+  const bookingDate = new Date(booking.bookingDate);
+  const duration = booking.eventDuration ?? 60;
+  const endDate = new Date(bookingDate);
+  endDate.setMinutes(endDate.getMinutes() + duration);
+
+  const hours = Math.floor(duration / 60);
+  const mins = duration % 60;
+  const durationStr = hours > 0 && mins > 0 ? `${hours}h ${mins}min` : hours > 0 ? `${hours}h` : `${mins}min`;
+
+  return {
+    id: booking.id || booking._id,
+    title: booking.eventTitle,
+    start: bookingDate,
+    end: endDate,
+    description: booking.eventInfo,
+    info: booking.eventInfo,
+    bookingInfo: booking.info,
+    coverUrl: booking.eventCoverUrl,
+    bookingData: booking,
+    spaceName: booking.spaceName,
+    categoryName: booking.categoryName,
+    bookedByName: booking.bookedByName,
+    addedBy: booking.bookedByName,
+    duration: durationStr,
+  };
+};
+
+/**
+ * Computes the MM/YY month-window (previous .. next month) around the current month.
+ * @returns {{startMonth: string, endMonth: string}}
+ */
+export const getDashboardMonthWindow = () => {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1;
+
+  const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+  const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+
+  const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+  const nextYear = currentMonth === 12 ? currentYear + 1 : currentYear;
+
+  return {
+    startMonth: `${prevMonth.toString().padStart(2, "0")}/${(prevYear % 100).toString().padStart(2, "0")}`,
+    endMonth: `${nextMonth.toString().padStart(2, "0")}/${(nextYear % 100).toString().padStart(2, "0")}`,
+  };
+};
+
 export const loadDashboardHomeData = async (to) => {
   try {
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth() + 1;
+    const { startMonth, endMonth } = getDashboardMonthWindow();
 
-    const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
-    const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+    const response = await axios.get(`/api/bookings/dashboard?startMonth=${startMonth}&endMonth=${endMonth}`);
 
-    const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
-    const nextYear = currentMonth === 12 ? currentYear + 1 : currentYear;
-
-    const startMonthStr = `${prevMonth.toString().padStart(2, "0")}/${(prevYear % 100).toString().padStart(2, "0")}`;
-    const endMonthStr = `${nextMonth.toString().padStart(2, "0")}/${(nextYear % 100).toString().padStart(2, "0")}`;
-
-    const [metricsResponse, bookingsResponse] = await Promise.allSettled([
-      axios.get("/api/bookings/count"),
-      axios.get(`/api/bookings?startMonth=${startMonthStr}&endMonth=${endMonthStr}`),
-    ]);
-
-    let metrics =
-      metricsResponse.status === "fulfilled" && metricsResponse.value.data.success
-        ? metricsResponse.value.data.data || {}
-        : {};
-    metrics = {
-      total: typeof metrics.total === "number" ? metrics.total : 0,
-      done: typeof metrics.done === "number" ? metrics.done : 0,
-      todo: typeof metrics.todo === "number" ? metrics.todo : 0,
+    const data = response.data.success ? response.data.data || {} : null;
+    const metricsRaw = data?.metrics || {};
+    const metrics = {
+      total: typeof metricsRaw.total === "number" ? metricsRaw.total : 0,
+      done: typeof metricsRaw.done === "number" ? metricsRaw.done : 0,
+      todo: typeof metricsRaw.todo === "number" ? metricsRaw.todo : 0,
     };
-
-    const bookings =
-      bookingsResponse.status === "fulfilled" && bookingsResponse.value.data.success
-        ? bookingsResponse.value.data.data || []
-        : [];
-
-    const hasError =
-      metricsResponse.status === "rejected" ||
-      bookingsResponse.status === "rejected" ||
-      (metricsResponse.status === "fulfilled" && !metricsResponse.value.data.success) ||
-      (bookingsResponse.status === "fulfilled" && !bookingsResponse.value.data.success);
-
-    let errorMessage = null;
-    if (hasError) {
-      if (metricsResponse.status === "rejected") {
-        errorMessage = "Error de conexión al cargar métricas";
-      } else if (bookingsResponse.status === "rejected") {
-        errorMessage = "Error de conexión al cargar reservas";
-      } else if (metricsResponse.status === "fulfilled" && !metricsResponse.value.data.success) {
-        errorMessage = metricsResponse.value.data.message;
-      } else if (bookingsResponse.status === "fulfilled" && !bookingsResponse.value.data.success) {
-        errorMessage = bookingsResponse.value.data.message;
-      }
-    }
+    const bookings = data?.bookings || [];
 
     to.meta.initialData = {
       metrics,
-      bookings: bookings || [],
-      startMonth: startMonthStr,
-      endMonth: endMonthStr,
-      error: hasError,
-      errorMessage: errorMessage || "",
+      bookings,
+      startMonth,
+      endMonth,
+      error: !response.data.success,
+      errorMessage: response.data.success ? "" : response.data.message,
     };
   } catch (error) {
     console.error("❌ Error fetching dashboard data:", error.message || error);
@@ -507,10 +523,11 @@ export const loadEventEditData = async (to) => {
 
 export const loadBookingsData = async (to) => {
   try {
-    const [metricsResult, bookingsResult, eventsResult] = await Promise.allSettled([
+    const [metricsResult, bookingsResult, eventsResult, spacesResult] = await Promise.allSettled([
       axios.get("/api/bookings/count"),
       axios.get("/api/bookings"),
       axios.get("/api/events"),
+      axios.get("/api/spaces"),
     ]);
 
     const metrics =
@@ -521,6 +538,9 @@ export const loadBookingsData = async (to) => {
 
     const events =
       eventsResult.status === "fulfilled" && eventsResult.value.data.success ? eventsResult.value.data.data : [];
+
+    const spaces =
+      spacesResult.status === "fulfilled" && spacesResult.value.data.success ? spacesResult.value.data.data : [];
 
     const hasError =
       metricsResult.status === "rejected" ||
@@ -551,6 +571,7 @@ export const loadBookingsData = async (to) => {
       metrics,
       bookings,
       events,
+      spaces,
       error: hasError,
       errorMessage,
     };
@@ -560,6 +581,7 @@ export const loadBookingsData = async (to) => {
       metrics: {},
       bookings: [],
       events: [],
+      spaces: [],
       error: true,
       errorMessage: "Error de conexión al cargar datos de reservas",
     };
@@ -705,69 +727,13 @@ export const loadScreenData = async (to) => {
     const startDate = now.toISOString();
     const endDate = nextWeek.toISOString();
 
-    const bookingsResponse = await axios.get(`/api/bookings?startDate=${startDate}&endDate=${endDate}`);
+    const response = await axios.get(`/api/bookings/dashboard?startDate=${startDate}&endDate=${endDate}`);
 
-    if (!bookingsResponse.data.success) {
-      throw new Error(bookingsResponse.data.message || "Error al obtener reservas");
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Error al obtener reservas");
     }
 
-    const bookings = bookingsResponse.data.data;
-
-    events = [];
-    for (const booking of bookings) {
-      try {
-        const eventResponse = await axios.get(`/api/events?id=${booking.eventId}`);
-        if (!eventResponse.data.success) continue;
-
-        const spaceResponse = await axios.get(`/api/spaces?id=${booking.space}`);
-        if (!spaceResponse.data.success) continue;
-
-        const userResponse = await axios.get(`/api/users?id=${booking.bookedBy}`);
-        if (!userResponse.data.success) continue;
-
-        let categoryName = "";
-        if (eventResponse.data.data.category) {
-          const categoryResponse = await axios.get(`/api/categories?id=${eventResponse.data.data.category}`);
-          if (categoryResponse.data.success) {
-            categoryName = categoryResponse.data.data.name;
-          }
-        }
-
-        const event = eventResponse.data.data;
-        const space = spaceResponse.data.data;
-        const user = userResponse.data.data;
-
-        let durationStr = "";
-        if (event.duration !== undefined && event.duration !== null) {
-          const hours = Math.floor(event.duration / 60);
-          const mins = event.duration % 60;
-          if (hours > 0 && mins > 0) {
-            durationStr = `${hours}h ${mins}min`;
-          } else if (hours > 0) {
-            durationStr = `${hours}h`;
-          } else {
-            durationStr = `${mins}min`;
-          }
-        }
-
-        events.push({
-          id: booking.id || booking._id,
-          title: event.title,
-          start: new Date(booking.bookingDate),
-          end: new Date(new Date(booking.bookingDate).getTime() + (event.duration || 60) * 60000),
-          description: event.info,
-          info: event.info,
-          coverUrl: event.coverUrl,
-          bookingInfo: booking.info,
-          spaceName: space.name,
-          categoryName: categoryName,
-          addedBy: user.name,
-          duration: durationStr,
-        });
-      } catch (error) {
-        console.error(`Error al procesar booking ${booking._id || booking.id}:`, error.message || error);
-      }
-    }
+    events = (response.data.data.bookings || []).map(mapBookingToEvent);
 
     events.sort((a, b) => a.start - b.start);
 

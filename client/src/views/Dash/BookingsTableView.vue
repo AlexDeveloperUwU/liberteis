@@ -332,7 +332,7 @@ const bookings = ref([]);
 const events = ref({});
 const spaces = ref({});
 const requestedSpaces = new Set();
-const users = ref({});
+const allUsers = ref([]);
 
 const isLoading = ref(false);
 
@@ -428,26 +428,8 @@ const getSpaceName = (spaceId) => {
 };
 
 const getBookedByName = (userId) => {
-  if (users.value[userId]) {
-    return users.value[userId];
-  }
-
-  loadUserName(userId);
-  return userId;
-};
-
-const loadUserName = async (userId) => {
-  if (users.value[userId] !== undefined) return;
-
-  try {
-    const response = await axios.get(`/api/users?id=${userId}`);
-    if (response.data.data && response.data.data.name) {
-      users.value[userId] = response.data.data.name;
-    }
-  } catch (error) {
-    console.error(`Error cargando nombre de usuario ${userId}:`, error);
-    users.value[userId] = userId;
-  }
+  const user = allUsers.value.find((u) => u.id === userId);
+  return user ? user.name : userId;
 };
 
 const filteredBookings = computed(() => {
@@ -536,6 +518,26 @@ const loadEventsInfo = (eventsList) => {
   }
 };
 
+const loadSpacesInfo = (spacesList) => {
+  if (!Array.isArray(spacesList)) return;
+  for (const space of spacesList) {
+    if (space && space.id) {
+      spaces.value[space.id] = space;
+    }
+  }
+};
+
+const loadUsers = async () => {
+  try {
+    const response = await axios.get("/api/users", { params: { status: "active" } });
+    if (response.data.success) {
+      allUsers.value = response.data.data;
+    }
+  } catch (error) {
+    console.error("Error cargando usuarios:", error);
+  }
+};
+
 const loadBookings = async () => {
   try {
     isLoading.value = true;
@@ -577,7 +579,20 @@ const loadBookings = async () => {
   }
 };
 
+const refreshMetrics = async () => {
+  try {
+    const metricsResponse = await axios.get("/api/bookings/count");
+    if (metricsResponse.data && metricsResponse.data.success) {
+      metrics.value = metricsResponse.data.data;
+    }
+  } catch (error) {
+    console.error("Error cargando métricas:", error);
+  }
+};
+
 onMounted(async () => {
+  loadUsers();
+
   if (route.meta.initialData) {
     if (route.meta.initialData.metrics) {
       metrics.value = route.meta.initialData.metrics;
@@ -585,6 +600,10 @@ onMounted(async () => {
 
     if (route.meta.initialData.events) {
       loadEventsInfo(route.meta.initialData.events);
+    }
+
+    if (route.meta.initialData.spaces) {
+      loadSpacesInfo(route.meta.initialData.spaces);
     }
 
     if (route.meta.initialData.bookings) {
@@ -636,7 +655,14 @@ const handleBookingStatusToggle = async (booking) => {
                     ? t("pages.dash.bookings.toasts.deactivated", { name: bookingLabel })
                     : t("pages.dash.bookings.toasts.reactivated", { name: bookingLabel }),
                 );
-                await loadBookings();
+
+                if (bookingFilter.value === "all") {
+                  booking.deleted = isDeactivating;
+                } else {
+                  bookings.value = bookings.value.filter((b) => b.id !== booking.id);
+                }
+
+                await refreshMetrics();
               }
             } catch (error) {
               toast.error(t("pages.other.commons.errors.generic"));

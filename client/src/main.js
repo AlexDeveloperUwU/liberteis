@@ -33,14 +33,14 @@ axios.interceptors.response.use(
   },
 );
 
-const initApp = () => {
+const initApp = async () => {
   try {
     const app = createApp(App);
     const pinia = createPinia();
     app.use(pinia);
 
     const mainStore = useMainStore();
-    const i18n = createI18nInstance(mainStore);
+    const i18n = await createI18nInstance(mainStore);
 
     mainStore.applyTheme();
 
