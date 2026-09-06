@@ -16,7 +16,7 @@ const api = Router();
 
 /**
  * GET /version
- * Obtiene la versión del proyecto desde package.json
+ * Gets the project version from package.json.
  */
 api.get("/version", (req, res) => {
   try {

@@ -6,9 +6,10 @@ import * as mailer from "../utils/mailer.js";
 import { logger } from "../utils/logger.js";
 import ErrorManager from "../errors/errorManager.js";
 
-const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
-
-//! Operaciones CRUD básicas
+/**
+ * Password reset token lifetime, in milliseconds (1 hour).
+ */
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
 
 /**
  * Adds a user to the database.
@@ -165,8 +166,6 @@ export async function updateUserPassword(id, pass, invalidateOtherSessions = tru
   }
 }
 
-//! Recuperación de contraseña
-
 /**
  * Requests a password reset for the given email: issues a single-use, time-limited token and
  * emails a reset link. Always succeeds when the account isn't found, so the route can hide that
@@ -272,8 +271,6 @@ export async function resetPassword(token, newPassword) {
     return ErrorManager.returnError("passwordResetError");
   }
 }
-
-//! Operaciones de recuperación de información
 
 /**
  * Gets a user from the database.

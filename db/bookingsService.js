@@ -4,8 +4,6 @@ import { logger } from "../utils/logger.js";
 import ErrorManager from "../errors/errorManager.js";
 import crypto from "crypto";
 
-//! Basic CRUD operations
-
 /**
  * Adds a booking to the database.
  * Supports single booking and recurring bookings.
@@ -275,8 +273,6 @@ export async function disableBooking(id) {
   }
 }
 
-//! Info retrieval operations
-
 /**
  * Retrieves a booking from the database.
  * @param {string} id - The ID of the booking to retrieve.
@@ -464,7 +460,9 @@ export async function getBookings(status = "active", userId = null, filters = {}
  * @param {string} [status="active"] - The status of bookings to retrieve ("all", "active", "inactive").
  * @param {string|null} [userId=null] - Optional user ID to filter bookings by specific user.
  * @param {object} [filters={}] - Optional filters: { startMonth, endMonth, startDate, endDate }.
- * @returns {Promise<object>} { bookings: [...enriched], metrics: { total, done, todo } }
+ * @returns {Promise<object>} { bookings: [...enriched], metrics: { total, done, todo } }.
+ *   The metrics are intentionally unwindowed: they reflect all active bookings regardless of the
+ *   startMonth/endMonth filters applied to `bookings` above, not derived from the (windowed) rows.
  */
 export async function getBookingsJoined(status = "active", userId = null, filters = {}) {
   try {
@@ -521,9 +519,6 @@ export async function getBookingsJoined(status = "active", userId = null, filter
       };
     });
 
-    // Intentionally unwindowed: metrics reflect all active bookings regardless of the
-    // startMonth/endMonth filters applied to bookingRows above — do not derive this from
-    // the (windowed) bookings fetched for this response.
     const metricsResult = await getBookingsCount(userId, null);
     const metrics = metricsResult.success ? metricsResult.data : { total: 0, done: 0, todo: 0 };
 

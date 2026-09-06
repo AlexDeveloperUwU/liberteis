@@ -404,7 +404,7 @@ const handleAction = async (action, modal) => {
         modalStore.removeModal(modal.id);
       }
     } catch {
-      // ignore action errors, modal stays open for the user to retry
+      /* Ignore action errors, modal stays open for the user to retry */
     }
   } else {
     modalStore.removeModal(modal.id);

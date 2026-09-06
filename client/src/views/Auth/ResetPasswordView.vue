@@ -128,7 +128,8 @@ const router = useRouter();
 const toast = useToast();
 const authStore = useAuthStore();
 
-const pageState = ref("checking"); // checking | valid | expired | invalid
+/** @type {import('vue').Ref<'checking'|'valid'|'expired'|'invalid'>} */
+const pageState = ref("checking");
 
 onMounted(async () => {
   const result = await authStore.validateResetToken(props.token);
@@ -221,7 +222,6 @@ const passwordStrength = computed(() => {
   if (!password.value) return "weak";
   if (password.value.length < 10) return "weak";
   if (password.value.length < 16) return "medium";
-  // Check for uppercase, lowercase, numbers, special chars
   const hasUppercase = /[A-Z]/.test(password.value);
   const hasLowercase = /[a-z]/.test(password.value);
   const hasNumbers = /\d/.test(password.value);
@@ -246,7 +246,6 @@ const handleSubmit = async () => {
   try {
     const result = await authStore.resetPassword(props.token, password.value);
     if (result.success) {
-      // The reset already invalidated every session server-side; drop any stale local one too.
       if (authStore.isAuthenticated) {
         authStore.$patch({ user: null, userVerified: false });
         localStorage.removeItem("auth_user");

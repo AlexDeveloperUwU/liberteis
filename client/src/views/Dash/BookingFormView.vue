@@ -696,19 +696,20 @@ const selectedSpace = ref("");
 const selectedEventInfo = ref(null);
 const selectedEventCategoryInfo = ref(null);
 
-// Recurrence refs
 const isRecurrent = ref(false);
 const updateScope = ref("single");
 
-// Use an object map for recurrence state instead of array of objects with labels
+/**
+ * Keyed by JS `Date#getDay()` values (0 = Sunday, ..., 6 = Saturday).
+ */
 const recurrenceState = reactive({
-  1: { selected: false, time: "10:00" }, // Monday
+  1: { selected: false, time: "10:00" },
   2: { selected: false, time: "10:00" },
   3: { selected: false, time: "10:00" },
   4: { selected: false, time: "10:00" },
   5: { selected: false, time: "10:00" },
   6: { selected: false, time: "10:00" },
-  0: { selected: false, time: "10:00" }, // Sunday
+  0: { selected: false, time: "10:00" },
 });
 
 const getDayLabel = (dayIndex) => {

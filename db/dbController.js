@@ -71,7 +71,7 @@ dbPool.getConnection((err, connection) => {
 });
 
 /**
- * Instancia de Kysely configurada para usar el pool de conexiones MySQL.
+ * Kysely instance configured to use the MySQL connection pool.
  */
 const db = new Kysely({
   dialect: new MysqlDialect({
@@ -80,7 +80,7 @@ const db = new Kysely({
 });
 
 /**
- * Crea las tablas necesarias en la base de datos si no existen.
+ * Creates the required database tables if they don't exist.
  * @async
  */
 export async function dbCreateTables() {
@@ -115,7 +115,7 @@ export async function dbCreateTables() {
         .addColumn("sessionVersion", "integer", (col) => col.defaultTo(0).notNull())
         .execute();
     } catch (e) {
-      // Column might already exist
+      /* Column might already exist */
     }
 
     await trx.schema
@@ -183,7 +183,7 @@ export async function dbCreateTables() {
     try {
       await trx.schema.alterTable("bookings").addColumn("groupId", "varchar(50)").execute();
     } catch (e) {
-      // Column might already exist
+      /* Column might already exist */
     }
 
     const configRows = await trx.selectFrom("config").selectAll().execute();
@@ -344,7 +344,7 @@ export async function dbUpdateWhere(table, conditions, data) {
 export async function dbGetDeletionStatus(table, id) {
   return await db.transaction().execute(async (trx) => {
     const data = await dbGetOne(table, id);
-    return data[0].deleted; // This should now return true/false as a boolean
+    return data[0].deleted;
   });
 }
 

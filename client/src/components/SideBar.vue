@@ -88,7 +88,6 @@ export default {
         emit("update:isCollapsed", mainStore.sidebarCollapsed);
       }
 
-      // Obtener la versión al montar el componente
       mainStore.fetchVersion();
 
       window.addEventListener("resize", detectMobile);

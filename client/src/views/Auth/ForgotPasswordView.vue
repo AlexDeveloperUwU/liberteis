@@ -82,8 +82,6 @@ const handleSubmit = async () => {
 
   submitting.value = true;
   try {
-    // Always show the "sent" state on a successful request, regardless of whether the
-    // address is registered, so this can never be used to check which emails have an account.
     await authStore.requestPasswordReset(email.value);
     submitted.value = true;
   } finally {

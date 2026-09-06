@@ -41,8 +41,10 @@ api.post("/", requireAdmin, async (req, res) => {
 
 /**
  * @name PUT /api/users/
- * @description Updates an existing user by ID. Users may update their own profile;
- *              updating other users requires an admin session.
+ * @description Updates an existing user by ID. Users may update their own profile, but cannot
+ *              change their own role; updating other users requires an admin session.
+ *              Changing your own password bumps sessionVersion for every session, including this
+ *              request's own, so the request's session is restamped here to avoid self-logout.
  * @param {object} req - Express request object.
  * @param {object} req.query - The query parameters.
  * @param {string} req.query.id - The ID of the user to update.
@@ -64,7 +66,6 @@ api.put("/", requireAuth, async (req, res) => {
         return res.status(403).json(ErrorManager.returnError("forbiddenAdminOnly"));
       }
     } else if (req._reqUser.type !== "adminUser") {
-      // Users editing their own profile cannot change their role
       delete userData.type;
     }
 
@@ -84,8 +85,6 @@ api.put("/", requireAuth, async (req, res) => {
       }
       delete userData.password;
 
-      // Changing your own password bumps sessionVersion for every session, including this
-      // request's own — restamp it here so the session making the change isn't logged out too.
       if (req._reqUser.id === id && passwordResult.data.sessionVersion !== undefined) {
         req.session.sessionVersion = passwordResult.data.sessionVersion;
       }

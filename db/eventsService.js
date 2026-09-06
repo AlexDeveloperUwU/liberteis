@@ -3,8 +3,6 @@ import * as id from "../utils/idGen.js";
 import { logger } from "../utils/logger.js";
 import ErrorManager from "../errors/errorManager.js";
 
-//! Basic CRUD operations
-
 /**
  * Adds an event to the database.
  * @param {Object} event - Object representing the event to add.
@@ -75,8 +73,6 @@ export async function changeEventStatus(id) {
     return ErrorManager.returnError("eventStatusChangeError");
   }
 }
-
-//! Info retrieval operations
 
 /**
  * Gets an event from the database.

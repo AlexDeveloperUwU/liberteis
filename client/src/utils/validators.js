@@ -1,7 +1,7 @@
 /**
- * Valida si un email tiene formato correcto
- * @param {string} email - Email a validar
- * @returns {boolean} - True si el email es válido, false si no
+ * Validates whether an email has the correct format.
+ * @param {string} email - Email to validate.
+ * @returns {boolean} True if the email is valid, false otherwise.
  */
 export const isValidEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -9,10 +9,10 @@ export const isValidEmail = (email) => {
 };
 
 /**
- * Valida que un nombre tenga al menos una longitud mínima
- * @param {string} name - Nombre a validar
- * @param {number} minLength - Longitud mínima (por defecto 3)
- * @returns {Object} - Objeto con isValid (boolean) y message (string)
+ * Validates that a name meets a minimum length.
+ * @param {string} name - Name to validate.
+ * @param {number} minLength - Minimum length (default 3).
+ * @returns {Object} Object with isValid (boolean) and message (string).
  */
 export const validateName = (name, minLength = 3) => {
   if (!name || name.trim().length < minLength) {
@@ -28,9 +28,9 @@ export const validateName = (name, minLength = 3) => {
 };
 
 /**
- * Valida un campo de email
- * @param {string} email - Email a validar
- * @returns {Object} - Objeto con isValid (boolean) y message (string)
+ * Validates an email field.
+ * @param {string} email - Email to validate.
+ * @returns {Object} Object with isValid (boolean) and message (string).
  */
 export const validateEmail = (email) => {
   if (!email) {
@@ -52,9 +52,9 @@ export const validateEmail = (email) => {
 };
 
 /**
- * Valida que se haya seleccionado un tipo de usuario
- * @param {string} type - Tipo de usuario
- * @returns {Object} - Objeto con isValid (boolean) y message (string)
+ * Validates that a user type has been selected.
+ * @param {string} type - User type.
+ * @returns {Object} Object with isValid (boolean) and message (string).
  */
 export const validateType = (type) => {
   if (!type) {
@@ -70,9 +70,9 @@ export const validateType = (type) => {
 };
 
 /**
- * Calcula el hash SHA-1 de una cadena de texto
- * @param {string} text - Texto para hashear
- * @returns {Promise<string>} - Hash SHA-1 en mayúsculas
+ * Computes the SHA-1 hash of a text string.
+ * @param {string} text - Text to hash.
+ * @returns {Promise<string>} Uppercase SHA-1 hash.
  */
 async function sha1Hash(text) {
   const encoder = new TextEncoder();
@@ -86,9 +86,9 @@ async function sha1Hash(text) {
 }
 
 /**
- * Verifica si una contraseña ha sido comprometida usando la API de HIBP
- * @param {string} password - Contraseña a verificar
- * @returns {Promise<{isPwned: boolean, count: number}>} - Resultado de la verificación
+ * Checks whether a password has been compromised using the HIBP API.
+ * @param {string} password - Password to check.
+ * @returns {Promise<{isPwned: boolean, count: number}>} Check result.
  */
 async function checkPwnedPassword(password) {
   try {
@@ -131,11 +131,11 @@ async function checkPwnedPassword(password) {
 }
 
 /**
- * Valida la contraseña (opcional pero con longitud mínima si se proporciona)
- * También verifica si la contraseña ha sido comprometida usando HIBP
- * @param {string} password - Contraseña a validar
- * @param {number} minLength - Longitud mínima (por defecto 6)
- * @returns {Promise<Object>} - Objeto con isValid (boolean), message (string), isPwned (boolean) y count (number)
+ * Validates the password (optional, but with a minimum length if provided).
+ * Also checks whether the password has been compromised using HIBP.
+ * @param {string} password - Password to validate.
+ * @param {number} minLength - Minimum length (default 6).
+ * @returns {Promise<Object>} Object with isValid (boolean), message (string), isPwned (boolean) and count (number).
  */
 export const validatePassword = async (password, minLength = 6) => {
   if (!password) {
@@ -162,7 +162,7 @@ export const validatePassword = async (password, minLength = 6) => {
     if (isPwned) {
       return {
         isValid: false,
-        message: "", // El mensaje se gestionará mediante traducciones en el componente
+        message: "",
         isPwned: true,
         count: count,
       };
@@ -178,10 +178,10 @@ export const validatePassword = async (password, minLength = 6) => {
     console.warn("No se pudo verificar la contraseña con la base de datos de filtraciones:", error);
     return {
       isValid: true,
-      message: "", // El mensaje se gestionará mediante traducciones en el componente
+      message: "",
       isPwned: false,
       count: 0,
-      error: true, // Indicamos que hubo un error en la verificación
+      error: true,
     };
   }
 };

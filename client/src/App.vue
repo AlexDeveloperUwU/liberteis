@@ -90,7 +90,6 @@ const applyFavicon = (href) => {
 };
 
 onMounted(async () => {
-  // Configurar el favicon con el valor por defecto empaquetado
   applyFavicon(iconUrl);
 
   isSidebarCollapsed.value = mainStore.sidebarCollapsed;
@@ -99,14 +98,12 @@ onMounted(async () => {
   window.addEventListener("resize", detectMobile);
   await configStore.loadAllConfigs();
 
-  // Sobrescribir con el favicon personalizado si está configurado
   const customFavicon = configStore.getConfigValue("favicon", "");
   if (customFavicon) {
     applyFavicon(customFavicon);
   }
 });
 
-// Reaccionar a cambios del favicon configurado (p. ej. desde la vista de ajustes)
 watch(
   () => configStore.getConfigValue("favicon", ""),
   (newFavicon) => {

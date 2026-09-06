@@ -1,7 +1,6 @@
 import crypto from "crypto";
 import { getKey } from "./secretKey.js";
 
-//! Contraseñas
 export function encryptPass(pass) {
   const salt = crypto.randomBytes(16).toString("hex");
   const hash = crypto.pbkdf2Sync(pass, salt, 100000, 64, "sha512").toString("hex");
@@ -20,7 +19,6 @@ export function validatePass(pass, storedHash) {
   return crypto.timingSafeEqual(hashBuffer, originalBuffer);
 }
 
-//! Tokens de un solo uso (recuperación de contraseña)
 export function generateResetToken() {
   return crypto.randomBytes(32).toString("hex");
 }
@@ -29,7 +27,6 @@ export function hashToken(token) {
   return crypto.createHash("sha256").update(token).digest("hex");
 }
 
-//! Datos Cifrados
 export function encryptData(data) {
   const key = Buffer.from(getKey(), "hex");
   const iv = crypto.randomBytes(12);

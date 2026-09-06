@@ -197,7 +197,8 @@ api.get("/category", async (req, res) => {
 
 /**
  * @name GET /api/events/
- * @description Gets either a specific event by ID or a list of events filtered by status
+ * @description Gets either a specific event by ID or a list of events filtered by status.
+ *              A normalUser is restricted to events they created.
  * @param {object} req - Express request object.
  * @param {object} req.query - Query parameters.
  * @param {string} [req.query.id] - ID of the event to retrieve.
@@ -216,14 +217,12 @@ api.get("/", async (req, res) => {
       const include = includeInactive === "true";
       const result = await events.getEvent(id, include);
 
-      // Si es normalUser, verificar que el evento le pertenece
       if (userRole === "normalUser" && result.success && result.data.createdBy !== userId) {
         return res.status(403).json(ErrorManager.returnError("accessDenied"));
       }
 
       return res.status(result.code).json(result);
     } else {
-      // Si es normalUser, solo mostrar sus eventos
       const filterUserId = userRole === "normalUser" ? userId : null;
       const result = await events.getEvents(status || "active", filterUserId);
       return res.status(result.code).json(result);

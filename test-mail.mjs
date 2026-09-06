@@ -2,7 +2,6 @@ async function test() {
   const BASE = "http://localhost:3000/api";
   console.log("=== MAILER TESTS ===\n");
 
-  // Test 1: Mail config seeding
   console.log("1. Mail config rows seeded...");
   try {
     const res = await fetch(`${BASE}/config`);
@@ -15,7 +14,6 @@ async function test() {
     console.log(`   ✗ ${e.message}`);
   }
 
-  // Test 2: Non-admin gating
   console.log("\n2. Admin-only gating (unauthenticated)...");
   try {
     const res = await fetch(`${BASE}/config`);
@@ -31,7 +29,6 @@ async function test() {
     console.log(`   ✗ ${e.message}`);
   }
 
-  // Test 3: Specific key gating
   console.log("\n3. Single-key admin gating...");
   try {
     const res = await fetch(`${BASE}/config?key=mailPassword`);

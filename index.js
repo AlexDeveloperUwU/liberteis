@@ -10,29 +10,26 @@ import session from "express-session";
 import MySQLStoreFactory from "express-mysql-session";
 import { getKey } from "./utils/secretKey.js";
 
-//! Init wrapper
+/**
+ * Bootstraps and starts the Express application.
+ */
 async function main() {
-  //! Define the __dirname and __filename variables
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const __filename = path.basename(fileURLToPath(import.meta.url));
 
   logs.logger.info(`Initializing the application`);
 
-  //! Import things for the cookie session
   const envConfig = dotenv.config({
     path: path.resolve(__dirname, "./data/secrets/dbcreds.env"),
   }).parsed;
 
   const MySQLStore = MySQLStoreFactory(session);
 
-  //! Import all the routers and routes
   const { dbCreateTables } = await import("./db/dbController.js");
   const apiRouter = (await import("./routes/api.js")).default;
 
-  //! Create an Express application
   const app = e();
 
-  //! Configure the Express application
   const PORT = process.env.PORT || 3000;
 
   app.disable("x-powered-by");
@@ -99,17 +96,14 @@ async function main() {
   app.use("/", e.static(path.join(__dirname, "views")));
   app.use("/uploads", e.static(path.join(__dirname, "data", "uploads")));
 
-  //! Create the database tables if they don't exist
   dbCreateTables();
 
-  //! Define the routes
   app.use("/api", apiRouter);
 
   app.get("/*splat", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "index.html"));
   });
 
-  //! Launch the Express application
   app.listen(PORT, () => {
     logs.logger.info(`Server is running on port ${PORT}`);
   });

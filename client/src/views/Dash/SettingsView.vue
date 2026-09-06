@@ -522,9 +522,6 @@ const handleSubmit = async () => {
       buttonState.value = "error";
       toast.error(failed.message || t("pages.dash.settings.errors.updateFailed"));
     } else {
-      // The server never echoes the real password back, so the store's optimistic
-      // cache (which just holds what was typed) needs to be corrected to the
-      // redacted "set" indicator before re-deriving mailPasswordConfigured below.
       if (passwordChanged) {
         configStore.configs.mailPassword = { id: "mailPassword", value: "set" };
       }

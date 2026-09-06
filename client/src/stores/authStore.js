@@ -36,8 +36,6 @@ export const useAuthStore = defineStore("auth", {
     },
     async verifyUserExists() {
       if (!this.isAuthenticated || !this.userId) return true;
-      // The user was already verified during this session; avoid one API
-      // request per navigation. Logout handles the expired/deleted cases.
       if (this.userVerified) return true;
 
       try {
@@ -88,7 +86,6 @@ export const useAuthStore = defineStore("auth", {
         const response = await axios.put(`/api/users?id=${this.userId}`, userData);
 
         if (response.data.success) {
-          // Merge the sent fields locally; the PUT response carries no user data.
           const safeFields = { ...userData };
           delete safeFields.password;
           delete safeFields.invalidateOtherSessions;

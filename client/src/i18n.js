@@ -1,7 +1,5 @@
 import { createI18n } from "vue-i18n";
 
-// Non-eager: each locale file is only fetched when its language is actually needed,
-// instead of bundling all locales (en/es/gl) into the initial load.
 const localesGlob = import.meta.glob("./locales/**/**.json");
 
 const loadedLocales = new Set();

@@ -578,7 +578,7 @@ const performDeactivate = async (id, scope, modalId, title) => {
     });
     if (response.data.success) {
       toast.success(t("pages.dash.events.toasts.deactivated", { name: title }));
-      modalStore.removeModal(modalId); // Remove details modal
+      modalStore.removeModal(modalId);
       await reloadDashboardData();
     }
   } catch {

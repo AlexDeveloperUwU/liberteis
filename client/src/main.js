@@ -10,10 +10,6 @@ import { useMainStore } from "./stores/mainStore";
 
 axios.defaults.withCredentials = true;
 
-// Cierra la sesión del frontend cuando el backend indica que la sesión ya no es válida (401).
-// El estado del frontend vive en localStorage y no expira por sí solo, así que sin esto
-// la interfaz seguiría mostrando al usuario como conectado aunque la sesión del servidor
-// haya caducado. No actúa sobre 403 (autenticado pero sin permisos).
 axios.interceptors.response.use(
   (response) => response,
   (error) => {

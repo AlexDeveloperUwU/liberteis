@@ -17,6 +17,6 @@ export function useModal() {
     show: modalStore.addModal,
     remove: modalStore.removeModal,
     clear: modalStore.clearAllModals,
-    showBookingDetails: modalStore.showBookingDetails, // Añade el método aquí
+    showBookingDetails: modalStore.showBookingDetails,
   };
 }
