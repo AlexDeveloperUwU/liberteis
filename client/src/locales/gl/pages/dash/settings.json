@@ -28,7 +28,7 @@
       "enableWeekends": "Mostrar sábados e domingos no calendario",
       "favicon": "https://exemplo.com/favicon.png",
       "mailHostPort": "smtp.exemplo.com:587",
-      "mailSecure": "Cifrar a conexión co servidor SMTP",
+      "mailSecure": "Só para o porto 465 (TLS implícito). Déixao desactivado para o porto 587 — STARTTLS negóciase automaticamente.",
       "mailUser": "Usuario SMTP",
       "mailPassword": "••••••••",
       "mailFromAddress": "no-reply\\@exemplo.com"

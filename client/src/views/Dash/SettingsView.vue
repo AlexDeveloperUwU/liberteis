@@ -79,6 +79,30 @@
                   </p>
                 </div>
               </div>
+
+              <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
+                <Mail class="w-5 h-5 text-primary-600 mr-3" />
+                <div>
+                  <p class="text-xs text-text-600">{{ t("pages.dash.settings.form.labels.mailUser") }}</p>
+                  <p class="text-text-800 font-medium break-all">
+                    {{ formData.mailUser || t("pages.dash.settings.common.disabled") }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
+                <ShieldCheck class="w-5 h-5 text-primary-600 mr-3" />
+                <div>
+                  <p class="text-xs text-text-600">{{ t("pages.dash.settings.form.labels.mailSecure") }}</p>
+                  <p class="text-text-800 font-medium">
+                    {{
+                      formData.mailSecure
+                        ? t("pages.dash.settings.common.enabled")
+                        : t("pages.dash.settings.common.disabled")
+                    }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -502,7 +526,7 @@ const handleSubmit = async () => {
       // cache (which just holds what was typed) needs to be corrected to the
       // redacted "set" indicator before re-deriving mailPasswordConfigured below.
       if (passwordChanged) {
-        configStore.configs.value.mailPassword = { id: "mailPassword", value: "set" };
+        configStore.configs.mailPassword = { id: "mailPassword", value: "set" };
       }
       loadSettings();
       buttonState.value = "success";

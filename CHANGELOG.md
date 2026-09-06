@@ -5,6 +5,25 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.1] - 2026-09-06
+
+### Fixed
+
+- Saving the SMTP password from the admin Settings page threw a `TypeError` and never saved: a
+  Pinia setup-store gotcha (`configStore.configs` is already unwrapped when accessed from outside
+  the store, so `.configs.value` was reaching for `.value` on the unwrapped object).
+- The Settings page's "Current settings" preview panel was missing the SMTP username and secure
+  connection fields.
+
+### Changed
+
+- Clarified the "Secure connection (TLS)" hint text: it's only for port 465 (implicit TLS) and
+  should stay off for port 587, where STARTTLS is negotiated automatically.
+- Dropped the SMTP password and from-address cards from the "Current settings" preview (password
+  is write-only and shouldn't be summarized there; from-address was redundant with the edit form).
+
+[2.5.1]: https://github.com/AlexDeveloperUwU/liberteis/releases/tag/v2.5.1
+
 ## [2.5.0] - 2026-09-04
 
 ### Added
