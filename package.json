@@ -1,6 +1,6 @@
 {
   "name": "liberteis",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "La aplicación oficial de gestión de eventos de Teis",
   "main": "index.js",
   "type": "module",
