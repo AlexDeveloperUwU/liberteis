@@ -12,9 +12,9 @@
             type="email"
             :label="t('pages.auth.login.email')"
             icon="mail"
-            :error="errors.email"
+            :error="emailError"
             :valid="isEmailValid"
-            @update:model-value="onEmailInput"
+            @update:model-value="touchedEmail = true"
             required />
 
           <TextField
@@ -22,8 +22,8 @@
             type="password"
             :label="t('pages.auth.login.password')"
             icon="shield"
-            :error="errors.password"
-            @update:model-value="clearPasswordError"
+            :error="passwordError"
+            @update:model-value="touchedPassword = true"
             required />
 
           <router-link :to="{ name: 'authForgotPassword' }" class="block text-sm text-primary-600 hover:text-primary-700 transition-colors">
@@ -34,7 +34,7 @@
             type="submit"
             full-width
             :state="loading ? 'processing' : 'default'"
-            :disabled="loading || !credentials.email || !credentials.password || Object.values(errors).some((e) => e)">
+            :disabled="loading || !isEmailValid || !credentials.password">
             {{ t("pages.auth.login.submit") }}
           </DsButton>
         </form>
@@ -62,46 +62,29 @@ const credentials = ref({
   password: "",
 });
 const loading = ref(false);
-const errors = ref({
-  email: "",
-  password: "",
-});
+const submitted = ref(false);
+const touchedEmail = ref(false);
+const touchedPassword = ref(false);
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const isEmailValid = computed(() => emailRegex.test(credentials.value.email));
 
-const validateEmail = (email) => {
-  if (!email) {
-    errors.value.email = t("pages.auth.login.errors.emailRequired");
-    return false;
-  }
-  if (!emailRegex.test(email)) {
-    errors.value.email = t("pages.auth.login.errors.emailInvalid");
-    return false;
-  }
-  errors.value.email = "";
-  return true;
-};
+const emailError = computed(() => {
+  if (!touchedEmail.value && !submitted.value) return "";
+  if (!credentials.value.email) return t("pages.auth.login.errors.emailRequired");
+  if (!isEmailValid.value) return t("pages.auth.login.errors.emailInvalid");
+  return "";
+});
 
-const onEmailInput = () => {
-  if (errors.value.email) errors.value.email = "";
-};
-
-const validatePassword = (password) => {
-  if (!password) {
-    errors.value.password = t("pages.auth.login.errors.passwordRequired");
-    return false;
-  }
-  errors.value.password = "";
-  return true;
-};
-
-const clearPasswordError = () => {
-  if (errors.value.password) errors.value.password = "";
-};
+const passwordError = computed(() => {
+  if (!touchedPassword.value && !submitted.value) return "";
+  if (!credentials.value.password) return t("pages.auth.login.errors.passwordRequired");
+  return "";
+});
 
 const handleLogin = async () => {
-  if (!validateEmail(credentials.value.email) || !validatePassword(credentials.value.password)) {
+  submitted.value = true;
+  if (!isEmailValid.value || !credentials.value.password) {
     return;
   }
   loading.value = true;
