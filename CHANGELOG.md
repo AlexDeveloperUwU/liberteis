@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.1] - 2026-09-08
+
+### Changed
+
+- `SideBar.vue`, `Toasts.vue`, `Modals.vue` ported onto the new design system components
+  (`resolveIcon`, `DsToast`, `DsModal`/`InfoRow`). `Modals.vue`'s inline SVG icons and duplicated
+  `bookingDetails` layout replaced with `InfoRow`; toast auto-dismiss timing moved from
+  `toastStore` into the UI so the exit animation plays before removal.
+- `UserTableView.vue` and `BookingsTableView.vue` rebuilt on `PageHeader`/`MetricCard`/`DsCard`/
+  `FilterBar`/`DataTable`/`DsPill`/`DsPagination`, removing the per-view hand-rolled table,
+  sort-icon render function, and pagination markup.
+
 ## [2.6.0] - 2026-09-08
 
 ### Added

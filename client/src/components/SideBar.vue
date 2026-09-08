@@ -1,17 +1,17 @@
 <template>
   <aside
-    class="sidebar-container bg-background-100 border-r-[1.5px] border-background-300 flex flex-col items-stretch"
+    class="sidebar-container bg-background-100 border-r-[1.5px] border-background-300 shadow-sidebar flex flex-col items-stretch"
     :class="[isMobile && isCollapsed ? 'sidebar-hidden' : '']">
     <nav class="sidebar-nav flex-1 w-full" :style="sidebarStyle">
       <ul class="space-y-3 w-full">
         <li v-for="(item, index) in menuItems" :key="index" class="rounded-md w-full">
           <router-link
             :to="item.route"
-            class="flex items-center gap-2 p-3 bg-background-200 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-[0_2px_4px_0_rgba(0,0,0,0.05)] w-full"
-            active-class="bg-primary-100 border-primary-500 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
-            <div class="sidebar-icon text-primary-600">
-              <component :is="item.icon" />
-            </div>
+            class="flex items-center gap-2 p-3 bg-background-200 rounded-md border-[1.5px] border-background-400 hover:border-primary-400 hover:bg-background-300 transition-all duration-200 shadow-sm w-full"
+            active-class="bg-primary-100 border-primary-500 shadow-nav-active">
+            <span class="sidebar-icon text-primary-600">
+              <component :is="resolveIcon(item.icon)" class="w-5 h-5" />
+            </span>
             <span v-if="!isCollapsed || isMobile" class="sidebar-text text-text-800">
               {{ t(item.titleKey) }}
             </span>
@@ -35,134 +35,63 @@
   </aside>
 </template>
 
-<script>
-import {
-  Menu as LucideMenu,
-  ChevronLeft as LucideChevronLeft,
-  Home as LucideHome,
-  BarChart as LucideBarChart,
-  Users as LucideUsers,
-  FileText as LucideFileText,
-  Settings as LucideSettings,
-  MapPin as LucideMapPin,
-  Bookmark as LucideBookmark,
-  CalendarDays as LucideCalendarDays,
-  CalendarClock as LucideCalendarClock,
-} from "lucide-vue-next";
+<script setup>
 import { useI18n } from "vue-i18n";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useMainStore } from "../stores/mainStore";
 import { useAuthStore } from "../stores/authStore";
 import { hasPermission } from "../utils/permissions";
+import { resolveIcon } from "./icons.js";
 import logoImg from "@/assets/img/logo.png";
 
-export default {
-  components: {
-    LucideMenu,
-    LucideChevronLeft,
-    LucideHome,
-    LucideBarChart,
-    LucideUsers,
-    LucideFileText,
-    LucideSettings,
-    LucideMapPin,
-    LucideBookmark,
-    LucideCalendarDays,
-    LucideCalendarClock,
+const props = defineProps({
+  isCollapsed: {
+    type: Boolean,
+    required: true,
   },
-  props: {
-    isCollapsed: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  emits: ["update:isCollapsed"],
-  setup(props, { emit }) {
-    const { t } = useI18n();
-    const isMobile = ref(window.innerWidth <= 768);
-    const mainStore = useMainStore();
-    const authStore = useAuthStore();
+});
+const emit = defineEmits(["update:isCollapsed"]);
 
-    onMounted(() => {
-      if (props.isCollapsed !== mainStore.sidebarCollapsed) {
-        emit("update:isCollapsed", mainStore.sidebarCollapsed);
-      }
+const { t } = useI18n();
+const isMobile = ref(window.innerWidth <= 768);
+const mainStore = useMainStore();
+const authStore = useAuthStore();
 
-      mainStore.fetchVersion();
-
-      window.addEventListener("resize", detectMobile);
-    });
-
-    const menuItems = computed(() => {
-      const items = [
-        {
-          titleKey: "components.sidebar.home",
-          icon: "LucideHome",
-          route: "/dash/home",
-          permission: "normalUser",
-        },
-        {
-          titleKey: "components.sidebar.events",
-          icon: "LucideCalendarDays",
-          route: "/dash/events",
-          permission: "managerUser",
-        },
-        {
-          titleKey: "components.sidebar.bookings",
-          icon: "LucideCalendarClock",
-          route: "/dash/bookings",
-          permission: "normalUser",
-        },
-        {
-          titleKey: "components.sidebar.categories",
-          icon: "LucideBookmark",
-          route: "/dash/categories",
-          permission: "managerUser",
-        },
-        {
-          titleKey: "components.sidebar.spaces",
-          icon: "LucideMapPin",
-          route: "/dash/spaces",
-          permission: "managerUser",
-        },
-        {
-          titleKey: "components.sidebar.users",
-          icon: "LucideUsers",
-          route: "/dash/users",
-          permission: "managerUser",
-        },
-        {
-          titleKey: "components.sidebar.settings",
-          icon: "LucideSettings",
-          route: "/dash/settings",
-          permission: "adminUser",
-        },
-      ];
-
-      return items.filter((item) => hasPermission(authStore.userType, item.permission));
-    });
-
-    const sidebarStyle = computed(() => {
-      return {
-        width: isMobile.value ? "12rem" : props.isCollapsed ? "5rem" : "12rem",
-      };
-    });
-
-    const detectMobile = () => {
-      isMobile.value = window.innerWidth <= 768;
-    };
-
-    return {
-      t,
-      menuItems,
-      isMobile,
-      locale: mainStore.locale,
-      sidebarStyle,
-      mainStore,
-      logoImg,
-    };
-  },
+const detectMobile = () => {
+  isMobile.value = window.innerWidth <= 768;
 };
+
+onMounted(() => {
+  if (props.isCollapsed !== mainStore.sidebarCollapsed) {
+    emit("update:isCollapsed", mainStore.sidebarCollapsed);
+  }
+
+  mainStore.fetchVersion();
+
+  window.addEventListener("resize", detectMobile);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", detectMobile);
+});
+
+const menuItems = computed(() => {
+  const items = [
+    { titleKey: "components.sidebar.home", icon: "home", route: "/dash/home", permission: "normalUser" },
+    { titleKey: "components.sidebar.events", icon: "calendar-days", route: "/dash/events", permission: "managerUser" },
+    { titleKey: "components.sidebar.bookings", icon: "calendar-clock", route: "/dash/bookings", permission: "normalUser" },
+    { titleKey: "components.sidebar.categories", icon: "bookmark", route: "/dash/categories", permission: "managerUser" },
+    { titleKey: "components.sidebar.spaces", icon: "map-pin", route: "/dash/spaces", permission: "managerUser" },
+    { titleKey: "components.sidebar.users", icon: "users", route: "/dash/users", permission: "managerUser" },
+    { titleKey: "components.sidebar.settings", icon: "settings", route: "/dash/settings", permission: "adminUser" },
+  ];
+
+  return items.filter((item) => hasPermission(authStore.userType, item.permission));
+});
+
+const sidebarStyle = computed(() => ({
+  width: isMobile.value ? "12rem" : props.isCollapsed ? "5rem" : "12rem",
+}));
 </script>
 
 <style scoped>
@@ -173,7 +102,6 @@ export default {
   top: 3.5rem;
   z-index: 40;
   transition: transform 0.3s ease;
-  box-shadow: 4px 0 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {

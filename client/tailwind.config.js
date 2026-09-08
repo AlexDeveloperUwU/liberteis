@@ -91,6 +91,7 @@ export default {
         "card-hover": "var(--shadow-card-hover)",
         navbar: "var(--shadow-navbar)",
         sidebar: "var(--shadow-sidebar)",
+        "nav-active": "var(--shadow-nav-active)",
       },
     },
   },

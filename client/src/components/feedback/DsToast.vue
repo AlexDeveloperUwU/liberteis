@@ -1,12 +1,12 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import { CheckCircle, XCircle, AlertTriangle, AlertCircle, X } from "lucide-vue-next";
 
 const props = defineProps({
   type: { type: String, default: "info", validator: (v) => ["success", "error", "warning", "info"].includes(v) },
   title: { type: String, default: null },
   message: { type: String, required: true },
-  progress: { type: Number, default: 100 },
+  /** Auto-closes after this many ms and drains the progress bar over the same span. Omit for a persistent toast (no bar). */
   autoHideMs: { type: Number, default: null },
 });
 const emit = defineEmits(["close"]);
@@ -20,14 +20,18 @@ const typeMeta = {
 
 const meta = typeMeta[props.type];
 const closing = ref(false);
+const barWidth = ref(100);
 
 const close = () => {
   closing.value = true;
   setTimeout(() => emit("close"), 300);
 };
 
-onMounted(() => {
-  if (props.autoHideMs) setTimeout(close, props.autoHideMs);
+onMounted(async () => {
+  if (!props.autoHideMs) return;
+  await nextTick();
+  barWidth.value = 0;
+  setTimeout(close, props.autoHideMs);
 });
 
 defineExpose({ close });
@@ -48,6 +52,10 @@ defineExpose({ close });
         <X class="w-4 h-4" />
       </button>
     </div>
-    <div v-if="progress !== null" class="absolute bottom-0 left-0 h-1" :class="meta.bar" :style="{ width: `${progress}%` }" />
+    <div
+      v-if="autoHideMs"
+      class="absolute bottom-0 left-0 h-1"
+      :class="meta.bar"
+      :style="{ width: `${barWidth}%`, transition: `width ${autoHideMs}ms linear` }" />
   </div>
 </template>

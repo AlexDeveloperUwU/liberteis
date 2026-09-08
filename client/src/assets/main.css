@@ -89,6 +89,7 @@
     --shadow-card-hover: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
     --shadow-navbar: 0 2px 15px -3px rgba(0, 0, 0, 0.08);
     --shadow-sidebar: 4px 0 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-nav-active: 0 2px 8px 0 rgba(0, 0, 0, 0.15);
 
     /* Motion */
     --duration-fast: 150ms;

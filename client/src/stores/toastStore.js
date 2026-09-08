@@ -18,11 +18,8 @@ export const useToastStore = defineStore("toast", () => {
 
     toasts.value.push(newToast);
 
-    if (!newToast.persistent && newToast.duration > 0) {
-      setTimeout(() => {
-        removeToast(id);
-      }, newToast.duration);
-    }
+    // Removal timing is driven by the DsToast UI component (Toasts.vue), which
+    // animates the exit before calling removeToast — no timer needed here.
 
     return id;
   };
