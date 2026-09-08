@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-09-08
+
+### Added
+
+- New admin design system tokens: `warning` color ramp, semantic alias layer (`--surface-*`,
+  `--border-*`, `--text-heading/title/body/label/muted`), radii/shadow/motion CSS variables, and
+  K2D/Lexend/Google Sans Code font loading.
+- New shared Vue component library under `client/src/components/{core,forms,navigation,data,feedback}/`:
+  `DsButton`, `IconButton`, `DsCard`, `MetricCard`, `DsPill`, `StatusDot`, `DsSkeleton`,
+  `EntityIcon`, `MorphIcon`, `TextField`, `SelectMenu`, `DsToggle`, `SearchField`, `DropdownMenu`,
+  `DsPagination`, `DataTable`, `FilterBar`, `InfoRow`, `PageHeader`, `EmptyState`, `DsModal`,
+  `DsToast`, plus a shared `icons.js` Lucide icon registry.
+
+### Changed
+
+- `NavBar.vue`'s locale and user dropdown menus now use the new `DropdownMenu` component.
+
 ## [2.5.1] - 2026-09-06
 
 ### Fixed

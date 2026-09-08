@@ -61,6 +61,54 @@
     --accent-800: #8c2424;
     --accent-900: #661a1a;
     --accent-950: #3f1010;
+
+    --warning-50: #fdf6e3;
+    --warning-100: #fbe9bb;
+    --warning-200: #f6d685;
+    --warning-300: #f0c052;
+    --warning-400: #e8ab2e;
+    --warning-500: #d99a1e;
+    --warning-600: #b37d13;
+    --warning-700: #8c620f;
+    --warning-800: #63450a;
+    --warning-900: #3f2c06;
+    --warning-950: #241a04;
+
+    /* Radii */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+
+    /* Elevation — soft, black-only shadows */
+    --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.1);
+    --shadow-card-hover: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+    --shadow-navbar: 0 2px 15px -3px rgba(0, 0, 0, 0.08);
+    --shadow-sidebar: 4px 0 15px -3px rgba(0, 0, 0, 0.1);
+
+    /* Motion */
+    --duration-fast: 150ms;
+    --duration-base: 200ms;
+    --duration-slow: 300ms;
+    --easing-confident: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* Semantic aliases — prefer these over raw ramp steps in new work */
+    --surface-page: var(--background-200);
+    --surface-card: var(--background-100);
+    --surface-inset: var(--background-50);
+    --surface-hover: var(--background-300);
+    --border-default: var(--background-300);
+    --border-strong: var(--background-400);
+    --border-interactive-hover: var(--primary-400);
+    --text-heading: var(--text-950);
+    --text-title: var(--text-900);
+    --text-body: var(--text-800);
+    --text-label: var(--text-700);
+    --text-muted: var(--text-600);
   }
   .dark {
     --text-50: #121416;
@@ -163,10 +211,13 @@
 }
 
 html {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Lexend", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
-  font-variation-settings: "wdth" 100;
+}
+
+.font-mono {
+  font-family: "Google Sans Code", ui-monospace, monospace;
 }
 
 @config '../../tailwind.config.js';
