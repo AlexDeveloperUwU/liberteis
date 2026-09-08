@@ -5,6 +5,34 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-09-08
+
+### Added
+
+- `app-window` and `globe` icons added to the shared registry.
+
+### Changed
+
+- `HomeView.vue` and `SettingsView.vue` rebuilt on the new design system components
+  (`PageHeader`/`MetricCard`/`DsCard`/`IconButton`/`InfoRow`/`TextField`/`DsToggle`/`DsButton`),
+  completing the pass over all 13 Dash views.
+- `LoginView.vue`, `ForgotPasswordView.vue`, and `ResetPasswordView.vue` rebuilt on
+  `DsCard`/`TextField`/`DsButton`/`DsPill`, completing the pass over all 3 Auth views.
+- `Info/ScreenView.vue`: converted ~40 Tailwind v4 arbitrary CSS-var classes
+  (`bg-(--background-200)`) to the equivalent mapped theme classes (`bg-background-200`) for
+  consistency with the rest of the app.
+
+### Fixed
+
+- `DsPagination` had hardcoded English text ("Page X of Y") and no ARIA labels on its prev/next
+  buttons, silently dropping i18n support introduced by the design-system component library.
+  Verified with `node check.js`: 0 missing i18n keys across en/es/gl both before and after.
+
+### Removed
+
+- `views/Others/Template.vue`, a dead scaffold referencing an undefined `FullCalendar` component
+  with zero references anywhere in the codebase.
+
 ## [2.6.4] - 2026-09-08
 
 ### Added

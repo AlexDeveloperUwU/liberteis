@@ -1,252 +1,188 @@
 <template>
   <div class="h-full w-full p-6">
-    <h1 class="text-3xl font-bold text-text-950 mb-2 k2d">
-      {{ t("pages.dash.home.page.title") }}
-    </h1>
-    <p class="text-text-800 mb-6">{{ t("pages.dash.home.page.description") }}</p>
+    <PageHeader :title="t('pages.dash.home.page.title')" :description="t('pages.dash.home.page.description')" />
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
-        <div class="flex items-center gap-2 mb-2">
-          <CalendarDays class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">
-            {{ t("pages.dash.home.metrics.totals") }}
-          </p>
-        </div>
-        <h2 class="text-2xl font-bold text-text-950">{{ metrics.totales || 0 }}</h2>
-      </div>
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
-        <div class="flex items-center gap-2 mb-2">
-          <CalendarCheck2 class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">{{ t("pages.dash.home.metrics.done") }}</p>
-        </div>
-        <h2 class="text-2xl font-bold text-text-950">{{ metrics.hechos || 0 }}</h2>
-      </div>
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
-        <div class="flex items-center gap-2 mb-2">
-          <CalendarCog class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">
-            {{ t("pages.dash.home.metrics.toBeDone") }}
-          </p>
-        </div>
-        <h2 class="text-2xl font-bold text-text-950">{{ metrics.porHacer || 0 }}</h2>
-      </div>
-      <div
-        class="bg-background-100 p-4 shadow-md hover:shadow-xl rounded-lg flex flex-col border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
-        <div class="flex items-center gap-2 mb-2">
-          <Calendar1 class="w-5 h-5 text-primary-600" />
-          <p class="font-medium text-text-800">
-            {{ t("pages.dash.home.metrics.upcoming") }}
-          </p>
-        </div>
-        <h2 class="text-2xl font-bold text-text-950">{{ upcomingBookingDate }}</h2>
-      </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <MetricCard icon="calendar-days" :label="t('pages.dash.home.metrics.totals')" :value="metrics.totales || 0" />
+      <MetricCard icon="calendar-check-2" :label="t('pages.dash.home.metrics.done')" :value="metrics.hechos || 0" />
+      <MetricCard icon="calendar-cog" :label="t('pages.dash.home.metrics.toBeDone')" :value="metrics.porHacer || 0" />
+      <MetricCard icon="calendar-1" :label="t('pages.dash.home.metrics.upcoming')" :value="upcomingBookingDate" />
     </div>
 
-    <div class="gap-6 mt-6">
-      <div
-        class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow duration-200">
-        <div class="calendar-container">
-          <div class="custom-calendar">
-            <div
-              class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 border-b border-background-400">
-              <div class="flex items-center mb-4 sm:mb-0">
-                <div
-                  class="p-2 bg-primary-100 rounded-lg border border-primary-500 mr-3 shadow-[0_2px_8px_0_rgba(0,0,0,0.15)]">
-                  <Calendar class="w-5 h-5 text-primary-600" />
-                </div>
-                <h2 class="text-xl font-bold text-text-900 k2d">
-                  {{ formatMonthYear(currentDate) }}
-                </h2>
-              </div>
-              <div class="flex items-center space-x-2">
-                <button
-                  @click="previousMonth"
-                  :aria-label="t('pages.dash.home.calendar.previousMonth')"
-                  class="h-10 w-10 p-0 rounded-lg border transition-colors duration-150 flex items-center justify-center bg-background-200 border-primary-400 hover:border-primary-500 hover:bg-background-300 text-primary-700 shadow-sm cursor-pointer">
-                  <ChevronLeft class="w-5 h-5" />
-                </button>
-                <button
-                  @click="goToToday"
-                  :class="[
-                    'h-10 px-4 rounded-lg text-sm font-medium shadow-sm border transition-colors duration-150 flex items-center justify-center cursor-pointer',
-                    isCurrentMonth()
-                      ? 'bg-primary-100 text-primary-700 border-primary-200 hover:bg-primary-200'
-                      : 'bg-primary-400 hover:bg-primary-500 text-white border-primary-600',
-                  ]"
-                  style="min-width: 2.5rem">
-                  {{ t("pages.dash.home.calendar.today") }}
-                </button>
-                <button
-                  @click="nextMonth"
-                  :aria-label="t('pages.dash.home.calendar.nextMonth')"
-                  class="h-10 w-10 p-0 rounded-lg border transition-colors duration-150 flex items-center justify-center bg-background-200 border-primary-400 hover:border-primary-500 hover:bg-background-300 text-primary-700 shadow-sm cursor-pointer">
-                  <ChevronRight class="w-5 h-5" />
-                </button>
-                <div class="ml-2">
-                  <button
-                    @click="toggleView"
-                    :aria-label="t('pages.dash.home.calendar.toggleView')"
-                    class="h-10 w-10 p-0 rounded-lg border transition-colors duration-150 flex items-center justify-center bg-background-200 border-primary-400 hover:border-primary-500 hover:bg-background-300 text-primary-700 shadow-sm"
-                    :class="{ 'bg-background-300': currentView === 'list' }">
-                    <component :is="currentView === 'month' ? List : Calendar" class="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
+    <DsCard>
+      <div class="calendar-container">
+        <div class="custom-calendar">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 border-b border-background-400">
+            <div class="flex items-center mb-4 sm:mb-0">
+              <span
+                class="flex items-center justify-center w-9 h-9 rounded-lg bg-primary-100 border border-primary-500 mr-3 shadow-nav-active">
+                <Calendar class="w-5 h-5 text-primary-600" />
+              </span>
+              <h2 class="text-xl font-bold text-text-900 font-display">
+                {{ formatMonthYear(currentDate) }}
+              </h2>
             </div>
-            <div
-              v-if="currentView === 'month'"
-              class="calendar-month-view border border-background-300 rounded-lg overflow-hidden shadow-sm">
-              <div class="grid" :class="[showWeekends ? 'grid-cols-7' : 'grid-cols-5']">
-                <template v-for="(day, index) in weekdayLabels" :key="index">
+            <div class="flex items-center gap-2">
+              <IconButton
+                icon="chevron-left"
+                variant="outlined"
+                :label="t('pages.dash.home.calendar.previousMonth')"
+                @click="previousMonth" />
+              <DsButton :variant="isCurrentMonth() ? 'soft' : 'primary'" @click="goToToday">
+                {{ t("pages.dash.home.calendar.today") }}
+              </DsButton>
+              <IconButton
+                icon="chevron-right"
+                variant="outlined"
+                :label="t('pages.dash.home.calendar.nextMonth')"
+                @click="nextMonth" />
+              <IconButton
+                :icon="currentView === 'month' ? 'list' : 'calendar-days'"
+                variant="outlined"
+                :active="currentView === 'list'"
+                :label="t('pages.dash.home.calendar.toggleView')"
+                @click="toggleView" />
+            </div>
+          </div>
+          <div
+            v-if="currentView === 'month'"
+            class="calendar-month-view border border-background-300 rounded-lg overflow-hidden shadow-sm">
+            <div class="grid" :class="[showWeekends ? 'grid-cols-7' : 'grid-cols-5']">
+              <template v-for="(day, index) in weekdayLabels" :key="index">
+                <div
+                  v-if="showWeekends || (index !== 5 && index !== 6)"
+                  class="py-3 text-center font-bold text-sm bg-background-200 text-text-800 border-b border-background-300">
+                  {{ day }}
+                </div>
+              </template>
+            </div>
+
+            <div class="grid" :class="[showWeekends ? 'grid-cols-7' : 'grid-cols-5']">
+              <template v-for="(week, weekIndex) in calendarData" :key="`week-${weekIndex}`">
+                <template v-for="(day, dayIndex) in week" :key="`day-${weekIndex}-${dayIndex}`">
                   <div
-                    v-if="showWeekends || (index !== 5 && index !== 6)"
-                    class="py-3 text-center font-bold text-sm bg-background-200 text-text-800 border-b border-background-300">
-                    {{ day }}
+                    v-if="showWeekends || !day.isWeekend"
+                    @click="navigateToBookingForm(day.date)"
+                    :class="[
+                      'min-h-[100px] p-2 relative border border-background-200 cursor-pointer hover:bg-background-100/80 transition-colors',
+                      day.isCurrentMonth ? 'bg-background-50 text-text-800' : 'bg-background-100/60 text-text-500',
+                      day.isToday ? 'today-cell' : '',
+                      day.isWeekend ? 'weekend' : '',
+                    ]">
+                    <div v-if="day.day !== 0" class="flex justify-between items-center mb-1 relative z-1">
+                      <div
+                        :class="[
+                          'flex justify-center items-center h-7 w-7 rounded-full font-medium text-sm',
+                          day.isToday ? 'bg-primary-500 text-white font-bold shadow' : '',
+                        ]">
+                        {{ day.day }}
+                      </div>
+                    </div>
+
+                    <div v-if="day.day !== 0" class="space-y-1 overflow-y-auto max-h-[110px] relative z-1">
+                      <div
+                        v-for="event in getEventsForDay(day.date)"
+                        :key="event.id"
+                        @click.stop="showEventDetailsModal(event)"
+                        :data-booking-id="
+                          event.id || (event.bookingData && (event.bookingData.id || event.bookingData._id))
+                        "
+                        class="py-1 px-2 rounded-lg cursor-pointer flex items-center font-semibold text-xs border-l-4 shadow-sm transition-all duration-150 hover:shadow-md"
+                        :class="getEventClassByStatus(event)">
+                        <div class="w-2.5 h-2.5 rounded-full mr-2 shrink-0" :class="getEventDotClass(event)"></div>
+                        <span class="truncate">{{ event.title }}</span>
+                      </div>
+                    </div>
                   </div>
                 </template>
-              </div>
-
-              <div class="grid" :class="[showWeekends ? 'grid-cols-7' : 'grid-cols-5']">
-                <template v-for="(week, weekIndex) in calendarData" :key="`week-${weekIndex}`">
-                  <template v-for="(day, dayIndex) in week" :key="`day-${weekIndex}-${dayIndex}`">
-                    <div
-                      v-if="showWeekends || !day.isWeekend"
-                      @click="navigateToBookingForm(day.date)"
-                      :class="[
-                        'min-h-[100px] p-2 relative border border-background-200 cursor-pointer hover:bg-background-100/80 transition-colors',
-                        day.isCurrentMonth ? 'bg-background-50 text-text-800' : 'bg-background-100/60 text-text-500',
-                        day.isToday ? 'today-cell' : '',
-                        day.isWeekend ? 'weekend' : '',
-                      ]">
-                      <div v-if="day.day !== 0" class="flex justify-between items-center mb-1 relative z-1">
-                        <div
-                          :class="[
-                            'flex justify-center items-center h-7 w-7 rounded-full font-medium text-sm',
-                            day.isToday ? 'bg-primary-500 text-white font-bold shadow' : '',
-                          ]">
-                          {{ day.day }}
-                        </div>
-                      </div>
-
-                      <div v-if="day.day !== 0" class="space-y-1 overflow-y-auto max-h-[110px] relative z-1">
-                        <div
-                          v-for="event in getEventsForDay(day.date)"
-                          :key="event.id"
-                          @click.stop="showEventDetailsModal(event)"
-                          :data-booking-id="
-                            event.id || (event.bookingData && (event.bookingData.id || event.bookingData._id))
-                          "
-                          class="py-1 px-2 rounded-lg cursor-pointer flex items-center font-semibold text-xs border-l-4 shadow-sm transition-all duration-150 hover:shadow-md"
-                          :class="getEventClassByStatus(event)">
-                          <div class="w-2.5 h-2.5 rounded-full mr-2 shrink-0" :class="getEventDotClass(event)"></div>
-                          <span class="truncate">{{ event.title }}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
-                </template>
-              </div>
+              </template>
             </div>
-            <div v-else class="calendar-list-view border border-background-300 rounded-lg overflow-hidden shadow-sm">
-              <div class="divide-y divide-background-200">
-                <div v-for="(group, date) in groupedEvents" :key="date" class="bg-background-50">
+          </div>
+          <div v-else class="calendar-list-view border border-background-300 rounded-lg overflow-hidden shadow-sm">
+            <div class="divide-y divide-background-200">
+              <div v-for="(group, date) in groupedEvents" :key="date" class="bg-background-50">
+                <div
+                  class="px-4 py-3 flex items-center border-b border-background-300"
+                  :class="isToday(new Date(date)) ? 'bg-primary-300' : 'bg-background-200'">
                   <div
-                    class="px-4 py-3 flex items-center border-b border-background-300"
-                    :class="isToday(new Date(date)) ? 'bg-primary-300' : 'bg-background-200'">
-                    <div
-                      :class="[
-                        'h-8 w-8 rounded-full flex items-center justify-center mr-3 border',
-                        isToday(new Date(date))
-                          ? 'bg-primary-200 text-primary-700 border-white'
-                          : 'bg-background-50 border-background-300 text-primary-700',
-                      ]">
-                      <span
-                        class="font-medium"
-                        :class="isToday(new Date(date)) ? 'text-primary-700' : 'text-primary-700'">
-                        {{ new Date(date).getDate() }}
-                      </span>
-                    </div>
-                    <span class="font-medium" :class="isToday(new Date(date)) ? 'text-text-900' : 'text-text-900'">
-                      {{ formatDate(new Date(date)) }}
+                    :class="[
+                      'h-8 w-8 rounded-full flex items-center justify-center mr-3 border',
+                      isToday(new Date(date))
+                        ? 'bg-primary-200 text-primary-700 border-white'
+                        : 'bg-background-50 border-background-300 text-primary-700',
+                    ]">
+                    <span
+                      class="font-medium"
+                      :class="isToday(new Date(date)) ? 'text-primary-700' : 'text-primary-700'">
+                      {{ new Date(date).getDate() }}
                     </span>
                   </div>
+                  <span class="font-medium" :class="isToday(new Date(date)) ? 'text-text-900' : 'text-text-900'">
+                    {{ formatDate(new Date(date)) }}
+                  </span>
+                </div>
 
+                <div
+                  v-if="group.length === 0"
+                  class="p-4 text-text-600 italic text-sm flex items-center justify-center">
+                  <Calendar1 class="w-4 h-4 mr-2 text-primary-600" />
+                  {{ t("pages.dash.home.calendar.noEvents") }}
+                </div>
+                <div v-else class="divide-y divide-background-100">
                   <div
-                    v-if="group.length === 0"
-                    class="p-4 text-text-600 italic text-sm flex items-center justify-center">
-                    <Calendar1 class="w-4 h-4 mr-2 text-primary-600" />
-                    {{ t("pages.dash.home.calendar.noEvents") }}
-                  </div>
-                  <div v-else class="divide-y divide-background-100">
-                    <div
-                      v-for="event in group"
-                      :key="event.id"
-                      @click="showEventDetailsModal(event)"
-                      :data-booking-id="
-                        event.id || (event.bookingData && (event.bookingData.id || event.bookingData._id))
-                      "
-                      class="p-4 transition-colors duration-150 cursor-pointer group"
-                      :class="getEventStatusClass(event)">
-                      <div class="flex items-start">
-                        <div class="h-3 w-3 rounded-full mt-1.5 mr-3 shrink-0" :class="getEventDotClass(event)"></div>
-                        <div class="grow">
-                          <div class="font-medium text-text-900 group-hover:text-primary-900">
-                            {{ event.title }}
-                          </div>
-                          <div class="text-sm text-text-600 mt-1 flex items-center group-hover:text-primary-900">
-                            <Clock class="w-3.5 h-3.5 mr-1.5 text-primary-600" />
-                            {{ formatTime(event.start) }} - {{ formatTime(event.end) }}
-                          </div>
-                          <div
-                            v-if="event.description"
-                            class="text-sm text-text-700 mt-1.5 line-clamp-2 group-hover:text-primary-900">
-                            {{ event.description }}
-                          </div>
+                    v-for="event in group"
+                    :key="event.id"
+                    @click="showEventDetailsModal(event)"
+                    :data-booking-id="
+                      event.id || (event.bookingData && (event.bookingData.id || event.bookingData._id))
+                    "
+                    class="p-4 transition-colors duration-150 cursor-pointer group"
+                    :class="getEventStatusClass(event)">
+                    <div class="flex items-start">
+                      <div class="h-3 w-3 rounded-full mt-1.5 mr-3 shrink-0" :class="getEventDotClass(event)"></div>
+                      <div class="grow">
+                        <div class="font-medium text-text-900 group-hover:text-primary-900">
+                          {{ event.title }}
+                        </div>
+                        <div class="text-sm text-text-600 mt-1 flex items-center group-hover:text-primary-900">
+                          <Clock class="w-3.5 h-3.5 mr-1.5 text-primary-600" />
+                          {{ formatTime(event.start) }} - {{ formatTime(event.end) }}
+                        </div>
+                        <div
+                          v-if="event.description"
+                          class="text-sm text-text-700 mt-1.5 line-clamp-2 group-hover:text-primary-900">
+                          {{ event.description }}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div
-                  v-if="Object.keys(groupedEvents).length === 0"
-                  class="p-8 text-center text-text-600 bg-background-50">
-                  <div class="flex flex-col items-center">
-                    <CalendarX class="w-12 h-12 text-primary-600 mb-3" />
-                    <p class="font-medium">
-                      {{ t("pages.dash.home.calendar.noEventsMonth") }}
-                    </p>
-                    <p class="text-sm mt-1 text-text-500">
-                      {{ t("pages.dash.home.calendar.tryAnotherMonth") }}
-                    </p>
-                  </div>
+              <div
+                v-if="Object.keys(groupedEvents).length === 0"
+                class="p-8 text-center text-text-600 bg-background-50">
+                <div class="flex flex-col items-center">
+                  <CalendarX class="w-12 h-12 text-primary-600 mb-3" />
+                  <p class="font-medium">
+                    {{ t("pages.dash.home.calendar.noEventsMonth") }}
+                  </p>
+                  <p class="text-sm mt-1 text-text-500">
+                    {{ t("pages.dash.home.calendar.tryAnotherMonth") }}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </DsCard>
   </div>
 </template>
 
 <script setup>
-import {
-  CalendarDays,
-  CalendarCog,
-  CalendarCheck2,
-  Calendar1,
-  ChevronLeft,
-  ChevronRight,
-  Calendar,
-  List,
-  Clock,
-  CalendarX,
-} from "lucide-vue-next";
+import { Calendar, Clock, CalendarX } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useConfigStore } from "@/stores/configStore";
@@ -257,6 +193,11 @@ import { useRouter } from "vue-router";
 import { useModal } from "@/composables/useModal";
 import { useToast } from "@/composables/useToast";
 import { mapBookingToEvent } from "@/router/fetchers";
+import PageHeader from "@/components/data/PageHeader.vue";
+import MetricCard from "@/components/core/MetricCard.vue";
+import DsCard from "@/components/core/DsCard.vue";
+import IconButton from "@/components/core/IconButton.vue";
+import DsButton from "@/components/core/DsButton.vue";
 
 const route = useRoute();
 const { t, locale } = useI18n();

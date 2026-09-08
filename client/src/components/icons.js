@@ -65,6 +65,8 @@ import {
   Map,
   UploadCloud,
   Timer,
+  AppWindow,
+  Globe,
 } from "lucide-vue-next";
 
 const REGISTRY = {
@@ -128,6 +130,8 @@ const REGISTRY = {
   map: Map,
   "upload-cloud": UploadCloud,
   timer: Timer,
+  "app-window": AppWindow,
+  globe: Globe,
 };
 
 /** Resolve a kebab-case Lucide icon name to its component, or null if unknown/absent. */

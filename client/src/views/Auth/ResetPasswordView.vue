@@ -1,9 +1,8 @@
 <template>
   <div class="min-h-screen w-full flex items-center justify-center bg-background-200">
     <div class="w-full max-w-md px-6">
-      <div
-        class="bg-background-100 p-8 shadow-md hover:shadow-xl rounded-lg border-[1.5px] border-background-300 hover:border-primary-400 transition-all duration-200">
-        <h1 class="text-3xl font-bold text-text-950 mb-6 k2d">
+      <DsCard>
+        <h1 class="font-display font-bold text-3xl text-text-heading mb-6">
           {{ t("pages.auth.resetPassword.title") }}
         </h1>
 
@@ -13,53 +12,35 @@
 
         <template v-else-if="pageState === 'expired' || pageState === 'invalid'">
           <p class="text-sm text-accent-600 mb-6">
-            {{
-              pageState === "expired" ? t("pages.auth.resetPassword.expired") : t("pages.auth.resetPassword.invalid")
-            }}
+            {{ pageState === "expired" ? t("pages.auth.resetPassword.expired") : t("pages.auth.resetPassword.invalid") }}
           </p>
-          <router-link
-            :to="{ name: 'authForgotPassword' }"
-            class="block text-sm text-center text-primary-600 hover:text-primary-700 dark:text-primary-400">
+          <router-link :to="{ name: 'authForgotPassword' }" class="block text-sm text-center text-primary-600 hover:text-primary-700">
             {{ t("pages.auth.resetPassword.requestNewLink") }}
           </router-link>
         </template>
 
         <form v-else @submit.prevent="handleSubmit" class="space-y-6">
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-text-800">{{ t("pages.auth.resetPassword.password") }}</label>
-            <div class="relative">
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                v-model="password"
-                autocomplete="new-password"
-                class="w-full px-3 py-2 pr-16 bg-background-50 dark:bg-background-300 border border-background-400 dark:border-background-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-950"
-                :class="{ 'border-accent-500': errors.password }"
-                required />
-              <div class="absolute inset-y-0 right-0 pr-3 flex items-center gap-2">
-                <button type="button" @click="showPassword = !showPassword">
-                  <component :is="showPassword ? EyeOff : Eye" class="h-5 w-5 text-text-400 hover:text-text-600" />
-                </button>
-                <Loader2 v-if="isValidatingPassword" class="w-5 h-5 text-primary-600 animate-spin" />
-                <CheckCircle2
-                  v-else-if="!errors.password && password && password.length >= 6"
-                  class="w-5 h-5 text-primary-500" />
-                <XCircle v-else-if="password" class="w-5 h-5 text-accent-500" />
-              </div>
+          <div>
+            <TextField
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              autocomplete="new-password"
+              :label="t('pages.auth.resetPassword.password')"
+              icon="shield"
+              :error="errors.password"
+              :valid="!errors.password && !!password && password.length >= 6"
+              required />
+            <div class="flex items-center gap-2 mt-1.5">
+              <button type="button" @click="showPassword = !showPassword" class="text-xs text-primary-600 hover:text-primary-700 flex items-center gap-1">
+                <component :is="showPassword ? EyeOff : Eye" class="w-3.5 h-3.5" />
+              </button>
+              <Loader2 v-if="isValidatingPassword" class="w-3.5 h-3.5 text-primary-600 animate-spin" />
             </div>
+
             <div v-if="password" class="space-y-2 mt-2">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-text-600">{{
-                  t("pages.other.validators.password.strength")
-                }}</span>
-                <span
-                  class="text-xs font-medium px-2 py-1 rounded"
-                  :class="[
-                    passwordStrength === 'weak'
-                      ? 'bg-accent-100 text-accent-700'
-                      : passwordStrength === 'medium'
-                        ? 'bg-yellow-100 text-yellow-700'
-                        : 'bg-primary-100 text-primary-700',
-                  ]">
+                <span class="text-xs font-medium text-text-600">{{ t("pages.other.validators.password.strength") }}</span>
+                <DsPill :tone="passwordStrength === 'weak' ? 'danger' : passwordStrength === 'medium' ? 'warning' : 'success'">
                   {{
                     passwordStrength === "weak"
                       ? t("pages.other.validators.password.weak")
@@ -67,45 +48,30 @@
                         ? t("pages.other.validators.password.medium")
                         : t("pages.other.validators.password.strong")
                   }}
-                </span>
+                </DsPill>
               </div>
               <div class="h-2 bg-background-300 rounded-full overflow-hidden">
                 <div
                   class="h-full transition-all"
-                  :class="[
-                    passwordStrength === 'weak'
-                      ? 'bg-accent-500 w-1/3'
-                      : passwordStrength === 'medium'
-                        ? 'bg-yellow-500 w-2/3'
-                        : 'bg-primary-500 w-full',
-                  ]"></div>
+                  :class="[passwordStrength === 'weak' ? 'bg-accent-500 w-1/3' : passwordStrength === 'medium' ? 'bg-warning-500 w-2/3' : 'bg-primary-500 w-full']"></div>
               </div>
             </div>
-            <p v-if="errors.password" class="text-sm text-accent-600">{{ errors.password }}</p>
           </div>
 
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-text-800">{{
-              t("pages.auth.resetPassword.confirmPassword")
-            }}</label>
-            <input
-              type="password"
-              v-model="confirmPassword"
-              autocomplete="new-password"
-              class="w-full px-3 py-2 bg-background-50 dark:bg-background-300 border border-background-400 dark:border-background-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-950"
-              :class="{ 'border-accent-500': errors.confirmPassword }"
-              required />
-            <p v-if="errors.confirmPassword" class="text-sm text-accent-600">{{ errors.confirmPassword }}</p>
-          </div>
+          <TextField
+            v-model="confirmPassword"
+            type="password"
+            autocomplete="new-password"
+            :label="t('pages.auth.resetPassword.confirmPassword')"
+            icon="shield"
+            :error="errors.confirmPassword"
+            required />
 
-          <button
-            type="submit"
-            :disabled="!canSubmit || submitting"
-            class="w-full bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white py-2 rounded-lg transition-colors font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+          <DsButton type="submit" full-width :state="submitting ? 'processing' : 'default'" :disabled="!canSubmit || submitting">
             {{ t("pages.auth.resetPassword.submit") }}
-          </button>
+          </DsButton>
         </form>
-      </div>
+      </DsCard>
     </div>
   </div>
 </template>
@@ -114,10 +80,14 @@
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { CheckCircle2, XCircle, Loader2, Eye, EyeOff } from "lucide-vue-next";
+import { Loader2, Eye, EyeOff } from "lucide-vue-next";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
 import { validatePassword } from "@/utils/validators";
+import DsCard from "@/components/core/DsCard.vue";
+import TextField from "@/components/forms/TextField.vue";
+import DsPill from "@/components/core/DsPill.vue";
+import DsButton from "@/components/core/DsButton.vue";
 
 const props = defineProps({
   token: { type: String, required: true },
