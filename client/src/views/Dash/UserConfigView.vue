@@ -1,471 +1,195 @@
 <template>
   <div class="h-full w-full p-6">
-    <div class="flex items-center mb-2">
-      <h1 class="text-3xl font-bold text-text-950 k2d">
-        {{ t("pages.dash.userConfig.page.title") }}
-      </h1>
-    </div>
-    <p class="text-text-800 mb-6">{{ t("pages.dash.userConfig.page.description") }}</p>
+    <PageHeader :title="t('pages.dash.userConfig.page.title')" :description="t('pages.dash.userConfig.page.description')" />
 
-    <div class="relative">
-      <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="order-2 lg:order-1">
-          <div
-            class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] h-full">
-            <h3 class="text-lg font-medium text-text-900 mb-4">
-              {{ t("pages.dash.userConfig.profile.preview") }}
-            </h3>
-
-            <div class="bg-background-50 p-5 rounded-lg border border-background-200">
-              <div class="flex items-center mb-5">
-                <div class="relative mr-5">
+    <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="order-2 lg:order-1">
+        <DsCard :title="t('pages.dash.userConfig.profile.preview')" class="h-full">
+          <div class="bg-background-50 p-5 rounded-lg border border-background-200">
+            <div class="flex items-center mb-5">
+              <div class="relative mr-5">
+                <div
+                  class="w-20 h-20 rounded-full bg-background-200 flex items-center justify-center overflow-hidden border-2 border-background-300 shadow-md">
+                  <User v-if="!formData.name" class="w-9 h-9 text-primary-600" />
                   <div
-                    class="w-20 h-20 rounded-full bg-background-200 flex items-center justify-center overflow-hidden border-2 border-background-300 shadow-md">
-                    <User class="w-9 h-9 text-primary-600" v-if="!formData.name" />
+                    v-else
+                    class="w-full h-full flex items-center justify-center text-primary-700 font-bold font-display bg-primary-100"
+                    style="font-size: 2rem">
+                    {{ getInitials(formData.name) }}
+                  </div>
+                </div>
+                <div
+                  v-if="userData.type"
+                  class="absolute -bottom-1.5 -right-1.5 rounded-full p-2 shadow-sm border border-background-50 bg-primary-100">
+                  <component :is="resolveIcon(roleIcons[userData.type])" class="w-4 h-4 text-primary-600" />
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-xl font-bold text-text-900">
+                  {{ formData.name || userData.name || t("pages.dash.userConfig.form.placeholders.name") }}
+                </h3>
+                <p class="text-text-600 text-sm mt-1">
+                  {{ userData.type ? t(`pages.dash.users.types.${userData.type}`) : "" }}
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <InfoRow icon="mail" :label="t('pages.dash.userConfig.form.labels.email')" :value="formData.email || userData.email || t('pages.dash.userConfig.form.placeholders.noEmail')" />
+              <InfoRow icon="calendar-days" :label="t('pages.dash.userConfig.profile.creationDate')" :value="userData.createdDate ? formatDate(userData.createdDate) : currentDate" />
+              <InfoRow icon="calendar-days" :label="t('pages.dash.userConfig.profile.lastAccess')" :value="userData.lastAccess ? formatDate(userData.lastAccess) : currentDate" />
+              <InfoRow icon="palette" :label="t('pages.dash.userConfig.profile.theme')" :value="t(`pages.dash.userConfig.themes.${formData.theme || userData.theme || 'system'}`)" />
+              <InfoRow icon="languages" :label="t('pages.dash.userConfig.profile.language')" :value="t(`pages.dash.userConfig.languages.${formData.language || userData.language || 'es'}`)" />
+
+              <div class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
+                <ShieldCheck class="w-5 h-5 text-primary-600 mr-3 mt-0.5" />
+                <div class="w-full">
+                  <p class="text-xs text-text-600 flex items-center justify-between">
+                    <span>{{ t("pages.dash.userConfig.profile.userPermissions") }}</span>
+                    <span class="text-primary-600 text-[10px] font-medium bg-primary-50 px-1.5 py-0.5 rounded-full">
+                      {{ permissions[userData.type]?.length || 0 }}
+                    </span>
+                  </p>
+                  <div class="mt-1.5 space-y-1">
+                    <div v-for="(permission, index) in permissions[userData.type] || []" :key="index" class="flex items-center text-text-800 text-xs">
+                      <CheckCircle class="w-3 h-3 text-primary-600 mr-1.5 shrink-0" />
+                      <span>{{ permission }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DsCard>
+      </div>
+
+      <div class="order-1 lg:order-2">
+        <DsCard :title="t('pages.dash.userConfig.common.edit')" class="h-full">
+          <div class="space-y-6">
+            <div class="bg-background-50 p-4 rounded-lg border border-background-200">
+              <h4 class="text-sm font-medium text-text-700 mb-3 flex items-center">
+                <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
+                {{ t("pages.dash.userConfig.form.sections.basicInfo") }}
+              </h4>
+
+              <div class="mb-4">
+                <TextField
+                  v-model="formData.name"
+                  :label="t('pages.dash.userConfig.form.labels.name')"
+                  icon="user"
+                  :disabled="isAdminAccount"
+                  :error="!formSubmitted ? errors.name : null"
+                  :valid="(!errors.name || formSubmitted) && !!formData.name && formData.name.length >= 3"
+                  :placeholder="t('pages.dash.userConfig.form.placeholders.name')"
+                  required />
+                <p v-if="isAdminAccount" class="mt-1.5 text-xs text-secondary-600 flex items-center">
+                  <InfoIcon class="w-3 h-3 mr-1" />
+                  {{ t("pages.dash.userConfig.errors.cantChangeName") }}
+                </p>
+              </div>
+
+              <div class="mb-4">
+                <TextField
+                  v-model="formData.email"
+                  type="email"
+                  :label="t('pages.dash.userConfig.form.labels.email')"
+                  icon="mail"
+                  :error="!formSubmitted ? errors.email : null"
+                  :valid="(!errors.email || formSubmitted) && !!formData.email && isValidEmail(formData.email)"
+                  :placeholder="t('pages.dash.userConfig.form.placeholders.email')"
+                  required />
+              </div>
+
+              <div class="mb-4">
+                <TextField
+                  v-model="formData.password"
+                  :type="showPassword ? 'text' : 'password'"
+                  autocomplete="new-password"
+                  :label="t('pages.dash.userConfig.form.labels.password')"
+                  icon="shield"
+                  :error="!formSubmitted ? errors.password : null"
+                  :placeholder="t('pages.dash.userConfig.form.placeholders.password')" />
+                <div class="flex items-center gap-2 mt-1.5">
+                  <button
+                    type="button"
+                    @click="showPassword = !showPassword"
+                    class="text-xs text-primary-600 hover:text-primary-700 flex items-center gap-1"
+                    :title="showPassword ? t('pages.dash.userConfig.form.hidePassword') : t('pages.dash.userConfig.form.showPassword')">
+                    <component :is="showPassword ? EyeOff : Eye" class="w-3.5 h-3.5" />
+                    {{ showPassword ? t("pages.dash.userConfig.form.hidePassword") : t("pages.dash.userConfig.form.showPassword") }}
+                  </button>
+                  <Loader2 v-if="isValidatingPassword" class="w-3.5 h-3.5 text-primary-600 animate-spin" />
+                </div>
+
+                <div v-if="formData.password" class="space-y-2 mt-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-text-600">{{ t("pages.other.validators.password.strength") }}</span>
+                    <DsPill :tone="passwordStrength === 'weak' ? 'danger' : passwordStrength === 'medium' ? 'warning' : 'success'">
+                      {{
+                        passwordStrength === "weak"
+                          ? t("pages.other.validators.password.weak")
+                          : passwordStrength === "medium"
+                            ? t("pages.other.validators.password.medium")
+                            : t("pages.other.validators.password.strong")
+                      }}
+                    </DsPill>
+                  </div>
+                  <div class="h-2 bg-background-300 rounded-full overflow-hidden">
                     <div
-                      v-else
-                      class="w-full h-full flex items-center justify-center text-primary-700 font-bold k2d bg-primary-100"
-                      style="font-size: 2rem">
-                      {{ getInitials(formData.name) }}
-                    </div>
-                  </div>
-                  <div
-                    v-if="userData.type"
-                    class="absolute -bottom-1.5 -right-1.5 rounded-full p-2 shadow-sm border border-background-50 bg-primary-100">
-                    <component :is="roleIcons[userData.type]" class="w-4 h-4 text-primary-600" />
+                      class="h-full transition-all"
+                      :class="[
+                        passwordStrength === 'weak' ? 'bg-accent-500 w-1/3' : passwordStrength === 'medium' ? 'bg-warning-500 w-2/3' : 'bg-primary-500 w-full',
+                      ]"></div>
                   </div>
                 </div>
+                <label v-if="formData.password" class="flex items-center gap-2 mt-3 text-sm text-text-700">
+                  <input type="checkbox" v-model="formData.invalidateOtherSessions" class="rounded" />
+                  {{ t("pages.dash.userConfig.form.labels.logoutOtherSessions") }}
+                </label>
+              </div>
+            </div>
 
-                <div>
-                  <h3 class="text-xl font-bold text-text-900">
-                    {{ formData.name || userData.name || t("pages.dash.userConfig.form.placeholders.name") }}
-                  </h3>
-                  <p class="text-text-600 text-sm mt-1">
-                    {{ userData.type ? t(`pages.dash.users.types.${userData.type}`) : "" }}
-                  </p>
-                </div>
+            <div class="bg-background-50 p-4 rounded-lg border border-background-200">
+              <h4 class="text-sm font-medium text-text-700 mb-3 flex items-center">
+                <Settings class="w-4 h-4 mr-2 text-primary-600" />
+                {{ t("pages.dash.userConfig.form.sections.preferences") }}
+              </h4>
+
+              <div class="mb-4">
+                <SelectMenu
+                  v-model="formData.theme"
+                  :label="t('pages.dash.userConfig.form.labels.theme')"
+                  icon="palette"
+                  :options="themeOptions"
+                  :error="!formSubmitted && errors.theme ? errors.theme : false"
+                  @update:model-value="touchedFields.theme = true" />
               </div>
 
-              <div class="space-y-4">
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <Mail class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.userConfig.form.labels.email") }}</p>
-                    <p class="text-text-800 font-medium">
-                      {{ formData.email || userData.email || t("pages.dash.userConfig.form.placeholders.noEmail") }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <Calendar class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.userConfig.profile.creationDate") }}</p>
-                    <p class="text-text-800 font-medium">
-                      {{ userData.createdDate ? formatDate(userData.createdDate) : currentDate }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <Calendar class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.userConfig.profile.lastAccess") }}</p>
-                    <p class="text-text-800 font-medium">
-                      {{ userData.lastAccess ? formatDate(userData.lastAccess) : currentDate }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <Palette class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.userConfig.profile.theme") }}</p>
-                    <p class="text-text-800 font-medium">
-                      {{ t(`pages.dash.userConfig.themes.${formData.theme || userData.theme || "system"}`) }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <Languages class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.userConfig.profile.language") }}</p>
-                    <p class="text-text-800 font-medium">
-                      {{ t(`pages.dash.userConfig.languages.${formData.language || userData.language || "es"}`) }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
-                  <ShieldCheck class="w-5 h-5 text-primary-600 mr-3 mt-0.5" />
-                  <div class="w-full">
-                    <p class="text-xs text-text-600 flex items-center justify-between">
-                      <span>{{ t("pages.dash.userConfig.profile.userPermissions") }}</span>
-                      <span class="text-primary-600 text-[10px] font-medium bg-primary-50 px-1.5 py-0.5 rounded-full">
-                        {{ permissions[userData.type]?.length || 0 }}
-                      </span>
-                    </p>
-
-                    <div class="mt-1.5 space-y-1">
-                      <div
-                        v-for="(permission, index) in permissions[userData.type] || []"
-                        :key="index"
-                        class="flex items-center text-text-800 text-xs">
-                        <CheckCircle class="w-3 h-3 text-primary-600 mr-1.5 shrink-0" />
-                        <span>{{ permission }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <SelectMenu
+                v-model="formData.language"
+                :label="t('pages.dash.userConfig.form.labels.language')"
+                icon="languages"
+                :options="languageOptions"
+                :error="!formSubmitted && errors.language ? errors.language : false"
+                @update:model-value="touchedFields.language = true" />
             </div>
           </div>
-        </div>
 
-        <div class="order-1 lg:order-2">
-          <div
-            class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] h-full">
-            <h3 class="text-lg font-medium text-text-900 mb-4">
-              {{ t("pages.dash.userConfig.common.edit") }}
-            </h3>
-
-            <div class="space-y-6">
-              <div class="bg-background-50 p-4 rounded-lg border border-background-200">
-                <h4 class="text-sm font-medium text-text-700 mb-3 flex items-center">
-                  <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
-                  {{ t("pages.dash.userConfig.form.sections.basicInfo") }}
-                </h4>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="name">
-                    {{ t("pages.dash.userConfig.form.labels.name") }}
-                  </label>
-                  <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <User
-                        class="w-5 h-5 text-primary-600 group-hover:text-primary-600 transition-colors duration-200" />
-                    </div>
-                    <input
-                      v-model="formData.name"
-                      id="name"
-                      type="text"
-                      :disabled="isAdminAccount"
-                      class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
-                      :class="{
-                        'border-accent-500 ring-1 ring-accent-300': errors.name && !formSubmitted,
-                        'bg-background-100 cursor-not-allowed': isAdminAccount,
-                      }"
-                      :placeholder="t('pages.dash.userConfig.form.placeholders.name')"
-                      required />
-                    <div class="absolute inset-y-0 right-3 flex items-center">
-                      <CheckCircle2
-                        v-if="(!errors.name || formSubmitted) && formData.name && formData.name.length >= 3"
-                        class="w-5 h-5 text-primary-500 animate-fadeIn" />
-                      <XCircle
-                        v-else-if="(formData.name || touchedFields.name) && !isAdminAccount && !formSubmitted"
-                        class="w-5 h-5 text-accent-500 animate-fadeIn" />
-                      <Shield v-else-if="isAdminAccount" class="w-5 h-5 text-secondary-500 animate-fadeIn" />
-                    </div>
-                  </div>
-                  <p v-if="isAdminAccount" class="mt-1.5 text-xs text-secondary-600 flex items-center">
-                    <InfoIcon class="w-3 h-3 mr-1" />
-                    {{ t("pages.dash.userConfig.errors.cantChangeName") }}
-                  </p>
-                </div>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="email">
-                    {{ t("pages.dash.userConfig.form.labels.email") }}
-                  </label>
-                  <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Mail
-                        class="w-5 h-5 text-primary-600 group-hover:text-primary-600 transition-colors duration-200" />
-                    </div>
-                    <input
-                      v-model="formData.email"
-                      id="email"
-                      type="email"
-                      class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
-                      :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.email && !formSubmitted }"
-                      :placeholder="t('pages.dash.userConfig.form.placeholders.email')"
-                      required />
-                    <div class="absolute inset-y-0 right-3 flex items-center">
-                      <CheckCircle2
-                        v-if="(!errors.email || formSubmitted) && formData.email && isValidEmail(formData.email)"
-                        class="w-5 h-5 text-primary-500 animate-fadeIn" />
-                      <XCircle
-                        v-else-if="(formData.email || touchedFields.email) && !formSubmitted"
-                        class="w-5 h-5 text-accent-500 animate-fadeIn" />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="password">
-                    {{ t("pages.dash.userConfig.form.labels.password") }}
-                  </label>
-                  <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Shield
-                        class="w-5 h-5 text-primary-600 group-hover:text-primary-600 transition-colors duration-200" />
-                    </div>
-                    <input
-                      v-model="formData.password"
-                      id="password"
-                      :type="showPassword ? 'text' : 'password'"
-                      autocomplete="new-password"
-                      class="block w-full pl-10 pr-20 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
-                      :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.password && !formSubmitted }"
-                      :placeholder="t('pages.dash.userConfig.form.placeholders.password')" />
-                    <div class="absolute inset-y-0 right-3 flex items-center gap-2">
-                      <button
-                        type="button"
-                        @click="showPassword = !showPassword"
-                        class="p-1 hover:bg-background-100 rounded-md transition-colors duration-150"
-                        :title="
-                          showPassword
-                            ? t('pages.dash.userConfig.form.hidePassword')
-                            : t('pages.dash.userConfig.form.showPassword')
-                        ">
-                        <component :is="showPassword ? EyeOff : Eye" class="w-4 h-4 text-text-500" />
-                      </button>
-                      <div v-if="isValidatingPassword" class="w-5 h-5">
-                        <Loader2 class="w-5 h-5 text-primary-600 animate-spin" />
-                      </div>
-                      <CheckCircle2
-                        v-else-if="!errors.password && formData.password && formData.password.length >= 6"
-                        class="w-5 h-5 text-primary-500 animate-fadeIn" />
-                      <XCircle v-else-if="formData.password" class="w-5 h-5 text-accent-500 animate-fadeIn" />
-                    </div>
-                  </div>
-                  <p v-if="passwordErrorMessage" class="mt-1.5 text-xs text-accent-600">{{ passwordErrorMessage }}</p>
-                  <div v-if="formData.password" class="space-y-2 mt-2">
-                    <div class="flex items-center justify-between">
-                      <span class="text-xs font-medium text-text-600">{{
-                        t("pages.other.validators.password.strength")
-                      }}</span>
-                      <span
-                        class="text-xs font-medium px-2 py-1 rounded"
-                        :class="[
-                          passwordStrength === 'weak'
-                            ? 'bg-accent-100 text-accent-700'
-                            : passwordStrength === 'medium'
-                              ? 'bg-yellow-100 text-yellow-700'
-                              : 'bg-primary-100 text-primary-700',
-                        ]">
-                        {{
-                          passwordStrength === "weak"
-                            ? t("pages.other.validators.password.weak")
-                            : passwordStrength === "medium"
-                              ? t("pages.other.validators.password.medium")
-                              : t("pages.other.validators.password.strong")
-                        }}
-                      </span>
-                    </div>
-                    <div class="h-2 bg-background-300 rounded-full overflow-hidden">
-                      <div
-                        class="h-full transition-all"
-                        :class="[
-                          passwordStrength === 'weak'
-                            ? 'bg-accent-500 w-1/3'
-                            : passwordStrength === 'medium'
-                              ? 'bg-yellow-500 w-2/3'
-                              : 'bg-primary-500 w-full',
-                        ]"></div>
-                    </div>
-                  </div>
-                  <label v-if="formData.password" class="flex items-center gap-2 mt-3 text-sm text-text-700">
-                    <input type="checkbox" v-model="formData.invalidateOtherSessions" class="rounded" />
-                    {{ t("pages.dash.userConfig.form.labels.logoutOtherSessions") }}
-                  </label>
-                </div>
-              </div>
-
-              <div class="bg-background-50 p-4 rounded-lg border border-background-200">
-                <h4 class="text-sm font-medium text-text-700 mb-3 flex items-center">
-                  <Settings class="w-4 h-4 mr-2 text-primary-600" />
-                  {{ t("pages.dash.userConfig.form.sections.preferences") }}
-                </h4>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="theme">
-                    {{ t("pages.dash.userConfig.form.labels.theme") }}
-                  </label>
-                  <div class="relative">
-                    <Listbox v-model="formData.theme" @update:modelValue="touchedFields.theme = true">
-                      <div class="relative">
-                        <ListboxButton
-                          class="relative w-full pl-10 pr-10 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 bg-background-50 text-left"
-                          :class="[
-                            { 'border-accent-500 ring-1 ring-accent-300': errors.theme && !formSubmitted },
-                            'text-text-950 font-medium',
-                          ]">
-                          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Palette class="w-5 h-5 text-primary-600" />
-                          </div>
-                          <span class="block truncate">
-                            {{ t(`pages.dash.userConfig.themes.${formData.theme}`) }}
-                          </span>
-                          <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <ChevronDown class="w-5 h-5 text-text-400" />
-                          </span>
-                        </ListboxButton>
-                        <transition
-                          enter-active-class="transition ease-out duration-100"
-                          enter-from-class="transform opacity-0 scale-95"
-                          enter-to-class="transform opacity-100 scale-100"
-                          leave-active-class="transition ease-in duration-75"
-                          leave-from-class="transform opacity-100 scale-100"
-                          leave-to-class="transform opacity-0 scale-95">
-                          <ListboxOptions
-                            class="absolute z-10 mt-1 w-full bg-background-50 border border-background-300 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none sm:text-sm origin-top-right">
-                            <ListboxOption
-                              v-for="theme in themes"
-                              :key="theme"
-                              :value="theme"
-                              v-slot="{ active, selected }">
-                              <li
-                                :class="[
-                                  selected
-                                    ? 'bg-primary-100 border-l-primary-500 text-primary-800'
-                                    : active
-                                      ? 'bg-primary-50 border-l-primary-300 text-primary-600'
-                                      : 'text-text-800',
-                                  'cursor-default select-none relative py-2 pl-10 pr-4 transition-all duration-150 border-l-[3px]',
-                                  selected ? 'border-l-[3px]' : active ? 'border-l-[3px]' : 'border-transparent',
-                                ]">
-                                <div class="flex items-center">
-                                  <Palette class="mr-2 h-5 w-5 text-primary-600" />
-                                  <span :class="[selected ? 'font-medium' : 'font-normal']">
-                                    {{ t(`pages.dash.userConfig.themes.${theme}`) }}
-                                  </span>
-                                </div>
-                                <span
-                                  v-if="selected"
-                                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-600">
-                                  <Check class="w-4 h-4 text-primary-600" />
-                                </span>
-                              </li>
-                            </ListboxOption>
-                          </ListboxOptions>
-                        </transition>
-                      </div>
-                    </Listbox>
-                  </div>
-                </div>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="language">
-                    {{ t("pages.dash.userConfig.form.labels.language") }}
-                  </label>
-                  <div class="relative">
-                    <Listbox v-model="formData.language" @update:modelValue="touchedFields.language = true">
-                      <div class="relative">
-                        <ListboxButton
-                          class="relative w-full pl-10 pr-10 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 bg-background-50 text-left"
-                          :class="[
-                            { 'border-accent-500 ring-1 ring-accent-300': errors.language && !formSubmitted },
-                            'text-text-950 font-medium',
-                          ]">
-                          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Languages class="w-5 h-5 text-primary-600" />
-                          </div>
-                          <span class="block truncate">
-                            {{ t(`pages.dash.userConfig.languages.${formData.language}`) }}
-                          </span>
-                          <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <ChevronDown class="w-5 h-5 text-text-400" />
-                          </span>
-                        </ListboxButton>
-                        <transition
-                          enter-active-class="transition ease-out duration-100"
-                          enter-from-class="transform opacity-0 scale-95"
-                          enter-to-class="transform opacity-100 scale-100"
-                          leave-active-class="transition ease-in duration-75"
-                          leave-from-class="transform opacity-100 scale-100"
-                          leave-to-class="transform opacity-0 scale-95">
-                          <ListboxOptions
-                            class="absolute z-10 mt-1 w-full bg-background-50 border border-background-300 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none sm:text-sm origin-top-right">
-                            <ListboxOption
-                              v-for="lang in languages"
-                              :key="lang"
-                              :value="lang"
-                              v-slot="{ active, selected }">
-                              <li
-                                :class="[
-                                  selected
-                                    ? 'bg-primary-100 border-l-primary-500 text-primary-800'
-                                    : active
-                                      ? 'bg-primary-50 border-l-primary-300 text-primary-600'
-                                      : 'text-text-800',
-                                  'cursor-default select-none relative py-2 pl-10 pr-4 transition-all duration-150 border-l-[3px]',
-                                  selected ? 'border-l-[3px]' : active ? 'border-l-[3px]' : 'border-transparent',
-                                ]">
-                                <div class="flex items-center">
-                                  <Languages class="mr-2 h-5 w-5 text-primary-600" />
-                                  <span :class="[selected ? 'font-medium' : 'font-normal']">
-                                    {{ t(`pages.dash.userConfig.languages.${lang}`) }}
-                                  </span>
-                                </div>
-                                <span
-                                  v-if="selected"
-                                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-600">
-                                  <Check class="w-4 h-4 text-primary-600" />
-                                </span>
-                              </li>
-                            </ListboxOption>
-                          </ListboxOptions>
-                        </transition>
-                      </div>
-                    </Listbox>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="flex justify-end items-center mt-6 gap-2">
-              <button
-                type="button"
-                class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-background-100 text-text-700 border border-background-300 hover:bg-background-200 transition-colors duration-150 cursor-pointer"
-                @click="resetForm">
-                <Undo2 class="w-4 h-4 mr-2" />
-                {{ t("pages.dash.userConfig.common.reset") }}
-              </button>
-              <button
-                type="submit"
-                class="h-10 px-5 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center transition-colors duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                :class="{
-                  'bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200':
-                    buttonState === 'default',
-                  'bg-background-200 text-text-500': buttonState === 'processing',
-                  'bg-secondary-100 text-secondary-800 border border-secondary-200': buttonState === 'success',
-                  'bg-accent-100 text-accent-800 border border-accent-200': buttonState === 'error',
-                }"
-                :disabled="isSubmitting || !isFormValid || !formChanged">
-                <div v-if="buttonState === 'processing'" class="flex items-center">
-                  <Loader2 class="w-4 h-4 mr-2 animate-spin" />
-                  {{ t("pages.dash.userConfig.form.actions.updating") }}
-                </div>
-                <div v-else-if="buttonState === 'success'" class="flex items-center">
-                  <CheckCircle2 class="w-4 h-4 mr-2 animate-fadeIn" />
-                  {{ t("pages.dash.userConfig.common.status.success") }}
-                </div>
-                <div v-else-if="buttonState === 'error'" class="flex items-center">
-                  <XCircle class="w-4 h-4 mr-2 animate-fadeIn" />
-                  {{ t("pages.dash.userConfig.common.status.error") }}
-                </div>
-                <div v-else class="flex items-center">
-                  <Save class="w-4 h-4 mr-2" />
-                  {{ t("pages.dash.userConfig.common.update") }}
-                </div>
-              </button>
-            </div>
+          <div class="flex justify-end items-center mt-6 gap-2">
+            <DsButton type="button" variant="neutral" icon="undo-2" @click="resetForm">
+              {{ t("pages.dash.userConfig.common.reset") }}
+            </DsButton>
+            <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid || !formChanged">
+              <template v-if="buttonState === 'processing'">{{ t("pages.dash.userConfig.form.actions.updating") }}</template>
+              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.userConfig.common.status.success") }}</template>
+              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.userConfig.common.status.error") }}</template>
+              <template v-else>{{ t("pages.dash.userConfig.common.update") }}</template>
+            </DsButton>
           </div>
-        </div>
-      </form>
-    </div>
+        </DsCard>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -473,36 +197,20 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-import {
-  User,
-  Mail,
-  Shield,
-  ChevronDown,
-  Loader2,
-  ClipboardList,
-  CheckCircle2,
-  ShieldCheck,
-  Save,
-  Users,
-  ShieldAlert,
-  Calendar,
-  CheckCircle,
-  XCircle,
-  Eye,
-  EyeOff,
-  Info as InfoIcon,
-  Settings,
-  Palette,
-  Languages,
-  Undo2,
-  Check,
-} from "lucide-vue-next";
-import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
+import { User, ClipboardList, CheckCircle, Eye, EyeOff, Loader2, Info as InfoIcon, Settings, ShieldCheck } from "lucide-vue-next";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { isValidEmail, validateName, validateEmail, validatePassword } from "@/utils/validators";
 import { useAuthStore } from "@/stores/authStore";
 import { ensureLocaleLoaded } from "@/i18n";
+import { resolveIcon } from "@/components/icons.js";
+import PageHeader from "@/components/data/PageHeader.vue";
+import DsCard from "@/components/core/DsCard.vue";
+import InfoRow from "@/components/data/InfoRow.vue";
+import TextField from "@/components/forms/TextField.vue";
+import SelectMenu from "@/components/forms/SelectMenu.vue";
+import DsPill from "@/components/core/DsPill.vue";
+import DsButton from "@/components/core/DsButton.vue";
 
 const { t, locale } = useI18n();
 const toast = useToast();
@@ -600,10 +308,13 @@ const formSubmitted = ref(false);
 const themes = ["light", "dark"];
 const languages = ["es", "en", "gl"];
 
+const themeOptions = computed(() => themes.map((theme) => ({ value: theme, label: t(`pages.dash.userConfig.themes.${theme}`) })));
+const languageOptions = computed(() => languages.map((lang) => ({ value: lang, label: t(`pages.dash.userConfig.languages.${lang}`) })));
+
 const roleIcons = {
-  normalUser: Users,
-  managerUser: ShieldCheck,
-  adminUser: ShieldAlert,
+  normalUser: "users",
+  managerUser: "shield-check",
+  adminUser: "shield-alert",
 };
 
 const permissions = computed(() => ({
@@ -944,17 +655,3 @@ function formatDate(dateStr) {
   return d.toLocaleString();
 }
 </script>
-
-<style scoped>
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-</style>

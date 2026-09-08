@@ -55,6 +55,16 @@ import {
   EyeOff,
   Shield,
   Lock,
+  Loader2,
+  ShieldCheck,
+  ShieldAlert,
+  Info,
+  Save,
+  Palette,
+  Undo2,
+  Map,
+  UploadCloud,
+  Timer,
 } from "lucide-vue-next";
 
 const REGISTRY = {
@@ -108,6 +118,16 @@ const REGISTRY = {
   "eye-off": EyeOff,
   shield: Shield,
   lock: Lock,
+  "loader-2": Loader2,
+  "shield-check": ShieldCheck,
+  "shield-alert": ShieldAlert,
+  info: Info,
+  save: Save,
+  palette: Palette,
+  "undo-2": Undo2,
+  map: Map,
+  "upload-cloud": UploadCloud,
+  timer: Timer,
 };
 
 /** Resolve a kebab-case Lucide icon name to its component, or null if unknown/absent. */

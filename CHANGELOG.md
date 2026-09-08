@@ -5,6 +5,35 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.4] - 2026-09-08
+
+### Added
+
+- `upload-cloud`, `map`, `palette`, `undo-2`, and `timer` icons added to the shared registry.
+
+### Changed
+
+- `SpacesFormView.vue`, `CategoriesFormView.vue`, `EventsFormView.vue`, and `BookingFormView.vue`
+  rebuilt on `PageHeader`/`DsCard`/`InfoRow`/`TextField`/`SelectMenu`/`DsButton`/`DsModal`,
+  completing the pass over all 6 Dash form views. The multi-select category-spaces picker and the
+  recurrence day/time pickers in `BookingFormView` kept their existing Headless UI / native-input
+  logic (no design-system primitive covers multi-select or date/time inputs yet) but were restyled
+  onto the new tokens.
+
+## [2.6.3] - 2026-09-08
+
+### Added
+
+- `DsButton` gained a `state` prop (`default`/`processing`/`success`/`error`) covering the
+  4-state submit-button pattern shared by every Dash form view, plus several icons to the shared
+  registry (`loader-2`, `shield-check`, `shield-alert`, `info`, `save`, `palette`, `undo-2`).
+
+### Changed
+
+- `UserFormView.vue` and `UserConfigView.vue` rebuilt on `PageHeader`/`DsCard`/`InfoRow`/
+  `TextField`/`SelectMenu`/`DsButton`, replacing their hand-rolled preview panels, Headless UI
+  `Listbox` usage, and inline validation-icon markup.
+
 ## [2.6.2] - 2026-09-08
 
 ### Changed

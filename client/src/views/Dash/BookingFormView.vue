@@ -1,626 +1,218 @@
 <template>
   <div class="h-full w-full p-6">
-    <div class="flex items-center mb-2">
-      <h1 class="text-3xl font-bold text-text-950 k2d">
-        {{ pageTitle }}
-      </h1>
-    </div>
+    <PageHeader :title="pageTitle" />
 
-    <div class="relative">
-      <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="order-2 lg:order-1">
-          <div
-            class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] h-full">
-            <h3 class="text-lg font-medium text-text-900 mb-4">
-              {{ t("pages.dash.bookingForm.profile.preview") }}
-            </h3>
+    <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="order-2 lg:order-1">
+        <DsCard :title="t('pages.dash.bookingForm.profile.preview')" class="h-full">
+          <div class="bg-background-50 p-5 rounded-lg border border-background-200 space-y-4">
+            <InfoRow icon="calendar-days" :label="t('pages.dash.bookingForm.form.labels.eventTitle')" :value="selectedEventName || t('pages.dash.bookingForm.form.placeholders.noEvent')" />
 
-            <div class="bg-background-50 p-5 rounded-lg border border-background-200">
-              <div class="space-y-4">
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <Calendar class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">
-                      {{ t("pages.dash.bookingForm.form.labels.eventTitle") }}
-                    </p>
-                    <p class="text-text-800 font-medium">
-                      {{ selectedEventName || t("pages.dash.bookingForm.form.placeholders.noEvent") }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex justify-center">
+            <div class="flex justify-center">
+              <div
+                class="relative rounded-lg overflow-hidden border border-background-300 shadow-sm cursor-pointer group"
+                style="width: 15%; aspect-ratio: 9/16"
+                @click="openImageModal">
+                <div v-if="selectedEventInfo && selectedEventInfo.coverUrl" class="w-full h-full">
+                  <img :src="selectedEventInfo.coverUrl" :alt="t('pages.other.commons.altText.eventCover')" class="w-full h-full object-cover" />
                   <div
-                    class="relative rounded-lg overflow-hidden border border-background-300 shadow-sm cursor-pointer group"
-                    style="width: 15%; aspect-ratio: 9/16"
-                    @click="openImageModal">
-                    <div v-if="selectedEventInfo && selectedEventInfo.coverUrl" class="w-full h-full">
-                      <img
-                        :src="selectedEventInfo.coverUrl"
-                        :alt="t('pages.other.commons.altText.eventCover')"
-                        class="w-full h-full object-cover" />
-                      <div
-                        class="absolute inset-0 bg-background-950/10 group-hover:bg-background-950/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-                        <div class="bg-background-50/90 p-2 rounded-full">
-                          <Search class="w-5 h-5 text-text-900" />
-                        </div>
-                      </div>
-                    </div>
-                    <div v-else class="w-full h-full bg-background-200 flex flex-col items-center justify-center">
-                      <ImageIcon class="w-12 h-12 text-primary-600 mb-2" />
+                    class="absolute inset-0 bg-background-950/10 group-hover:bg-background-950/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                    <div class="bg-background-50/90 p-2 rounded-full">
+                      <Search class="w-5 h-5 text-text-900" />
                     </div>
                   </div>
                 </div>
-
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <MapPin class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">
-                      {{ t("pages.dash.bookingForm.form.labels.space") }}
-                    </p>
-                    <p class="text-text-800 font-medium">
-                      {{ selectedSpaceName || t("pages.dash.bookingForm.form.placeholders.noSpace") }}
-                    </p>
-                  </div>
+                <div v-else class="w-full h-full bg-background-200 flex flex-col items-center justify-center">
+                  <ImageIcon class="w-12 h-12 text-primary-600 mb-2" />
                 </div>
+              </div>
+            </div>
 
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <Clock class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">
-                      {{ t("pages.dash.bookingForm.form.labels.bookingDate") }}
-                    </p>
-                    <p v-if="!isRecurrent" class="text-text-800 font-medium">
-                      {{
-                        formatBookingDate(formData.bookingDate) || t("pages.dash.bookingForm.form.placeholders.noDate")
-                      }}
-                    </p>
-                    <p v-else class="text-text-800 font-medium">
-                      {{ formatPreviewDate(formData.startDate) }} -
-                      {{ formatPreviewDate(formData.endDate) }}
-                    </p>
-                  </div>
+            <InfoRow icon="map-pin" :label="t('pages.dash.bookingForm.form.labels.space')" :value="selectedSpaceName || t('pages.dash.bookingForm.form.placeholders.noSpace')" />
+
+            <InfoRow
+              icon="clock"
+              :label="t('pages.dash.bookingForm.form.labels.bookingDate')"
+              :value="
+                isRecurrent
+                  ? `${formatPreviewDate(formData.startDate)} - ${formatPreviewDate(formData.endDate)}`
+                  : formatBookingDate(formData.bookingDate) || t('pages.dash.bookingForm.form.placeholders.noDate')
+              " />
+
+            <template v-if="selectedEventInfo">
+              <InfoRow icon="bookmark" :label="t('pages.dash.bookingForm.form.labels.eventCategory')" :value="selectedEventCategoryName || t('pages.dash.bookingForm.form.labels.noCategory')" />
+              <InfoRow v-if="selectedEventInfo.duration" icon="timer" :label="t('pages.dash.bookingForm.form.labels.eventDuration')" :value="formatDuration(selectedEventInfo.duration)" />
+            </template>
+
+            <InfoRow
+              v-if="isEditMode && initialBookingData"
+              icon="user"
+              :label="t('pages.dash.bookingForm.profile.bookedBy')"
+              :value="bookedByLabel" />
+
+            <InfoRow icon="file-text" align="start" :label="t('pages.dash.bookingForm.form.labels.info')" :value="formData.info || t('pages.dash.bookingForm.form.placeholders.noInfo')" />
+          </div>
+        </DsCard>
+      </div>
+
+      <div class="order-1 lg:order-2">
+        <DsCard :title="isEditMode ? t('pages.dash.bookingForm.common.edit') : t('pages.dash.bookingForm.common.create')" class="h-full">
+          <div class="bg-background-50 p-4 rounded-lg border border-background-200 space-y-4">
+            <h4 class="text-sm font-medium text-text-700 mb-1 flex items-center">
+              <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
+              {{ t("pages.dash.bookingForm.form.sections.basicInfo") }}
+            </h4>
+
+            <div>
+              <SelectMenu
+                v-model="selectedEvent"
+                :label="t('pages.dash.bookingForm.form.labels.event')"
+                icon="calendar-days"
+                :options="eventOptions"
+                :placeholder="t('pages.dash.bookingForm.form.placeholders.selectEvent')"
+                :error="!formSubmitted && errors.event ? errors.event : false"
+                :disabled="isEditMode" />
+              <DsButton type="button" variant="soft" icon="calendar-days" full-width class="mt-2" @click="$router.push({ name: 'dashEventsNew' })">
+                {{ t("pages.dash.bookingForm.form.actions.createEvent") || "¿No encuentras tu evento? Crea uno nuevo" }}
+              </DsButton>
+            </div>
+
+            <SelectMenu
+              v-model="selectedSpace"
+              :label="t('pages.dash.bookingForm.form.labels.space')"
+              icon="map-pin"
+              :options="spaceOptions"
+              :placeholder="!selectedEvent && !isEditMode ? t('pages.dash.bookingForm.form.placeholders.selectSpaceFirst') : t('pages.dash.bookingForm.form.placeholders.selectSpace')"
+              :error="!formSubmitted && errors.space ? errors.space : false"
+              :disabled="!selectedEvent && !isEditMode" />
+
+            <label v-if="!isEditMode" class="flex items-center gap-3 bg-background-100 p-3 rounded-lg border border-background-300 hover:border-primary-300 transition-colors cursor-pointer">
+              <input id="recurrence" type="checkbox" v-model="isRecurrent" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 cursor-pointer" />
+              <span class="text-sm font-medium text-text-700 select-none">{{ t("pages.dash.bookingForm.form.labels.repeat") }}</span>
+            </label>
+
+            <div v-if="isRecurrent && !isEditMode" class="bg-background-100 p-4 rounded-lg border border-background-300 space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-1.5">{{ t("pages.dash.bookingForm.form.labels.startDate") }}</span>
+                  <span class="relative flex items-center">
+                    <Calendar class="absolute left-3 w-4 h-4 text-primary-600 pointer-events-none" />
+                    <input v-model="formData.startDate" type="date" class="w-full h-10 pl-9 pr-3 rounded-md border-[1.5px] border-background-300 bg-background-50 text-sm text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                  </span>
+                </label>
+                <label class="block">
+                  <span class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-1.5">{{ t("pages.dash.bookingForm.form.labels.endDate") }}</span>
+                  <span class="relative flex items-center">
+                    <Calendar class="absolute left-3 w-4 h-4 text-primary-600 pointer-events-none" />
+                    <input v-model="formData.endDate" type="date" class="w-full h-10 pl-9 pr-3 rounded-md border-[1.5px] border-background-300 bg-background-50 text-sm text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                  </span>
+                </label>
+              </div>
+
+              <div>
+                <span class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-3">{{ t("pages.dash.bookingForm.form.labels.days") }}</span>
+                <div class="grid grid-cols-7 gap-2">
+                  <button
+                    v-for="dayIndex in [1, 2, 3, 4, 5, 6, 0]"
+                    :key="dayIndex"
+                    type="button"
+                    @click="toggleDay(dayIndex)"
+                    class="h-10 rounded-md border-[1.5px] flex items-center justify-center transition-all duration-150 shadow-sm"
+                    :class="recurrenceState[dayIndex].selected ? 'bg-primary-600 border-primary-600 text-white' : 'bg-background-50 border-background-300 text-text-600 hover:border-primary-300'">
+                    <span class="text-xs font-bold">{{ getDayLabel(dayIndex) }}</span>
+                  </button>
                 </div>
+              </div>
 
-                <template v-if="selectedEventInfo">
-                  <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                    <Bookmark class="w-5 h-5 text-primary-600 mr-3" />
-                    <div>
-                      <p class="text-xs text-text-600">
-                        {{ t("pages.dash.bookingForm.form.labels.eventCategory") }}
-                      </p>
-                      <p class="text-text-800 font-medium">
-                        {{ selectedEventCategoryName || t("pages.dash.bookingForm.form.labels.noCategory") }}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div
-                    class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200"
-                    v-if="selectedEventInfo.duration">
-                    <Timer class="w-5 h-5 text-primary-600 mr-3" />
-                    <div>
-                      <p class="text-xs text-text-600">
-                        {{ t("pages.dash.bookingForm.form.labels.eventDuration") }}
-                      </p>
-                      <p class="text-text-800 font-medium">
-                        {{ formatDuration(selectedEventInfo.duration) }}
-                      </p>
-                    </div>
+              <div v-if="hasSelectedDays" class="pt-2 border-t border-background-300">
+                <template v-for="dayIndex in [1, 2, 3, 4, 5, 6, 0]" :key="dayIndex">
+                  <div v-if="recurrenceState[dayIndex].selected" class="flex items-center justify-between py-2 border-b border-background-200 last:border-0">
+                    <span class="text-sm font-medium text-text-800">{{ getFullDayLabel(dayIndex) }}</span>
+                    <span class="relative w-32 flex items-center">
+                      <Clock class="absolute left-2.5 w-3.5 h-3.5 text-primary-600 pointer-events-none" />
+                      <input type="time" v-model="recurrenceState[dayIndex].time" class="w-full h-8 pl-8 pr-2 text-sm rounded-md border border-background-300 bg-background-50 text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    </span>
                   </div>
                 </template>
-
-                <template v-if="isEditMode && initialBookingData">
-                  <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                    <User class="w-5 h-5 text-primary-600 mr-3" />
-                    <div>
-                      <p class="text-xs text-text-600">
-                        {{ t("pages.dash.bookingForm.profile.bookedBy") }}
-                      </p>
-                      <p class="text-text-800 font-medium">
-                        <span v-if="isLoadingBooker">{{ t("pages.dash.bookingForm.profile.loading") }}</span>
-                        <span v-else-if="bookerError">{{ t("pages.dash.bookingForm.profile.errorLoading") }}</span>
-                        <span v-else-if="bookerData">{{ bookerData.name }}</span>
-                        <span v-else>{{ initialBookingData.bookedBy }}</span>
-                      </p>
-                    </div>
-                  </div>
-                </template>
-
-                <div
-                  v-if="formData.info"
-                  class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
-                  <FileText class="w-5 h-5 text-primary-600 mr-3 mt-0.5 shrink-0" />
-                  <div class="w-full">
-                    <p class="text-xs text-text-600">
-                      {{ t("pages.dash.bookingForm.form.labels.info") }}
-                    </p>
-                    <p class="text-text-800 mt-1 whitespace-pre-wrap wrap-break-word">
-                      {{ formData.info }}
-                    </p>
-                  </div>
-                </div>
-                <div v-else class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <FileText class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">
-                      {{ t("pages.dash.bookingForm.form.labels.info") }}
-                    </p>
-                    <p class="text-text-600 text-sm">
-                      {{ t("pages.dash.bookingForm.form.placeholders.noInfo") }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="order-1 lg:order-2">
-          <div
-            class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] h-full">
-            <h3 class="text-lg font-medium text-text-900 mb-4">
-              {{ isEditMode ? t("pages.dash.bookingForm.common.edit") : t("pages.dash.bookingForm.common.create") }}
-            </h3>
-
-            <div class="space-y-6">
-              <div class="bg-background-50 p-4 rounded-lg border border-background-200">
-                <h4 class="text-sm font-medium text-text-700 mb-3 flex items-center">
-                  <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
-                  {{ t("pages.dash.bookingForm.form.sections.basicInfo") }}
-                </h4>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="event">
-                    {{ t("pages.dash.bookingForm.form.labels.event") }}
-                  </label>
-                  <div class="relative">
-                    <Listbox v-model="selectedEvent" :disabled="isEditMode">
-                      <div class="relative">
-                        <ListboxButton
-                          class="relative w-full pl-10 pr-10 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 bg-background-50 text-left"
-                          :class="{
-                            'border-accent-500 ring-1 ring-accent-300': errors.event && !formSubmitted,
-                            'opacity-60 cursor-not-allowed': isEditMode,
-                          }">
-                          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Calendar class="w-5 h-5 text-primary-600" />
-                          </div>
-                          <span
-                            class="block truncate"
-                            :class="!selectedEvent ? 'text-text-400' : 'text-text-950 font-medium'">
-                            {{ selectedEventName || t("pages.dash.bookingForm.form.placeholders.selectEvent") }}
-                          </span>
-                          <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <div class="flex items-center">
-                              <XCircle
-                                v-if="errors.event && !formSubmitted"
-                                class="w-5 h-5 text-accent-500 mr-2 animate-fadeIn" />
-                              <ChevronDown class="w-5 h-5 text-text-400" />
-                            </div>
-                          </span>
-                        </ListboxButton>
-                        <transition
-                          enter-active-class="transition ease-out duration-100"
-                          enter-from-class="transform opacity-0 scale-95"
-                          enter-to-class="transform opacity-100 scale-100"
-                          leave-active-class="transition ease-in duration-75"
-                          leave-from-class="transform opacity-100 scale-100"
-                          leave-to-class="transform opacity-0 scale-95">
-                          <ListboxOptions
-                            class="absolute z-10 mt-1 w-full bg-background-50 border border-background-300 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none sm:text-sm origin-top-right">
-                            <ListboxOption
-                              v-for="event in events"
-                              :key="event._id || event.id"
-                              :value="event._id || event.id"
-                              v-slot="{ active, selected }">
-                              <li
-                                :class="[
-                                  selected
-                                    ? 'bg-primary-100 border-l-primary-500 text-primary-800'
-                                    : active
-                                      ? 'bg-primary-50 border-l-primary-300 text-primary-600'
-                                      : 'text-text-800',
-                                  'cursor-default select-none relative py-2 pl-10 pr-4 transition-all duration-150 border-l-[3px]',
-                                  selected ? 'border-l-[3px]' : active ? 'border-l-[3px]' : 'border-transparent',
-                                ]">
-                                <div class="flex items-center">
-                                  <Calendar class="mr-2 h-5 w-5 text-primary-600" />
-                                  <span :class="[selected ? 'font-medium' : 'font-normal']">
-                                    {{ event.title }}
-                                  </span>
-                                </div>
-                                <span
-                                  v-if="selected"
-                                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-600">
-                                  <Check class="w-4 h-4" />
-                                </span>
-                              </li>
-                            </ListboxOption>
-                          </ListboxOptions>
-                        </transition>
-                      </div>
-                    </Listbox>
-                    <button
-                      type="button"
-                      class="mt-2 w-full h-9 px-4 rounded-md text-sm font-medium shadow-sm flex items-center justify-center bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200 transition-colors duration-150 cursor-pointer"
-                      @click="$router.push({ name: 'dashEventsNew' })">
-                      <Calendar class="w-4 h-4 mr-2" />
-                      {{
-                        t("pages.dash.bookingForm.form.actions.createEvent") ||
-                        "¿No encuentras tu evento? Crea uno nuevo"
-                      }}
-                    </button>
-                  </div>
-                </div>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="space">
-                    {{ t("pages.dash.bookingForm.form.labels.space") }}
-                  </label>
-                  <div class="relative">
-                    <Listbox v-model="selectedSpace" :disabled="!selectedEvent && !isEditMode">
-                      <div class="relative">
-                        <ListboxButton
-                          class="relative w-full pl-10 pr-10 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 bg-background-50 text-left"
-                          :class="{
-                            'border-accent-500 ring-1 ring-accent-300': errors.space && !formSubmitted,
-                            'opacity-60 cursor-not-allowed': !selectedEvent && !isEditMode,
-                          }">
-                          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <MapPin class="w-5 h-5 text-primary-600" />
-                          </div>
-                          <span
-                            class="block truncate"
-                            :class="!selectedSpace ? 'text-text-400' : 'text-text-950 font-medium'">
-                            {{
-                              !selectedEvent && !isEditMode
-                                ? t("pages.dash.bookingForm.form.placeholders.selectSpaceFirst")
-                                : selectedSpaceName || t("pages.dash.bookingForm.form.placeholders.selectSpace")
-                            }}
-                          </span>
-                          <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <div class="flex items-center">
-                              <XCircle
-                                v-if="errors.space && !formSubmitted"
-                                class="w-5 h-5 text-accent-500 mr-2 animate-fadeIn" />
-                              <ChevronDown class="w-5 h-5 text-text-400" />
-                            </div>
-                          </span>
-                        </ListboxButton>
-                        <transition
-                          enter-active-class="transition ease-out duration-100"
-                          enter-from-class="transform opacity-0 scale-95"
-                          enter-to-class="transform opacity-100 scale-100"
-                          leave-active-class="transition ease-in duration-75"
-                          leave-from-class="transform opacity-100 scale-100"
-                          leave-to-class="transform opacity-0 scale-95">
-                          <ListboxOptions
-                            class="absolute z-10 mt-1 w-full bg-background-50 border border-background-300 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none sm:text-sm origin-top-right">
-                            <ListboxOption
-                              v-for="space in availableSpaces"
-                              :key="space._id || space.id"
-                              :value="space._id || space.id"
-                              v-slot="{ active, selected }">
-                              <li
-                                :class="[
-                                  selected
-                                    ? 'bg-primary-100 border-l-primary-500 text-primary-800'
-                                    : active
-                                      ? 'bg-primary-50 border-l-primary-300 text-primary-600'
-                                      : 'text-text-800',
-                                  'cursor-default select-none relative py-2 pl-10 pr-4 transition-all duration-150 border-l-[3px]',
-                                  selected ? 'border-l-[3px]' : active ? 'border-l-[3px]' : 'border-transparent',
-                                ]">
-                                <div class="flex items-center">
-                                  <MapPin class="mr-2 h-5 w-5 text-primary-600" />
-                                  <span :class="[selected ? 'font-medium' : 'font-normal']">
-                                    {{ space.name }}
-                                  </span>
-                                </div>
-                                <span
-                                  v-if="selected"
-                                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-600">
-                                  <Check class="w-4 h-4" />
-                                </span>
-                              </li>
-                            </ListboxOption>
-                          </ListboxOptions>
-                        </transition>
-                      </div>
-                    </Listbox>
-                  </div>
-                </div>
-
-                <!-- Recurrence Toggle -->
-                <div v-if="!isEditMode" class="mb-4">
-                  <div
-                    class="flex items-center bg-background-100 p-3 rounded-lg border border-background-300 hover:border-primary-300 transition-colors">
-                    <div class="relative flex items-start">
-                      <div class="flex items-center h-5">
-                        <input
-                          id="recurrence"
-                          type="checkbox"
-                          v-model="isRecurrent"
-                          class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 cursor-pointer" />
-                      </div>
-                      <div class="ml-3 text-sm">
-                        <label for="recurrence" class="font-medium text-text-700 cursor-pointer select-none">
-                          {{ t("pages.dash.bookingForm.form.labels.repeat") }}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Recurrence Form -->
-                <div
-                  v-if="isRecurrent && !isEditMode"
-                  class="mb-4 bg-background-50 p-4 rounded-lg border border-background-300 space-y-4 shadow-sm animate-fadeIn">
-                  <div class="grid grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-1.5">{{
-                        t("pages.dash.bookingForm.form.labels.startDate")
-                      }}</label>
-                      <div class="relative group">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <Calendar class="w-4 h-4 text-primary-600" />
-                        </div>
-                        <input
-                          v-model="formData.startDate"
-                          type="date"
-                          class="block w-full pl-9 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-sm text-text-950 font-medium bg-background-50" />
-                      </div>
-                    </div>
-                    <div>
-                      <label class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-1.5">{{
-                        t("pages.dash.bookingForm.form.labels.endDate")
-                      }}</label>
-                      <div class="relative group">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <Calendar class="w-4 h-4 text-primary-600" />
-                        </div>
-                        <input
-                          v-model="formData.endDate"
-                          type="date"
-                          class="block w-full pl-9 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-sm text-text-950 font-medium bg-background-50" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-3">{{
-                      t("pages.dash.bookingForm.form.labels.days")
-                    }}</label>
-                    <div class="grid grid-cols-7 gap-2">
-                      <div
-                        v-for="dayIndex in [1, 2, 3, 4, 5, 6, 0]"
-                        :key="dayIndex"
-                        @click="toggleDay(dayIndex)"
-                        class="h-10 rounded-md border flex items-center justify-center cursor-pointer transition-all duration-200 select-none shadow-sm hover:shadow-md"
-                        :class="
-                          recurrenceState[dayIndex].selected
-                            ? 'bg-primary-600 border-primary-600 text-white'
-                            : 'bg-background-50 border-background-300 text-text-600 hover:bg-background-100 hover:border-primary-300'
-                        ">
-                        <span class="text-xs font-bold">{{ getDayLabel(dayIndex) }}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div v-if="hasSelectedDays" class="pt-2 border-t border-background-300 animate-fadeIn">
-                    <div v-for="dayIndex in [1, 2, 3, 4, 5, 6, 0]" :key="dayIndex">
-                      <div
-                        v-if="recurrenceState[dayIndex].selected"
-                        class="flex items-center justify-between py-2 border-b border-background-200 last:border-0">
-                        <span class="text-sm font-medium text-text-800">{{ getFullDayLabel(dayIndex) }}</span>
-                        <div class="relative w-32">
-                          <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-                            <Clock class="w-3.5 h-3.5 text-primary-600" />
-                          </div>
-                          <input
-                            type="time"
-                            v-model="recurrenceState[dayIndex].time"
-                            class="block w-full pl-8 pr-2 py-1.5 text-sm border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-text-950 bg-background-50" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Single Date Picker -->
-                <div v-if="!isRecurrent" class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="bookingDate">
-                    {{ t("pages.dash.bookingForm.form.labels.bookingDate") }}
-                  </label>
-                  <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Clock
-                        class="w-5 h-5 text-primary-600 group-hover:text-primary-600 transition-colors duration-200" />
-                    </div>
-                    <input
-                      v-model="formData.bookingDate"
-                      id="bookingDate"
-                      type="datetime-local"
-                      class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
-                      :class="{
-                        'border-accent-500 ring-1 ring-accent-300': errors.bookingDate && !formSubmitted,
-                      }"
-                      required />
-                    <div class="absolute inset-y-0 right-3 flex items-center">
-                      <CheckCircle2
-                        v-if="(!errors.bookingDate || formSubmitted) && formData.bookingDate"
-                        class="w-5 h-5 text-primary-500 animate-fadeIn" />
-                      <XCircle
-                        v-else-if="(formData.bookingDate || touchedFields.bookingDate) && !formSubmitted"
-                        class="w-5 h-5 text-accent-500 animate-fadeIn" />
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Edit Scope (Group vs Single) -->
-                <div
-                  v-if="isEditMode && initialBookingData?.groupId"
-                  class="mb-4 bg-background-50 p-4 rounded-lg border border-background-300">
-                  <label class="block text-text-800 text-sm font-bold mb-3 flex items-center">
-                    <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
-                    {{ t("pages.dash.bookingForm.form.labels.updateScope") }}
-                  </label>
-                  <div class="flex flex-col gap-2">
-                    <label
-                      class="flex items-center p-3 rounded-md border border-background-300 bg-background-100 cursor-pointer transition-colors hover:bg-background-200"
-                      :class="updateScope === 'single' ? 'ring-2 ring-primary-500 border-primary-500' : ''">
-                      <input
-                        type="radio"
-                        id="single"
-                        value="single"
-                        v-model="updateScope"
-                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" />
-                      <span class="ml-3 text-sm font-medium text-text-800">{{
-                        t("pages.dash.bookingForm.form.options.updateSingle")
-                      }}</span>
-                    </label>
-                    <label
-                      class="flex items-center p-3 rounded-md border border-background-300 bg-background-100 cursor-pointer transition-colors hover:bg-background-200"
-                      :class="updateScope === 'group' ? 'ring-2 ring-primary-500 border-primary-500' : ''">
-                      <input
-                        type="radio"
-                        id="group"
-                        value="group"
-                        v-model="updateScope"
-                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" />
-                      <span class="ml-3 text-sm font-medium text-text-800">{{
-                        t("pages.dash.bookingForm.form.options.updateGroup")
-                      }}</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="info">
-                    {{ t("pages.dash.bookingForm.form.labels.info") }}
-                  </label>
-                  <div class="relative group">
-                    <textarea
-                      v-model="formData.info"
-                      id="info"
-                      rows="4"
-                      maxlength="500"
-                      class="block w-full p-3 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950"
-                      :class="{
-                        'border-accent-500 ring-1 ring-accent-300': errors.info && !formSubmitted,
-                      }"
-                      :placeholder="t('pages.dash.bookingForm.form.placeholders.info')"></textarea>
-                    <div class="absolute bottom-3 right-3 flex items-center">
-                      <span class="text-xs text-text-500 mr-2">{{ formData.info?.length || 0 }}/500</span>
-                      <CheckCircle2
-                        v-if="!errors.info || formSubmitted"
-                        class="w-5 h-5 text-primary-500 animate-fadeIn" />
-                      <XCircle
-                        v-else-if="errors.info && !formSubmitted"
-                        class="w-5 h-5 text-accent-500 animate-fadeIn" />
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
-            <div class="flex justify-end items-center mt-6 gap-2">
-              <button
-                type="button"
-                class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-background-100 text-text-700 border border-background-300 hover:bg-background-200 transition-colors duration-150 cursor-pointer"
-                @click="$router.push({ name: returnRoute })">
-                <X class="w-4 h-4 mr-2" />
-                {{ t("pages.dash.bookingForm.common.cancel") }}
-              </button>
-              <button
-                type="submit"
-                class="h-10 px-5 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center transition-colors duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                :class="{
-                  'bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200':
-                    buttonState === 'default',
-                  'bg-background-200 text-text-500': buttonState === 'processing',
-                  'bg-secondary-100 text-secondary-800 border border-secondary-200': buttonState === 'success',
-                  'bg-accent-100 text-accent-800 border border-accent-200': buttonState === 'error',
-                }"
-                :disabled="isSubmitting || !isFormValid">
-                <div v-if="buttonState === 'processing'" class="flex items-center">
-                  <Loader2 class="w-4 h-4 mr-2 animate-spin" />
-                  {{
-                    isEditMode
-                      ? t("pages.dash.bookingForm.form.actions.updating")
-                      : t("pages.dash.bookingForm.form.actions.submitting")
-                  }}
-                </div>
-                <div v-else-if="buttonState === 'success'" class="flex items-center">
-                  <CheckCircle2 class="w-4 h-4 mr-2 animate-fadeIn" />
-                  {{ t("pages.dash.bookingForm.common.status.success") }}
-                </div>
-                <div v-else-if="buttonState === 'error'" class="flex items-center">
-                  <XCircle class="w-4 h-4 mr-2 animate-fadeIn" />
-                  {{ t("pages.dash.bookingForm.common.status.error") }}
-                </div>
-                <div v-else class="flex items-center">
-                  <Save class="w-4 h-4 mr-2" />
-                  {{
-                    isEditMode ? t("pages.dash.bookingForm.common.update") : t("pages.dash.bookingForm.common.create")
-                  }}
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-    <Teleport to="body">
-      <Transition
-        enter-active-class="transition-opacity duration-300 ease-out"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition-opacity duration-300 ease-in"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0">
-        <div v-if="showImageModal && selectedEventInfo && selectedEventInfo.coverUrl" class="fixed inset-0 z-50">
-          <div
-            class="fixed inset-0 bg-background-950/85 dark:bg-background-50/85 transition-opacity duration-300"></div>
+            <label v-if="!isRecurrent" class="block">
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.bookingForm.form.labels.bookingDate") }}</span>
+              <span class="relative flex items-center">
+                <Clock class="absolute left-3 w-4 h-4 text-text-500 pointer-events-none" />
+                <input
+                  v-model="formData.bookingDate"
+                  type="datetime-local"
+                  class="w-full h-10 pl-9 pr-9 rounded-md border-[1.5px] bg-background-50 text-text-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150"
+                  :class="errors.bookingDate && !formSubmitted ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'"
+                  required />
+                <CheckCircle2 v-if="(!errors.bookingDate || formSubmitted) && formData.bookingDate" class="absolute right-3 w-4 h-4 text-primary-500" />
+                <XCircle v-else-if="(formData.bookingDate || touchedFields.bookingDate) && !formSubmitted" class="absolute right-3 w-4 h-4 text-accent-500" />
+              </span>
+            </label>
 
-          <div class="fixed inset-0 overflow-y-auto">
-            <div class="flex min-h-full items-center justify-center p-4 text-center">
-              <div class="relative w-full max-w-3xl mx-auto">
-                <div class="relative bg-background-50 dark:bg-background-100 rounded-lg shadow-xl p-2">
-                  <div
-                    class="flex justify-between items-center p-4 border-b border-background-200 dark:border-background-300">
-                    <h3 class="text-lg font-semibold text-text-900 dark:text-text-800">
-                      {{ t("pages.dash.bookingForm.form.labels.eventCover") }}
-                    </h3>
-                    <button
-                      @click="showImageModal = false"
-                      class="rounded-md p-2 text-text-700 dark:text-text-700 hover:bg-background-100 dark:hover:bg-background-200 hover:text-text-900 dark:hover:text-text-900 transition-colors">
-                      <X class="w-5 h-5" />
-                    </button>
-                  </div>
-
-                  <div class="p-4">
-                    <img
-                      :src="selectedEventInfo.coverUrl"
-                      :alt="t('pages.other.commons.altText.eventCoverFullscreen')"
-                      class="max-h-[70vh] mx-auto object-contain rounded-lg" />
-                  </div>
-
-                  <div class="bg-background-100 dark:bg-background-200 px-6 py-4 flex justify-end gap-2 rounded-b-lg">
-                    <button
-                      @click="showImageModal = false"
-                      class="inline-flex justify-center rounded-md bg-background-50 dark:bg-background-100 px-3 py-2 text-sm font-semibold text-text-800 dark:text-text-700 shadow-sm ring-1 ring-inset ring-background-300 dark:ring-background-400 hover:bg-background-100 dark:hover:bg-background-200 transition-colors">
-                      {{ t("pages.dash.bookingForm.common.close") }}
-                    </button>
-                  </div>
-                </div>
+            <div v-if="isEditMode && initialBookingData?.groupId" class="bg-background-100 p-4 rounded-lg border border-background-300">
+              <span class="block text-text-800 text-sm font-bold mb-3 flex items-center">
+                <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
+                {{ t("pages.dash.bookingForm.form.labels.updateScope") }}
+              </span>
+              <div class="flex flex-col gap-2">
+                <label class="flex items-center p-3 rounded-md border-[1.5px] bg-background-50 cursor-pointer transition-colors" :class="updateScope === 'single' ? 'border-primary-500 ring-2 ring-primary-500' : 'border-background-300 hover:border-primary-300'">
+                  <input type="radio" value="single" v-model="updateScope" class="h-4 w-4 text-primary-600 focus:ring-primary-500" />
+                  <span class="ml-3 text-sm font-medium text-text-800">{{ t("pages.dash.bookingForm.form.options.updateSingle") }}</span>
+                </label>
+                <label class="flex items-center p-3 rounded-md border-[1.5px] bg-background-50 cursor-pointer transition-colors" :class="updateScope === 'group' ? 'border-primary-500 ring-2 ring-primary-500' : 'border-background-300 hover:border-primary-300'">
+                  <input type="radio" value="group" v-model="updateScope" class="h-4 w-4 text-primary-600 focus:ring-primary-500" />
+                  <span class="ml-3 text-sm font-medium text-text-800">{{ t("pages.dash.bookingForm.form.options.updateGroup") }}</span>
+                </label>
               </div>
             </div>
+
+            <div>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.bookingForm.form.labels.info") }}</span>
+              <span class="relative block">
+                <textarea
+                  v-model="formData.info"
+                  rows="4"
+                  maxlength="500"
+                  class="block w-full p-3 border-[1.5px] rounded-md bg-background-50 text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150"
+                  :class="errors.info && !formSubmitted ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'"
+                  :placeholder="t('pages.dash.bookingForm.form.placeholders.info')"></textarea>
+                <span class="absolute bottom-3 right-3 flex items-center gap-2">
+                  <span class="text-xs text-text-500">{{ formData.info?.length || 0 }}/500</span>
+                  <CheckCircle2 v-if="!errors.info || formSubmitted" class="w-4 h-4 text-primary-500" />
+                  <XCircle v-else-if="errors.info && !formSubmitted" class="w-4 h-4 text-accent-500" />
+                </span>
+              </span>
+            </div>
           </div>
-        </div>
-      </Transition>
-    </Teleport>
+
+          <div class="flex justify-end items-center mt-6 gap-2">
+            <DsButton type="button" variant="neutral" icon="x" @click="$router.push({ name: returnRoute })">
+              {{ t("pages.dash.bookingForm.common.cancel") }}
+            </DsButton>
+            <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid">
+              <template v-if="buttonState === 'processing'">
+                {{ isEditMode ? t("pages.dash.bookingForm.form.actions.updating") : t("pages.dash.bookingForm.form.actions.submitting") }}
+              </template>
+              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.bookingForm.common.status.success") }}</template>
+              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.bookingForm.common.status.error") }}</template>
+              <template v-else>{{ isEditMode ? t("pages.dash.bookingForm.common.update") : t("pages.dash.bookingForm.common.create") }}</template>
+            </DsButton>
+          </div>
+        </DsCard>
+      </div>
+    </form>
+
+    <DsModal
+      :open="showImageModal && !!(selectedEventInfo && selectedEventInfo.coverUrl)"
+      :title="t('pages.dash.bookingForm.form.labels.eventCover')"
+      width="lg"
+      :actions="[{ label: t('pages.dash.bookingForm.common.close'), type: 'default', onClick: () => (showImageModal = false) }]"
+      @close="showImageModal = false">
+      <img v-if="selectedEventInfo" :src="selectedEventInfo.coverUrl" :alt="t('pages.other.commons.altText.eventCoverFullscreen')" class="max-h-[70vh] mx-auto object-contain rounded-lg" />
+    </DsModal>
   </div>
 </template>
 
@@ -628,30 +220,17 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import {
-  Calendar,
-  MapPin,
-  User,
-  Loader2,
-  ClipboardList,
-  CheckCircle2,
-  X,
-  Save,
-  XCircle,
-  FileText,
-  Clock,
-  ChevronDown,
-  Check,
-  Bookmark,
-  Timer,
-  ImageIcon,
-  Search,
-} from "lucide-vue-next";
-import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
+import { Calendar, Search, ImageIcon, Clock, CheckCircle2, XCircle, ClipboardList } from "lucide-vue-next";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
 import { toMySQLDateTime } from "@/utils/dateUtils";
+import PageHeader from "@/components/data/PageHeader.vue";
+import DsCard from "@/components/core/DsCard.vue";
+import InfoRow from "@/components/data/InfoRow.vue";
+import SelectMenu from "@/components/forms/SelectMenu.vue";
+import DsButton from "@/components/core/DsButton.vue";
+import DsModal from "@/components/feedback/DsModal.vue";
 
 const { t, locale } = useI18n();
 const router = useRouter();
@@ -695,6 +274,13 @@ const selectedEvent = ref("");
 const selectedSpace = ref("");
 const selectedEventInfo = ref(null);
 const selectedEventCategoryInfo = ref(null);
+
+const eventOptions = computed(() =>
+  events.value.map((event) => ({ value: event._id || event.id, label: event.title, icon: "calendar-days" })),
+);
+const spaceOptions = computed(() =>
+  availableSpaces.value.map((space) => ({ value: space._id || space.id, label: space.name, icon: "map-pin" })),
+);
 
 const isRecurrent = ref(false);
 const updateScope = ref("single");
@@ -1128,6 +714,13 @@ const loadBookerData = async (bookerId) => {
   }
 };
 
+const bookedByLabel = computed(() => {
+  if (isLoadingBooker.value) return t("pages.dash.bookingForm.profile.loading");
+  if (bookerError.value) return t("pages.dash.bookingForm.profile.errorLoading");
+  if (bookerData.value) return bookerData.value.name;
+  return initialBookingData.value?.bookedBy ?? "";
+});
+
 const showImageModal = ref(false);
 
 const openImageModal = () => {
@@ -1136,17 +729,3 @@ const openImageModal = () => {
   }
 };
 </script>
-
-<style scoped>
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-</style>

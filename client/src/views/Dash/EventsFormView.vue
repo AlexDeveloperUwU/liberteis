@@ -1,460 +1,185 @@
 <template>
   <div class="h-full w-full p-6">
-    <div class="flex items-center mb-2">
-      <h1 class="text-3xl font-bold text-text-950 k2d">
-        {{ pageTitle }}
-      </h1>
-    </div>
-    <p class="text-text-800 mb-6">{{ pageDescription }}</p>
+    <PageHeader :title="pageTitle" :description="pageDescription" />
 
-    <div class="relative">
-      <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="order-2 lg:order-1">
-          <div
-            class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] h-full">
-            <h3 class="text-lg font-medium text-text-900 mb-4">
-              {{ t("pages.dash.eventsForm.profile.preview") }}
-            </h3>
+    <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="order-2 lg:order-1">
+        <DsCard :title="t('pages.dash.eventsForm.profile.preview')" class="h-full">
+          <div class="bg-background-50 p-5 rounded-lg border border-background-200 space-y-4">
+            <InfoRow icon="calendar-days" :label="t('pages.dash.eventsForm.form.labels.title')" :value="formData.title || t('pages.dash.eventsForm.form.placeholders.title')" />
 
-            <div class="bg-background-50 p-5 rounded-lg border border-background-200">
-              <div class="space-y-4">
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <Calendar class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.eventsForm.form.labels.title") }}</p>
-                    <p class="text-text-800 font-medium">
-                      {{ formData.title || t("pages.dash.eventsForm.form.placeholders.title") }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex justify-center">
+            <div class="flex justify-center">
+              <div
+                class="relative rounded-lg overflow-hidden border border-background-300 shadow-sm cursor-pointer group"
+                style="width: 15%; aspect-ratio: 9/16"
+                @click="openImageModal">
+                <div v-if="imagePreview || formData.coverUrl" class="w-full h-full">
+                  <img :src="imagePreview || formData.coverUrl" :alt="t('pages.other.commons.altText.eventCover')" class="w-full h-full object-cover" />
                   <div
-                    class="relative rounded-lg overflow-hidden border border-background-300 shadow-sm cursor-pointer group"
-                    style="width: 15%; aspect-ratio: 9/16"
-                    @click="openImageModal">
-                    <div v-if="imagePreview || formData.coverUrl" class="w-full h-full">
-                      <img
-                        :src="imagePreview || formData.coverUrl"
-                        :alt="t('pages.other.commons.altText.eventCover')"
-                        class="w-full h-full object-cover" />
-                      <div
-                        class="absolute inset-0 bg-background-950/10 group-hover:bg-background-950/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-                        <div class="bg-background-50/90 p-2 rounded-full">
-                          <Search class="w-5 h-5 text-text-900" />
-                        </div>
-                      </div>
-                    </div>
-                    <div v-else class="w-full h-full bg-background-200 flex flex-col items-center justify-center">
-                      <ImageIcon class="w-12 h-12 text-primary-600 mb-2" />
-                      <p class="text-text-600 text-sm">
-                        {{ t("pages.dash.eventsForm.form.placeholders.noCover") }}
-                      </p>
+                    class="absolute inset-0 bg-background-950/10 group-hover:bg-background-950/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                    <div class="bg-background-50/90 p-2 rounded-full">
+                      <Search class="w-5 h-5 text-text-900" />
                     </div>
                   </div>
                 </div>
-
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <MapPin class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.eventsForm.form.labels.category") }}</p>
-                    <p class="text-text-800 font-medium">
-                      {{ selectedCategoryName || t("pages.dash.eventsForm.form.placeholders.noCategory") }}
-                    </p>
-                  </div>
+                <div v-else class="w-full h-full bg-background-200 flex flex-col items-center justify-center">
+                  <ImageIcon class="w-12 h-12 text-primary-600 mb-2" />
+                  <p class="text-text-600 text-sm">{{ t("pages.dash.eventsForm.form.placeholders.noCover") }}</p>
                 </div>
+              </div>
+            </div>
 
-                <template v-if="isEditMode && initialEventData">
-                  <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                    <User class="w-5 h-5 text-primary-600 mr-3" />
-                    <div>
-                      <p class="text-xs text-text-600">{{ t("pages.dash.eventsForm.profile.createdBy") }}</p>
-                      <p class="text-text-800 font-medium">
-                        <span v-if="isLoadingCreator">{{ t("pages.dash.eventsForm.profile.loading") }}</span>
-                        <span v-else-if="creatorError">{{ t("pages.dash.eventsForm.profile.errorLoading") }}</span>
-                        <span v-else-if="creatorData">{{ creatorData.name }}</span>
-                        <span v-else>{{ initialEventData.createdBy }}</span>
-                      </p>
-                    </div>
-                  </div>
-                </template>
+            <InfoRow icon="bookmark" :label="t('pages.dash.eventsForm.form.labels.category')" :value="selectedCategoryName || t('pages.dash.eventsForm.form.placeholders.noCategory')" />
+            <InfoRow
+              v-if="isEditMode && initialEventData"
+              icon="user"
+              :label="t('pages.dash.eventsForm.profile.createdBy')"
+              :value="createdByLabel" />
+            <InfoRow icon="file-text" align="start" :label="t('pages.dash.eventsForm.form.labels.info')" :value="formData.info || t('pages.dash.eventsForm.form.placeholders.noInfo')" />
+            <InfoRow icon="clock" :label="t('pages.dash.eventsForm.form.labels.duration')" :value="formatDuration(formData.duration)" />
+          </div>
+        </DsCard>
+      </div>
 
+      <div class="order-1 lg:order-2">
+        <DsCard :title="isEditMode ? t('pages.dash.eventsForm.common.edit') : t('pages.dash.eventsForm.common.create')" class="h-full">
+          <div class="bg-background-50 p-4 rounded-lg border border-background-200 space-y-4">
+            <h4 class="text-sm font-medium text-text-700 mb-1 flex items-center">
+              <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
+              {{ t("pages.dash.eventsForm.form.sections.basicInfo") }}
+            </h4>
+
+            <TextField
+              v-model="formData.title"
+              :label="t('pages.dash.eventsForm.form.labels.title')"
+              icon="calendar-days"
+              :error="!formSubmitted ? errors.title : null"
+              :valid="(!errors.title || formSubmitted) && !!formData.title && formData.title.length >= 3"
+              :placeholder="t('pages.dash.eventsForm.form.placeholders.title')"
+              required />
+
+            <SelectMenu
+              v-model="selectedCategory"
+              :label="t('pages.dash.eventsForm.form.labels.category')"
+              icon="bookmark"
+              :options="categoryOptions"
+              :placeholder="t('pages.dash.eventsForm.form.placeholders.selectCategory')"
+              :error="!formSubmitted && errors.category ? errors.category : false" />
+
+            <div>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.eventsForm.form.labels.duration") }}</span>
+              <div class="grid grid-cols-2 gap-4">
+                <span class="relative flex items-center">
+                  <Clock class="absolute left-3 w-4 h-4 text-text-500 pointer-events-none" />
+                  <input
+                    v-model.number="formData.hours"
+                    type="number"
+                    min="0"
+                    max="24"
+                    step="1"
+                    class="w-full h-10 pl-9 pr-16 rounded-md border-[1.5px] border-background-300 bg-background-50 text-text-900 text-sm no-spinner focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150"
+                    :placeholder="t('pages.dash.eventsForm.form.placeholders.hours')"
+                    @input="updateDuration" />
+                  <span class="absolute right-3 text-sm text-text-600">{{ t("pages.dash.eventsForm.form.labels.hours") }}</span>
+                </span>
+                <span class="relative flex items-center">
+                  <Clock class="absolute left-3 w-4 h-4 text-text-500 pointer-events-none" />
+                  <input
+                    v-model.number="formData.minutes"
+                    type="number"
+                    min="0"
+                    max="59"
+                    step="5"
+                    class="w-full h-10 pl-9 pr-16 rounded-md border-[1.5px] bg-background-50 text-text-900 text-sm no-spinner focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150"
+                    :class="errors.duration && !formSubmitted ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'"
+                    :placeholder="t('pages.dash.eventsForm.form.placeholders.minutes')"
+                    @input="updateDuration" />
+                  <span class="absolute right-3 text-sm text-text-600">{{ t("pages.dash.eventsForm.form.labels.minutes") }}</span>
+                </span>
+              </div>
+              <p v-if="errors.duration && !formSubmitted" class="mt-1 text-xs text-accent-600">{{ errors.duration }}</p>
+            </div>
+
+            <div>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.eventsForm.form.labels.info") }}</span>
+              <span class="relative block">
+                <textarea
+                  v-model="formData.info"
+                  rows="5"
+                  maxlength="500"
+                  class="block w-full p-3 border-[1.5px] rounded-md bg-background-50 text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150"
+                  :class="errors.info && !formSubmitted ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'"
+                  :placeholder="t('pages.dash.eventsForm.form.placeholders.info')"></textarea>
+                <span class="absolute bottom-3 right-3 flex items-center gap-2">
+                  <span class="text-xs text-text-500">{{ formData.info.length }}/500</span>
+                  <CheckCircle2 v-if="(!errors.info || formSubmitted) && formData.info && formData.info.length >= 3" class="w-4 h-4 text-primary-500" />
+                  <XCircle v-else-if="(formData.info || touchedFields.info) && !formSubmitted && errors.info" class="w-4 h-4 text-accent-500" />
+                </span>
+              </span>
+            </div>
+
+            <div>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.eventsForm.form.labels.cover") }}</span>
+              <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileUpload" />
+              <div @dragover.prevent="isDragging = true" @dragleave.prevent="isDragging = false" @drop.prevent="onDrop">
                 <div
-                  v-if="formData.info"
-                  class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
-                  <FileText class="w-5 h-5 text-primary-600 mr-3 mt-0.5 shrink-0" />
-                  <div class="w-full">
-                    <p class="text-xs text-text-600">{{ t("pages.dash.eventsForm.form.labels.info") }}</p>
-                    <p class="text-text-800 mt-1 whitespace-pre-wrap wrap-break-word">
-                      {{ formData.info }}
-                    </p>
-                  </div>
-                </div>
-                <div v-else class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <FileText class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.eventsForm.form.labels.info") }}</p>
-                    <p class="text-text-600 text-sm">
-                      {{ t("pages.dash.eventsForm.form.placeholders.noInfo") }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <Clock class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.eventsForm.form.labels.duration") }}</p>
-                    <p class="text-text-800 font-medium">
-                      {{ formatDuration(formData.duration) }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="order-1 lg:order-2">
-          <div
-            class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] h-full">
-            <h3 class="text-lg font-medium text-text-900 mb-4">
-              {{ isEditMode ? t("pages.dash.eventsForm.common.edit") : t("pages.dash.eventsForm.common.create") }}
-            </h3>
-
-            <div class="space-y-6">
-              <div class="bg-background-50 p-4 rounded-lg border border-background-200">
-                <h4 class="text-sm font-medium text-text-700 mb-3 flex items-center">
-                  <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
-                  {{ t("pages.dash.eventsForm.form.sections.basicInfo") }}
-                </h4>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="title">
-                    {{ t("pages.dash.eventsForm.form.labels.title") }}
-                  </label>
-                  <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Calendar
-                        class="w-5 h-5 text-primary-600 group-hover:text-primary-600 transition-colors duration-200" />
-                    </div>
-                    <input
-                      v-model="formData.title"
-                      id="title"
-                      type="text"
-                      class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
-                      :class="{
-                        'border-accent-500 ring-1 ring-accent-300': errors.title && !formSubmitted,
-                      }"
-                      :placeholder="t('pages.dash.eventsForm.form.placeholders.title')"
-                      required />
-                    <div class="absolute inset-y-0 right-3 flex items-center">
-                      <CheckCircle2
-                        v-if="(!errors.title || formSubmitted) && formData.title && formData.title.length >= 3"
-                        class="w-5 h-5 text-primary-500 animate-fadeIn" />
-                      <XCircle
-                        v-else-if="(formData.title || touchedFields.title) && !formSubmitted"
-                        class="w-5 h-5 text-accent-500 animate-fadeIn" />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="category">
-                    {{ t("pages.dash.eventsForm.form.labels.category") }}
-                  </label>
-                  <div class="relative">
-                    <Listbox v-model="selectedCategory">
-                      <div class="relative">
-                        <ListboxButton
-                          class="relative w-full pl-10 pr-10 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 bg-background-50 text-left"
-                          :class="{
-                            'border-accent-500 ring-1 ring-accent-300': errors.category && !formSubmitted,
-                          }">
-                          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Bookmark class="w-5 h-5 text-primary-600" />
-                          </div>
-                          <span
-                            class="block truncate"
-                            :class="!selectedCategory ? 'text-text-400' : 'text-text-950 font-medium'">
-                            {{ selectedCategoryName || t("pages.dash.eventsForm.form.placeholders.selectCategory") }}
-                          </span>
-                          <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <div class="flex items-center">
-                              <XCircle
-                                v-if="errors.category && !formSubmitted"
-                                class="w-5 h-5 text-accent-500 mr-2 animate-fadeIn" />
-                              <ChevronDown class="w-5 h-5 text-text-400" />
-                            </div>
-                          </span>
-                        </ListboxButton>
-                        <transition
-                          enter-active-class="transition ease-out duration-100"
-                          enter-from-class="transform opacity-0 scale-95"
-                          enter-to-class="transform opacity-100 scale-100"
-                          leave-active-class="transition ease-in duration-75"
-                          leave-from-class="transform opacity-100 scale-100"
-                          leave-to-class="transform opacity-0 scale-95">
-                          <ListboxOptions
-                            class="absolute z-10 mt-1 w-full bg-background-50 border border-background-300 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none sm:text-sm origin-top-right">
-                            <ListboxOption
-                              v-for="category in categories"
-                              :key="category._id || category.id"
-                              :value="category._id || category.id"
-                              v-slot="{ active, selected }">
-                              <li
-                                :class="[
-                                  selected
-                                    ? 'bg-primary-100 border-l-primary-500 text-primary-800'
-                                    : active
-                                      ? 'bg-primary-50 border-l-primary-300 text-primary-600'
-                                      : 'text-text-800',
-                                  'cursor-default select-none relative py-2 pl-10 pr-4 transition-all duration-150 border-l-[3px]',
-                                  selected ? 'border-l-[3px]' : active ? 'border-l-[3px]' : 'border-transparent',
-                                ]">
-                                <div class="flex items-center">
-                                  <Bookmark class="mr-2 h-5 w-5 text-primary-600" />
-                                  <span :class="[selected ? 'font-medium' : 'font-normal']">
-                                    {{ category.name }}
-                                  </span>
-                                </div>
-                                <span
-                                  v-if="selected"
-                                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-600">
-                                  <Check class="w-4 h-4" />
-                                </span>
-                              </li>
-                            </ListboxOption>
-                          </ListboxOptions>
-                        </transition>
-                      </div>
-                    </Listbox>
-                  </div>
-                </div>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="duration">
-                    {{ t("pages.dash.eventsForm.form.labels.duration") }}
-                  </label>
-                  <div class="grid grid-cols-2 gap-4">
-                    <div class="relative group">
-                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Clock
-                          class="w-5 h-5 text-primary-600 group-hover:text-primary-600 transition-colors duration-200" />
-                      </div>
-                      <input
-                        v-model.number="formData.hours"
-                        id="hours"
-                        type="number"
-                        min="0"
-                        max="24"
-                        step="1"
-                        class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium no-spinner"
-                        :placeholder="t('pages.dash.eventsForm.form.placeholders.hours')"
-                        @input="updateDuration" />
-                      <div class="absolute inset-y-0 right-3 flex items-center">
-                        <span class="text-sm text-text-600">{{ t("pages.dash.eventsForm.form.labels.hours") }}</span>
-                      </div>
-                    </div>
-
-                    <div class="relative group">
-                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Clock
-                          class="w-5 h-5 text-primary-600 group-hover:text-primary-600 transition-colors duration-200" />
-                      </div>
-                      <input
-                        v-model.number="formData.minutes"
-                        id="minutes"
-                        type="number"
-                        min="0"
-                        max="59"
-                        step="5"
-                        class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium no-spinner"
-                        :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.duration && !formSubmitted }"
-                        :placeholder="t('pages.dash.eventsForm.form.placeholders.minutes')"
-                        @input="updateDuration" />
-                      <div class="absolute inset-y-0 right-3 flex items-center">
-                        <span class="text-sm text-text-600">{{ t("pages.dash.eventsForm.form.labels.minutes") }}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <p v-if="errors.duration && !formSubmitted" class="mt-1 text-sm text-accent-500">
-                    {{ errors.duration }}
+                  class="border-2 border-dashed rounded-lg p-5 text-center transition-all cursor-pointer w-full"
+                  :class="[
+                    isDragging ? 'border-primary-500 bg-primary-50' : 'border-background-300 hover:border-primary-300',
+                    showErrorMessage ? 'border-accent-500 bg-accent-50' : '',
+                  ]"
+                  @click="fileInput.click()">
+                  <UploadCloud class="w-8 h-8 mx-auto text-primary-600 mb-1.5" />
+                  <p :class="['font-medium mb-0.5', showErrorMessage ? 'text-accent-700' : 'text-text-700']">
+                    {{
+                      showErrorMessage
+                        ? displayErrorMessage
+                        : isDragging
+                          ? t("pages.dash.eventsForm.form.placeholders.dropImageHere")
+                          : t("pages.dash.eventsForm.form.placeholders.uploadCover")
+                    }}
                   </p>
-                </div>
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="info">
-                    {{ t("pages.dash.eventsForm.form.labels.info") }}
-                  </label>
-                  <div class="relative group">
-                    <textarea
-                      v-model="formData.info"
-                      id="info"
-                      rows="5"
-                      maxlength="500"
-                      class="block w-full p-3 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950"
-                      :class="{ 'border-accent-500 ring-1 ring-accent-300': errors.info && !formSubmitted }"
-                      :placeholder="t('pages.dash.eventsForm.form.placeholders.info')"></textarea>
-                    <div class="absolute bottom-3 right-3 flex items-center">
-                      <span class="text-xs text-text-500 mr-2">{{ formData.info.length }}/500</span>
-                      <CheckCircle2
-                        v-if="(!errors.info || formSubmitted) && formData.info && formData.info.length >= 3"
-                        class="w-5 h-5 text-primary-500 animate-fadeIn" />
-                      <XCircle
-                        v-else-if="(formData.info || touchedFields.info) && !formSubmitted && errors.info"
-                        class="w-5 h-5 text-accent-500 animate-fadeIn" />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="cover">
-                    {{ t("pages.dash.eventsForm.form.labels.cover") }}
-                  </label>
-                  <div class="relative group">
-                    <input
-                      ref="fileInput"
-                      type="file"
-                      id="cover"
-                      accept="image/*"
-                      class="hidden"
-                      @change="handleFileUpload" />
-
-                    <div
-                      class="w-full"
-                      @dragover.prevent="isDragging = true"
-                      @dragleave.prevent="isDragging = false"
-                      @drop.prevent="onDrop">
-                      <div
-                        :class="[
-                          'border-2 border-dashed rounded-lg p-5 text-center transition-all cursor-pointer w-full',
-                          isDragging
-                            ? 'border-primary-500 bg-primary-50'
-                            : 'border-background-300 hover:border-primary-300',
-                          showErrorMessage ? 'border-accent-500 bg-accent-50' : '',
-                        ]"
-                        @click="$refs.fileInput.click()">
-                        <UploadCloud class="w-8 h-8 mx-auto text-primary-600 mb-1.5" />
-                        <p :class="['font-medium mb-0.5', showErrorMessage ? 'text-accent-700' : 'text-text-700']">
-                          {{
-                            showErrorMessage
-                              ? displayErrorMessage
-                              : isDragging
-                                ? t("pages.dash.eventsForm.form.placeholders.dropImageHere")
-                                : t("pages.dash.eventsForm.form.placeholders.uploadCover")
-                          }}
-                        </p>
-                        <p class="text-text-500 text-xs" v-if="!showErrorMessage">
-                          {{ t("pages.dash.eventsForm.form.placeholders.coverFormat") }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="flex justify-end items-center mt-6 gap-2">
-              <button
-                type="button"
-                class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-background-100 text-text-700 border border-background-300 hover:bg-background-200 transition-colors duration-150 cursor-pointer"
-                @click="$router.push({ name: 'dashEvents' })">
-                <X class="w-4 h-4 mr-2" />
-                {{ t("pages.dash.eventsForm.common.cancel") }}
-              </button>
-              <button
-                type="submit"
-                class="h-10 px-5 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center transition-colors duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                :class="{
-                  'bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200':
-                    buttonState === 'default',
-                  'bg-background-200 text-text-500': buttonState === 'processing',
-                  'bg-secondary-100 text-secondary-800 border border-secondary-200': buttonState === 'success',
-                  'bg-accent-100 text-accent-800 border border-accent-200': buttonState === 'error',
-                }"
-                :disabled="isSubmitting || !isFormValid">
-                <div v-if="buttonState === 'processing'" class="flex items-center">
-                  <Loader2 class="w-4 h-4 mr-2 animate-spin" />
-                  {{
-                    isEditMode
-                      ? t("pages.dash.eventsForm.form.actions.updating")
-                      : t("pages.dash.eventsForm.form.actions.submitting")
-                  }}
-                </div>
-                <div v-else-if="buttonState === 'success'" class="flex items-center">
-                  <CheckCircle2 class="w-4 h-4 mr-2 animate-fadeIn" />
-                  {{ t("pages.dash.eventsForm.common.status.success") }}
-                </div>
-                <div v-else-if="buttonState === 'error'" class="flex items-center">
-                  <XCircle class="w-4 h-4 mr-2 animate-fadeIn" />
-                  {{ t("pages.dash.eventsForm.common.status.error") }}
-                </div>
-                <div v-else class="flex items-center">
-                  <Save class="w-4 h-4 mr-2" />
-                  {{ isEditMode ? t("pages.dash.eventsForm.common.update") : t("pages.dash.eventsForm.common.create") }}
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-    <Teleport to="body">
-      <Transition
-        enter-active-class="transition-opacity duration-300 ease-out"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition-opacity duration-300 ease-in"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0">
-        <div v-if="showImageModal && (imagePreview || formData.coverUrl)" class="fixed inset-0 z-50">
-          <div
-            class="fixed inset-0 bg-background-950/85 dark:bg-background-50/85 transition-opacity duration-300"></div>
-
-          <div class="fixed inset-0 overflow-y-auto">
-            <div class="flex min-h-full items-center justify-center p-4 text-center">
-              <div class="relative w-full max-w-3xl mx-auto">
-                <div class="relative bg-background-50 dark:bg-background-100 rounded-lg shadow-xl p-2">
-                  <div
-                    class="flex justify-between items-center p-4 border-b border-background-200 dark:border-background-300">
-                    <h3 class="text-lg font-semibold text-text-900 dark:text-text-800">
-                      {{ t("pages.dash.eventsForm.form.labels.cover") }}
-                    </h3>
-                    <button
-                      @click="showImageModal = false"
-                      class="rounded-md p-2 text-text-700 dark:text-text-700 hover:bg-background-100 dark:hover:bg-background-200 hover:text-text-900 dark:hover:text-text-900 transition-colors">
-                      <X class="w-5 h-5" />
-                    </button>
-                  </div>
-
-                  <div class="p-4">
-                    <img
-                      :src="imagePreview || formData.coverUrl"
-                      :alt="t('pages.other.commons.altText.eventCoverFullscreen')"
-                      class="max-h-[70vh] mx-auto object-contain rounded-lg" />
-                  </div>
-
-                  <div class="bg-background-100 dark:bg-background-200 px-6 py-4 flex justify-end gap-2 rounded-b-lg">
-                    <button
-                      @click="showImageModal = false"
-                      class="inline-flex justify-center rounded-md bg-background-50 dark:bg-background-100 px-3 py-2 text-sm font-semibold text-text-800 dark:text-text-700 shadow-sm ring-1 ring-inset ring-background-300 dark:ring-background-400 hover:bg-background-100 dark:hover:bg-background-200 transition-colors">
-                      {{ t("pages.dash.eventsForm.common.close") }}
-                    </button>
-                    <button
-                      @click="
-                        removeImage();
-                        showImageModal = false;
-                      "
-                      class="inline-flex justify-center rounded-md bg-accent-600 dark:bg-accent-500 text-text-50 hover:bg-accent-700 dark:hover:bg-accent-600 px-3 py-2 text-sm font-semibold shadow-sm transition-colors">
-                      {{ t("pages.dash.eventsForm.common.delete") }}
-                    </button>
-                  </div>
+                  <p v-if="!showErrorMessage" class="text-text-500 text-xs">{{ t("pages.dash.eventsForm.form.placeholders.coverFormat") }}</p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </Transition>
-    </Teleport>
+
+          <div class="flex justify-end items-center mt-6 gap-2">
+            <DsButton type="button" variant="neutral" icon="x" @click="$router.push({ name: 'dashEvents' })">
+              {{ t("pages.dash.eventsForm.common.cancel") }}
+            </DsButton>
+            <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid">
+              <template v-if="buttonState === 'processing'">
+                {{ isEditMode ? t("pages.dash.eventsForm.form.actions.updating") : t("pages.dash.eventsForm.form.actions.submitting") }}
+              </template>
+              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.eventsForm.common.status.success") }}</template>
+              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.eventsForm.common.status.error") }}</template>
+              <template v-else>{{ isEditMode ? t("pages.dash.eventsForm.common.update") : t("pages.dash.eventsForm.common.create") }}</template>
+            </DsButton>
+          </div>
+        </DsCard>
+      </div>
+    </form>
+
+    <DsModal
+      :open="showImageModal && !!(imagePreview || formData.coverUrl)"
+      :title="t('pages.dash.eventsForm.form.labels.cover')"
+      width="lg"
+      :actions="[
+        { label: t('pages.dash.eventsForm.common.close'), type: 'default', onClick: () => (showImageModal = false) },
+        {
+          label: t('pages.dash.eventsForm.common.delete'),
+          type: 'danger',
+          onClick: () => {
+            removeImage();
+            showImageModal = false;
+          },
+        },
+      ]"
+      @close="showImageModal = false">
+      <img :src="imagePreview || formData.coverUrl" :alt="t('pages.other.commons.altText.eventCoverFullscreen')" class="max-h-[70vh] mx-auto object-contain rounded-lg" />
+    </DsModal>
   </div>
 </template>
 
@@ -462,29 +187,17 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import {
-  Calendar,
-  MapPin,
-  Loader2,
-  ClipboardList,
-  CheckCircle2,
-  X,
-  Save,
-  XCircle,
-  FileText,
-  Clock,
-  UploadCloud,
-  ImageIcon,
-  ChevronDown,
-  Check,
-  Search,
-  Bookmark,
-  User,
-} from "lucide-vue-next";
-import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
+import { Search, ImageIcon, Clock, CheckCircle2, XCircle, UploadCloud, ClipboardList } from "lucide-vue-next";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
+import PageHeader from "@/components/data/PageHeader.vue";
+import DsCard from "@/components/core/DsCard.vue";
+import InfoRow from "@/components/data/InfoRow.vue";
+import TextField from "@/components/forms/TextField.vue";
+import SelectMenu from "@/components/forms/SelectMenu.vue";
+import DsButton from "@/components/core/DsButton.vue";
+import DsModal from "@/components/feedback/DsModal.vue";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -500,6 +213,10 @@ const loadError = ref(null);
 const categories = ref([]);
 const selectedCategory = ref("");
 const selectedCategoryInfo = ref(null);
+
+const categoryOptions = computed(() =>
+  categories.value.map((category) => ({ value: category._id || category.id, label: category.name, icon: "bookmark" })),
+);
 
 const imagePreview = ref(null);
 const imageFile = ref(null);
@@ -892,6 +609,13 @@ const loadCreatorData = async (creatorId) => {
     isLoadingCreator.value = false;
   }
 };
+
+const createdByLabel = computed(() => {
+  if (isLoadingCreator.value) return t("pages.dash.eventsForm.profile.loading");
+  if (creatorError.value) return t("pages.dash.eventsForm.profile.errorLoading");
+  if (creatorData.value) return creatorData.value.name;
+  return initialEventData.value?.createdBy ?? "";
+});
 </script>
 <style scoped>
 .no-spinner::-webkit-outer-spin-button,

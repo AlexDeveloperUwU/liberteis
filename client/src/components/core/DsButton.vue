@@ -11,6 +11,8 @@ const props = defineProps({
   size: { type: String, default: "md", validator: (v) => ["md", "sm"].includes(v) },
   icon: { type: String, default: null },
   iconRight: { type: String, default: null },
+  /** Submit-button lifecycle: overrides variant/icon/disabled to show progress, success, or error. @default "default" */
+  state: { type: String, default: "default", validator: (v) => ["default", "processing", "success", "error"].includes(v) },
   fullWidth: { type: Boolean, default: false },
   type: { type: String, default: "button" },
   disabled: { type: Boolean, default: false },
@@ -26,26 +28,29 @@ const variantClasses = {
   successSoft: "bg-secondary-100 hover:bg-secondary-200 text-secondary-800 border-secondary-200",
 };
 
-const iconComponent = (name) => {
-  if (!name) return null;
-  return resolveIcon(name);
-};
+const stateVariant = { processing: "neutral", success: "successSoft", error: "dangerSoft" };
+const stateIcon = { processing: "loader-2", success: "check-circle-2", error: "x-circle" };
 
-const IconLeft = computed(() => iconComponent(props.icon));
-const IconRight = computed(() => iconComponent(props.iconRight));
+const effectiveVariant = computed(() => stateVariant[props.state] ?? props.variant);
+const effectiveIcon = computed(() => stateIcon[props.state] ?? props.icon);
+const isDisabled = computed(() => props.disabled || props.state === "processing");
+
+const IconLeft = computed(() => resolveIcon(effectiveIcon.value));
+const IconRight = computed(() => resolveIcon(props.iconRight));
 </script>
 
 <template>
   <button
     :type="type"
-    :disabled="disabled"
-    class="inline-flex items-center justify-center gap-2 rounded-lg border-[1.5px] font-medium transition-all duration-150 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
+    :disabled="isDisabled"
+    class="inline-flex items-center justify-center gap-2 rounded-lg border-[1.5px] font-medium transition-all duration-150 active:scale-[0.97] disabled:cursor-not-allowed disabled:active:scale-100"
     :class="[
-      variantClasses[variant],
+      variantClasses[effectiveVariant],
       size === 'md' ? 'h-10 px-4 text-sm' : 'h-8 px-3 text-sm',
       fullWidth ? 'w-full' : '',
+      state === 'default' && isDisabled ? 'opacity-60' : '',
     ]">
-    <component :is="IconLeft" v-if="IconLeft" class="w-4 h-4" />
+    <component :is="IconLeft" v-if="IconLeft" class="w-4 h-4" :class="state === 'processing' ? 'animate-spin' : ''" />
     <slot />
     <component :is="IconRight" v-if="IconRight" class="w-4 h-4" />
   </button>

@@ -1,241 +1,128 @@
 <template>
   <div class="h-full w-full p-6">
-    <div class="flex items-center mb-2">
-      <h1 class="text-3xl font-bold text-text-950 k2d">
-        {{ pageTitle }}
-      </h1>
-    </div>
-    <p class="text-text-800 mb-6">{{ pageDescription }}</p>
+    <PageHeader :title="pageTitle" :description="pageDescription" />
 
-    <div class="relative">
-      <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="order-2 lg:order-1">
-          <div
-            class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] h-full">
-            <h3 class="text-lg font-medium text-text-900 mb-4">
-              {{ t("pages.dash.categoriesForm.profile.preview") }}
-            </h3>
-
-            <div class="bg-background-50 p-5 rounded-lg border border-background-200">
-              <div class="flex items-center mb-5">
-                <div class="relative mr-5">
+    <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="order-2 lg:order-1">
+        <DsCard :title="t('pages.dash.categoriesForm.profile.preview')" class="h-full">
+          <div class="bg-background-50 p-5 rounded-lg border border-background-200">
+            <div class="flex items-center mb-5">
+              <div class="relative mr-5">
+                <div
+                  class="w-20 h-20 rounded-full bg-background-200 flex items-center justify-center overflow-hidden border-2 border-background-300 shadow-md">
+                  <Bookmark v-if="!formData.name" class="w-9 h-9 text-primary-600" />
                   <div
-                    class="w-20 h-20 rounded-full bg-background-200 flex items-center justify-center overflow-hidden border-2 border-background-300 shadow-md">
-                    <Bookmark class="w-9 h-9 text-primary-600" v-if="!formData.name" />
-                    <div
-                      v-else
-                      class="w-full h-full flex items-center justify-center text-primary-700 font-bold k2d bg-primary-100"
-                      style="font-size: 2rem">
-                      {{ getInitials(formData.name) }}
-                    </div>
+                    v-else
+                    class="w-full h-full flex items-center justify-center text-primary-700 font-bold font-display bg-primary-100"
+                    style="font-size: 2rem">
+                    {{ getInitials(formData.name) }}
                   </div>
-                </div>
-
-                <div>
-                  <h3 class="text-xl font-bold text-text-900">
-                    {{ formData.name || t("pages.dash.categoriesForm.form.placeholders.name") }}
-                  </h3>
                 </div>
               </div>
 
-              <div class="space-y-4">
-                <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                  <LayoutGrid class="w-5 h-5 text-primary-600 mr-3" />
-                  <div>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.categoriesForm.form.labels.spaces") }}</p>
-                    <p v-if="formData.spaces?.length > 0" class="text-text-800 mt-1">
-                      {{ selectedSpacesInfo.map((space) => space.name).join(", ") }}
-                    </p>
-                    <p v-else class="text-text-600">
-                      {{ t("pages.dash.categoriesForm.form.placeholders.noSpaces") }}
-                    </p>
-                  </div>
-                </div>
-                <template v-if="isEditMode && initialCategoryData">
-                  <div class="flex items-center p-3 bg-background-100 rounded-lg border border-background-200">
-                    <Mail class="w-5 h-5 text-primary-600 mr-3" />
-                    <div>
-                      <p class="text-xs text-text-600">{{ t("pages.dash.categoriesForm.profile.createdBy") }}</p>
-                      <p class="text-text-800 font-medium">
-                        <span v-if="isLoadingCreator">{{ t("pages.dash.categoriesForm.profile.loading") }}</span>
-                        <span v-else-if="creatorError">{{ t("pages.dash.categoriesForm.profile.errorLoading") }}</span>
-                        <span v-else-if="creatorData">{{ creatorData.name }}</span>
-                        <span v-else>{{ initialCategoryData.createdBy }}</span>
-                      </p>
-                    </div>
-                  </div>
-                </template>
+              <div>
+                <h3 class="text-xl font-bold text-text-900">
+                  {{ formData.name || t("pages.dash.categoriesForm.form.placeholders.name") }}
+                </h3>
               </div>
+            </div>
+
+            <div class="space-y-4">
+              <InfoRow
+                icon="map-pin"
+                align="start"
+                :label="t('pages.dash.categoriesForm.form.labels.spaces')"
+                :value="formData.spaces?.length > 0 ? selectedSpacesInfo.map((space) => space.name).join(', ') : t('pages.dash.categoriesForm.form.placeholders.noSpaces')" />
+              <InfoRow
+                v-if="isEditMode && initialCategoryData"
+                icon="mail"
+                :label="t('pages.dash.categoriesForm.profile.createdBy')"
+                :value="createdByLabel" />
             </div>
           </div>
-        </div>
+        </DsCard>
+      </div>
 
-        <div class="order-1 lg:order-2">
-          <div
-            class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] h-full">
-            <h3 class="text-lg font-medium text-text-900 mb-4">
-              {{
-                isEditMode ? t("pages.dash.categoriesForm.common.edit") : t("pages.dash.categoriesForm.common.create")
-              }}
-            </h3>
+      <div class="order-1 lg:order-2">
+        <DsCard :title="isEditMode ? t('pages.dash.categoriesForm.common.edit') : t('pages.dash.categoriesForm.common.create')" class="h-full">
+          <div class="bg-background-50 p-4 rounded-lg border border-background-200 space-y-4">
+            <h4 class="text-sm font-medium text-text-700 mb-1 flex items-center">
+              <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
+              {{ t("pages.dash.categoriesForm.form.sections.basicInfo") }}
+            </h4>
 
-            <div class="space-y-6">
-              <div class="bg-background-50 p-4 rounded-lg border border-background-200">
-                <h4 class="text-sm font-medium text-text-700 mb-3 flex items-center">
-                  <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
-                  {{ t("pages.dash.categoriesForm.form.sections.basicInfo") }}
-                </h4>
+            <TextField
+              v-model="formData.name"
+              :label="t('pages.dash.categoriesForm.form.labels.name')"
+              icon="bookmark"
+              :error="!formSubmitted ? errors.name : null"
+              :valid="(!errors.name || formSubmitted) && !!formData.name && formData.name.length >= 3"
+              :placeholder="t('pages.dash.categoriesForm.form.placeholders.name')"
+              required />
 
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="name">
-                    {{ t("pages.dash.categoriesForm.form.labels.name") }}
-                  </label>
-                  <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Bookmark
-                        class="w-5 h-5 text-primary-600 group-hover:text-primary-600 transition-colors duration-200" />
-                    </div>
-                    <input
-                      v-model="formData.name"
-                      id="name"
-                      type="text"
-                      class="block w-full pl-10 pr-3 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 text-text-950 font-medium"
-                      :class="{
-                        'border-accent-500 ring-1 ring-accent-300': errors.name && !formSubmitted,
-                      }"
-                      :placeholder="t('pages.dash.categoriesForm.form.placeholders.name')"
-                      required />
-                    <div class="absolute inset-y-0 right-3 flex items-center">
-                      <CheckCircle2
-                        v-if="(!errors.name || formSubmitted) && formData.name && formData.name.length >= 3"
-                        class="w-5 h-5 text-primary-500 animate-fadeIn" />
-                      <XCircle
-                        v-else-if="(formData.name || touchedFields.name) && !formSubmitted"
-                        class="w-5 h-5 text-accent-500 animate-fadeIn" />
-                    </div>
-                  </div>
+            <div>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.categoriesForm.form.labels.spaces") }}</span>
+              <Listbox v-model="selectedSpaces" multiple @update:modelValue="updateSelectedSpacesInfo">
+                <div class="relative">
+                  <ListboxButton
+                    class="relative w-full pl-10 pr-10 h-10 border-[1.5px] border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150 bg-background-50 text-left">
+                    <MapPin class="absolute inset-y-0 left-3 w-4 h-4 my-auto text-text-500" />
+                    <span class="block truncate text-sm" :class="!selectedSpaces.length ? 'text-text-500' : 'text-text-900'">
+                      {{
+                        selectedSpaces.length > 0
+                          ? selectedSpacesInfo.map((space) => space.name).join(", ")
+                          : t("pages.dash.categoriesForm.form.placeholders.spaces")
+                      }}
+                    </span>
+                    <ChevronDown class="absolute inset-y-0 right-3 w-4 h-4 my-auto text-text-500" />
+                  </ListboxButton>
+                  <transition
+                    enter-active-class="transition ease-out duration-100"
+                    enter-from-class="transform opacity-0 scale-95"
+                    enter-to-class="transform opacity-100 scale-100"
+                    leave-active-class="transition ease-in duration-75"
+                    leave-from-class="transform opacity-100 scale-100"
+                    leave-to-class="transform opacity-0 scale-95">
+                    <ListboxOptions
+                      class="absolute z-10 mt-1 w-full bg-background-100 border-[1.5px] border-background-300 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none py-1">
+                      <ListboxOption v-for="space in availableSpaces" :key="space.id" :value="space.id" v-slot="{ active, selected }">
+                        <li
+                          class="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer border-l-[3px] border-transparent"
+                          :class="
+                            selected
+                              ? 'bg-primary-100 border-l-primary-500 font-medium text-primary-700'
+                              : active
+                                ? 'border-l-primary-300 text-primary-600 bg-primary-50'
+                                : 'text-text-800'
+                          ">
+                          <MapPin class="w-4 h-4" />
+                          <span class="flex-1">{{ space.name }}</span>
+                          <Check v-if="selected" class="w-4 h-4" />
+                        </li>
+                      </ListboxOption>
+                    </ListboxOptions>
+                  </transition>
                 </div>
-
-                <div class="mb-4">
-                  <label class="block text-text-700 text-sm font-medium mb-2" for="spaces">
-                    {{ t("pages.dash.categoriesForm.form.labels.spaces") }}
-                  </label>
-                  <div class="relative">
-                    <Listbox v-model="selectedSpaces" multiple @update:modelValue="updateSelectedSpacesInfo">
-                      <div class="relative">
-                        <ListboxButton
-                          class="relative w-full pl-10 pr-10 py-2 border border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent hover:border-primary-300 transition-all duration-200 bg-background-50 text-left">
-                          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <LayoutGrid class="w-5 h-5 text-primary-600" />
-                          </div>
-                          <span
-                            class="block truncate"
-                            :class="!selectedSpaces.length ? 'text-text-400' : 'text-text-950 font-medium'">
-                            {{
-                              selectedSpaces.length > 0
-                                ? selectedSpacesInfo.map((space) => space.name).join(", ")
-                                : t("pages.dash.categoriesForm.form.placeholders.spaces")
-                            }}
-                          </span>
-                          <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <ChevronDown class="w-5 h-5 text-text-400" />
-                          </span>
-                        </ListboxButton>
-                        <transition
-                          enter-active-class="transition ease-out duration-100"
-                          enter-from-class="transform opacity-0 scale-95"
-                          enter-to-class="transform opacity-100 scale-100"
-                          leave-active-class="transition ease-in duration-75"
-                          leave-from-class="transform opacity-100 scale-100"
-                          leave-to-class="transform opacity-0 scale-95">
-                          <ListboxOptions
-                            class="absolute z-10 mt-1 w-full bg-background-50 border border-background-300 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none sm:text-sm origin-top-right">
-                            <ListboxOption
-                              v-for="space in availableSpaces"
-                              :key="space.id"
-                              :value="space.id"
-                              v-slot="{ active, selected }">
-                              <li
-                                :class="[
-                                  selected
-                                    ? 'bg-primary-100 border-l-primary-500 text-primary-800'
-                                    : active
-                                      ? 'bg-primary-50 border-l-primary-300 text-primary-600'
-                                      : 'text-text-800',
-                                  'cursor-default select-none relative py-2 pl-10 pr-4 transition-all duration-150 border-l-[3px]',
-                                  selected ? 'border-l-[3px]' : active ? 'border-l-[3px]' : 'border-transparent',
-                                ]">
-                                <div class="flex items-center">
-                                  <LayoutGrid class="mr-2 h-5 w-5 text-primary-600" />
-                                  <span :class="[selected ? 'font-medium' : 'font-normal']">
-                                    {{ space.name }}
-                                  </span>
-                                </div>
-                                <span
-                                  v-if="selected"
-                                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-600">
-                                  <Check class="w-4 h-4" />
-                                </span>
-                              </li>
-                            </ListboxOption>
-                          </ListboxOptions>
-                        </transition>
-                      </div>
-                    </Listbox>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="flex justify-end items-center mt-6 gap-2">
-              <button
-                type="button"
-                class="h-10 px-4 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center bg-background-100 text-text-700 border border-background-300 hover:bg-background-200 transition-colors duration-150 cursor-pointer"
-                @click="$router.push({ name: 'dashCategories' })">
-                <X class="w-4 h-4 mr-2" />
-                {{ t("pages.dash.categoriesForm.common.cancel") }}
-              </button>
-              <button
-                type="submit"
-                class="h-10 px-5 rounded-lg text-sm font-medium shadow-sm flex items-center justify-center transition-colors duration-150 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                :class="{
-                  'bg-primary-100 text-primary-800 border border-primary-200 hover:bg-primary-200':
-                    buttonState === 'default',
-                  'bg-background-200 text-text-500': buttonState === 'processing',
-                  'bg-secondary-100 text-secondary-800 border border-secondary-200': buttonState === 'success',
-                  'bg-accent-100 text-accent-800 border border-accent-200': buttonState === 'error',
-                }"
-                :disabled="isSubmitting || !isFormValid">
-                <div v-if="buttonState === 'processing'" class="flex items-center">
-                  <Loader2 class="w-4 h-4 mr-2 animate-spin" />
-                  {{
-                    isEditMode
-                      ? t("pages.dash.categoriesForm.form.actions.updating")
-                      : t("pages.dash.categoriesForm.form.actions.submitting")
-                  }}
-                </div>
-                <div v-else-if="buttonState === 'success'" class="flex items-center">
-                  <CheckCircle2 class="w-4 h-4 mr-2 animate-fadeIn" />
-                  {{ t("pages.dash.categoriesForm.common.status.success") }}
-                </div>
-                <div v-else-if="buttonState === 'error'" class="flex items-center">
-                  <XCircle class="w-4 h-4 mr-2 animate-fadeIn" />
-                  {{ t("pages.dash.categoriesForm.common.status.error") }}
-                </div>
-                <div v-else class="flex items-center">
-                  <Save class="w-4 h-4 mr-2" />
-                  {{
-                    isEditMode
-                      ? t("pages.dash.categoriesForm.common.update")
-                      : t("pages.dash.categoriesForm.common.create")
-                  }}
-                </div>
-              </button>
+              </Listbox>
             </div>
           </div>
-        </div>
-      </form>
-    </div>
+
+          <div class="flex justify-end items-center mt-6 gap-2">
+            <DsButton type="button" variant="neutral" icon="x" @click="$router.push({ name: 'dashCategories' })">
+              {{ t("pages.dash.categoriesForm.common.cancel") }}
+            </DsButton>
+            <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid">
+              <template v-if="buttonState === 'processing'">
+                {{ isEditMode ? t("pages.dash.categoriesForm.form.actions.updating") : t("pages.dash.categoriesForm.form.actions.submitting") }}
+              </template>
+              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.categoriesForm.common.status.success") }}</template>
+              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.categoriesForm.common.status.error") }}</template>
+              <template v-else>{{ isEditMode ? t("pages.dash.categoriesForm.common.update") : t("pages.dash.categoriesForm.common.create") }}</template>
+            </DsButton>
+          </div>
+        </DsCard>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -244,22 +131,15 @@ import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue";
-import {
-  Bookmark,
-  Mail,
-  Loader2,
-  ClipboardList,
-  CheckCircle2,
-  X,
-  Save,
-  XCircle,
-  LayoutGrid,
-  Check,
-  ChevronDown,
-} from "lucide-vue-next";
+import { Bookmark, ClipboardList, MapPin, Check, ChevronDown } from "lucide-vue-next";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
+import PageHeader from "@/components/data/PageHeader.vue";
+import DsCard from "@/components/core/DsCard.vue";
+import InfoRow from "@/components/data/InfoRow.vue";
+import TextField from "@/components/forms/TextField.vue";
+import DsButton from "@/components/core/DsButton.vue";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -491,18 +371,11 @@ const loadCreatorData = async (creatorId) => {
     isLoadingCreator.value = false;
   }
 };
-</script>
 
-<style scoped>
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-</style>
+const createdByLabel = computed(() => {
+  if (isLoadingCreator.value) return t("pages.dash.categoriesForm.profile.loading");
+  if (creatorError.value) return t("pages.dash.categoriesForm.profile.errorLoading");
+  if (creatorData.value) return creatorData.value.name;
+  return initialCategoryData.value?.createdBy ?? "";
+});
+</script>
