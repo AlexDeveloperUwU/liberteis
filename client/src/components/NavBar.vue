@@ -55,8 +55,8 @@ import { computed, onMounted, onBeforeUnmount } from "vue";
 import { useMainStore } from "../stores/mainStore";
 import { useAuthStore } from "../stores/authStore";
 import { useConfigStore } from "@/stores/configStore";
-import { i18n } from "../i18n";
 import { useRoute, useRouter } from "vue-router";
+import { ensureLocaleLoaded } from "@/i18n";
 import DropdownMenu from "./navigation/DropdownMenu.vue";
 
 const props = defineProps({
@@ -85,9 +85,10 @@ const toggleSidebar = () => {
   mainStore.setSidebarCollapsed(!props.isCollapsed);
 };
 
-const setLocale = (lang) => {
+const setLocale = async (lang) => {
+  await ensureLocaleLoaded(lang);
+  locale.value = lang;
   mainStore.setLocale(lang);
-  i18n.global.locale.value = lang;
 };
 
 const handleLogout = () => authStore.logout();

@@ -182,7 +182,7 @@
 </template>
 
 <script setup>
-import { Calendar, Clock, CalendarX } from "lucide-vue-next";
+import { Calendar, Calendar1, Clock, CalendarX } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useConfigStore } from "@/stores/configStore";
@@ -527,32 +527,31 @@ const performDeactivate = async (id, scope, modalId, title) => {
   }
 };
 
-const formatMonthYear = (date) => {
-  const monthIndex = date.getMonth();
-  const monthKeys = [
-    "january",
-    "february",
-    "march",
-    "april",
-    "may",
-    "june",
-    "july",
-    "august",
-    "september",
-    "october",
-    "november",
-    "december",
-  ];
+const monthKeys = [
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december",
+];
 
-  return `${t(`pages.other.commons.months.${monthKeys[monthIndex]}`)} ${date.getFullYear()}`;
+const formatMonthYear = (date) => {
+  return `${t(`pages.other.commons.months.${monthKeys[date.getMonth()]}`)} ${date.getFullYear()}`;
 };
 
+const weekdayKeys = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+
 const formatDate = (date) => {
-  return date.toLocaleDateString(locale.value, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
+  const weekday = t(`pages.other.commons.weekdays.${weekdayKeys[date.getDay()]}`);
+  const month = t(`pages.other.commons.months.${monthKeys[date.getMonth()]}`);
+  return `${weekday}, ${date.getDate()} de ${month.toLowerCase()}`;
 };
 
 const formatTime = (dateStr) => {
@@ -657,7 +656,7 @@ const updateNextBooking = () => {
     const nextEvent = upcomingEvents[0];
     const nextDate = new Date(nextEvent.start);
 
-    upcomingBookingDate.value = nextDate.toLocaleDateString("es", {
+    upcomingBookingDate.value = nextDate.toLocaleDateString(locale.value, {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",

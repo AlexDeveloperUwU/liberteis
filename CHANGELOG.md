@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.4] - 2026-09-08
+
+### Fixed
+
+- `HomeView`'s day-list dates and `ScreenView`'s kiosk clock used `Intl`'s `weekday`/`month: "long"`
+  formatting with the `gl` locale, which browsers silently fall back to Spanish for since Galician
+  isn't reliably in their ICU data. Both now build the date string from the app's own
+  `weekdays`/`months` translations instead of relying on `Intl`. Also replaced a hardcoded `"es"`
+  locale on `HomeView`'s "next booking" date with the reactive locale.
+- `HomeView` crashed with a "Failed to resolve component: Calendar1" warning — the icon was used in
+  the template but never imported.
+- Switching language from the navbar picker silently did nothing: it set `i18n.global.locale`
+  directly and synchronously, racing ahead of the store's message-loading logic and landing on a
+  locale with no messages loaded (falling back to `gl`). Now awaits `ensureLocaleLoaded` before
+  flipping the locale, matching the pattern already used by the profile settings language picker.
+
 ## [2.7.3] - 2026-09-08
 
 ### Fixed

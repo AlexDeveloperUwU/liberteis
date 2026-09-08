@@ -164,14 +164,31 @@ const currentEvent = computed(() => {
   return events.value[currentEventIndex.value] || events.value[0];
 });
 
+const weekdayKeys = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+const monthKeys = [
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december",
+];
+
+const formatLongDate = (date) => {
+  const weekday = t(`pages.other.commons.weekdays.${weekdayKeys[date.getDay()]}`);
+  const month = t(`pages.other.commons.months.${monthKeys[date.getMonth()]}`).toLowerCase();
+  return `${weekday}, ${date.getDate()} de ${month} de ${date.getFullYear()}`;
+};
+
 const updateClock = () => {
   const now = new Date();
-  currentDateTime.value = now.toLocaleDateString(locale.value, {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  currentDateTime.value = formatLongDate(now);
   timeOnly.value = now.toLocaleTimeString(locale.value, {
     hour: "2-digit",
     minute: "2-digit",
@@ -180,13 +197,7 @@ const updateClock = () => {
 
 const formatFullDate = (dateStr) => {
   if (!dateStr) return "";
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(locale.value, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  return formatLongDate(new Date(dateStr));
 };
 
 const formatTime = (dateStr) => {
