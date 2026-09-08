@@ -23,18 +23,14 @@
           <div>
             <TextField
               v-model="password"
-              :type="showPassword ? 'text' : 'password'"
+              type="password"
               autocomplete="new-password"
               :label="t('pages.auth.resetPassword.password')"
               icon="shield"
               :error="errors.password"
-              :valid="!errors.password && !!password && password.length >= 6"
               required />
-            <div class="flex items-center gap-2 mt-1.5">
-              <button type="button" @click="showPassword = !showPassword" class="text-xs text-primary-600 hover:text-primary-700 flex items-center gap-1">
-                <component :is="showPassword ? EyeOff : Eye" class="w-3.5 h-3.5" />
-              </button>
-              <Loader2 v-if="isValidatingPassword" class="w-3.5 h-3.5 text-primary-600 animate-spin" />
+            <div v-if="isValidatingPassword" class="flex items-center gap-2 mt-1.5">
+              <Loader2 class="w-3.5 h-3.5 text-primary-600 animate-spin" />
             </div>
 
             <div v-if="password" class="space-y-2 mt-2">
@@ -80,7 +76,7 @@
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { Loader2, Eye, EyeOff } from "lucide-vue-next";
+import { Loader2 } from "lucide-vue-next";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
 import { validatePassword } from "@/utils/validators";
@@ -114,7 +110,6 @@ onMounted(async () => {
 
 const password = ref("");
 const confirmPassword = ref("");
-const showPassword = ref(false);
 const submitting = ref(false);
 const isValidatingPassword = ref(false);
 

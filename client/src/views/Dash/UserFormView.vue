@@ -122,22 +122,14 @@
               <div v-if="isEditMode" class="mb-4">
                 <TextField
                   v-model="formData.password"
-                  :type="showPassword ? 'text' : 'password'"
+                  type="password"
                   autocomplete="new-password"
                   :label="t('pages.dash.userForm.form.labels.password')"
                   icon="shield"
                   :error="!formSubmitted ? errors.password : null"
                   :placeholder="t('pages.dash.userForm.form.placeholders.password')" />
-                <div class="flex items-center gap-2 mt-1.5">
-                  <button
-                    type="button"
-                    @click="showPassword = !showPassword"
-                    class="text-xs text-primary-600 hover:text-primary-700 flex items-center gap-1"
-                    :title="showPassword ? t('pages.dash.userForm.form.actionsAria.hidePassword') : t('pages.dash.userForm.form.actionsAria.showPassword')">
-                    <component :is="showPassword ? EyeOff : Eye" class="w-3.5 h-3.5" />
-                    {{ showPassword ? t("pages.dash.userForm.form.actionsAria.hidePassword") : t("pages.dash.userForm.form.actionsAria.showPassword") }}
-                  </button>
-                  <Loader2 v-if="isValidatingPassword" class="w-3.5 h-3.5 text-primary-600 animate-spin" />
+                <div v-if="isValidatingPassword" class="flex items-center gap-2 mt-1.5">
+                  <Loader2 class="w-3.5 h-3.5 text-primary-600 animate-spin" />
                 </div>
               </div>
             </div>
@@ -182,7 +174,7 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { User, Shield, ShieldCheck, ClipboardList, CheckCircle, Eye, EyeOff, Loader2, Info as InfoIcon } from "lucide-vue-next";
+import { User, Shield, ShieldCheck, ClipboardList, CheckCircle, Loader2, Info as InfoIcon } from "lucide-vue-next";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
@@ -207,7 +199,6 @@ const initialUserData = ref(null);
 const initialEmail = ref("");
 const isLoading = ref(isEditMode.value);
 const loadError = ref(null);
-const showPassword = ref(false);
 
 const isAdminAccount = computed(() => {
   if (initialUserData.value) {

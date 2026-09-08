@@ -5,6 +5,43 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.2] - 2026-09-08
+
+### Fixed
+
+- `TextField`'s built-in password reveal toggle (added in the previous release) was reimplemented
+  as an easy-to-miss external button below the field in 4 forms instead of being wired into the
+  input; consolidated back into `TextField` itself, and the 4 views' now-redundant `showPassword`
+  refs and manual toggle buttons removed.
+- `LoginView`'s email field showed a green "valid" check for any non-empty value (e.g. `admin@`):
+  the `:valid` prop depended on `errors.email`, which only got set on blur, and blur events never
+  reached `TextField`'s inner `<input>` (single-root component, no forwarding) once the manual
+  toggle was removed. Fixed by computing validity directly from the email regex on every
+  keystroke instead of from stale error state — same class of bug the last release's `DsPagination`
+  fix caught, audited for and confirmed absent everywhere else (`SpacesFormView`,
+  `CategoriesFormView`, `EventsFormView`, `UserFormView`, `UserConfigView`, `SettingsView` all
+  compute `:valid` from a direct value check backed by a live `watch()`, not from error state).
+- `SelectMenu` had no `disabled` prop at all — `:disabled="isAdminAccount"` on `UserFormView`'s
+  role picker and the event/space lock-during-edit bindings on `BookingFormView` silently did
+  nothing. Added the prop, wired to Headless UI's `Listbox` `disabled`.
+- `TextField` is a single-root (`<label>`) component with default attribute inheritance, so
+  `autocomplete="new-password"` (used on 6 password fields across 4 views) landed on the label
+  instead of the `<input>`, doing nothing. Added `inheritAttrs: false` and explicit `v-bind="$attrs"`
+  on the input so any non-prop attribute reaches the right element. Also wired the existing
+  `required` prop (previously used only for the label's `*` decoration) onto the native input for
+  native browser form-validation semantics.
+
+## [2.7.1] - 2026-09-08
+
+### Fixed
+
+- The `text-heading`/`text-title`/`text-body`/`text-label`/`text-muted` semantic text tokens were
+  declared as CSS custom properties but never added to `tailwind.config.js`'s `text` color
+  palette, so `text-text-*` utility classes (used ~33 times across `DsCard`, `PageHeader`,
+  `InfoRow`, `TextField`, and others) compiled to no CSS at all — text fell back to inherited/
+  default color, most visible as unreadable text and card borders blending into the page in dark
+  mode. Fixed by adding the 5 names to the `text` color group.
+
 ## [2.7.0] - 2026-09-08
 
 ### Added

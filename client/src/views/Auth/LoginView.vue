@@ -13,23 +13,18 @@
             :label="t('pages.auth.login.email')"
             icon="mail"
             :error="errors.email"
-            :valid="!!credentials.email && !errors.email"
-            @update:model-value="clearEmailError"
+            :valid="isEmailValid"
+            @update:model-value="onEmailInput"
             required />
 
-          <div>
-            <TextField
-              v-model="credentials.password"
-              :type="showPassword ? 'text' : 'password'"
-              :label="t('pages.auth.login.password')"
-              icon="shield"
-              :error="errors.password"
-              @update:model-value="clearPasswordError"
-              required />
-            <button type="button" @click="showPassword = !showPassword" class="mt-1.5 text-xs text-primary-600 hover:text-primary-700 flex items-center gap-1">
-              <component :is="showPassword ? EyeOff : Eye" class="w-3.5 h-3.5" />
-            </button>
-          </div>
+          <TextField
+            v-model="credentials.password"
+            type="password"
+            :label="t('pages.auth.login.password')"
+            icon="shield"
+            :error="errors.password"
+            @update:model-value="clearPasswordError"
+            required />
 
           <router-link :to="{ name: 'authForgotPassword' }" class="block text-sm text-primary-600 hover:text-primary-700 transition-colors">
             {{ t("pages.auth.login.forgotPassword") }}
@@ -49,10 +44,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/authStore";
-import { Eye, EyeOff } from "lucide-vue-next";
 import { useToast } from "@/composables/useToast";
 import { useRouter } from "vue-router";
 import DsCard from "@/components/core/DsCard.vue";
@@ -67,15 +61,16 @@ const credentials = ref({
   email: "",
   password: "",
 });
-const showPassword = ref(false);
 const loading = ref(false);
 const errors = ref({
   email: "",
   password: "",
 });
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const isEmailValid = computed(() => emailRegex.test(credentials.value.email));
+
 const validateEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email) {
     errors.value.email = t("pages.auth.login.errors.emailRequired");
     return false;
@@ -88,6 +83,10 @@ const validateEmail = (email) => {
   return true;
 };
 
+const onEmailInput = () => {
+  if (errors.value.email) errors.value.email = "";
+};
+
 const validatePassword = (password) => {
   if (!password) {
     errors.value.password = t("pages.auth.login.errors.passwordRequired");
@@ -95,10 +94,6 @@ const validatePassword = (password) => {
   }
   errors.value.password = "";
   return true;
-};
-
-const clearEmailError = () => {
-  if (errors.value.email) errors.value.email = "";
 };
 
 const clearPasswordError = () => {

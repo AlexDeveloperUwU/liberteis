@@ -14,6 +14,11 @@ export default {
           800: "var(--text-800)",
           900: "var(--text-900)",
           950: "var(--text-950)",
+          heading: "var(--text-heading)",
+          title: "var(--text-title)",
+          body: "var(--text-body)",
+          label: "var(--text-label)",
+          muted: "var(--text-muted)",
         },
         background: {
           50: "var(--background-50)",

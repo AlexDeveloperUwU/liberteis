@@ -104,22 +104,14 @@
               <div class="mb-4">
                 <TextField
                   v-model="formData.password"
-                  :type="showPassword ? 'text' : 'password'"
+                  type="password"
                   autocomplete="new-password"
                   :label="t('pages.dash.userConfig.form.labels.password')"
                   icon="shield"
                   :error="!formSubmitted ? errors.password : null"
                   :placeholder="t('pages.dash.userConfig.form.placeholders.password')" />
-                <div class="flex items-center gap-2 mt-1.5">
-                  <button
-                    type="button"
-                    @click="showPassword = !showPassword"
-                    class="text-xs text-primary-600 hover:text-primary-700 flex items-center gap-1"
-                    :title="showPassword ? t('pages.dash.userConfig.form.hidePassword') : t('pages.dash.userConfig.form.showPassword')">
-                    <component :is="showPassword ? EyeOff : Eye" class="w-3.5 h-3.5" />
-                    {{ showPassword ? t("pages.dash.userConfig.form.hidePassword") : t("pages.dash.userConfig.form.showPassword") }}
-                  </button>
-                  <Loader2 v-if="isValidatingPassword" class="w-3.5 h-3.5 text-primary-600 animate-spin" />
+                <div v-if="isValidatingPassword" class="flex items-center gap-2 mt-1.5">
+                  <Loader2 class="w-3.5 h-3.5 text-primary-600 animate-spin" />
                 </div>
 
                 <div v-if="formData.password" class="space-y-2 mt-2">
@@ -197,7 +189,7 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-import { User, ClipboardList, CheckCircle, Eye, EyeOff, Loader2, Info as InfoIcon, Settings, ShieldCheck } from "lucide-vue-next";
+import { User, ClipboardList, CheckCircle, Loader2, Info as InfoIcon, Settings, ShieldCheck } from "lucide-vue-next";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { isValidEmail, validateName, validateEmail, validatePassword } from "@/utils/validators";
@@ -219,7 +211,6 @@ const authStore = useAuthStore();
 const userData = ref({});
 const isLoading = ref(true);
 const loadError = ref(null);
-const showPassword = ref(false);
 
 const isAdminAccount = computed(() => {
   return userData.value?.createdBy === "System" && userData.value?.name === "Administrador";

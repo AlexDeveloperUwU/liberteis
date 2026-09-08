@@ -12,6 +12,7 @@ const props = defineProps({
   placeholder: { type: String, default: "Select..." },
   error: { type: [Boolean, String], default: false },
   width: { type: String, default: "100%" },
+  disabled: { type: Boolean, default: false },
 });
 const emit = defineEmits(["update:modelValue"]);
 
@@ -25,10 +26,10 @@ const selectedLabel = computed(() => props.options.find((o) => o.value === props
 <template>
   <div :style="{ width }">
     <span v-if="label" class="block text-sm font-medium text-text-label mb-1.5">{{ label }}</span>
-    <Listbox :model-value="modelValue" @update:model-value="(v) => emit('update:modelValue', v)">
+    <Listbox :model-value="modelValue" :disabled="disabled" @update:model-value="(v) => emit('update:modelValue', v)">
       <div class="relative">
         <ListboxButton
-          class="relative w-full h-10 rounded-md border-[1.5px] bg-background-50 text-sm text-left pl-3 pr-9 flex items-center gap-2 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          class="relative w-full h-10 rounded-md border-[1.5px] bg-background-50 text-sm text-left pl-3 pr-9 flex items-center gap-2 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
           :class="error ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'">
           <component :is="LeftIcon" v-if="LeftIcon" class="w-4 h-4 text-text-500 shrink-0" />
           <span class="truncate" :class="modelValue ? 'text-text-900' : 'text-text-500'">{{ selectedLabel }}</span>
