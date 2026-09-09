@@ -8,22 +8,22 @@
           <div class="bg-background-50 p-5 rounded-lg border border-background-200 space-y-4">
             <InfoRow icon="calendar-days" :label="t('pages.dash.bookingForm.form.labels.eventTitle')" :value="selectedEventName || t('pages.dash.bookingForm.form.placeholders.noEvent')" />
 
-            <div class="flex justify-center">
+            <div class="my-3">
               <div
-                class="relative rounded-lg overflow-hidden border border-background-300 shadow-sm cursor-pointer group"
-                style="width: 15%; aspect-ratio: 9/16"
+                class="relative w-24 shrink-0 rounded-lg overflow-hidden border border-background-300 shadow-sm cursor-pointer group"
+                style="aspect-ratio: 9/16"
                 @click="openImageModal">
                 <div v-if="selectedEventInfo && selectedEventInfo.coverUrl" class="w-full h-full">
                   <img :src="selectedEventInfo.coverUrl" :alt="t('pages.other.commons.altText.eventCover')" class="w-full h-full object-cover" />
                   <div
                     class="absolute inset-0 bg-background-950/10 group-hover:bg-background-950/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
                     <div class="bg-background-50/90 p-2 rounded-full">
-                      <Search class="w-5 h-5 text-text-900" />
+                      <Search class="w-4 h-4 text-text-900" />
                     </div>
                   </div>
                 </div>
-                <div v-else class="w-full h-full bg-background-200 flex flex-col items-center justify-center">
-                  <ImageIcon class="w-12 h-12 text-primary-600 mb-2" />
+                <div v-else class="w-full h-full bg-background-200 flex items-center justify-center">
+                  <ImageIcon class="w-7 h-7 text-primary-600" />
                 </div>
               </div>
             </div>
@@ -32,7 +32,7 @@
 
             <InfoRow
               icon="clock"
-              :label="t('pages.dash.bookingForm.form.labels.bookingDate')"
+              :label="isRecurrent ? t('pages.dash.bookingForm.form.labels.bookingDateOnly') : t('pages.dash.bookingForm.form.labels.bookingDate')"
               :value="
                 isRecurrent
                   ? `${formatPreviewDate(formData.startDate)} - ${formatPreviewDate(formData.endDate)}`
@@ -58,11 +58,6 @@
       <div class="order-1 lg:order-2">
         <DsCard :title="isEditMode ? t('pages.dash.bookingForm.common.edit') : t('pages.dash.bookingForm.common.create')" class="h-full">
           <div class="bg-background-50 p-4 rounded-lg border border-background-200 space-y-4">
-            <h4 class="text-sm font-medium text-text-700 mb-1 flex items-center">
-              <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
-              {{ t("pages.dash.bookingForm.form.sections.basicInfo") }}
-            </h4>
-
             <div>
               <SelectMenu
                 v-model="selectedEvent"

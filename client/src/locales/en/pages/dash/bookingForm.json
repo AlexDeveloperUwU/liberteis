@@ -22,6 +22,7 @@
       "event": "Event",
       "space": "Space",
       "bookingDate": "Date and time",
+      "bookingDateOnly": "Date",
       "info": "Additional information",
       "eventTitle": "Event",
       "eventCategory": "Category",

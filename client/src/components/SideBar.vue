@@ -1,7 +1,8 @@
 <template>
   <aside
     class="sidebar-container bg-background-100 border-r-[1.5px] border-background-300 shadow-sidebar flex flex-col items-stretch"
-    :class="[isMobile && isCollapsed ? 'sidebar-hidden' : '']">
+    :class="[isMobile && isCollapsed ? 'sidebar-hidden' : '']"
+    :style="sidebarStyle">
     <nav class="sidebar-nav flex-1 w-full" :style="sidebarStyle">
       <ul class="space-y-3 w-full">
         <li v-for="(item, index) in menuItems" :key="index" class="rounded-md w-full">
@@ -12,7 +13,7 @@
             <span class="sidebar-icon text-primary-600">
               <component :is="resolveIcon(item.icon)" class="w-5 h-5" />
             </span>
-            <span v-if="!isCollapsed || isMobile" class="sidebar-text text-text-800">
+            <span class="sidebar-text text-text-800" :class="{ 'sidebar-text-hidden': isCollapsed && !isMobile }">
               {{ t(item.titleKey) }}
             </span>
           </router-link>
@@ -27,7 +28,7 @@
         <div class="sidebar-logo">
           <img :src="logoImg" :alt="t('components.sidebar.logoAlt')" class="w-4 h-4" />
         </div>
-        <div v-if="!isCollapsed || isMobile" class="sidebar-version text-xs text-text-600">
+        <div class="sidebar-version text-xs text-text-600" :class="{ 'sidebar-text-hidden': isCollapsed && !isMobile }">
           <span>{{ mainStore.version || "..." }}</span>
         </div>
       </div>
@@ -101,7 +102,9 @@ const sidebarStyle = computed(() => ({
   left: 0;
   top: 3.5rem;
   z-index: 40;
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    width 0.3s ease;
 }
 
 @media (max-width: 768px) {
@@ -128,6 +131,12 @@ const sidebarStyle = computed(() => ({
   font-size: 1rem;
   font-family: "K2D", sans-serif;
   overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-text-hidden {
+  opacity: 0;
 }
 
 .sidebar-footer {

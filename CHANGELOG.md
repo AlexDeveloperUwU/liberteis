@@ -5,6 +5,29 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.6] - 2026-09-09
+
+### Fixed
+
+- Sidebar labels and version text popped in/out instantly when collapsing/expanding instead of
+  transitioning, and the rail's width animated in two independently-timed pieces; now the text
+  fades and the whole rail resizes as one unit.
+- Booking form: removed a redundant "Basic information" header duplicating the panel's own title,
+  and repositioned the event cover thumbnail below the event row instead of floating between
+  InfoRows.
+- Booking preview showed "Date and time" for recurring bookings, which only have a date range, no
+  time; added a date-only label used when the booking repeats.
+- `DsModal`'s backdrop used `bg-background-950/85` to dim the page, but `background-950` is
+  intentionally inverted to a near-white value in dark mode (so surfaces stay consistent), which
+  washed the backdrop out to white instead of dimming it. Switched to a fixed `bg-black/70` scrim.
+- `DsModal` had no working open/close animation — it referenced a `ds-modal-in` CSS animation that
+  was never defined anywhere, so it silently did nothing, and there was no exit animation at all.
+  Added a real fade for the backdrop and a fade+scale for the panel on both open and close.
+- Backend dev server (`nodemon`) had no watch scope, so it restarted on every change anywhere in
+  the repo, including client-side files (e.g. locale JSON edits) — any API request landing during
+  that restart window failed with a connection reset/500. Scoped nodemon to ignore `client/**` and
+  `data/**`.
+
 ## [2.7.5] - 2026-09-09
 
 ### Fixed

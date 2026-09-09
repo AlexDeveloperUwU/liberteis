@@ -1,6 +1,6 @@
 {
   "name": "liberteis",
-  "version": "2.7.5",
+  "version": "2.7.6",
   "description": "La aplicación oficial de gestión de eventos de Teis",
   "main": "index.js",
   "type": "module",
@@ -53,5 +53,8 @@
   "prettier": {
     "bracketSameLine": true,
     "printWidth": 120
+  },
+  "nodemonConfig": {
+    "ignore": ["client/**", "data/**"]
   }
 }
