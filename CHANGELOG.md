@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.5] - 2026-09-09
+
+### Fixed
+
+- `HomeView`'s "next upcoming event" metric was recomputed every time the calendar's browsed month
+  changed, picking the earliest event in whatever window happened to be loaded instead of the true
+  next event relative to today. Now only recomputed while the loaded month is the current one.
+- `es`/`gl` sidebar translations were missing the `events` key, showing the raw i18n key instead of
+  the translated label.
+
 ## [2.7.4] - 2026-09-08
 
 ### Fixed

@@ -636,7 +636,11 @@ const loadBookings = async (forceRefresh = false) => {
       duration: formatDuration(booking.eventDuration),
     }));
 
-    updateNextBooking();
+    // The "next upcoming event" metric reflects real-world now, not whatever month is being
+    // browsed — only recompute it while the loaded window actually includes today.
+    if (isCurrentMonth) {
+      updateNextBooking();
+    }
   } catch (error) {
     console.error("Error al cargar los bookings:", error);
     loadingError.value = error.message || t("pages.dash.home.errors.loadingData");
