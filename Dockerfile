@@ -29,6 +29,9 @@ RUN npm install --production && npm cache clean --force
 # Copia el resto del código de la aplicación
 COPY . .
 
+# Genera los iconos de los emails (no se versionan, se generan en build)
+RUN npm run email:icons
+
 # Copia los contenidos de dist a views desde la etapa de construcción
 COPY --from=build-client /app/client/dist /app/views
 

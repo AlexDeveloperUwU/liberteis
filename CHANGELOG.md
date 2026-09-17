@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.1] - 2026-09-17
+
+### Fixed
+
+- Generated email icon PNGs (`emails/assets/`) were committed to the repo; they're build
+  output from `npm run email:icons`, not hand-authored, so they're now gitignored instead.
+  Regenerate them locally with `npm run email:icons` after installing; the Docker build now
+  runs that step automatically. Moved `lucide-static` from `devDependencies` to
+  `dependencies` so it's present when the production image installs with `--production`.
+
 ## [2.8.0] - 2026-09-17
 
 ### Added
