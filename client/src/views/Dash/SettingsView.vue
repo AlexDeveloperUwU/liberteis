@@ -6,13 +6,40 @@
       <div class="order-2 lg:order-1">
         <DsCard :title="t('pages.dash.settings.preview.title')" class="h-full">
           <div class="bg-background-50 p-5 rounded-lg border border-background-200 space-y-4">
-            <InfoRow icon="app-window" :label="t('pages.dash.settings.form.labels.appName')" :value="formData.appName || t('pages.dash.settings.form.placeholders.appName')" />
-            <InfoRow icon="globe" :label="t('pages.dash.settings.form.labels.domain')" :value="formData.domain || t('pages.dash.settings.form.placeholders.domain')" />
-            <InfoRow icon="image" :label="t('pages.dash.settings.form.labels.favicon')" :value="formData.favicon || t('pages.dash.settings.common.default')" />
-            <InfoRow icon="calendar-days" :label="t('pages.dash.settings.form.labels.enableWeekends')" :value="formData.enableWeekends ? t('pages.dash.settings.common.enabled') : t('pages.dash.settings.common.disabled')" />
-            <InfoRow icon="mail" :label="t('pages.dash.settings.form.labels.mailHostPort')" :value="formData.mailHostPort || t('pages.dash.settings.common.disabled')" />
-            <InfoRow icon="mail" :label="t('pages.dash.settings.form.labels.mailUser')" :value="formData.mailUser || t('pages.dash.settings.common.disabled')" />
-            <InfoRow icon="shield-check" :label="t('pages.dash.settings.form.labels.mailSecure')" :value="formData.mailSecure ? t('pages.dash.settings.common.enabled') : t('pages.dash.settings.common.disabled')" />
+            <InfoRow
+              icon="app-window"
+              :label="t('pages.dash.settings.form.labels.appName')"
+              :value="formData.appName || t('pages.dash.settings.form.placeholders.appName')" />
+            <InfoRow
+              icon="globe"
+              :label="t('pages.dash.settings.form.labels.domain')"
+              :value="formData.domain || t('pages.dash.settings.form.placeholders.domain')" />
+            <InfoRow
+              icon="image"
+              :label="t('pages.dash.settings.form.labels.favicon')"
+              :value="formData.favicon || t('pages.dash.settings.common.default')" />
+            <InfoRow
+              icon="calendar-days"
+              :label="t('pages.dash.settings.form.labels.enableWeekends')"
+              :value="
+                formData.enableWeekends
+                  ? t('pages.dash.settings.common.enabled')
+                  : t('pages.dash.settings.common.disabled')
+              " />
+            <InfoRow
+              icon="mail"
+              :label="t('pages.dash.settings.form.labels.mailHostPort')"
+              :value="formData.mailHostPort || t('pages.dash.settings.common.disabled')" />
+            <InfoRow
+              icon="mail"
+              :label="t('pages.dash.settings.form.labels.mailUser')"
+              :value="formData.mailUser || t('pages.dash.settings.common.disabled')" />
+            <InfoRow
+              icon="shield-check"
+              :label="t('pages.dash.settings.form.labels.mailSecure')"
+              :value="
+                formData.mailSecure ? t('pages.dash.settings.common.enabled') : t('pages.dash.settings.common.disabled')
+              " />
           </div>
         </DsCard>
       </div>
@@ -49,16 +76,24 @@
                   icon="image"
                   :placeholder="t('pages.dash.settings.form.placeholders.favicon')" />
                 <div v-if="formData.favicon && !faviconPreviewError" class="flex items-center gap-2 mt-1.5">
-                  <img :src="formData.favicon" alt="favicon" class="w-5 h-5 rounded object-contain" @error="faviconPreviewError = true" @load="faviconPreviewError = false" />
+                  <img
+                    :src="formData.favicon"
+                    alt="favicon"
+                    class="w-5 h-5 rounded object-contain"
+                    @error="faviconPreviewError = true"
+                    @load="faviconPreviewError = false" />
                 </div>
                 <p class="mt-1.5 text-xs text-text-600">{{ t("pages.dash.settings.form.hints.favicon") }}</p>
               </div>
 
-              <div class="flex items-center justify-between p-3 bg-background-100 rounded-lg border border-background-200">
+              <div
+                class="flex items-center justify-between p-3 bg-background-100 rounded-lg border border-background-200">
                 <div class="flex items-center">
                   <Calendar class="w-5 h-5 text-primary-600 mr-3" />
                   <div>
-                    <p class="text-text-800 font-medium text-sm">{{ t("pages.dash.settings.form.labels.enableWeekends") }}</p>
+                    <p class="text-text-800 font-medium text-sm">
+                      {{ t("pages.dash.settings.form.labels.enableWeekends") }}
+                    </p>
                     <p class="text-xs text-text-600">{{ t("pages.dash.settings.form.placeholders.enableWeekends") }}</p>
                   </div>
                 </div>
@@ -72,8 +107,15 @@
                 {{ t("pages.dash.settings.form.sections.mail") }}
               </h4>
 
-              <TextField v-model="formData.mailHostPort" :label="t('pages.dash.settings.form.labels.mailHostPort')" :placeholder="t('pages.dash.settings.form.placeholders.mailHostPort')" />
-              <TextField v-model="formData.mailUser" autocomplete="off" :label="t('pages.dash.settings.form.labels.mailUser')" :placeholder="t('pages.dash.settings.form.placeholders.mailUser')" />
+              <TextField
+                v-model="formData.mailHostPort"
+                :label="t('pages.dash.settings.form.labels.mailHostPort')"
+                :placeholder="t('pages.dash.settings.form.placeholders.mailHostPort')" />
+              <TextField
+                v-model="formData.mailUser"
+                autocomplete="off"
+                :label="t('pages.dash.settings.form.labels.mailUser')"
+                :placeholder="t('pages.dash.settings.form.placeholders.mailUser')" />
 
               <div>
                 <TextField
@@ -84,7 +126,11 @@
                   :placeholder="t('pages.dash.settings.form.placeholders.mailPassword')" />
                 <p class="mt-1.5 text-xs text-text-600">
                   {{ t("pages.dash.settings.form.hints.mailPassword") }}
-                  {{ mailPasswordConfigured ? t("pages.dash.settings.form.hints.mailPasswordSet") : t("pages.dash.settings.form.hints.mailPasswordUnset") }}
+                  {{
+                    mailPasswordConfigured
+                      ? t("pages.dash.settings.form.hints.mailPasswordSet")
+                      : t("pages.dash.settings.form.hints.mailPasswordUnset")
+                  }}
                 </p>
               </div>
 
@@ -94,11 +140,14 @@
                 :label="t('pages.dash.settings.form.labels.mailFromAddress')"
                 :placeholder="t('pages.dash.settings.form.placeholders.mailFromAddress')" />
 
-              <div class="flex items-center justify-between p-3 bg-background-100 rounded-lg border border-background-200">
+              <div
+                class="flex items-center justify-between p-3 bg-background-100 rounded-lg border border-background-200">
                 <div class="flex items-center">
                   <ShieldCheck class="w-5 h-5 text-primary-600 mr-3" />
                   <div>
-                    <p class="text-text-800 font-medium text-sm">{{ t("pages.dash.settings.form.labels.mailSecure") }}</p>
+                    <p class="text-text-800 font-medium text-sm">
+                      {{ t("pages.dash.settings.form.labels.mailSecure") }}
+                    </p>
                     <p class="text-xs text-text-600">{{ t("pages.dash.settings.form.placeholders.mailSecure") }}</p>
                   </div>
                 </div>
@@ -111,10 +160,20 @@
             <DsButton type="button" variant="neutral" icon="undo-2" @click="resetForm">
               {{ t("pages.dash.settings.common.reset") }}
             </DsButton>
-            <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid || !formChanged">
-              <template v-if="buttonState === 'processing'">{{ t("pages.dash.settings.form.actions.updating") }}</template>
-              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.settings.common.status.success") }}</template>
-              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.settings.common.status.error") }}</template>
+            <DsButton
+              type="submit"
+              :state="buttonState"
+              icon="save"
+              :disabled="isSubmitting || !isFormValid || !formChanged">
+              <template v-if="buttonState === 'processing'">{{
+                t("pages.dash.settings.form.actions.updating")
+              }}</template>
+              <template v-else-if="buttonState === 'success'">{{
+                t("pages.dash.settings.common.status.success")
+              }}</template>
+              <template v-else-if="buttonState === 'error'">{{
+                t("pages.dash.settings.common.status.error")
+              }}</template>
               <template v-else>{{ t("pages.dash.settings.common.update") }}</template>
             </DsButton>
           </div>
@@ -127,7 +186,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { Settings, Mail, ShieldCheck, Calendar } from "lucide-vue-next";
+import { Settings, Mail, ShieldCheck, Calendar } from "@lucide/vue";
 import { useToast } from "@/composables/useToast";
 import { useConfigStore } from "@/stores/configStore";
 import PageHeader from "@/components/data/PageHeader.vue";

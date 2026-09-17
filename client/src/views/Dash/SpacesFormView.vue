@@ -30,7 +30,10 @@
               </div>
             </div>
             <div class="space-y-4">
-              <InfoRow icon="map-pin" :label="t('pages.dash.spacesForm.form.labels.location')" :value="formData.location || t('pages.dash.spacesForm.form.placeholders.noLocation')" />
+              <InfoRow
+                icon="map-pin"
+                :label="t('pages.dash.spacesForm.form.labels.location')"
+                :value="formData.location || t('pages.dash.spacesForm.form.placeholders.noLocation')" />
               <InfoRow
                 v-if="isEditMode && initialSpaceData"
                 icon="mail"
@@ -47,7 +50,9 @@
       </div>
 
       <div class="order-1 lg:order-2">
-        <DsCard :title="isEditMode ? t('pages.dash.spacesForm.common.edit') : t('pages.dash.spacesForm.common.create')" class="h-full">
+        <DsCard
+          :title="isEditMode ? t('pages.dash.spacesForm.common.edit') : t('pages.dash.spacesForm.common.create')"
+          class="h-full">
           <div class="bg-background-50 p-4 rounded-lg border border-background-200 space-y-4">
             <h4 class="text-sm font-medium text-text-700 mb-1 flex items-center">
               <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
@@ -73,7 +78,9 @@
               required />
 
             <label class="block">
-              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.spacesForm.form.labels.info") }}</span>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{
+                t("pages.dash.spacesForm.form.labels.info")
+              }}</span>
               <textarea
                 v-model="formData.info"
                 rows="5"
@@ -88,11 +95,21 @@
             </DsButton>
             <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid">
               <template v-if="buttonState === 'processing'">
-                {{ isEditMode ? t("pages.dash.spacesForm.form.actions.updating") : t("pages.dash.spacesForm.form.actions.submitting") }}
+                {{
+                  isEditMode
+                    ? t("pages.dash.spacesForm.form.actions.updating")
+                    : t("pages.dash.spacesForm.form.actions.submitting")
+                }}
               </template>
-              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.spacesForm.common.status.success") }}</template>
-              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.spacesForm.common.status.error") }}</template>
-              <template v-else>{{ isEditMode ? t("pages.dash.spacesForm.common.update") : t("pages.dash.spacesForm.common.create") }}</template>
+              <template v-else-if="buttonState === 'success'">{{
+                t("pages.dash.spacesForm.common.status.success")
+              }}</template>
+              <template v-else-if="buttonState === 'error'">{{
+                t("pages.dash.spacesForm.common.status.error")
+              }}</template>
+              <template v-else>{{
+                isEditMode ? t("pages.dash.spacesForm.common.update") : t("pages.dash.spacesForm.common.create")
+              }}</template>
             </DsButton>
           </div>
         </DsCard>
@@ -105,7 +122,7 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { Map, ClipboardList } from "lucide-vue-next";
+import { Map, ClipboardList } from "@lucide/vue";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";

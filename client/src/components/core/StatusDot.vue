@@ -15,7 +15,10 @@ const toneClasses = {
 
 <template>
   <span class="inline-flex items-center gap-1.5">
-    <span class="inline-block rounded-full" :class="toneClasses[tone]" :style="{ width: `${size}px`, height: `${size}px` }" />
+    <span
+      class="inline-block rounded-full"
+      :class="toneClasses[tone]"
+      :style="{ width: `${size}px`, height: `${size}px` }" />
     <span v-if="label" class="text-sm text-text-body">{{ label }}</span>
   </span>
 </template>

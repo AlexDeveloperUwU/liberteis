@@ -1,6 +1,8 @@
 <template>
   <div class="h-full w-full p-6">
-    <PageHeader :title="t('pages.dash.categories.page.title')" :description="t('pages.dash.categories.page.description')" />
+    <PageHeader
+      :title="t('pages.dash.categories.page.title')"
+      :description="t('pages.dash.categories.page.description')" />
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
       <MetricCard icon="bookmark" :label="t('pages.dash.categories.metrics.totals')" :value="metrics.total || 0" />
@@ -14,7 +16,11 @@
         :search-placeholder="t('pages.other.commons.search.placeholder')"
         class="mb-6">
         <template #filters>
-          <SelectMenu v-model="categoryFilter" :options="statusOptions" width="10rem" @update:model-value="loadCategories" />
+          <SelectMenu
+            v-model="categoryFilter"
+            :options="statusOptions"
+            width="10rem"
+            @update:model-value="loadCategories" />
         </template>
         <template #actions>
           <DsButton icon="plus" @click="$router.push({ name: 'dashCategoriesNew' })">
@@ -43,7 +49,10 @@
         </template>
         <template #cell-actions="{ row }">
           <div class="flex items-center gap-2">
-            <DsPill as="button" icon="pencil" @click="$router.push({ name: 'dashCategoriesEdit', params: { id: row.id } })">
+            <DsPill
+              as="button"
+              icon="pencil"
+              @click="$router.push({ name: 'dashCategoriesEdit', params: { id: row.id } })">
               {{ t("pages.dash.categories.actions.edit") }}
             </DsPill>
             <DsPill
@@ -51,7 +60,9 @@
               :tone="row.deleted ? 'success' : 'danger'"
               :icon="row.deleted ? 'check-circle' : 'trash'"
               @click="handleCategoryStatusToggle(row)">
-              {{ row.deleted ? t("pages.dash.categories.actions.reactivate") : t("pages.dash.categories.actions.delete") }}
+              {{
+                row.deleted ? t("pages.dash.categories.actions.reactivate") : t("pages.dash.categories.actions.delete")
+              }}
             </DsPill>
           </div>
         </template>
@@ -90,7 +101,11 @@ const currentPage = ref(1);
 const itemsPerPage = 5;
 
 const statusOptions = computed(() =>
-  ["active", "inactive", "all"].map((value) => ({ value, label: t(`pages.other.commons.status.${value}`), icon: "bookmark" })),
+  ["active", "inactive", "all"].map((value) => ({
+    value,
+    label: t(`pages.other.commons.status.${value}`),
+    icon: "bookmark",
+  })),
 );
 
 const columns = computed(() => [

@@ -1,6 +1,8 @@
 <template>
   <div class="h-full w-full p-6">
-    <PageHeader :title="t('pages.dash.userConfig.page.title')" :description="t('pages.dash.userConfig.page.description')" />
+    <PageHeader
+      :title="t('pages.dash.userConfig.page.title')"
+      :description="t('pages.dash.userConfig.page.description')" />
 
     <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div class="order-2 lg:order-1">
@@ -36,11 +38,26 @@
             </div>
 
             <div class="space-y-4">
-              <InfoRow icon="mail" :label="t('pages.dash.userConfig.form.labels.email')" :value="formData.email || userData.email || t('pages.dash.userConfig.form.placeholders.noEmail')" />
-              <InfoRow icon="calendar-days" :label="t('pages.dash.userConfig.profile.creationDate')" :value="userData.createdDate ? formatDate(userData.createdDate) : currentDate" />
-              <InfoRow icon="calendar-days" :label="t('pages.dash.userConfig.profile.lastAccess')" :value="userData.lastAccess ? formatDate(userData.lastAccess) : currentDate" />
-              <InfoRow icon="palette" :label="t('pages.dash.userConfig.profile.theme')" :value="t(`pages.dash.userConfig.themes.${formData.theme || userData.theme || 'system'}`)" />
-              <InfoRow icon="languages" :label="t('pages.dash.userConfig.profile.language')" :value="t(`pages.dash.userConfig.languages.${formData.language || userData.language || 'es'}`)" />
+              <InfoRow
+                icon="mail"
+                :label="t('pages.dash.userConfig.form.labels.email')"
+                :value="formData.email || userData.email || t('pages.dash.userConfig.form.placeholders.noEmail')" />
+              <InfoRow
+                icon="calendar-days"
+                :label="t('pages.dash.userConfig.profile.creationDate')"
+                :value="userData.createdDate ? formatDate(userData.createdDate) : currentDate" />
+              <InfoRow
+                icon="calendar-days"
+                :label="t('pages.dash.userConfig.profile.lastAccess')"
+                :value="userData.lastAccess ? formatDate(userData.lastAccess) : currentDate" />
+              <InfoRow
+                icon="palette"
+                :label="t('pages.dash.userConfig.profile.theme')"
+                :value="t(`pages.dash.userConfig.themes.${formData.theme || userData.theme || 'system'}`)" />
+              <InfoRow
+                icon="languages"
+                :label="t('pages.dash.userConfig.profile.language')"
+                :value="t(`pages.dash.userConfig.languages.${formData.language || userData.language || 'es'}`)" />
 
               <div class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
                 <ShieldCheck class="w-5 h-5 text-primary-600 mr-3 mt-0.5" />
@@ -52,7 +69,10 @@
                     </span>
                   </p>
                   <div class="mt-1.5 space-y-1">
-                    <div v-for="(permission, index) in permissions[userData.type] || []" :key="index" class="flex items-center text-text-800 text-xs">
+                    <div
+                      v-for="(permission, index) in permissions[userData.type] || []"
+                      :key="index"
+                      class="flex items-center text-text-800 text-xs">
                       <CheckCircle class="w-3 h-3 text-primary-600 mr-1.5 shrink-0" />
                       <span>{{ permission }}</span>
                     </div>
@@ -116,8 +136,13 @@
 
                 <div v-if="formData.password" class="space-y-2 mt-2">
                   <div class="flex items-center justify-between">
-                    <span class="text-xs font-medium text-text-600">{{ t("pages.other.validators.password.strength") }}</span>
-                    <DsPill :tone="passwordStrength === 'weak' ? 'danger' : passwordStrength === 'medium' ? 'warning' : 'success'">
+                    <span class="text-xs font-medium text-text-600">{{
+                      t("pages.other.validators.password.strength")
+                    }}</span>
+                    <DsPill
+                      :tone="
+                        passwordStrength === 'weak' ? 'danger' : passwordStrength === 'medium' ? 'warning' : 'success'
+                      ">
                       {{
                         passwordStrength === "weak"
                           ? t("pages.other.validators.password.weak")
@@ -131,7 +156,11 @@
                     <div
                       class="h-full transition-all"
                       :class="[
-                        passwordStrength === 'weak' ? 'bg-accent-500 w-1/3' : passwordStrength === 'medium' ? 'bg-warning-500 w-2/3' : 'bg-primary-500 w-full',
+                        passwordStrength === 'weak'
+                          ? 'bg-accent-500 w-1/3'
+                          : passwordStrength === 'medium'
+                            ? 'bg-warning-500 w-2/3'
+                            : 'bg-primary-500 w-full',
                       ]"></div>
                   </div>
                 </div>
@@ -172,10 +201,20 @@
             <DsButton type="button" variant="neutral" icon="undo-2" @click="resetForm">
               {{ t("pages.dash.userConfig.common.reset") }}
             </DsButton>
-            <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid || !formChanged">
-              <template v-if="buttonState === 'processing'">{{ t("pages.dash.userConfig.form.actions.updating") }}</template>
-              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.userConfig.common.status.success") }}</template>
-              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.userConfig.common.status.error") }}</template>
+            <DsButton
+              type="submit"
+              :state="buttonState"
+              icon="save"
+              :disabled="isSubmitting || !isFormValid || !formChanged">
+              <template v-if="buttonState === 'processing'">{{
+                t("pages.dash.userConfig.form.actions.updating")
+              }}</template>
+              <template v-else-if="buttonState === 'success'">{{
+                t("pages.dash.userConfig.common.status.success")
+              }}</template>
+              <template v-else-if="buttonState === 'error'">{{
+                t("pages.dash.userConfig.common.status.error")
+              }}</template>
               <template v-else>{{ t("pages.dash.userConfig.common.update") }}</template>
             </DsButton>
           </div>
@@ -189,7 +228,7 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-import { User, ClipboardList, CheckCircle, Loader2, Info as InfoIcon, Settings, ShieldCheck } from "lucide-vue-next";
+import { User, ClipboardList, CheckCircle, Loader2, Info as InfoIcon, Settings, ShieldCheck } from "@lucide/vue";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { isValidEmail, validateName, validateEmail, validatePassword } from "@/utils/validators";
@@ -299,8 +338,12 @@ const formSubmitted = ref(false);
 const themes = ["light", "dark"];
 const languages = ["es", "en", "gl"];
 
-const themeOptions = computed(() => themes.map((theme) => ({ value: theme, label: t(`pages.dash.userConfig.themes.${theme}`) })));
-const languageOptions = computed(() => languages.map((lang) => ({ value: lang, label: t(`pages.dash.userConfig.languages.${lang}`) })));
+const themeOptions = computed(() =>
+  themes.map((theme) => ({ value: theme, label: t(`pages.dash.userConfig.themes.${theme}`) })),
+);
+const languageOptions = computed(() =>
+  languages.map((lang) => ({ value: lang, label: t(`pages.dash.userConfig.languages.${lang}`) })),
+);
 
 const roleIcons = {
   normalUser: "users",

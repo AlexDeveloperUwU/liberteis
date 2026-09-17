@@ -14,7 +14,11 @@
         :search-placeholder="t('pages.other.commons.search.placeholder')"
         class="mb-6">
         <template #filters>
-          <SelectMenu v-model="bookingFilter" :options="statusOptions" width="10rem" @update:model-value="loadBookings" />
+          <SelectMenu
+            v-model="bookingFilter"
+            :options="statusOptions"
+            width="10rem"
+            @update:model-value="loadBookings" />
         </template>
         <template #actions>
           <DsButton icon="calendar-1" @click="$router.push({ name: 'dashBookingsNew' })">
@@ -41,7 +45,10 @@
         </template>
         <template #cell-actions="{ row }">
           <div class="flex items-center gap-2">
-            <DsPill as="button" icon="pencil" @click="$router.push({ name: 'dashBookingsEdit', params: { id: row.id } })">
+            <DsPill
+              as="button"
+              icon="pencil"
+              @click="$router.push({ name: 'dashBookingsEdit', params: { id: row.id } })">
               {{ t("pages.dash.bookings.actions.edit") }}
             </DsPill>
             <DsPill
@@ -49,7 +56,9 @@
               :tone="row.deleted ? 'success' : 'danger'"
               :icon="row.deleted ? 'calendar-check-2' : 'trash'"
               @click="handleBookingStatusToggle(row)">
-              {{ row.deleted ? t("pages.dash.bookings.actions.reactivate") : t("pages.dash.bookings.actions.deactivate") }}
+              {{
+                row.deleted ? t("pages.dash.bookings.actions.reactivate") : t("pages.dash.bookings.actions.deactivate")
+              }}
             </DsPill>
           </div>
         </template>

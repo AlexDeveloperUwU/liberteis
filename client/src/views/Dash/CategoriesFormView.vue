@@ -32,7 +32,11 @@
                 icon="map-pin"
                 align="start"
                 :label="t('pages.dash.categoriesForm.form.labels.spaces')"
-                :value="formData.spaces?.length > 0 ? selectedSpacesInfo.map((space) => space.name).join(', ') : t('pages.dash.categoriesForm.form.placeholders.noSpaces')" />
+                :value="
+                  formData.spaces?.length > 0
+                    ? selectedSpacesInfo.map((space) => space.name).join(', ')
+                    : t('pages.dash.categoriesForm.form.placeholders.noSpaces')
+                " />
               <InfoRow
                 v-if="isEditMode && initialCategoryData"
                 icon="mail"
@@ -44,7 +48,11 @@
       </div>
 
       <div class="order-1 lg:order-2">
-        <DsCard :title="isEditMode ? t('pages.dash.categoriesForm.common.edit') : t('pages.dash.categoriesForm.common.create')" class="h-full">
+        <DsCard
+          :title="
+            isEditMode ? t('pages.dash.categoriesForm.common.edit') : t('pages.dash.categoriesForm.common.create')
+          "
+          class="h-full">
           <div class="bg-background-50 p-4 rounded-lg border border-background-200 space-y-4">
             <h4 class="text-sm font-medium text-text-700 mb-1 flex items-center">
               <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
@@ -61,13 +69,17 @@
               required />
 
             <div>
-              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.categoriesForm.form.labels.spaces") }}</span>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{
+                t("pages.dash.categoriesForm.form.labels.spaces")
+              }}</span>
               <Listbox v-model="selectedSpaces" multiple @update:modelValue="updateSelectedSpacesInfo">
                 <div class="relative">
                   <ListboxButton
                     class="relative w-full pl-10 pr-10 h-10 border-[1.5px] border-background-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150 bg-background-50 text-left">
                     <MapPin class="absolute inset-y-0 left-3 w-4 h-4 my-auto text-text-500" />
-                    <span class="block truncate text-sm" :class="!selectedSpaces.length ? 'text-text-500' : 'text-text-900'">
+                    <span
+                      class="block truncate text-sm"
+                      :class="!selectedSpaces.length ? 'text-text-500' : 'text-text-900'">
                       {{
                         selectedSpaces.length > 0
                           ? selectedSpacesInfo.map((space) => space.name).join(", ")
@@ -85,7 +97,11 @@
                     leave-to-class="transform opacity-0 scale-95">
                     <ListboxOptions
                       class="absolute z-10 mt-1 w-full bg-background-100 border-[1.5px] border-background-300 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none py-1">
-                      <ListboxOption v-for="space in availableSpaces" :key="space.id" :value="space.id" v-slot="{ active, selected }">
+                      <ListboxOption
+                        v-for="space in availableSpaces"
+                        :key="space.id"
+                        :value="space.id"
+                        v-slot="{ active, selected }">
                         <li
                           class="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer border-l-[3px] border-transparent"
                           :class="
@@ -113,11 +129,21 @@
             </DsButton>
             <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid">
               <template v-if="buttonState === 'processing'">
-                {{ isEditMode ? t("pages.dash.categoriesForm.form.actions.updating") : t("pages.dash.categoriesForm.form.actions.submitting") }}
+                {{
+                  isEditMode
+                    ? t("pages.dash.categoriesForm.form.actions.updating")
+                    : t("pages.dash.categoriesForm.form.actions.submitting")
+                }}
               </template>
-              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.categoriesForm.common.status.success") }}</template>
-              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.categoriesForm.common.status.error") }}</template>
-              <template v-else>{{ isEditMode ? t("pages.dash.categoriesForm.common.update") : t("pages.dash.categoriesForm.common.create") }}</template>
+              <template v-else-if="buttonState === 'success'">{{
+                t("pages.dash.categoriesForm.common.status.success")
+              }}</template>
+              <template v-else-if="buttonState === 'error'">{{
+                t("pages.dash.categoriesForm.common.status.error")
+              }}</template>
+              <template v-else>{{
+                isEditMode ? t("pages.dash.categoriesForm.common.update") : t("pages.dash.categoriesForm.common.create")
+              }}</template>
             </DsButton>
           </div>
         </DsCard>
@@ -131,7 +157,7 @@ import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue";
-import { Bookmark, ClipboardList, MapPin, Check, ChevronDown } from "lucide-vue-next";
+import { Bookmark, ClipboardList, MapPin, Check, ChevronDown } from "@lucide/vue";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";

@@ -10,13 +10,21 @@
           <p class="text-sm text-text-body mb-6">{{ t("pages.auth.forgotPassword.description") }}</p>
 
           <form @submit.prevent="handleSubmit" class="space-y-6">
-            <TextField v-model="email" type="email" :label="t('pages.auth.forgotPassword.email')" icon="mail" :error="error" required />
+            <TextField
+              v-model="email"
+              type="email"
+              :label="t('pages.auth.forgotPassword.email')"
+              icon="mail"
+              :error="error"
+              required />
 
             <DsButton type="submit" full-width :state="submitting ? 'processing' : 'default'" :disabled="submitting">
               {{ t("pages.auth.forgotPassword.submit") }}
             </DsButton>
 
-            <router-link :to="{ name: 'authLogin' }" class="block text-sm text-center text-primary-600 hover:text-primary-700">
+            <router-link
+              :to="{ name: 'authLogin' }"
+              class="block text-sm text-center text-primary-600 hover:text-primary-700">
               {{ t("pages.auth.forgotPassword.backToLogin") }}
             </router-link>
           </form>
@@ -24,7 +32,9 @@
 
         <template v-else>
           <p class="text-sm text-text-body mb-6">{{ t("pages.auth.forgotPassword.sentMessage") }}</p>
-          <router-link :to="{ name: 'authLogin' }" class="block text-sm text-center text-primary-600 hover:text-primary-700">
+          <router-link
+            :to="{ name: 'authLogin' }"
+            class="block text-sm text-center text-primary-600 hover:text-primary-700">
             {{ t("pages.auth.forgotPassword.backToLogin") }}
           </router-link>
         </template>

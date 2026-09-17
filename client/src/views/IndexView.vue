@@ -49,7 +49,7 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { GraduationCap, BookOpen } from "lucide-vue-next";
+import { GraduationCap, BookOpen } from "@lucide/vue";
 import { useConfigStore } from "@/stores/configStore";
 
 const { t } = useI18n();

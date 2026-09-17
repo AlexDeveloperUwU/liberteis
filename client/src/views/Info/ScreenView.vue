@@ -23,8 +23,7 @@
         class="flex flex-col w-full h-full max-w-6xl bg-background-50 rounded-xl shadow-lg overflow-hidden relative">
         <transition name="fade" mode="out-in" @before-leave="startTransition" @after-leave="finishTransition">
           <div :key="currentEventIndex" class="flex h-full flex-col md:flex-row overflow-auto">
-            <div
-              class="w-full md:w-1/2 h-64 md:h-full flex items-center justify-center p-4 md:p-8 bg-background-100">
+            <div class="w-full md:w-1/2 h-64 md:h-full flex items-center justify-center p-4 md:p-8 bg-background-100">
               <div v-if="currentEvent.coverUrl" class="w-full h-full flex items-center justify-center relative">
                 <img
                   :src="currentEvent.coverUrl"
@@ -140,7 +139,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import axios from "axios";
-import { Clock, MapPin, Tag, CalendarDays, User } from "lucide-vue-next";
+import { Clock, MapPin, Tag, CalendarDays, User } from "@lucide/vue";
 import { mapBookingToEvent } from "@/router/fetchers";
 
 const route = useRoute();

@@ -26,7 +26,9 @@
             @update:model-value="touchedPassword = true"
             required />
 
-          <router-link :to="{ name: 'authForgotPassword' }" class="block text-sm text-primary-600 hover:text-primary-700 transition-colors">
+          <router-link
+            :to="{ name: 'authForgotPassword' }"
+            class="block text-sm text-primary-600 hover:text-primary-700 transition-colors">
             {{ t("pages.auth.login.forgotPassword") }}
           </router-link>
 

@@ -22,7 +22,10 @@
               class="max-w-[15%] object-contain aspect-9/16 bg-background-200" />
           </div>
 
-          <InfoRow icon="calendar-days" :label="$t('components.modals.bookingDetails.event')" :value="modal.data?.eventName ?? notAvailable" />
+          <InfoRow
+            icon="calendar-days"
+            :label="$t('components.modals.bookingDetails.event')"
+            :value="modal.data?.eventName ?? notAvailable" />
           <InfoRow
             v-if="modal.data?.eventDescription"
             icon="file-text"
@@ -35,11 +38,26 @@
             align="start"
             :label="$t('components.modals.bookingDetails.additionalInfo')"
             :value="modal.data.bookingInfo" />
-          <InfoRow icon="clock" :label="$t('components.modals.bookingDetails.dateTime')" :value="modal.data?.dateTime ?? notAvailable" />
-          <InfoRow icon="clock" :label="$t('components.modals.bookingDetails.duration')" :value="modal.data?.duration ?? notAvailable" />
-          <InfoRow icon="map-pin" :label="$t('components.modals.bookingDetails.space')" :value="modal.data?.space ?? notAvailable" />
-          <InfoRow icon="bookmark" :label="$t('components.modals.bookingDetails.category')" :value="modal.data?.category ?? notAvailable" />
-          <InfoRow icon="user" :label="$t('components.modals.bookingDetails.bookedBy')" :value="modal.data?.bookedBy ?? notAvailable" />
+          <InfoRow
+            icon="clock"
+            :label="$t('components.modals.bookingDetails.dateTime')"
+            :value="modal.data?.dateTime ?? notAvailable" />
+          <InfoRow
+            icon="clock"
+            :label="$t('components.modals.bookingDetails.duration')"
+            :value="modal.data?.duration ?? notAvailable" />
+          <InfoRow
+            icon="map-pin"
+            :label="$t('components.modals.bookingDetails.space')"
+            :value="modal.data?.space ?? notAvailable" />
+          <InfoRow
+            icon="bookmark"
+            :label="$t('components.modals.bookingDetails.category')"
+            :value="modal.data?.category ?? notAvailable" />
+          <InfoRow
+            icon="user"
+            :label="$t('components.modals.bookingDetails.bookedBy')"
+            :value="modal.data?.bookedBy ?? notAvailable" />
         </div>
         <p v-else class="text-sm text-text-body">{{ modal.content }}</p>
       </DsModal>
@@ -105,7 +123,11 @@ const actionsFor = (modal) => {
   if (modal.actions?.length) {
     actions.push(...modal.actions.map((action) => ({ ...action, onClick: () => handleAction(action, modal) })));
   } else {
-    actions.push({ label: t("components.modals.common.close"), type: "default", onClick: () => modalStore.removeModal(modal.id) });
+    actions.push({
+      label: t("components.modals.common.close"),
+      type: "default",
+      onClick: () => modalStore.removeModal(modal.id),
+    });
   }
 
   return actions;

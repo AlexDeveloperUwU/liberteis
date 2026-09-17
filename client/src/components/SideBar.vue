@@ -80,8 +80,18 @@ const menuItems = computed(() => {
   const items = [
     { titleKey: "components.sidebar.home", icon: "home", route: "/dash/home", permission: "normalUser" },
     { titleKey: "components.sidebar.events", icon: "calendar-days", route: "/dash/events", permission: "managerUser" },
-    { titleKey: "components.sidebar.bookings", icon: "calendar-clock", route: "/dash/bookings", permission: "normalUser" },
-    { titleKey: "components.sidebar.categories", icon: "bookmark", route: "/dash/categories", permission: "managerUser" },
+    {
+      titleKey: "components.sidebar.bookings",
+      icon: "calendar-clock",
+      route: "/dash/bookings",
+      permission: "normalUser",
+    },
+    {
+      titleKey: "components.sidebar.categories",
+      icon: "bookmark",
+      route: "/dash/categories",
+      permission: "managerUser",
+    },
     { titleKey: "components.sidebar.spaces", icon: "map-pin", route: "/dash/spaces", permission: "managerUser" },
     { titleKey: "components.sidebar.users", icon: "users", route: "/dash/users", permission: "managerUser" },
     { titleKey: "components.sidebar.settings", icon: "settings", route: "/dash/settings", permission: "adminUser" },

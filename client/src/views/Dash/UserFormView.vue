@@ -40,7 +40,10 @@
             </div>
 
             <div class="space-y-4">
-              <InfoRow icon="mail" :label="t('pages.dash.userForm.form.labels.email')" :value="formData.email || t('pages.dash.userForm.form.placeholders.noEmail')" />
+              <InfoRow
+                icon="mail"
+                :label="t('pages.dash.userForm.form.labels.email')"
+                :value="formData.email || t('pages.dash.userForm.form.placeholders.noEmail')" />
               <InfoRow
                 icon="calendar-days"
                 :label="t('pages.dash.userForm.profile.creationDate')"
@@ -49,11 +52,17 @@
                 <InfoRow
                   icon="calendar-days"
                   :label="t('pages.dash.userForm.profile.lastAccess')"
-                  :value="initialUserData.lastLogin ? formatDate(initialUserData.lastLogin) : t('pages.dash.userForm.profile.neverLoggedIn')" />
+                  :value="
+                    initialUserData.lastLogin
+                      ? formatDate(initialUserData.lastLogin)
+                      : t('pages.dash.userForm.profile.neverLoggedIn')
+                  " />
                 <InfoRow icon="mail" :label="t('pages.dash.userForm.profile.createdBy')" :value="createdByLabel" />
               </template>
 
-              <div v-if="formData.type" class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
+              <div
+                v-if="formData.type"
+                class="flex items-start p-3 bg-background-100 rounded-lg border border-background-200">
                 <ShieldCheck class="w-5 h-5 text-primary-600 mr-3 mt-0.5" />
                 <div class="w-full">
                   <p class="text-xs text-text-600 flex items-center justify-between">
@@ -63,7 +72,10 @@
                     </span>
                   </p>
                   <div class="mt-1.5 space-y-1">
-                    <div v-for="(permission, index) in permissions[formData.type]" :key="index" class="flex items-center text-text-800 text-xs">
+                    <div
+                      v-for="(permission, index) in permissions[formData.type]"
+                      :key="index"
+                      class="flex items-center text-text-800 text-xs">
                       <CheckCircle class="w-3 h-3 text-primary-600 mr-1.5 shrink-0" />
                       <span>{{ permission }}</span>
                     </div>
@@ -83,7 +95,9 @@
       </div>
 
       <div class="order-1 lg:order-2">
-        <DsCard :title="isEditMode ? t('pages.dash.userForm.common.edit') : t('pages.dash.userForm.common.create')" class="h-full">
+        <DsCard
+          :title="isEditMode ? t('pages.dash.userForm.common.edit') : t('pages.dash.userForm.common.create')"
+          class="h-full">
           <div class="space-y-6">
             <div class="bg-background-50 p-4 rounded-lg border border-background-200">
               <h4 class="text-sm font-medium text-text-700 mb-3 flex items-center">
@@ -103,7 +117,10 @@
                   required />
                 <p v-if="isAdminAccount" class="mt-1.5 text-xs text-secondary-600 flex items-center">
                   <InfoIcon class="w-3 h-3 mr-1" />
-                  {{ t("pages.dash.userForm.errors.cantChangeName") || "El nombre del administrador no puede ser modificado" }}
+                  {{
+                    t("pages.dash.userForm.errors.cantChangeName") ||
+                    "El nombre del administrador no puede ser modificado"
+                  }}
                 </p>
               </div>
 
@@ -157,11 +174,21 @@
             </DsButton>
             <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid">
               <template v-if="buttonState === 'processing'">
-                {{ isEditMode ? t("pages.dash.userForm.form.actions.updating") : t("pages.dash.userForm.form.actions.submitting") }}
+                {{
+                  isEditMode
+                    ? t("pages.dash.userForm.form.actions.updating")
+                    : t("pages.dash.userForm.form.actions.submitting")
+                }}
               </template>
-              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.userForm.common.status.success") }}</template>
-              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.userForm.common.status.error") }}</template>
-              <template v-else>{{ isEditMode ? t("pages.dash.userForm.common.update") : t("pages.dash.userForm.common.create") }}</template>
+              <template v-else-if="buttonState === 'success'">{{
+                t("pages.dash.userForm.common.status.success")
+              }}</template>
+              <template v-else-if="buttonState === 'error'">{{
+                t("pages.dash.userForm.common.status.error")
+              }}</template>
+              <template v-else>{{
+                isEditMode ? t("pages.dash.userForm.common.update") : t("pages.dash.userForm.common.create")
+              }}</template>
             </DsButton>
           </div>
         </DsCard>
@@ -174,7 +201,7 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { User, Shield, ShieldCheck, ClipboardList, CheckCircle, Loader2, Info as InfoIcon } from "lucide-vue-next";
+import { User, Shield, ShieldCheck, ClipboardList, CheckCircle, Loader2, Info as InfoIcon } from "@lucide/vue";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";

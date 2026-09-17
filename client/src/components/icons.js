@@ -1,7 +1,7 @@
 // Central icon registry for the ui/ component library.
 // Components take an icon as a kebab-case string prop (matching the design
 // system's contract); we resolve it against a curated, explicit import list
-// here instead of `import * as icons from "lucide-vue-next"` everywhere,
+// here instead of `import * as icons from "@lucide/vue"` everywhere,
 // which would pull the entire icon set into the bundle and defeat tree-shaking.
 // ponytail: fixed list, extend it when a view needs an icon not here yet.
 import {
@@ -67,7 +67,7 @@ import {
   Timer,
   AppWindow,
   Globe,
-} from "lucide-vue-next";
+} from "@lucide/vue";
 
 const REGISTRY = {
   home: Home,

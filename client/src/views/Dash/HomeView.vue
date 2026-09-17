@@ -182,7 +182,7 @@
 </template>
 
 <script setup>
-import { Calendar, Calendar1, Clock, CalendarX } from "lucide-vue-next";
+import { Calendar, Calendar1, Clock, CalendarX } from "@lucide/vue";
 import { useI18n } from "vue-i18n";
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useConfigStore } from "@/stores/configStore";

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import { CheckCircle2, XCircle, Eye, EyeOff } from "lucide-vue-next";
+import { CheckCircle2, XCircle, Eye, EyeOff } from "@lucide/vue";
 import { resolveIcon } from "../icons.js";
 
 // Attrs like autocomplete/name/maxlength must land on the actual <input>, not on the
@@ -52,7 +52,11 @@ const effectiveType = computed(() => (isPasswordField.value && revealed.value ? 
         class="w-full h-10 rounded-md border-[1.5px] bg-background-50 text-text-900 text-sm transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
         :class="[
           LeftIcon ? 'pl-9' : 'pl-3',
-          error ? 'border-accent-500 ring-1 ring-accent-300 pr-9' : valid || isPasswordField ? 'border-background-300 pr-9' : 'border-background-300 pr-3',
+          error
+            ? 'border-accent-500 ring-1 ring-accent-300 pr-9'
+            : valid || isPasswordField
+              ? 'border-background-300 pr-9'
+              : 'border-background-300 pr-3',
         ]" />
       <!-- ponytail: aria-label hardcoded in English (not visible text); wire to i18n if that's ever needed -->
       <button

@@ -1,5 +1,5 @@
 <script setup>
-import { ChevronUp, ChevronDown } from "lucide-vue-next";
+import { ChevronUp, ChevronDown } from "@lucide/vue";
 import { resolveIcon } from "../icons.js";
 
 defineProps({

@@ -36,7 +36,11 @@ const itemIcon = (name) => {
             @click="item.onClick && item.onClick()"
             class="w-full flex items-center gap-2 px-3 py-2 text-sm text-left border-l-[3px] border-transparent transition-colors duration-150"
             :class="[
-              item.tone === 'danger' ? 'text-accent-600' : item.selected ? 'bg-primary-100 border-l-primary-500 text-primary-700 font-medium' : 'text-text-800',
+              item.tone === 'danger'
+                ? 'text-accent-600'
+                : item.selected
+                  ? 'bg-primary-100 border-l-primary-500 text-primary-700 font-medium'
+                  : 'text-text-800',
               active && !item.selected ? 'border-l-primary-300 bg-primary-50' : '',
             ]">
             <component :is="itemIcon(item.icon)" v-if="item.icon" class="w-4 h-4" />

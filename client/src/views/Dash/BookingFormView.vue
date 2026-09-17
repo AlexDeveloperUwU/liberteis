@@ -6,7 +6,10 @@
       <div class="order-2 lg:order-1">
         <DsCard :title="t('pages.dash.bookingForm.profile.preview')" class="h-full">
           <div class="bg-background-50 p-5 rounded-lg border border-background-200 space-y-4">
-            <InfoRow icon="calendar-days" :label="t('pages.dash.bookingForm.form.labels.eventTitle')" :value="selectedEventName || t('pages.dash.bookingForm.form.placeholders.noEvent')" />
+            <InfoRow
+              icon="calendar-days"
+              :label="t('pages.dash.bookingForm.form.labels.eventTitle')"
+              :value="selectedEventName || t('pages.dash.bookingForm.form.placeholders.noEvent')" />
 
             <div class="my-3">
               <div
@@ -14,7 +17,10 @@
                 style="aspect-ratio: 9/16"
                 @click="openImageModal">
                 <div v-if="selectedEventInfo && selectedEventInfo.coverUrl" class="w-full h-full">
-                  <img :src="selectedEventInfo.coverUrl" :alt="t('pages.other.commons.altText.eventCover')" class="w-full h-full object-cover" />
+                  <img
+                    :src="selectedEventInfo.coverUrl"
+                    :alt="t('pages.other.commons.altText.eventCover')"
+                    class="w-full h-full object-cover" />
                   <div
                     class="absolute inset-0 bg-background-950/10 group-hover:bg-background-950/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
                     <div class="bg-background-50/90 p-2 rounded-full">
@@ -28,11 +34,18 @@
               </div>
             </div>
 
-            <InfoRow icon="map-pin" :label="t('pages.dash.bookingForm.form.labels.space')" :value="selectedSpaceName || t('pages.dash.bookingForm.form.placeholders.noSpace')" />
+            <InfoRow
+              icon="map-pin"
+              :label="t('pages.dash.bookingForm.form.labels.space')"
+              :value="selectedSpaceName || t('pages.dash.bookingForm.form.placeholders.noSpace')" />
 
             <InfoRow
               icon="clock"
-              :label="isRecurrent ? t('pages.dash.bookingForm.form.labels.bookingDateOnly') : t('pages.dash.bookingForm.form.labels.bookingDate')"
+              :label="
+                isRecurrent
+                  ? t('pages.dash.bookingForm.form.labels.bookingDateOnly')
+                  : t('pages.dash.bookingForm.form.labels.bookingDate')
+              "
               :value="
                 isRecurrent
                   ? `${formatPreviewDate(formData.startDate)} - ${formatPreviewDate(formData.endDate)}`
@@ -40,8 +53,15 @@
               " />
 
             <template v-if="selectedEventInfo">
-              <InfoRow icon="bookmark" :label="t('pages.dash.bookingForm.form.labels.eventCategory')" :value="selectedEventCategoryName || t('pages.dash.bookingForm.form.labels.noCategory')" />
-              <InfoRow v-if="selectedEventInfo.duration" icon="timer" :label="t('pages.dash.bookingForm.form.labels.eventDuration')" :value="formatDuration(selectedEventInfo.duration)" />
+              <InfoRow
+                icon="bookmark"
+                :label="t('pages.dash.bookingForm.form.labels.eventCategory')"
+                :value="selectedEventCategoryName || t('pages.dash.bookingForm.form.labels.noCategory')" />
+              <InfoRow
+                v-if="selectedEventInfo.duration"
+                icon="timer"
+                :label="t('pages.dash.bookingForm.form.labels.eventDuration')"
+                :value="formatDuration(selectedEventInfo.duration)" />
             </template>
 
             <InfoRow
@@ -50,13 +70,19 @@
               :label="t('pages.dash.bookingForm.profile.bookedBy')"
               :value="bookedByLabel" />
 
-            <InfoRow icon="file-text" align="start" :label="t('pages.dash.bookingForm.form.labels.info')" :value="formData.info || t('pages.dash.bookingForm.form.placeholders.noInfo')" />
+            <InfoRow
+              icon="file-text"
+              align="start"
+              :label="t('pages.dash.bookingForm.form.labels.info')"
+              :value="formData.info || t('pages.dash.bookingForm.form.placeholders.noInfo')" />
           </div>
         </DsCard>
       </div>
 
       <div class="order-1 lg:order-2">
-        <DsCard :title="isEditMode ? t('pages.dash.bookingForm.common.edit') : t('pages.dash.bookingForm.common.create')" class="h-full">
+        <DsCard
+          :title="isEditMode ? t('pages.dash.bookingForm.common.edit') : t('pages.dash.bookingForm.common.create')"
+          class="h-full">
           <div class="bg-background-50 p-4 rounded-lg border border-background-200 space-y-4">
             <div>
               <SelectMenu
@@ -67,7 +93,13 @@
                 :placeholder="t('pages.dash.bookingForm.form.placeholders.selectEvent')"
                 :error="!formSubmitted && errors.event ? errors.event : false"
                 :disabled="isEditMode" />
-              <DsButton type="button" variant="soft" icon="calendar-days" full-width class="mt-2" @click="$router.push({ name: 'dashEventsNew' })">
+              <DsButton
+                type="button"
+                variant="soft"
+                icon="calendar-days"
+                full-width
+                class="mt-2"
+                @click="$router.push({ name: 'dashEventsNew' })">
                 {{ t("pages.dash.bookingForm.form.actions.createEvent") || "¿No encuentras tu evento? Crea uno nuevo" }}
               </DsButton>
             </div>
@@ -77,35 +109,61 @@
               :label="t('pages.dash.bookingForm.form.labels.space')"
               icon="map-pin"
               :options="spaceOptions"
-              :placeholder="!selectedEvent && !isEditMode ? t('pages.dash.bookingForm.form.placeholders.selectSpaceFirst') : t('pages.dash.bookingForm.form.placeholders.selectSpace')"
+              :placeholder="
+                !selectedEvent && !isEditMode
+                  ? t('pages.dash.bookingForm.form.placeholders.selectSpaceFirst')
+                  : t('pages.dash.bookingForm.form.placeholders.selectSpace')
+              "
               :error="!formSubmitted && errors.space ? errors.space : false"
               :disabled="!selectedEvent && !isEditMode" />
 
-            <label v-if="!isEditMode" class="flex items-center gap-3 bg-background-100 p-3 rounded-lg border border-background-300 hover:border-primary-300 transition-colors cursor-pointer">
-              <input id="recurrence" type="checkbox" v-model="isRecurrent" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 cursor-pointer" />
-              <span class="text-sm font-medium text-text-700 select-none">{{ t("pages.dash.bookingForm.form.labels.repeat") }}</span>
+            <label
+              v-if="!isEditMode"
+              class="flex items-center gap-3 bg-background-100 p-3 rounded-lg border border-background-300 hover:border-primary-300 transition-colors cursor-pointer">
+              <input
+                id="recurrence"
+                type="checkbox"
+                v-model="isRecurrent"
+                class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 cursor-pointer" />
+              <span class="text-sm font-medium text-text-700 select-none">{{
+                t("pages.dash.bookingForm.form.labels.repeat")
+              }}</span>
             </label>
 
-            <div v-if="isRecurrent && !isEditMode" class="bg-background-100 p-4 rounded-lg border border-background-300 space-y-4">
+            <div
+              v-if="isRecurrent && !isEditMode"
+              class="bg-background-100 p-4 rounded-lg border border-background-300 space-y-4">
               <div class="grid grid-cols-2 gap-4">
                 <label class="block">
-                  <span class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-1.5">{{ t("pages.dash.bookingForm.form.labels.startDate") }}</span>
+                  <span class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-1.5">{{
+                    t("pages.dash.bookingForm.form.labels.startDate")
+                  }}</span>
                   <span class="relative flex items-center">
                     <Calendar class="absolute left-3 w-4 h-4 text-primary-600 pointer-events-none" />
-                    <input v-model="formData.startDate" type="date" class="w-full h-10 pl-9 pr-3 rounded-md border-[1.5px] border-background-300 bg-background-50 text-sm text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    <input
+                      v-model="formData.startDate"
+                      type="date"
+                      class="w-full h-10 pl-9 pr-3 rounded-md border-[1.5px] border-background-300 bg-background-50 text-sm text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500" />
                   </span>
                 </label>
                 <label class="block">
-                  <span class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-1.5">{{ t("pages.dash.bookingForm.form.labels.endDate") }}</span>
+                  <span class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-1.5">{{
+                    t("pages.dash.bookingForm.form.labels.endDate")
+                  }}</span>
                   <span class="relative flex items-center">
                     <Calendar class="absolute left-3 w-4 h-4 text-primary-600 pointer-events-none" />
-                    <input v-model="formData.endDate" type="date" class="w-full h-10 pl-9 pr-3 rounded-md border-[1.5px] border-background-300 bg-background-50 text-sm text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    <input
+                      v-model="formData.endDate"
+                      type="date"
+                      class="w-full h-10 pl-9 pr-3 rounded-md border-[1.5px] border-background-300 bg-background-50 text-sm text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500" />
                   </span>
                 </label>
               </div>
 
               <div>
-                <span class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-3">{{ t("pages.dash.bookingForm.form.labels.days") }}</span>
+                <span class="block text-text-700 text-xs font-semibold uppercase tracking-wider mb-3">{{
+                  t("pages.dash.bookingForm.form.labels.days")
+                }}</span>
                 <div class="grid grid-cols-7 gap-2">
                   <button
                     v-for="dayIndex in [1, 2, 3, 4, 5, 6, 0]"
@@ -113,7 +171,11 @@
                     type="button"
                     @click="toggleDay(dayIndex)"
                     class="h-10 rounded-md border-[1.5px] flex items-center justify-center transition-all duration-150 shadow-sm"
-                    :class="recurrenceState[dayIndex].selected ? 'bg-primary-600 border-primary-600 text-white' : 'bg-background-50 border-background-300 text-text-600 hover:border-primary-300'">
+                    :class="
+                      recurrenceState[dayIndex].selected
+                        ? 'bg-primary-600 border-primary-600 text-white'
+                        : 'bg-background-50 border-background-300 text-text-600 hover:border-primary-300'
+                    ">
                     <span class="text-xs font-bold">{{ getDayLabel(dayIndex) }}</span>
                   </button>
                 </div>
@@ -121,11 +183,16 @@
 
               <div v-if="hasSelectedDays" class="pt-2 border-t border-background-300">
                 <template v-for="dayIndex in [1, 2, 3, 4, 5, 6, 0]" :key="dayIndex">
-                  <div v-if="recurrenceState[dayIndex].selected" class="flex items-center justify-between py-2 border-b border-background-200 last:border-0">
+                  <div
+                    v-if="recurrenceState[dayIndex].selected"
+                    class="flex items-center justify-between py-2 border-b border-background-200 last:border-0">
                     <span class="text-sm font-medium text-text-800">{{ getFullDayLabel(dayIndex) }}</span>
                     <span class="relative w-32 flex items-center">
                       <Clock class="absolute left-2.5 w-3.5 h-3.5 text-primary-600 pointer-events-none" />
-                      <input type="time" v-model="recurrenceState[dayIndex].time" class="w-full h-8 pl-8 pr-2 text-sm rounded-md border border-background-300 bg-background-50 text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                      <input
+                        type="time"
+                        v-model="recurrenceState[dayIndex].time"
+                        class="w-full h-8 pl-8 pr-2 text-sm rounded-md border border-background-300 bg-background-50 text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500" />
                     </span>
                   </div>
                 </template>
@@ -133,46 +200,86 @@
             </div>
 
             <label v-if="!isRecurrent" class="block">
-              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.bookingForm.form.labels.bookingDate") }}</span>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{
+                t("pages.dash.bookingForm.form.labels.bookingDate")
+              }}</span>
               <span class="relative flex items-center">
                 <Clock class="absolute left-3 w-4 h-4 text-text-500 pointer-events-none" />
                 <input
                   v-model="formData.bookingDate"
                   type="datetime-local"
                   class="w-full h-10 pl-9 pr-9 rounded-md border-[1.5px] bg-background-50 text-text-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150"
-                  :class="errors.bookingDate && !formSubmitted ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'"
+                  :class="
+                    errors.bookingDate && !formSubmitted
+                      ? 'border-accent-500 ring-1 ring-accent-300'
+                      : 'border-background-300'
+                  "
                   required />
-                <CheckCircle2 v-if="(!errors.bookingDate || formSubmitted) && formData.bookingDate" class="absolute right-3 w-4 h-4 text-primary-500" />
-                <XCircle v-else-if="(formData.bookingDate || touchedFields.bookingDate) && !formSubmitted" class="absolute right-3 w-4 h-4 text-accent-500" />
+                <CheckCircle2
+                  v-if="(!errors.bookingDate || formSubmitted) && formData.bookingDate"
+                  class="absolute right-3 w-4 h-4 text-primary-500" />
+                <XCircle
+                  v-else-if="(formData.bookingDate || touchedFields.bookingDate) && !formSubmitted"
+                  class="absolute right-3 w-4 h-4 text-accent-500" />
               </span>
             </label>
 
-            <div v-if="isEditMode && initialBookingData?.groupId" class="bg-background-100 p-4 rounded-lg border border-background-300">
+            <div
+              v-if="isEditMode && initialBookingData?.groupId"
+              class="bg-background-100 p-4 rounded-lg border border-background-300">
               <span class="block text-text-800 text-sm font-bold mb-3 flex items-center">
                 <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
                 {{ t("pages.dash.bookingForm.form.labels.updateScope") }}
               </span>
               <div class="flex flex-col gap-2">
-                <label class="flex items-center p-3 rounded-md border-[1.5px] bg-background-50 cursor-pointer transition-colors" :class="updateScope === 'single' ? 'border-primary-500 ring-2 ring-primary-500' : 'border-background-300 hover:border-primary-300'">
-                  <input type="radio" value="single" v-model="updateScope" class="h-4 w-4 text-primary-600 focus:ring-primary-500" />
-                  <span class="ml-3 text-sm font-medium text-text-800">{{ t("pages.dash.bookingForm.form.options.updateSingle") }}</span>
+                <label
+                  class="flex items-center p-3 rounded-md border-[1.5px] bg-background-50 cursor-pointer transition-colors"
+                  :class="
+                    updateScope === 'single'
+                      ? 'border-primary-500 ring-2 ring-primary-500'
+                      : 'border-background-300 hover:border-primary-300'
+                  ">
+                  <input
+                    type="radio"
+                    value="single"
+                    v-model="updateScope"
+                    class="h-4 w-4 text-primary-600 focus:ring-primary-500" />
+                  <span class="ml-3 text-sm font-medium text-text-800">{{
+                    t("pages.dash.bookingForm.form.options.updateSingle")
+                  }}</span>
                 </label>
-                <label class="flex items-center p-3 rounded-md border-[1.5px] bg-background-50 cursor-pointer transition-colors" :class="updateScope === 'group' ? 'border-primary-500 ring-2 ring-primary-500' : 'border-background-300 hover:border-primary-300'">
-                  <input type="radio" value="group" v-model="updateScope" class="h-4 w-4 text-primary-600 focus:ring-primary-500" />
-                  <span class="ml-3 text-sm font-medium text-text-800">{{ t("pages.dash.bookingForm.form.options.updateGroup") }}</span>
+                <label
+                  class="flex items-center p-3 rounded-md border-[1.5px] bg-background-50 cursor-pointer transition-colors"
+                  :class="
+                    updateScope === 'group'
+                      ? 'border-primary-500 ring-2 ring-primary-500'
+                      : 'border-background-300 hover:border-primary-300'
+                  ">
+                  <input
+                    type="radio"
+                    value="group"
+                    v-model="updateScope"
+                    class="h-4 w-4 text-primary-600 focus:ring-primary-500" />
+                  <span class="ml-3 text-sm font-medium text-text-800">{{
+                    t("pages.dash.bookingForm.form.options.updateGroup")
+                  }}</span>
                 </label>
               </div>
             </div>
 
             <div>
-              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.bookingForm.form.labels.info") }}</span>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{
+                t("pages.dash.bookingForm.form.labels.info")
+              }}</span>
               <span class="relative block">
                 <textarea
                   v-model="formData.info"
                   rows="4"
                   maxlength="500"
                   class="block w-full p-3 border-[1.5px] rounded-md bg-background-50 text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150"
-                  :class="errors.info && !formSubmitted ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'"
+                  :class="
+                    errors.info && !formSubmitted ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'
+                  "
                   :placeholder="t('pages.dash.bookingForm.form.placeholders.info')"></textarea>
                 <span class="absolute bottom-3 right-3 flex items-center gap-2">
                   <span class="text-xs text-text-500">{{ formData.info?.length || 0 }}/500</span>
@@ -189,11 +296,21 @@
             </DsButton>
             <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid">
               <template v-if="buttonState === 'processing'">
-                {{ isEditMode ? t("pages.dash.bookingForm.form.actions.updating") : t("pages.dash.bookingForm.form.actions.submitting") }}
+                {{
+                  isEditMode
+                    ? t("pages.dash.bookingForm.form.actions.updating")
+                    : t("pages.dash.bookingForm.form.actions.submitting")
+                }}
               </template>
-              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.bookingForm.common.status.success") }}</template>
-              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.bookingForm.common.status.error") }}</template>
-              <template v-else>{{ isEditMode ? t("pages.dash.bookingForm.common.update") : t("pages.dash.bookingForm.common.create") }}</template>
+              <template v-else-if="buttonState === 'success'">{{
+                t("pages.dash.bookingForm.common.status.success")
+              }}</template>
+              <template v-else-if="buttonState === 'error'">{{
+                t("pages.dash.bookingForm.common.status.error")
+              }}</template>
+              <template v-else>{{
+                isEditMode ? t("pages.dash.bookingForm.common.update") : t("pages.dash.bookingForm.common.create")
+              }}</template>
             </DsButton>
           </div>
         </DsCard>
@@ -204,9 +321,15 @@
       :open="showImageModal && !!(selectedEventInfo && selectedEventInfo.coverUrl)"
       :title="t('pages.dash.bookingForm.form.labels.eventCover')"
       width="lg"
-      :actions="[{ label: t('pages.dash.bookingForm.common.close'), type: 'default', onClick: () => (showImageModal = false) }]"
+      :actions="[
+        { label: t('pages.dash.bookingForm.common.close'), type: 'default', onClick: () => (showImageModal = false) },
+      ]"
       @close="showImageModal = false">
-      <img v-if="selectedEventInfo" :src="selectedEventInfo.coverUrl" :alt="t('pages.other.commons.altText.eventCoverFullscreen')" class="max-h-[70vh] mx-auto object-contain rounded-lg" />
+      <img
+        v-if="selectedEventInfo"
+        :src="selectedEventInfo.coverUrl"
+        :alt="t('pages.other.commons.altText.eventCoverFullscreen')"
+        class="max-h-[70vh] mx-auto object-contain rounded-lg" />
     </DsModal>
   </div>
 </template>
@@ -215,7 +338,7 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { Calendar, Search, ImageIcon, Clock, CheckCircle2, XCircle, ClipboardList } from "lucide-vue-next";
+import { Calendar, Search, ImageIcon, Clock, CheckCircle2, XCircle, ClipboardList } from "@lucide/vue";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";

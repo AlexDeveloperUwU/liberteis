@@ -6,7 +6,10 @@
       <div class="order-2 lg:order-1">
         <DsCard :title="t('pages.dash.eventsForm.profile.preview')" class="h-full">
           <div class="bg-background-50 p-5 rounded-lg border border-background-200 space-y-4">
-            <InfoRow icon="calendar-days" :label="t('pages.dash.eventsForm.form.labels.title')" :value="formData.title || t('pages.dash.eventsForm.form.placeholders.title')" />
+            <InfoRow
+              icon="calendar-days"
+              :label="t('pages.dash.eventsForm.form.labels.title')"
+              :value="formData.title || t('pages.dash.eventsForm.form.placeholders.title')" />
 
             <div class="flex justify-center">
               <div
@@ -14,7 +17,10 @@
                 style="width: 15%; aspect-ratio: 9/16"
                 @click="openImageModal">
                 <div v-if="imagePreview || formData.coverUrl" class="w-full h-full">
-                  <img :src="imagePreview || formData.coverUrl" :alt="t('pages.other.commons.altText.eventCover')" class="w-full h-full object-cover" />
+                  <img
+                    :src="imagePreview || formData.coverUrl"
+                    :alt="t('pages.other.commons.altText.eventCover')"
+                    class="w-full h-full object-cover" />
                   <div
                     class="absolute inset-0 bg-background-950/10 group-hover:bg-background-950/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
                     <div class="bg-background-50/90 p-2 rounded-full">
@@ -29,20 +35,32 @@
               </div>
             </div>
 
-            <InfoRow icon="bookmark" :label="t('pages.dash.eventsForm.form.labels.category')" :value="selectedCategoryName || t('pages.dash.eventsForm.form.placeholders.noCategory')" />
+            <InfoRow
+              icon="bookmark"
+              :label="t('pages.dash.eventsForm.form.labels.category')"
+              :value="selectedCategoryName || t('pages.dash.eventsForm.form.placeholders.noCategory')" />
             <InfoRow
               v-if="isEditMode && initialEventData"
               icon="user"
               :label="t('pages.dash.eventsForm.profile.createdBy')"
               :value="createdByLabel" />
-            <InfoRow icon="file-text" align="start" :label="t('pages.dash.eventsForm.form.labels.info')" :value="formData.info || t('pages.dash.eventsForm.form.placeholders.noInfo')" />
-            <InfoRow icon="clock" :label="t('pages.dash.eventsForm.form.labels.duration')" :value="formatDuration(formData.duration)" />
+            <InfoRow
+              icon="file-text"
+              align="start"
+              :label="t('pages.dash.eventsForm.form.labels.info')"
+              :value="formData.info || t('pages.dash.eventsForm.form.placeholders.noInfo')" />
+            <InfoRow
+              icon="clock"
+              :label="t('pages.dash.eventsForm.form.labels.duration')"
+              :value="formatDuration(formData.duration)" />
           </div>
         </DsCard>
       </div>
 
       <div class="order-1 lg:order-2">
-        <DsCard :title="isEditMode ? t('pages.dash.eventsForm.common.edit') : t('pages.dash.eventsForm.common.create')" class="h-full">
+        <DsCard
+          :title="isEditMode ? t('pages.dash.eventsForm.common.edit') : t('pages.dash.eventsForm.common.create')"
+          class="h-full">
           <div class="bg-background-50 p-4 rounded-lg border border-background-200 space-y-4">
             <h4 class="text-sm font-medium text-text-700 mb-1 flex items-center">
               <ClipboardList class="w-4 h-4 mr-2 text-primary-600" />
@@ -67,7 +85,9 @@
               :error="!formSubmitted && errors.category ? errors.category : false" />
 
             <div>
-              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.eventsForm.form.labels.duration") }}</span>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{
+                t("pages.dash.eventsForm.form.labels.duration")
+              }}</span>
               <div class="grid grid-cols-2 gap-4">
                 <span class="relative flex items-center">
                   <Clock class="absolute left-3 w-4 h-4 text-text-500 pointer-events-none" />
@@ -80,7 +100,9 @@
                     class="w-full h-10 pl-9 pr-16 rounded-md border-[1.5px] border-background-300 bg-background-50 text-text-900 text-sm no-spinner focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150"
                     :placeholder="t('pages.dash.eventsForm.form.placeholders.hours')"
                     @input="updateDuration" />
-                  <span class="absolute right-3 text-sm text-text-600">{{ t("pages.dash.eventsForm.form.labels.hours") }}</span>
+                  <span class="absolute right-3 text-sm text-text-600">{{
+                    t("pages.dash.eventsForm.form.labels.hours")
+                  }}</span>
                 </span>
                 <span class="relative flex items-center">
                   <Clock class="absolute left-3 w-4 h-4 text-text-500 pointer-events-none" />
@@ -91,35 +113,51 @@
                     max="59"
                     step="5"
                     class="w-full h-10 pl-9 pr-16 rounded-md border-[1.5px] bg-background-50 text-text-900 text-sm no-spinner focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150"
-                    :class="errors.duration && !formSubmitted ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'"
+                    :class="
+                      errors.duration && !formSubmitted
+                        ? 'border-accent-500 ring-1 ring-accent-300'
+                        : 'border-background-300'
+                    "
                     :placeholder="t('pages.dash.eventsForm.form.placeholders.minutes')"
                     @input="updateDuration" />
-                  <span class="absolute right-3 text-sm text-text-600">{{ t("pages.dash.eventsForm.form.labels.minutes") }}</span>
+                  <span class="absolute right-3 text-sm text-text-600">{{
+                    t("pages.dash.eventsForm.form.labels.minutes")
+                  }}</span>
                 </span>
               </div>
               <p v-if="errors.duration && !formSubmitted" class="mt-1 text-xs text-accent-600">{{ errors.duration }}</p>
             </div>
 
             <div>
-              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.eventsForm.form.labels.info") }}</span>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{
+                t("pages.dash.eventsForm.form.labels.info")
+              }}</span>
               <span class="relative block">
                 <textarea
                   v-model="formData.info"
                   rows="5"
                   maxlength="500"
                   class="block w-full p-3 border-[1.5px] rounded-md bg-background-50 text-text-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-150"
-                  :class="errors.info && !formSubmitted ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'"
+                  :class="
+                    errors.info && !formSubmitted ? 'border-accent-500 ring-1 ring-accent-300' : 'border-background-300'
+                  "
                   :placeholder="t('pages.dash.eventsForm.form.placeholders.info')"></textarea>
                 <span class="absolute bottom-3 right-3 flex items-center gap-2">
                   <span class="text-xs text-text-500">{{ formData.info.length }}/500</span>
-                  <CheckCircle2 v-if="(!errors.info || formSubmitted) && formData.info && formData.info.length >= 3" class="w-4 h-4 text-primary-500" />
-                  <XCircle v-else-if="(formData.info || touchedFields.info) && !formSubmitted && errors.info" class="w-4 h-4 text-accent-500" />
+                  <CheckCircle2
+                    v-if="(!errors.info || formSubmitted) && formData.info && formData.info.length >= 3"
+                    class="w-4 h-4 text-primary-500" />
+                  <XCircle
+                    v-else-if="(formData.info || touchedFields.info) && !formSubmitted && errors.info"
+                    class="w-4 h-4 text-accent-500" />
                 </span>
               </span>
             </div>
 
             <div>
-              <span class="block text-sm font-medium text-text-label mb-1.5">{{ t("pages.dash.eventsForm.form.labels.cover") }}</span>
+              <span class="block text-sm font-medium text-text-label mb-1.5">{{
+                t("pages.dash.eventsForm.form.labels.cover")
+              }}</span>
               <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileUpload" />
               <div @dragover.prevent="isDragging = true" @dragleave.prevent="isDragging = false" @drop.prevent="onDrop">
                 <div
@@ -139,7 +177,9 @@
                           : t("pages.dash.eventsForm.form.placeholders.uploadCover")
                     }}
                   </p>
-                  <p v-if="!showErrorMessage" class="text-text-500 text-xs">{{ t("pages.dash.eventsForm.form.placeholders.coverFormat") }}</p>
+                  <p v-if="!showErrorMessage" class="text-text-500 text-xs">
+                    {{ t("pages.dash.eventsForm.form.placeholders.coverFormat") }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -151,11 +191,21 @@
             </DsButton>
             <DsButton type="submit" :state="buttonState" icon="save" :disabled="isSubmitting || !isFormValid">
               <template v-if="buttonState === 'processing'">
-                {{ isEditMode ? t("pages.dash.eventsForm.form.actions.updating") : t("pages.dash.eventsForm.form.actions.submitting") }}
+                {{
+                  isEditMode
+                    ? t("pages.dash.eventsForm.form.actions.updating")
+                    : t("pages.dash.eventsForm.form.actions.submitting")
+                }}
               </template>
-              <template v-else-if="buttonState === 'success'">{{ t("pages.dash.eventsForm.common.status.success") }}</template>
-              <template v-else-if="buttonState === 'error'">{{ t("pages.dash.eventsForm.common.status.error") }}</template>
-              <template v-else>{{ isEditMode ? t("pages.dash.eventsForm.common.update") : t("pages.dash.eventsForm.common.create") }}</template>
+              <template v-else-if="buttonState === 'success'">{{
+                t("pages.dash.eventsForm.common.status.success")
+              }}</template>
+              <template v-else-if="buttonState === 'error'">{{
+                t("pages.dash.eventsForm.common.status.error")
+              }}</template>
+              <template v-else>{{
+                isEditMode ? t("pages.dash.eventsForm.common.update") : t("pages.dash.eventsForm.common.create")
+              }}</template>
             </DsButton>
           </div>
         </DsCard>
@@ -178,7 +228,10 @@
         },
       ]"
       @close="showImageModal = false">
-      <img :src="imagePreview || formData.coverUrl" :alt="t('pages.other.commons.altText.eventCoverFullscreen')" class="max-h-[70vh] mx-auto object-contain rounded-lg" />
+      <img
+        :src="imagePreview || formData.coverUrl"
+        :alt="t('pages.other.commons.altText.eventCoverFullscreen')"
+        class="max-h-[70vh] mx-auto object-contain rounded-lg" />
     </DsModal>
   </div>
 </template>
@@ -187,7 +240,7 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { Search, ImageIcon, Clock, CheckCircle2, XCircle, UploadCloud, ClipboardList } from "lucide-vue-next";
+import { Search, ImageIcon, Clock, CheckCircle2, XCircle, UploadCloud, ClipboardList } from "@lucide/vue";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";

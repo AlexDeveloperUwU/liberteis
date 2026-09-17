@@ -1,5 +1,6 @@
 <template>
-  <nav class="navbar fixed top-0 left-0 w-full z-50 bg-background-100 border-b-[1.5px] border-background-300 shadow-navbar">
+  <nav
+    class="navbar fixed top-0 left-0 w-full z-50 bg-background-100 border-b-[1.5px] border-background-300 shadow-navbar">
     <div class="flex items-center justify-between px-6 py-3">
       <div class="flex items-center gap-3">
         <button
@@ -49,7 +50,14 @@
 </template>
 
 <script setup>
-import { CalendarClock, Languages, ChevronDown, Menu as LucideMenu, ChevronLeft as LucideChevronLeft, User } from "lucide-vue-next";
+import {
+  CalendarClock,
+  Languages,
+  ChevronDown,
+  Menu as LucideMenu,
+  ChevronLeft as LucideChevronLeft,
+  User,
+} from "@lucide/vue";
 import { useI18n } from "vue-i18n";
 import { computed, onMounted, onBeforeUnmount } from "vue";
 import { useMainStore } from "../stores/mainStore";

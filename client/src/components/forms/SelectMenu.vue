@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
-import { Check, ChevronDown, XCircle } from "lucide-vue-next";
+import { Check, ChevronDown, XCircle } from "@lucide/vue";
 import { resolveIcon } from "../icons.js";
 
 const props = defineProps({
@@ -20,7 +20,9 @@ const LeftIcon = computed(() => resolveIcon(props.icon));
 
 const optionIcon = (name) => resolveIcon(name);
 
-const selectedLabel = computed(() => props.options.find((o) => o.value === props.modelValue)?.label ?? props.placeholder);
+const selectedLabel = computed(
+  () => props.options.find((o) => o.value === props.modelValue)?.label ?? props.placeholder,
+);
 </script>
 
 <template>

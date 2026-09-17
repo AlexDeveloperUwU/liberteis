@@ -12,7 +12,11 @@ const props = defineProps({
   icon: { type: String, default: null },
   iconRight: { type: String, default: null },
   /** Submit-button lifecycle: overrides variant/icon/disabled to show progress, success, or error. @default "default" */
-  state: { type: String, default: "default", validator: (v) => ["default", "processing", "success", "error"].includes(v) },
+  state: {
+    type: String,
+    default: "default",
+    validator: (v) => ["default", "processing", "success", "error"].includes(v),
+  },
   fullWidth: { type: Boolean, default: false },
   type: { type: String, default: "button" },
   disabled: { type: Boolean, default: false },

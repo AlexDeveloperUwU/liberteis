@@ -5,6 +5,37 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.3] - 2026-09-17
+
+### Security
+
+- Bumped `sharp` to 0.35.4, fixing two libheif vulnerabilities (GHSA-g89c-p67h-r497,
+  GHSA-2jg2-4ch7-h545).
+- Bumped `mysql2` to 3.24.4 and added a `mysql2` override so the copy nested
+  under `express-mysql-session` also picks it up, fixing an auth-plugin
+  downgrade that could leak plaintext credentials (GHSA-3f6p-5ww8-9rcr) and an
+  unbounded zlib inflate decompression-bomb DoS (GHSA-rgwj-5xj2-c3m3).
+- Bumped `multer` to 2.4.0, fixing four denial-of-service issues (file
+  descriptor leak on aborted uploads, crafted multipart field names, oversized
+  array indexes, and a file-size-limit bypass via async `fileFilter`).
+- Bumped `qs` (transitive, via `body-parser`/`express`) to 6.16.0, fixing an
+  array-limit bypass and a DoS via attacker-controlled `isBuffer`.
+- `client/`: bumped `js-yaml`, `baseline-browser-mapping`, `browserslist`, and
+  `postcss-selector-parser` (all transitive dev-tooling dependencies), fixing a
+  CPU-exhaustion issue in YAML merge keys, a process-termination DoS, an
+  unbounded-memory/prototype-write issue, and an AST-recursion DoS.
+
+### Changed
+
+- Refreshed remaining outdated dependencies to their latest compatible
+  versions, including major bumps verified to need no code changes:
+  `kysely`, `concurrently` (root); `pinia`, `vue-router`, `globals`, `eslint`
+  (with `@eslint/js`), `eslint-plugin-vue`, and a staged `vite` 6→7 bump
+  (`@vitejs/plugin-vue`, `vite-plugin-vue-devtools` alongside it) (`client/`).
+- Migrated from the deprecated `lucide-vue-next` to `@lucide/vue` (same API,
+  import path only).
+- Removed the unused `uuid` dependency from `client/`.
+
 ## [2.8.2] - 2026-09-17
 
 ### Changed

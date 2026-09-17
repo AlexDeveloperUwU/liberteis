@@ -12,9 +12,13 @@
 
         <template v-else-if="pageState === 'expired' || pageState === 'invalid'">
           <p class="text-sm text-accent-600 mb-6">
-            {{ pageState === "expired" ? t("pages.auth.resetPassword.expired") : t("pages.auth.resetPassword.invalid") }}
+            {{
+              pageState === "expired" ? t("pages.auth.resetPassword.expired") : t("pages.auth.resetPassword.invalid")
+            }}
           </p>
-          <router-link :to="{ name: 'authForgotPassword' }" class="block text-sm text-center text-primary-600 hover:text-primary-700">
+          <router-link
+            :to="{ name: 'authForgotPassword' }"
+            class="block text-sm text-center text-primary-600 hover:text-primary-700">
             {{ t("pages.auth.resetPassword.requestNewLink") }}
           </router-link>
         </template>
@@ -35,8 +39,13 @@
 
             <div v-if="password" class="space-y-2 mt-2">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-text-600">{{ t("pages.other.validators.password.strength") }}</span>
-                <DsPill :tone="passwordStrength === 'weak' ? 'danger' : passwordStrength === 'medium' ? 'warning' : 'success'">
+                <span class="text-xs font-medium text-text-600">{{
+                  t("pages.other.validators.password.strength")
+                }}</span>
+                <DsPill
+                  :tone="
+                    passwordStrength === 'weak' ? 'danger' : passwordStrength === 'medium' ? 'warning' : 'success'
+                  ">
                   {{
                     passwordStrength === "weak"
                       ? t("pages.other.validators.password.weak")
@@ -49,7 +58,13 @@
               <div class="h-2 bg-background-300 rounded-full overflow-hidden">
                 <div
                   class="h-full transition-all"
-                  :class="[passwordStrength === 'weak' ? 'bg-accent-500 w-1/3' : passwordStrength === 'medium' ? 'bg-warning-500 w-2/3' : 'bg-primary-500 w-full']"></div>
+                  :class="[
+                    passwordStrength === 'weak'
+                      ? 'bg-accent-500 w-1/3'
+                      : passwordStrength === 'medium'
+                        ? 'bg-warning-500 w-2/3'
+                        : 'bg-primary-500 w-full',
+                  ]"></div>
               </div>
             </div>
           </div>
@@ -63,7 +78,11 @@
             :error="errors.confirmPassword"
             required />
 
-          <DsButton type="submit" full-width :state="submitting ? 'processing' : 'default'" :disabled="!canSubmit || submitting">
+          <DsButton
+            type="submit"
+            full-width
+            :state="submitting ? 'processing' : 'default'"
+            :disabled="!canSubmit || submitting">
             {{ t("pages.auth.resetPassword.submit") }}
           </DsButton>
         </form>
@@ -76,7 +95,7 @@
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { Loader2 } from "lucide-vue-next";
+import { Loader2 } from "@lucide/vue";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
 import { validatePassword } from "@/utils/validators";
