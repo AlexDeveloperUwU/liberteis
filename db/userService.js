@@ -201,7 +201,7 @@ export async function requestPasswordReset(email) {
     const domain = domainResult.success ? domainResult.data.value : "";
     const resetLink = `${domain}/auth/resetPassword/${token}`;
 
-    await mailer.sendPasswordResetEmail(user, resetLink);
+    await mailer.sendPasswordResetEmail(user, resetLink, RESET_TOKEN_TTL_MS / (60 * 60 * 1000));
 
     return ErrorManager.returnSuccess(200, "Password reset requested", { code: 200 });
   } catch (error) {

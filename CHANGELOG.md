@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.0] - 2026-09-17
+
+### Added
+
+- Password-reset emails are now real HTML matching the app's design system (K2D/Lexend fonts,
+  brand colors), built from a shared base template (`emails/base.html`) and per-locale
+  translation files (`emails/locales/{en,es,gl}/passwordReset.json`) instead of a hardcoded
+  plain-text string. `userCreated`/`accountChanged` are unaffected for now.
+- Email icons are PNGs generated from Lucide (`npm run email:icons`, backed by the new
+  `lucide-static` dependency) and sent as inline attachments, since Gmail and Outlook don't
+  render inline SVG or `data:` image URIs.
+
 ## [2.7.6] - 2026-09-09
 
 ### Fixed
