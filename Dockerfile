@@ -29,9 +29,6 @@ RUN npm install --production && npm cache clean --force
 # Copia el resto del código de la aplicación
 COPY . .
 
-# Genera los iconos de los emails (no se versionan, se generan en build)
-RUN npm run email:icons
-
 # Copia los contenidos de dist a views desde la etapa de construcción
 COPY --from=build-client /app/client/dist /app/views
 
@@ -48,8 +45,8 @@ ENV PORT=$PORT
 # Expone el puerto
 EXPOSE $PORT
 
-# Asegurar permisos para el directorio de logs
-RUN mkdir -p /app/logs && chown -R node:node /app/logs
+# Asegurar permisos para el directorio de logs y de los iconos de email generados en tiempo de ejecución
+RUN mkdir -p /app/logs /app/emails/assets && chown -R node:node /app/logs /app/emails/assets
 
 # Cambiar al usuario node para evitar problemas de permisos
 USER node

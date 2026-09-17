@@ -5,6 +5,7 @@ import nodemailer from "nodemailer";
 import * as configService from "../db/configService.js";
 import { decryptData } from "./dataSecurity.js";
 import { logger } from "./logger.js";
+import { ensureIcon, ensureBrandIcon } from "../emails/generate-icons.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const EMAILS_DIR = path.join(__dirname, "..", "emails");
@@ -112,28 +113,19 @@ function escapeHtml(value) {
 }
 
 /**
- * The app's icon, embedded as a `cid:brandIcon` inline attachment in the
- * header brand row. Most email clients (Gmail, Outlook) don't render inline
- * `<svg>` and Gmail strips `data:` image URIs, so icons must be real
- * attachments, not inline markup.
- */
-const BRAND_ICON_PATH = path.join(EMAILS_DIR, "assets", "brand-icon.png");
-
-/**
  * Non-translatable presentation metadata for templates that have been
  * migrated to the HTML `emails/` template system. A template key present
  * here uses `emails/base.html` + `emails/locales/<lang>/<key>.json`; a key
  * absent here falls back to the legacy plain-text `templates` object below.
- * `titleIconPath`/`infoIconPath` are embedded as `cid:titleIcon`/`cid:infoIcon`
- * inline attachments (see `BRAND_ICON_PATH` above for why, not inline SVG).
- * Both PNGs come from `emails/icons/*.svg` via `emails/generate-icons.mjs`.
+ * `titleIcon`/`infoIcon` are Lucide icon names resolved via `ensureIcon()`
+ * (see its own doc comment for why they're PNG attachments, not inline SVG).
  */
 const TEMPLATE_META = {
   passwordReset: {
     accent: "#2159a3",
     badgeBg: "#d4e2f5",
-    titleIconPath: path.join(EMAILS_DIR, "assets", "key.png"),
-    infoIconPath: path.join(EMAILS_DIR, "assets", "clock.png"),
+    titleIcon: "key",
+    infoIcon: "clock",
   },
 };
 
@@ -242,9 +234,9 @@ async function sendHtmlTemplatedMail(templateKey, settings, user, data) {
   });
 
   const attachments = [
-    { filename: "brand-icon.png", path: BRAND_ICON_PATH, cid: "brandIcon" },
-    { filename: "title-icon.png", path: meta.titleIconPath, cid: "titleIcon" },
-    { filename: "info-icon.png", path: meta.infoIconPath, cid: "infoIcon" },
+    { filename: "brand-icon.png", path: await ensureBrandIcon(), cid: "brandIcon" },
+    { filename: "title-icon.png", path: await ensureIcon(meta.titleIcon), cid: "titleIcon" },
+    { filename: "info-icon.png", path: await ensureIcon(meta.infoIcon), cid: "infoIcon" },
   ];
 
   return sendMail({ to: user.email, subject, text, html, attachments });

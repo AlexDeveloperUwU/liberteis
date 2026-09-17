@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.2] - 2026-09-17
+
+### Changed
+
+- Email icon PNGs are now generated lazily on first use and cached on disk
+  (`emails/generate-icons.mjs` exports `ensureIcon`/`ensureBrandIcon`, called from
+  `utils/mailer.js`), instead of as an explicit Docker build step. Removes the need for the
+  build step entirely; the Dockerfile now just ensures `/app/emails/assets` is writable by
+  the runtime user, same as it already does for `/app/logs`.
+
 ## [2.8.1] - 2026-09-17
 
 ### Fixed
