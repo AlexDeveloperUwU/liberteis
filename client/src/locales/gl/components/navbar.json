@@ -5,5 +5,6 @@
   "lightMode": "Modo claro",
   "darkMode": "Modo escuro",
   "settings": "Configuración",
-  "toggleSidebar": "Alternar barra lateral"
+  "toggleSidebar": "Alternar barra lateral",
+  "userMenu": "Menú de usuario"
 }

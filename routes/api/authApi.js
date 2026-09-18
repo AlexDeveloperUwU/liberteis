@@ -134,6 +134,24 @@ api.post("/logout", (req, res) => {
 });
 
 /**
+ * @name GET /api/auth/me
+ * @description Returns the user for the current session cookie, if any. Lets the client
+ * reconcile its local auth state against the server's actual session on boot.
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
+ */
+api.get("/me", (req, res) => {
+  if (!req._reqUser) {
+    return res.status(401).json(ErrorManager.returnError("unauthorized"));
+  }
+
+  const { id, name, email, type, lang } = req._reqUser;
+  return res
+    .status(200)
+    .json(ErrorManager.returnSuccess(200, "Session valid", { user: { id, name, email, type, lang } }));
+});
+
+/**
  * @name POST /api/auth/forgotPassword
  * @description Requests a password reset email for the given address. Always responds with a
  * generic success message, regardless of whether the address is registered, to avoid leaking

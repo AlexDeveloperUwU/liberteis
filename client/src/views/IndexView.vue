@@ -15,7 +15,11 @@
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div
+            role="button"
+            tabindex="0"
             @click="selectUserType('teacher')"
+            @keydown.enter="selectUserType('teacher')"
+            @keydown.space.prevent="selectUserType('teacher')"
             class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 hover:border-primary-400 hover:shadow-xl transition-all duration-200 cursor-pointer group"
             :class="{ 'border-primary-500 bg-primary-50': selectedUserType === 'teacher' }">
             <div class="flex flex-col items-center text-center">
@@ -28,7 +32,11 @@
           </div>
 
           <div
+            role="button"
+            tabindex="0"
             @click="selectUserType('student')"
+            @keydown.enter="selectUserType('student')"
+            @keydown.space.prevent="selectUserType('student')"
             class="bg-background-100 p-6 rounded-lg border-[1.5px] border-background-300 hover:border-primary-400 hover:shadow-xl transition-all duration-200 cursor-pointer group"
             :class="{ 'border-primary-500 bg-primary-50': selectedUserType === 'student' }">
             <div class="flex flex-col items-center text-center">

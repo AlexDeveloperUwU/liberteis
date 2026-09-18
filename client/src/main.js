@@ -7,6 +7,7 @@ import App from "./App.vue";
 import router from "./router";
 import { createI18nInstance } from "./i18n";
 import { useMainStore } from "./stores/mainStore";
+import { useAuthStore } from "./stores/authStore";
 
 axios.defaults.withCredentials = true;
 
@@ -19,6 +20,9 @@ axios.interceptors.response.use(
     const wasLoggedIn = Boolean(localStorage.getItem("auth_user"));
 
     if (status === 401 && !isAuthEndpoint && wasLoggedIn) {
+      const authStore = useAuthStore();
+      authStore.user = null;
+      authStore.userVerified = false;
       localStorage.removeItem("auth_user");
       if (window.location.pathname !== "/") {
         window.location.href = "/";
@@ -34,6 +38,9 @@ const initApp = async () => {
     const app = createApp(App);
     const pinia = createPinia();
     app.use(pinia);
+
+    const authStore = useAuthStore();
+    await authStore.initSession();
 
     const mainStore = useMainStore();
     const i18n = await createI18nInstance(mainStore);

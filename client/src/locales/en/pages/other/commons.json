@@ -59,6 +59,9 @@
     "eventCover": "Event cover",
     "eventCoverFullscreen": "Event cover fullscreen"
   },
+  "actions": {
+    "openImagePreview": "Open image preview"
+  },
   "errors": {
     "generic": "An unexpected error occurred."
   }

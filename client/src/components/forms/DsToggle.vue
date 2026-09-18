@@ -7,6 +7,7 @@ const props = defineProps({
   label: { type: String, default: null },
   description: { type: String, default: null },
   icon: { type: String, default: null },
+  ariaLabel: { type: String, default: null },
 });
 const emit = defineEmits(["update:modelValue"]);
 
@@ -30,6 +31,7 @@ const toggle = () => emit("update:modelValue", !props.modelValue);
     <button
       role="switch"
       :aria-checked="modelValue"
+      :aria-label="ariaLabel || label"
       type="button"
       @click="toggle"
       class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200"
@@ -43,6 +45,7 @@ const toggle = () => emit("update:modelValue", !props.modelValue);
     v-else
     role="switch"
     :aria-checked="modelValue"
+    :aria-label="ariaLabel || label"
     type="button"
     @click="toggle"
     class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200"

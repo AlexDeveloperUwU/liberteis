@@ -13,9 +13,14 @@
 
             <div class="flex justify-center">
               <div
+                role="button"
+                tabindex="0"
+                :aria-label="t('pages.other.commons.actions.openImagePreview')"
                 class="relative rounded-lg overflow-hidden border border-background-300 shadow-sm cursor-pointer group"
                 style="width: 15%; aspect-ratio: 9/16"
-                @click="openImageModal">
+                @click="openImageModal"
+                @keydown.enter="openImageModal"
+                @keydown.space.prevent="openImageModal">
                 <div v-if="imagePreview || formData.coverUrl" class="w-full h-full">
                   <img
                     :src="imagePreview || formData.coverUrl"
@@ -161,12 +166,16 @@
               <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileUpload" />
               <div @dragover.prevent="isDragging = true" @dragleave.prevent="isDragging = false" @drop.prevent="onDrop">
                 <div
+                  role="button"
+                  tabindex="0"
                   class="border-2 border-dashed rounded-lg p-5 text-center transition-all cursor-pointer w-full"
                   :class="[
                     isDragging ? 'border-primary-500 bg-primary-50' : 'border-background-300 hover:border-primary-300',
                     showErrorMessage ? 'border-accent-500 bg-accent-50' : '',
                   ]"
-                  @click="fileInput.click()">
+                  @click="fileInput.click()"
+                  @keydown.enter="fileInput.click()"
+                  @keydown.space.prevent="fileInput.click()">
                   <UploadCloud class="w-8 h-8 mx-auto text-primary-600 mb-1.5" />
                   <p :class="['font-medium mb-0.5', showErrorMessage ? 'text-accent-700' : 'text-text-700']">
                     {{

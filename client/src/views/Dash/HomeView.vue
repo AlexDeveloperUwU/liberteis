@@ -63,7 +63,12 @@
                 <template v-for="(day, dayIndex) in week" :key="`day-${weekIndex}-${dayIndex}`">
                   <div
                     v-if="showWeekends || !day.isWeekend"
+                    role="button"
+                    tabindex="0"
+                    :aria-label="t('pages.dash.home.calendar.createBookingOn', { date: formatDate(day.date) })"
                     @click="navigateToBookingForm(day.date)"
+                    @keydown.enter="navigateToBookingForm(day.date)"
+                    @keydown.space.prevent="navigateToBookingForm(day.date)"
                     :class="[
                       'min-h-[100px] p-2 relative border border-background-200 cursor-pointer hover:bg-background-100/80 transition-colors',
                       day.isCurrentMonth ? 'bg-background-50 text-text-800' : 'bg-background-100/60 text-text-500',
@@ -84,7 +89,11 @@
                       <div
                         v-for="event in getEventsForDay(day.date)"
                         :key="event.id"
+                        role="button"
+                        tabindex="0"
                         @click.stop="showEventDetailsModal(event)"
+                        @keydown.enter.stop="showEventDetailsModal(event)"
+                        @keydown.space.stop.prevent="showEventDetailsModal(event)"
                         :data-booking-id="
                           event.id || (event.bookingData && (event.bookingData.id || event.bookingData._id))
                         "
@@ -133,7 +142,11 @@
                   <div
                     v-for="event in group"
                     :key="event.id"
+                    role="button"
+                    tabindex="0"
                     @click="showEventDetailsModal(event)"
+                    @keydown.enter="showEventDetailsModal(event)"
+                    @keydown.space.prevent="showEventDetailsModal(event)"
                     :data-booking-id="
                       event.id || (event.bookingData && (event.bookingData.id || event.bookingData._id))
                     "

@@ -48,10 +48,10 @@
         <DsCard :title="t('pages.dash.settings.common.edit')" class="h-full">
           <div class="space-y-6">
             <div class="bg-background-50 p-4 rounded-lg border border-background-200 space-y-4">
-              <h4 class="text-sm font-medium text-text-700 mb-1 flex items-center">
+              <h3 class="text-sm font-medium text-text-700 mb-1 flex items-center">
                 <Settings class="w-4 h-4 mr-2 text-primary-600" />
                 {{ t("pages.dash.settings.form.sections.general") }}
-              </h4>
+              </h3>
 
               <TextField
                 v-model="formData.appName"
@@ -97,15 +97,17 @@
                     <p class="text-xs text-text-600">{{ t("pages.dash.settings.form.placeholders.enableWeekends") }}</p>
                   </div>
                 </div>
-                <DsToggle v-model="formData.enableWeekends" />
+                <DsToggle
+                  v-model="formData.enableWeekends"
+                  :aria-label="t('pages.dash.settings.form.labels.enableWeekends')" />
               </div>
             </div>
 
             <div class="bg-background-50 p-4 rounded-lg border border-background-200 space-y-4">
-              <h4 class="text-sm font-medium text-text-700 mb-1 flex items-center">
+              <h3 class="text-sm font-medium text-text-700 mb-1 flex items-center">
                 <Mail class="w-4 h-4 mr-2 text-primary-600" />
                 {{ t("pages.dash.settings.form.sections.mail") }}
-              </h4>
+              </h3>
 
               <TextField
                 v-model="formData.mailHostPort"
@@ -151,7 +153,7 @@
                     <p class="text-xs text-text-600">{{ t("pages.dash.settings.form.placeholders.mailSecure") }}</p>
                   </div>
                 </div>
-                <DsToggle v-model="formData.mailSecure" />
+                <DsToggle v-model="formData.mailSecure" :aria-label="t('pages.dash.settings.form.labels.mailSecure')" />
               </div>
             </div>
           </div>

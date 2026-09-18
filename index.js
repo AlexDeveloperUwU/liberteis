@@ -43,9 +43,9 @@ async function main() {
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         imgSrc: ["'self'", "data:"],
-        fontSrc: ["'self'", "data:"],
+        fontSrc: ["'self'", "data:", "https://fonts.gstatic.com"],
         connectSrc: ["'self'"],
         objectSrc: ["'none'"],
         frameAncestors: ["'none'"],

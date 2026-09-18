@@ -5,6 +5,36 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 2026-09-19
+
+### Added
+
+- `GET /api/auth/me` endpoint, returning the session's current user (or 401), so the
+  client can reconcile its auth state against the server on boot.
+
+### Fixed
+
+- Client auth state (`authStore.isAuthenticated`) no longer trusts `localStorage` alone —
+  it's now reconciled against the server session via `/api/auth/me` on app boot, closing a
+  gap where a valid server session with empty/cleared local storage got incorrectly bounced
+  to the login page (and vice versa, via a split-brain fix in the 401 response interceptor).
+- Added accessible names to several interactive elements that screen readers announced as
+  a bare "button": the navbar user-menu trigger, the settings page's toggle switches, and
+  role-select cards on the homepage (removed a mismatched `aria-label` that didn't include
+  the card's full visible text).
+- Fixed several non-native clickable elements (`div`/`span` with a click handler) missing
+  keyboard support and ARIA roles, across `DsPill`, `DataTable` rows, calendar day/event
+  cells, and image-preview triggers on the events/booking/settings forms.
+- Fixed a skipped heading level (`h2` → `h4`) on the settings page.
+- Content-Security-Policy now allows the Google Fonts stylesheet/font domains, and the
+  page's inline theme-detection script was moved to an external file so it no longer needs
+  a CSP exception.
+- Fixed a console error thrown on nearly every page load: `mainStore`'s locale-change
+  subscriber read `mutation.events.key`, which Pinia only populates for `patch object`
+  mutations — never for the direct `.value =` assignments this store actually uses.
+- Increased `--text-600`'s contrast in light mode (`#6c757d` → `#666e76`) to meet WCAG AA
+  (previously 4.45:1, just under the 4.5:1 threshold; dark mode was already compliant).
+
 ## [2.8.3] - 2026-09-17
 
 ### Security

@@ -42,3 +42,7 @@ test.js
 concat.sh
 full_project_context.md
 .zcode/
+
+unlighthouse.config.ts
+.unlighthouse/
+unlighthouse-reports/

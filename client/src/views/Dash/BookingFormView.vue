@@ -13,9 +13,14 @@
 
             <div class="my-3">
               <div
+                role="button"
+                tabindex="0"
+                :aria-label="t('pages.other.commons.actions.openImagePreview')"
                 class="relative w-24 shrink-0 rounded-lg overflow-hidden border border-background-300 shadow-sm cursor-pointer group"
                 style="aspect-ratio: 9/16"
-                @click="openImageModal">
+                @click="openImageModal"
+                @keydown.enter="openImageModal"
+                @keydown.space.prevent="openImageModal">
                 <div v-if="selectedEventInfo && selectedEventInfo.coverUrl" class="w-full h-full">
                   <img
                     :src="selectedEventInfo.coverUrl"

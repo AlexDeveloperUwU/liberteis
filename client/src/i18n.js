@@ -79,11 +79,15 @@ async function createI18nInstance(mainStore) {
     messages,
   });
 
+  // mainStore is a setup store: its mutations are always type "direct" (plain `.value =`
+  // assignments), so `mutation.events` — only populated for "patch object" mutations — is
+  // never set here. Track the previous locale ourselves instead of reading mutation.events.
+  let previousLocale = mainStore.locale;
   mainStore.$subscribe(async (mutation, state) => {
-    if (mutation.storeId === "main" && mutation.events.key === "locale") {
-      await ensureLocaleLoaded(state.locale);
-      i18n.global.locale.value = state.locale;
-    }
+    if (mutation.storeId !== "main" || state.locale === previousLocale) return;
+    previousLocale = state.locale;
+    await ensureLocaleLoaded(state.locale);
+    i18n.global.locale.value = state.locale;
   });
 
   return i18n;

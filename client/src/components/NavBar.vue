@@ -34,6 +34,7 @@
         <DropdownMenu :items="userItems" width="12rem">
           <template #trigger>
             <button
+              :aria-label="t('components.navbar.userMenu')"
               class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary-400 hover:border-primary-500 transition-colors flex items-center justify-center bg-primary-100 p-0">
               <div class="w-full h-full flex items-center justify-center text-primary-700 font-bold font-display">
                 <template v-if="authStore.isAuthenticated">

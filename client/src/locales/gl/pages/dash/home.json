@@ -17,7 +17,8 @@
     "noEventsMonth": "Non hai eventos para este mes",
     "noEvents": "Non hai eventos hoxe",
     "tryAnotherMonth": "Tenta ver outro mes",
-    "close": "Pechar"
+    "close": "Pechar",
+    "createBookingOn": "Crear unha reserva o {date}"
   },
   "errors": {
     "loadingData": "Erro ao cargar os datos"

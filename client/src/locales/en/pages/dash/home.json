@@ -17,7 +17,8 @@
     "noEventsMonth": "No events for this month",
     "noEvents": "No events today",
     "tryAnotherMonth": "Try seeing another month",
-    "close": "Close"
+    "close": "Close",
+    "createBookingOn": "Create a booking on {date}"
   },
   "errors": {
     "loadingData": "Error loading data"

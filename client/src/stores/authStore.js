@@ -27,6 +27,22 @@ export const useAuthStore = defineStore("auth", {
         return false;
       }
     },
+    async initSession() {
+      try {
+        const response = await axios.get("/api/auth/me");
+        this.user = response.data.data.user;
+        this.userVerified = true;
+        localStorage.setItem("auth_user", JSON.stringify(this.user));
+      } catch (error) {
+        if (error.response?.status === 401) {
+          this.user = null;
+          this.userVerified = false;
+          localStorage.removeItem("auth_user");
+        }
+        // Any other error (network down, server unreachable): fail open and keep whatever
+        // was hydrated from localStorage, matching verifyUserExists's fail-open behavior.
+      }
+    },
     async logout() {
       await axios.post("/api/auth/logout");
       this.user = null;

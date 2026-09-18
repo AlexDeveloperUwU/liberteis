@@ -50,9 +50,13 @@ const headerIcon = (name) => {
         <tr
           v-for="row in rows"
           :key="row[rowKey]"
+          :role="onRowClick ? 'button' : undefined"
+          :tabindex="onRowClick ? 0 : undefined"
           class="border-b border-background-200 transition-colors duration-150 hover:bg-primary-50"
           :class="[onRowClick ? 'cursor-pointer hover:border-l-[3px] hover:border-l-primary-300' : '']"
-          @click="onRowClick && onRowClick(row)">
+          @click="onRowClick && onRowClick(row)"
+          @keydown.enter="onRowClick && onRowClick(row)"
+          @keydown.space.prevent="onRowClick && onRowClick(row)">
           <td
             v-for="(col, i) in columns"
             :key="col.key"

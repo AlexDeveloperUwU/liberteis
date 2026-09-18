@@ -59,6 +59,9 @@
     "eventCover": "Imaxe de portada do evento",
     "eventCoverFullscreen": "Imaxe de portada do evento a pantalla completa"
   },
+  "actions": {
+    "openImagePreview": "Abrir vista previa da imaxe"
+  },
   "errors": {
     "generic": "Produciuse un erro inesperado."
   }
