@@ -4,6 +4,15 @@ import ErrorManager from "../../errors/errorManager.js";
 import { generatePass } from "../../utils/password.js";
 import { logger } from "../../utils/logger.js";
 import { requireAdmin, requireAuth, requireRole } from "../middleware/requireAdmin.js";
+import {
+  createUserSchema,
+  updateUserSchema,
+  idQuerySchema,
+  optionalIdQuerySchema,
+  emailQuerySchema,
+  parseBody,
+  parseQuery,
+} from "./schemas.js";
 
 /**
  * Express router for authentication related endpoints.
@@ -22,7 +31,7 @@ export default api;
  */
 api.post("/", requireAdmin, async (req, res) => {
   try {
-    const userData = req.body;
+    const userData = parseBody(createUserSchema, req.body);
     if (!userData) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
@@ -54,10 +63,13 @@ api.post("/", requireAdmin, async (req, res) => {
  */
 api.put("/", requireAuth, async (req, res) => {
   try {
-    const { id } = req.query;
-    const userData = req.body;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { id } = query;
+    const userData = parseBody(updateUserSchema, req.body);
+    if (!userData) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
@@ -126,11 +138,11 @@ api.put("/", requireAuth, async (req, res) => {
  */
 api.patch("/toggle", requireAdmin, async (req, res) => {
   try {
-    const { id } = req.query;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema, req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { id } = query;
 
     const result = await users.toggleUserStatus(id);
     return res.status(result.code).json(result);
@@ -175,7 +187,12 @@ api.get("/count", requireRole("managerUser"), async (req, res) => {
  */
 api.get("/", async (req, res) => {
   try {
-    const { id, status, includeInactive } = req.query;
+    const query = parseQuery(optionalIdQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { id } = query;
+    const { status, includeInactive } = req.query;
 
     if (id) {
       const include = includeInactive === "true";
@@ -207,7 +224,11 @@ api.get("/", async (req, res) => {
  */
 api.get("/emailCheck", requireRole("managerUser"), async (req, res) => {
   try {
-    const { email } = req.query;
+    const query = parseQuery(emailQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { email } = query;
     const exists = await users.checkUserExists(email);
     return res.status(200).json(exists);
   } catch (error) {

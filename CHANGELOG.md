@@ -5,6 +5,30 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0] - 2026-09-20
+
+### Added
+
+- Request validation (`zod`) across every API route — bodies, query parameters, and the
+  password-reset route param are now schema-checked, rejecting malformed input before it
+  reaches the service layer instead of relying on ad hoc truthiness checks.
+
+### Fixed
+
+- `/api/auth/login` no longer reveals whether an email is registered — a non-existent
+  account and a wrong password now return the same generic response.
+- The AES key used to encrypt config secrets (e.g. the SMTP password) is no longer the
+  same value as the session-signing secret; it's now a dedicated key, with an automatic
+  one-time migration for any value already encrypted under the old key.
+- The generic DB helpers (`dbGetOne`, `dbSaveData`, etc.) now reject any table name outside
+  the app's own tables, as a defense-in-depth boundary check.
+- `index.js` and `db/dbController.js` no longer load the same `.env` file independently.
+
+### Removed
+
+- The `npm test` script and `@types/jest` devDependency — `jest` was never actually
+  installed and no test files exist in the repo, so the script only ever failed.
+
 ## [2.9.0] - 2026-09-19
 
 ### Added

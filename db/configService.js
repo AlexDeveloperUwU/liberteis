@@ -1,7 +1,7 @@
 import * as dbc from "./dbController.js";
 import { logger } from "../utils/logger.js";
 import ErrorManager from "../errors/errorManager.js";
-import { encryptData } from "../utils/dataSecurity.js";
+import { encryptData, decryptDataWithLegacyKey } from "../utils/dataSecurity.js";
 
 /**
  * Encrypts sensitive config values before they're persisted. Currently only
@@ -16,6 +16,27 @@ function encryptIfSensitive(key, value) {
     return encryptData(value);
   }
   return value;
+}
+
+/**
+ * One-time boot migration: re-encrypts `mailPassword` under the dedicated
+ * encryption key instead of the session secret it used to share. Idempotent —
+ * once the value is under the new key, decrypting it with the legacy key
+ * fails (GCM auth tag mismatch) and this becomes a no-op on later boots.
+ * @returns {Promise<void>}
+ */
+export async function migrateLegacyEncryptedConfig() {
+  try {
+    const result = await dbc.dbGetOne("config", "mailPassword");
+    const stored = result[0]?.value;
+    if (!stored) return;
+
+    const plaintext = decryptDataWithLegacyKey(stored);
+    await dbc.dbUpdateData("config", "mailPassword", { value: encryptData(plaintext) });
+    logger.info("Migrated mailPassword config value to the dedicated encryption key");
+  } catch {
+    // Already migrated (not decryptable with the legacy key) or nothing to migrate.
+  }
 }
 
 /**

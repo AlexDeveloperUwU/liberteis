@@ -16,7 +16,6 @@ Run from the repo root unless noted.
 - `npm run dev` — runs client (Vite, port 3001) and server (`nodemon index.js`) concurrently. Primary way to develop.
 - `npm start` — server only, via nodemon.
 - `npm run prod` — server only, plain `node index.js`.
-- `npm test` — runs Jest (`node --experimental-vm-modules ... jest --detectOpenHandles`); required for ESM support. Run a single test with `npm test -- <path-or-name-pattern>`.
 - `npm run format` — Prettier write (config lives in `package.json`: `bracketSameLine: true`, `printWidth: 120`).
 - `node check.js` — validates that Vue components' i18n keys exist in all three locale files (`en`, `es`, `gl`) and reports unused/missing keys.
 

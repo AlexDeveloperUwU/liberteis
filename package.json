@@ -1,11 +1,10 @@
 {
   "name": "liberteis",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "La aplicación oficial de gestión de eventos de Teis",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js --detectOpenHandles",
     "nvm": "nvm use 22",
     "start": "nodemon index.js",
     "format": "prettier --write .",
@@ -43,10 +42,10 @@
     "pino-http": "^11.0.0",
     "pino-http-print": "^4.0.0",
     "pino-pretty": "^13.0.0",
-    "sharp": "^0.35.0"
+    "sharp": "^0.35.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "concurrently": "^10.0.5",
     "nodemon": "^3.1.11",

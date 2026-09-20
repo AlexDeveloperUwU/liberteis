@@ -4,6 +4,15 @@ import ErrorManager from "../../errors/errorManager.js";
 import { logger } from "../../utils/logger.js";
 import { uploadEventImage, deleteEventImage } from "../../utils/fileUpload.js";
 import { requireAuth } from "../middleware/requireAdmin.js";
+import {
+  createEventSchema,
+  updateEventSchema,
+  idQuerySchema,
+  categoryIdQuerySchema,
+  optionalIdQuerySchema,
+  parseBody,
+  parseQuery,
+} from "./schemas.js";
 
 /**
  * Express router for event related endpoints.
@@ -36,9 +45,8 @@ async function canModifyEvent(req, id) {
  */
 api.post("/", requireAuth, uploadEventImage, async (req, res) => {
   try {
-    const eventData = req.body;
-
-    if (!eventData || !eventData.title || !eventData.info || !eventData.category) {
+    const eventData = parseBody(createEventSchema, req.body);
+    if (!eventData) {
       logger.error("Invalid event data - missing required fields");
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
@@ -78,17 +86,20 @@ api.post("/", requireAuth, uploadEventImage, async (req, res) => {
  */
 api.put("/", requireAuth, uploadEventImage, async (req, res) => {
   try {
-    const { id } = req.query;
-    const eventData = req.body;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema, req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { id } = query;
 
     if (!(await canModifyEvent(req, id))) {
       return res.status(403).json(ErrorManager.returnError("forbidden"));
     }
 
+    const eventData = parseBody(updateEventSchema, req.body);
+    if (!eventData) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
     delete eventData.createdBy;
 
     if (req.file) {
@@ -126,11 +137,11 @@ api.put("/", requireAuth, uploadEventImage, async (req, res) => {
  */
 api.patch("/toggle", requireAuth, async (req, res) => {
   try {
-    const { id } = req.query;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema, req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { id } = query;
 
     if (!(await canModifyEvent(req, id))) {
       return res.status(403).json(ErrorManager.returnError("forbidden"));
@@ -179,11 +190,12 @@ api.get("/count", async (req, res) => {
  */
 api.get("/category", async (req, res) => {
   try {
-    const { categoryId, includeInactive } = req.query;
-
-    if (!categoryId) {
+    const query = parseQuery(categoryIdQuerySchema, req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { categoryId } = query;
+    const { includeInactive } = req.query;
 
     const include = includeInactive === "true";
     const result = await events.getEventsByCategory(categoryId, include);
@@ -209,7 +221,12 @@ api.get("/category", async (req, res) => {
  */
 api.get("/", async (req, res) => {
   try {
-    const { id, status, includeInactive } = req.query;
+    const query = parseQuery(optionalIdQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { id } = query;
+    const { status, includeInactive } = req.query;
     const userRole = req._reqUser?.type;
     const userId = req._reqUser?.id;
 

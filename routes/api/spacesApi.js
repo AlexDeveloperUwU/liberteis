@@ -3,6 +3,14 @@ import * as spaces from "../../db/spacesService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { logger } from "../../utils/logger.js";
 import { requireRole } from "../middleware/requireAdmin.js";
+import {
+  createSpaceSchema,
+  updateSpaceSchema,
+  idQuerySchema,
+  optionalIdQuerySchema,
+  parseBody,
+  parseQuery,
+} from "./schemas.js";
 
 /**
  * Express router for space related endpoints.
@@ -21,7 +29,7 @@ export default api;
  */
 api.post("/", requireRole("managerUser"), async (req, res) => {
   try {
-    const spaceData = req.body;
+    const spaceData = parseBody(createSpaceSchema, req.body);
     if (!spaceData) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
@@ -48,10 +56,13 @@ api.post("/", requireRole("managerUser"), async (req, res) => {
  */
 api.put("/", requireRole("managerUser"), async (req, res) => {
   try {
-    const { id } = req.query;
-    const spaceData = req.body;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { id } = query;
+    const spaceData = parseBody(updateSpaceSchema, req.body);
+    if (!spaceData) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
@@ -76,11 +87,11 @@ api.put("/", requireRole("managerUser"), async (req, res) => {
  */
 api.patch("/toggle", requireRole("managerUser"), async (req, res) => {
   try {
-    const { id } = req.query;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema, req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { id } = query;
 
     logger.info(`Toggling space with ID: ${id}`);
     const result = await spaces.toggleSpaceStatus(id);
@@ -126,7 +137,12 @@ api.get("/count", async (req, res) => {
  */
 api.get("/", async (req, res) => {
   try {
-    const { id, status, includeInactive } = req.query;
+    const query = parseQuery(optionalIdQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { id } = query;
+    const { status, includeInactive } = req.query;
     if (id) {
       const include = includeInactive === "true";
       const result = await spaces.getSpace(id, include);

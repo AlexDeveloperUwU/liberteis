@@ -5,7 +5,6 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import * as logs from "./utils/logger.js";
-import dotenv from "dotenv";
 import session from "express-session";
 import MySQLStoreFactory from "express-mysql-session";
 import { getKey } from "./utils/secretKey.js";
@@ -19,13 +18,10 @@ async function main() {
 
   logs.logger.info(`Initializing the application`);
 
-  const envConfig = dotenv.config({
-    path: path.resolve(__dirname, "./data/secrets/dbcreds.env"),
-  }).parsed;
-
   const MySQLStore = MySQLStoreFactory(session);
 
   const { dbCreateTables } = await import("./db/dbController.js");
+  const { migrateLegacyEncryptedConfig } = await import("./db/configService.js");
   const apiRouter = (await import("./routes/api.js")).default;
 
   const app = e();
@@ -56,11 +52,11 @@ async function main() {
   );
 
   const sessionOptions = {
-    host: envConfig.MYSQL_HOST,
+    host: process.env.MYSQL_HOST,
     port: "3306",
-    user: envConfig.MYSQL_USER,
-    password: envConfig.MYSQL_PASSWORD,
-    database: envConfig.MYSQL_DATABASE,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
     clearExpired: true,
     checkExpirationInterval: 900000,
     expiration: 604800000,
@@ -96,7 +92,7 @@ async function main() {
   app.use("/", e.static(path.join(__dirname, "views")));
   app.use("/uploads", e.static(path.join(__dirname, "data", "uploads")));
 
-  dbCreateTables();
+  dbCreateTables().then(migrateLegacyEncryptedConfig);
 
   app.use("/api", apiRouter);
 

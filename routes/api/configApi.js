@@ -3,6 +3,7 @@ import * as config from "../../db/configService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { requireAdmin } from "../middleware/requireAdmin.js";
 import { logger } from "../../utils/logger.js";
+import { setConfigSchema, keyQuerySchema, optionalKeyQuerySchema, parseBody, parseQuery } from "./schemas.js";
 
 const api = Router();
 export default api;
@@ -37,7 +38,11 @@ function redactConfigRow(row) {
  */
 api.get("/", async (req, res) => {
   try {
-    const { key } = req.query;
+    const query = parseQuery(optionalKeyQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { key } = query;
     const isAdmin = req._reqUser?.type === "adminUser";
 
     if (key) {
@@ -87,11 +92,11 @@ api.get("/", async (req, res) => {
  */
 api.post("/", requireAdmin, async (req, res) => {
   try {
-    const { key, value } = req.body;
-
-    if (!key || value === undefined) {
+    const body = parseBody(setConfigSchema, req.body);
+    if (!body) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { key, value } = body;
 
     const existsResult = await config.checkConfigExistence(key);
     if (!existsResult.success) {
@@ -123,11 +128,11 @@ api.post("/", requireAdmin, async (req, res) => {
  */
 api.put("/", requireAdmin, async (req, res) => {
   try {
-    const { key, value } = req.body;
-
-    if (!key || value === undefined) {
+    const body = parseBody(setConfigSchema, req.body);
+    if (!body) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { key, value } = body;
 
     const existsResult = await config.checkConfigExistence(key);
     if (!existsResult.success) {
@@ -158,11 +163,11 @@ api.put("/", requireAdmin, async (req, res) => {
  */
 api.delete("/", requireAdmin, async (req, res) => {
   try {
-    const { key } = req.query;
-
-    if (!key) {
+    const query = parseQuery(keyQuerySchema, req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { key } = query;
 
     const existsResult = await config.checkConfigExistence(key);
     if (!existsResult.success) {

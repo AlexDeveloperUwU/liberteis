@@ -3,6 +3,18 @@ import * as bookings from "../../db/bookingsService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { logger } from "../../utils/logger.js";
 import { requireAuth } from "../middleware/requireAdmin.js";
+import {
+  createBookingSchema,
+  updateBookingSchema,
+  idQuerySchema,
+  scopeQuerySchema,
+  eventIdQuerySchema,
+  userIdQuerySchema,
+  optionalUserIdQuerySchema,
+  optionalIdQuerySchema,
+  parseBody,
+  parseQuery,
+} from "./schemas.js";
 
 /**
  * Express router for bookings related endpoints.
@@ -35,20 +47,24 @@ async function canModifyBooking(req, id) {
  */
 api.post("/", requireAuth, async (req, res) => {
   try {
-    const bookingData = req.body;
-
-    const type = req._reqUser.type;
-    if (type !== "managerUser" && type !== "adminUser") {
-      bookingData.bookedBy = req._reqUser.id;
-    }
-
-    if (!bookingData || !bookingData.eventId || !bookingData.space || !bookingData.bookedBy) {
+    const parsedBooking = parseBody(createBookingSchema, req.body);
+    if (!parsedBooking) {
       logger.error("Invalid booking data - missing required fields");
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    logger.info(`Creating booking for event: ${bookingData.eventId} by user: ${bookingData.bookedBy}`);
-    const result = await bookings.addBooking(bookingData);
+    const type = req._reqUser.type;
+    if (type !== "managerUser" && type !== "adminUser") {
+      parsedBooking.bookedBy = req._reqUser.id;
+    }
+
+    if (!parsedBooking.bookedBy) {
+      logger.error("Invalid booking data - missing required fields");
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    logger.info(`Creating booking for event: ${parsedBooking.eventId} by user: ${parsedBooking.bookedBy}`);
+    const result = await bookings.addBooking(parsedBooking);
     return res.status(result.code).json(result);
   } catch (error) {
     logger.error(`Error in /api/bookings/ [POST]: ${error.message}`);
@@ -70,21 +86,24 @@ api.post("/", requireAuth, async (req, res) => {
  */
 api.put("/", requireAuth, async (req, res) => {
   try {
-    const { id, scope } = req.query;
-    const bookingData = req.body;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema.merge(scopeQuerySchema), req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { id, scope } = query;
 
     if (!(await canModifyBooking(req, id))) {
       return res.status(403).json(ErrorManager.returnError("forbidden"));
     }
 
-    delete bookingData.bookedBy;
+    const parsedBooking = parseBody(updateBookingSchema, req.body);
+    if (!parsedBooking) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    delete parsedBooking.bookedBy;
 
     logger.info(`Updating booking with ID: ${id} Scope: ${scope}`);
-    const result = await bookings.updateBooking(id, bookingData, scope);
+    const result = await bookings.updateBooking(id, parsedBooking, scope);
     return res.status(result.code).json(result);
   } catch (error) {
     logger.error(`Error in /api/bookings/ [PUT]: ${error.message}`);
@@ -105,11 +124,11 @@ api.put("/", requireAuth, async (req, res) => {
  */
 api.patch("/toggle", requireAuth, async (req, res) => {
   try {
-    const { id, scope } = req.query;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema.merge(scopeQuerySchema), req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { id, scope } = query;
 
     if (!(await canModifyBooking(req, id))) {
       return res.status(403).json(ErrorManager.returnError("forbidden"));
@@ -137,11 +156,11 @@ api.patch("/toggle", requireAuth, async (req, res) => {
  */
 api.delete("/", requireAuth, async (req, res) => {
   try {
-    const { id, scope } = req.query;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema.merge(scopeQuerySchema), req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { id, scope } = query;
 
     if (!(await canModifyBooking(req, id))) {
       return res.status(403).json(ErrorManager.returnError("forbidden"));
@@ -167,7 +186,12 @@ api.delete("/", requireAuth, async (req, res) => {
  */
 api.get("/count", async (req, res) => {
   try {
-    const { userId, type } = req.query;
+    const query = parseQuery(optionalUserIdQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { userId } = query;
+    const { type } = req.query;
     const result = await bookings.getBookingsCount(userId, type);
     return res.status(result.code).json(result);
   } catch (error) {
@@ -225,11 +249,12 @@ api.get("/dashboard", async (req, res) => {
  */
 api.get("/event", async (req, res) => {
   try {
-    const { eventId, includeInactive } = req.query;
-
-    if (!eventId) {
+    const query = parseQuery(eventIdQuerySchema, req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { eventId } = query;
+    const { includeInactive } = req.query;
 
     const include = includeInactive === "true";
     const result = await bookings.getBookingsByEvent(eventId, include);
@@ -253,11 +278,12 @@ api.get("/event", async (req, res) => {
  */
 api.get("/user", async (req, res) => {
   try {
-    const { userId, includeInactive } = req.query;
-
-    if (!userId) {
+    const query = parseQuery(userIdQuerySchema, req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { userId } = query;
+    const { includeInactive } = req.query;
 
     const include = includeInactive === "true";
     const result = await bookings.getBookingsByUser(userId, include);
@@ -282,7 +308,12 @@ api.get("/user", async (req, res) => {
  */
 api.get("/", async (req, res) => {
   try {
-    const { id, status, includeInactive, startMonth, endMonth, startDate, endDate } = req.query;
+    const query = parseQuery(optionalIdQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { id } = query;
+    const { status, includeInactive, startMonth, endMonth, startDate, endDate } = req.query;
     const userRole = req._reqUser?.type;
     const userId = req._reqUser?.id;
 

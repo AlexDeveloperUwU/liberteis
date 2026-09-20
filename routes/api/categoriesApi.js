@@ -3,6 +3,14 @@ import * as categories from "../../db/categoriesService.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { logger } from "../../utils/logger.js";
 import { requireRole } from "../middleware/requireAdmin.js";
+import {
+  createCategorySchema,
+  updateCategorySchema,
+  idQuerySchema,
+  optionalIdQuerySchema,
+  parseBody,
+  parseQuery,
+} from "./schemas.js";
 
 /**
  * Express router for category related endpoints.
@@ -21,9 +29,8 @@ export default api;
  */
 api.post("/", requireRole("managerUser"), async (req, res) => {
   try {
-    const categoryData = req.body;
-
-    if (!categoryData || !categoryData.name || !Array.isArray(categoryData.spaces)) {
+    const categoryData = parseBody(createCategorySchema, req.body);
+    if (!categoryData) {
       logger.error("Invalid category data - missing required fields");
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
@@ -57,10 +64,13 @@ api.post("/", requireRole("managerUser"), async (req, res) => {
  */
 api.put("/", requireRole("managerUser"), async (req, res) => {
   try {
-    const { id } = req.query;
-    const categoryData = req.body;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { id } = query;
+    const categoryData = parseBody(updateCategorySchema, req.body);
+    if (!categoryData) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
 
@@ -94,11 +104,11 @@ api.put("/", requireRole("managerUser"), async (req, res) => {
  */
 api.patch("/toggle", requireRole("managerUser"), async (req, res) => {
   try {
-    const { id } = req.query;
-
-    if (!id) {
+    const query = parseQuery(idQuerySchema, req.query);
+    if (!query) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { id } = query;
 
     logger.info(`Toggling category with ID: ${id}`);
     const result = await categories.changeCategoryStatus(id);
@@ -144,7 +154,12 @@ api.get("/count", async (req, res) => {
  */
 api.get("/", async (req, res) => {
   try {
-    const { id, status, includeInactive } = req.query;
+    const query = parseQuery(optionalIdQuerySchema, req.query);
+    if (!query) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+    const { id } = query;
+    const { status, includeInactive } = req.query;
     if (id) {
       const include = includeInactive === "true";
       const result = await categories.getCategory(id, include);

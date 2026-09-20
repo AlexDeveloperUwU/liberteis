@@ -3,6 +3,14 @@ import * as users from "../../db/userService.js";
 import { validatePass } from "../../utils/dataSecurity.js";
 import ErrorManager from "../../errors/errorManager.js";
 import { logger } from "../../utils/logger.js";
+import {
+  loginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  resetTokenParamSchema,
+  parseBody,
+  parseQuery,
+} from "./schemas.js";
 
 /**
  * Express router for authentication related endpoints.
@@ -64,15 +72,15 @@ const resetPasswordRateLimiter = createRateLimiter(15 * 60 * 1000, 10);
  */
 api.post("/login", loginRateLimiter, async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
+    const body = parseBody(loginSchema, req.body);
+    if (!body) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { email, password } = body;
 
     const userResult = await users.getUserByEmail(email);
     if (!userResult.success) {
-      return res.status(userResult.code).json(userResult);
+      return res.status(401).json(ErrorManager.returnError("invalidParameters"));
     }
 
     const user = userResult.data;
@@ -163,11 +171,11 @@ api.get("/me", (req, res) => {
  */
 api.post("/forgotPassword", forgotPasswordRateLimiter, async (req, res) => {
   try {
-    const { email } = req.body;
-
-    if (!email) {
+    const body = parseBody(forgotPasswordSchema, req.body);
+    if (!body) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { email } = body;
 
     const result = await users.requestPasswordReset(email);
     if (!result.success) {
@@ -194,7 +202,12 @@ api.post("/forgotPassword", forgotPasswordRateLimiter, async (req, res) => {
  */
 api.get("/resetPassword/:token", resetPasswordRateLimiter, async (req, res) => {
   try {
-    const result = await users.validateResetToken(req.params.token);
+    const params = parseQuery(resetTokenParamSchema, req.params);
+    if (!params) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    const result = await users.validateResetToken(params.token);
     return res.status(result.code).json(result);
   } catch (error) {
     logger.error(`Error in GET /api/auth/resetPassword: ${error.message}`);
@@ -214,11 +227,11 @@ api.get("/resetPassword/:token", resetPasswordRateLimiter, async (req, res) => {
  */
 api.post("/resetPassword", resetPasswordRateLimiter, async (req, res) => {
   try {
-    const { token, password } = req.body;
-
-    if (!token || !password) {
+    const body = parseBody(resetPasswordSchema, req.body);
+    if (!body) {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
+    const { token, password } = body;
 
     const result = await users.resetPassword(token, password);
     return res.status(result.code).json(result);

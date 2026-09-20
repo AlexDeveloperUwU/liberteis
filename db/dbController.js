@@ -14,6 +14,18 @@ const envConfig = dotenv.config({
 /**
  * MySQL database connection configuration.
  */
+/**
+ * Tables created by `dbCreateTables()` below. The generic helpers use this
+ * to reject any table name that isn't one of the app's own tables.
+ */
+const VALID_TABLES = new Set(["config", "users", "passwordresets", "spaces", "categories", "events", "bookings"]);
+
+function assertValidTable(table) {
+  if (!VALID_TABLES.has(table)) {
+    throw new Error(`Invalid table name: ${table}`);
+  }
+}
+
 const dbPool = mysql.createPool({
   host: envConfig.MYSQL_HOST,
   user: envConfig.MYSQL_USER,
@@ -240,6 +252,7 @@ export async function dbCreateTables() {
  * @returns {Promise<boolean>} - Returns true if the record exists, false otherwise.
  */
 export async function dbCheckExistence(table, id) {
+  assertValidTable(table);
   return await db.transaction().execute(async (trx) => {
     const result = await trx.selectFrom(table).select("id").where("id", "=", id).execute();
     return result.length > 0;
@@ -254,6 +267,7 @@ export async function dbCheckExistence(table, id) {
  * @returns {Promise<Object>} - Returns the found record.
  */
 export async function dbGetOne(table, id) {
+  assertValidTable(table);
   return await db.transaction().execute(async (trx) => {
     return await trx.selectFrom(table).selectAll().where("id", "=", id).execute();
   });
@@ -266,6 +280,7 @@ export async function dbGetOne(table, id) {
  * @returns {Promise<Array>} - Returns all records from the table.
  */
 export async function dbGetAll(table) {
+  assertValidTable(table);
   return await db.transaction().execute(async (trx) => {
     return await trx.selectFrom(table).selectAll().execute();
   });
@@ -279,6 +294,7 @@ export async function dbGetAll(table) {
  * @returns {Promise<Array>} - Returns the records that meet the conditions.
  */
 export async function dbGetWhere(table, conditions) {
+  assertValidTable(table);
   return await db.transaction().execute(async (trx) => {
     if (!Array.isArray(conditions)) {
       conditions = [conditions];
@@ -299,6 +315,7 @@ export async function dbGetWhere(table, conditions) {
  * @returns {Promise<Object>} - Returns the result of the insertion.
  */
 export async function dbSaveData(table, data) {
+  assertValidTable(table);
   return await db.transaction().execute(async (trx) => {
     return await trx.insertInto(table).values(data).execute();
   });
@@ -313,6 +330,7 @@ export async function dbSaveData(table, data) {
  * @returns {Promise<Object>} - Returns the result of the update.
  */
 export async function dbUpdateData(table, id, data) {
+  assertValidTable(table);
   return await db.transaction().execute(async (trx) => {
     return await trx.updateTable(table).set(data).where("id", "=", id).execute();
   });
@@ -322,6 +340,7 @@ export async function dbUpdateData(table, id, data) {
  * Updates data based on a where clause (e.g. for group updates)
  */
 export async function dbUpdateWhere(table, conditions, data) {
+  assertValidTable(table);
   return await db.transaction().execute(async (trx) => {
     if (!Array.isArray(conditions)) {
       conditions = [conditions];
@@ -384,6 +403,7 @@ export async function dbSetDeleteStatus(table, id, deletionStatus) {
  * @returns {Promise<Object>} - Returns the result of the deletion.
  */
 export async function dbDeleteData(table, id) {
+  assertValidTable(table);
   return await db.transaction().execute(async (trx) => {
     return await trx.deleteFrom(table).where("id", "=", id).execute();
   });
