@@ -18,13 +18,18 @@
   "form": {
     "sections": {
       "basicInfo": "Basic user information",
-      "accessInfo": "Access information"
+      "accessInfo": "Access information",
+      "emailLanguage": "Welcome email language"
     },
     "labels": {
       "name": "User name",
       "email": "Email",
       "userType": "User type",
-      "password": "Password"
+      "password": "Password",
+      "language": "Language"
+    },
+    "hints": {
+      "language": "The welcome email with the temporary password will be sent in this language."
     },
     "actionsAria": {
       "showPassword": "Show password",

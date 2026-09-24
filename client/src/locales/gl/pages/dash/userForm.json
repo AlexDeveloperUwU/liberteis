@@ -18,13 +18,18 @@
   "form": {
     "sections": {
       "basicInfo": "Información básica do usuario",
-      "accessInfo": "Información de acceso"
+      "accessInfo": "Información de acceso",
+      "emailLanguage": "Idioma do correo de benvida"
     },
     "labels": {
       "name": "Nome de usuario",
       "email": "Correo electrónico",
       "userType": "Tipo de usuario",
-      "password": "Contrasinal"
+      "password": "Contrasinal",
+      "language": "Idioma"
+    },
+    "hints": {
+      "language": "O correo de benvida co contrasinal temporal enviarase neste idioma."
     },
     "actionsAria": {
       "showPassword": "Mostrar contrasinal",

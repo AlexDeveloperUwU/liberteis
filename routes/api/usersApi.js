@@ -81,7 +81,7 @@ api.put("/", requireAuth, async (req, res) => {
       delete userData.type;
     }
 
-    const currentUser = await users.getUser(id);
+    const currentUser = await users.getUser(id, true);
     if (currentUser.success && currentUser.data.createdBy === "System" && currentUser.data.name === "Administrador") {
       delete userData.name;
       delete userData.type;
@@ -107,7 +107,7 @@ api.put("/", requireAuth, async (req, res) => {
     const userDataKeys = Object.keys(userData).filter((key) => key !== "password");
     if (userDataKeys.length > 0) {
       logger.info(`Updating user with ID: ${id}`);
-      updateResult = await users.updateUser(id, userData);
+      updateResult = await users.updateUser(id, userData, currentUser.success ? currentUser.data : undefined);
 
       if (!updateResult.success) {
         return res.status(updateResult.code).json(updateResult);
