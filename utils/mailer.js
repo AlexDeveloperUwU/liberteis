@@ -199,6 +199,59 @@ const templates = {
       body: "Ola {{name}},\n\nO teu {{reason}} acaba de cambiar en {{appName}}. Se non fuches ti, contacta cun administrador.",
     },
   },
+  accountPasswordChanged: {
+    en: {
+      subject: "Your {{appName}} password was changed",
+      body: "Hi {{name}},\n\nYour password was just changed on {{appName}}. If this wasn't you, please contact an administrator immediately.",
+    },
+    es: {
+      subject: "Tu contraseña de {{appName}} ha sido cambiada",
+      body: "Hola {{name}},\n\nTu contraseña se acaba de cambiar en {{appName}}. Si no fuiste tú, contacta con un administrador de inmediato.",
+    },
+    gl: {
+      subject: "O teu contrasinal de {{appName}} foi cambiado",
+      body: "Ola {{name}},\n\nO teu contrasinal acaba de cambiar en {{appName}}. Se non fuches ti, contacta cun administrador inmediatamente.",
+    },
+  },
+  accountDeleted: {
+    en: {
+      subject: "Your {{appName}} account was deactivated",
+      body: "Hi {{name}},\n\nYour account was deactivated on {{appName}}. If you believe this is a mistake, please contact an administrator.",
+    },
+    es: {
+      subject: "Tu cuenta de {{appName}} ha sido desactivada",
+      body: "Hola {{name}},\n\nTu cuenta ha sido desactivada en {{appName}}. Si crees que se trata de un error, contacta con un administrador.",
+    },
+    gl: {
+      subject: "A túa conta de {{appName}} foi desactivada",
+      body: "Ola {{name}},\n\nA túa conta foi desactivada en {{appName}}. Se cres que se trata dun erro, contacta cun administrador.",
+    },
+  },
+  accountReactivated: {
+    en: {
+      subject: "Your {{appName}} account was reactivated",
+      body: "Hi {{name}},\n\nYour account was reactivated on {{appName}} and you can log in again. If you believe this is a mistake, please contact an administrator.",
+    },
+    es: {
+      subject: "Tu cuenta de {{appName}} ha sido reactivada",
+      body: "Hola {{name}},\n\nTu cuenta ha sido reactivada en {{appName}} y ya puedes iniciar sesión de nuevo. Si crees que se trata de un error, contacta con un administrador.",
+    },
+    gl: {
+      subject: "A túa conta de {{appName}} foi reactivada",
+      body: "Ola {{name}},\n\nA túa conta foi reactivada en {{appName}} e xa podes iniciar sesión de novo. Se cres que se trata dun erro, contacta cun administrador.",
+    },
+  },
+};
+
+/**
+ * Maps a `sendAccountChangedEmail` reason to the `templates` key holding its dedicated copy.
+ * `"email"`/`"status"`/`"profile"` share the generic `accountChanged` wording (rendered with
+ * `{{reason}}`); the other reasons get their own subject/body with no `{{reason}}` token.
+ */
+const ACCOUNT_CHANGE_TEMPLATE_KEYS = {
+  password: "accountPasswordChanged",
+  deleted: "accountDeleted",
+  reactivated: "accountReactivated",
 };
 
 /**
@@ -302,14 +355,15 @@ export async function sendPasswordResetEmail(user, resetLink, expiryHours = 1) {
 }
 
 /**
- * Sends a generic "your account changed" notification.
- *
- * Not called from anywhere yet — ready for a future task to wire into
- * `routes/api/usersApi.js` (email/password/status changes).
+ * Sends an "your account changed" notification, wired into the user lifecycle in
+ * `db/userService.js` (profile edits, password changes, and soft delete/restore).
  * @param {{email: string, name: string, lang?: string}} user - The recipient.
- * @param {("email"|"password"|"status")} reason - What changed.
+ * @param {("email"|"password"|"status"|"profile"|"deleted"|"reactivated")} reason - What changed.
+ *   `"deleted"`/`"reactivated"`/`"password"` use dedicated copy; the rest render the generic
+ *   "your {{reason}} was changed" wording.
  * @returns {Promise<boolean>} Whether the email was actually sent.
  */
 export async function sendAccountChangedEmail(user, reason) {
-  return sendTemplatedMail("accountChanged", user, { reason });
+  const templateKey = ACCOUNT_CHANGE_TEMPLATE_KEYS[reason] || "accountChanged";
+  return sendTemplatedMail(templateKey, user, { reason });
 }

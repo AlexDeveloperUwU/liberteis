@@ -25,15 +25,20 @@ export async function addUser(user) {
   if (!allowedTypes.includes(user.type)) {
     user.type = "normalUser";
   }
+  const allowedLangs = ["es", "en", "gl"];
+  if (!allowedLangs.includes(user.lang)) {
+    user.lang = "gl";
+  }
   user.id = await id.generateId("user");
   user.hashedPassword = ds.encryptPass(user.password);
+  const tempPassword = user.password;
   delete user.password;
   user.lastLogin = undefined;
-  user.lang = "gl";
   user.deleted = false;
 
   try {
     await dbc.dbSaveData("users", user);
+    await mailer.sendUserCreatedEmail(user, tempPassword);
     return ErrorManager.returnSuccess(201, "User created successfully", { code: 201 });
   } catch (error) {
     if (error.message && error.message.includes("Duplicate entry") && error.message.includes("for key 'users.email'")) {
@@ -50,9 +55,12 @@ export async function addUser(user) {
  * Updates a user in the database.
  * @param {string} id - User ID.
  * @param {Object} user - Object with updated user data.
+ * @param {{email: string, name: string, lang?: string}} [notifyUser] - The pre-fetched target
+ *   user to notify by email; when omitted, no notification is sent (used by callers that already
+ *   loaded the user, e.g. `routes/api/usersApi.js`, to avoid a second lookup here).
  * @returns {Promise<Object>} Operation result.
  */
-export async function updateUser(id, user) {
+export async function updateUser(id, user, notifyUser) {
   if (!id || !user) {
     return ErrorManager.returnError("invalidParameters");
   }
@@ -77,6 +85,9 @@ export async function updateUser(id, user) {
 
   try {
     await dbc.dbUpdateData("users", id, sanitized);
+    if (notifyUser) {
+      await mailer.sendAccountChangedEmail({ ...notifyUser, ...sanitized }, "profile");
+    }
     return ErrorManager.returnSuccess(200, "User updated successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error updating user in the database: ${error.message}`);
@@ -104,6 +115,7 @@ export async function toggleUserStatus(id) {
     const newStatus = { deleted: !user.deleted };
 
     await dbc.dbUpdateData("users", id, newStatus);
+    await mailer.sendAccountChangedEmail(user, newStatus.deleted ? "deleted" : "reactivated");
     return ErrorManager.returnSuccess(200, "User status updated successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error toggling user status in the database: ${error.message}`);
@@ -148,15 +160,16 @@ export async function updateUserPassword(id, pass, invalidateOtherSessions = tru
   const updateData = { hashedPassword: ds.encryptPass(pass) };
 
   try {
-    if (invalidateOtherSessions) {
-      const userResult = await dbc.dbGetOne("users", id);
-      const user = userResult[0];
-      if (user) {
-        updateData.sessionVersion = (user.sessionVersion || 0) + 1;
-      }
+    const userResult = await dbc.dbGetOne("users", id);
+    const user = userResult[0];
+    if (invalidateOtherSessions && user) {
+      updateData.sessionVersion = (user.sessionVersion || 0) + 1;
     }
 
     await dbc.dbUpdateData("users", id, updateData);
+    if (user) {
+      await mailer.sendAccountChangedEmail(user, "password");
+    }
     return ErrorManager.returnSuccess(200, "User password updated successfully", {
       sessionVersion: updateData.sessionVersion,
     });

@@ -166,6 +166,22 @@
                 :disabled="isAdminAccount"
                 @update:model-value="touchedFields.type = true" />
             </div>
+
+            <div v-if="!isEditMode" class="bg-background-50 p-4 rounded-lg border border-background-200">
+              <h4 class="text-sm font-medium text-text-700 mb-3 flex items-center">
+                <Languages class="w-4 h-4 mr-2 text-primary-600" />
+                {{ t("pages.dash.userForm.form.sections.emailLanguage") }}
+              </h4>
+
+              <SelectMenu
+                v-model="formData.language"
+                :label="t('pages.dash.userForm.form.labels.language')"
+                icon="languages"
+                :options="languageOptions" />
+              <p class="mt-1.5 text-xs text-text-500">
+                {{ t("pages.dash.userForm.form.hints.language") }}
+              </p>
+            </div>
           </div>
 
           <div class="flex justify-end items-center mt-6 gap-2">
@@ -201,7 +217,7 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { User, Shield, ShieldCheck, ClipboardList, CheckCircle, Loader2, Info as InfoIcon } from "@lucide/vue";
+import { User, Shield, ShieldCheck, ClipboardList, CheckCircle, Loader2, Languages, Info as InfoIcon } from "@lucide/vue";
 import axios from "axios";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
@@ -214,7 +230,7 @@ import TextField from "@/components/forms/TextField.vue";
 import SelectMenu from "@/components/forms/SelectMenu.vue";
 import DsButton from "@/components/core/DsButton.vue";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const toast = useToast();
@@ -281,7 +297,13 @@ const formData = reactive({
   email: "",
   type: "",
   password: "",
+  language: locale.value,
 });
+
+const languages = ["es", "en", "gl"];
+const languageOptions = computed(() =>
+  languages.map((lang) => ({ value: lang, label: t(`pages.dash.userConfig.languages.${lang}`) })),
+);
 
 const errors = reactive({
   name: "",
@@ -502,6 +524,7 @@ const handleSubmit = async () => {
 
     if (isEditMode.value) {
       const userUpdate = { ...formData };
+      delete userUpdate.language;
       if (!formData.password) delete userUpdate.password;
 
       if (isAdminAccount.value) {
@@ -523,7 +546,9 @@ const handleSubmit = async () => {
       }
     } else {
       formData.createdBy = authStore.userId;
-      const response = await axios.post("/api/users", formData);
+      const { language, ...userCreate } = formData;
+      userCreate.lang = language;
+      const response = await axios.post("/api/users", userCreate);
 
       if (response.status === 201) {
         formSubmitted.value = true;

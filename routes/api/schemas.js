@@ -135,6 +135,7 @@ export const createUserSchema = z
     name: z.string().min(1),
     email: z.string().email(),
     type: userTypeSchema.optional(),
+    lang: z.string().min(1).optional(),
   })
   .passthrough();
 

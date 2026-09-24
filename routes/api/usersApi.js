@@ -107,7 +107,7 @@ api.put("/", requireAuth, async (req, res) => {
     const userDataKeys = Object.keys(userData).filter((key) => key !== "password");
     if (userDataKeys.length > 0) {
       logger.info(`Updating user with ID: ${id}`);
-      updateResult = await users.updateUser(id, userData);
+      updateResult = await users.updateUser(id, userData, currentUser.success ? currentUser.data : undefined);
 
       if (!updateResult.success) {
         return res.status(updateResult.code).json(updateResult);

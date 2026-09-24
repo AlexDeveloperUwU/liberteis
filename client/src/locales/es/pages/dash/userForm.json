@@ -18,13 +18,18 @@
   "form": {
     "sections": {
       "basicInfo": "Información básica del usuario",
-      "accessInfo": "Información de acceso"
+      "accessInfo": "Información de acceso",
+      "emailLanguage": "Idioma del correo de bienvenida"
     },
     "labels": {
       "name": "Nombre de usuario",
       "email": "Correo electrónico",
       "userType": "Tipo de usuario",
-      "password": "Contraseña"
+      "password": "Contraseña",
+      "language": "Idioma"
+    },
+    "hints": {
+      "language": "El correo de bienvenida con la contraseña temporal se enviará en este idioma."
     },
     "actionsAria": {
       "showPassword": "Mostrar contraseña",
