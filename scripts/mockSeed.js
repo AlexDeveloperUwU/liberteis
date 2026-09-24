@@ -49,7 +49,19 @@ function isoInDays(days, hour = 10) {
   const d = new Date();
   d.setDate(d.getDate() + days);
   d.setHours(hour, 0, 0, 0);
-  return d.toISOString().slice(0, 19).replace("T", " ");
+  const pad = (n) => (n < 10 ? "0" + n : n);
+  return (
+    d.getFullYear() +
+    "-" +
+    pad(d.getMonth() + 1) +
+    "-" +
+    pad(d.getDate()) +
+    " " +
+    pad(d.getHours()) +
+    ":" +
+    pad(d.getMinutes()) +
+    ":00"
+  );
 }
 
 async function seed() {

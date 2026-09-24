@@ -434,9 +434,8 @@ async function createAdminUser() {
         createdBy: "System",
       };
 
-      await import("./userService.js").then((userService) => {
-        userService.addUser(adminUser);
-      });
+      const userService = await import("./userService.js");
+      await userService.addUser(adminUser);
     } catch (error) {
       logger.error(`Error creating admin user: ${error.message}`);
     }
