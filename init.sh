@@ -314,7 +314,6 @@ run_dev_mock() {
   wait_for_mysql_healthy
   echo -e "${GREEN}MySQL is healthy.${NC}"
   export_env_variables
-  grant_mysql_permissions
 
   creds_file="./data/secrets/dbcreds.env"
   mock_creds_file="./data/secrets/mockdbcreds.env"

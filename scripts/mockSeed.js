@@ -37,9 +37,8 @@ async function recreateMockDatabase() {
   try {
     await rootConnection.query(`DROP DATABASE IF EXISTS \`${MOCK_DB_NAME}\``);
     await rootConnection.query(`CREATE DATABASE \`${MOCK_DB_NAME}\``);
-    await rootConnection.query(
-      `GRANT ALL PRIVILEGES ON \`${MOCK_DB_NAME}\`.* TO '${mockEnv.MYSQL_USER}'@'%'; FLUSH PRIVILEGES;`,
-    );
+    await rootConnection.query(`GRANT ALL PRIVILEGES ON \`${MOCK_DB_NAME}\`.* TO '${mockEnv.MYSQL_USER}'@'%'`);
+    await rootConnection.query(`FLUSH PRIVILEGES`);
     console.log(`Recreated database \`${MOCK_DB_NAME}\`.`);
   } finally {
     await rootConnection.end();
