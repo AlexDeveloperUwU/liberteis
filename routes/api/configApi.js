@@ -14,6 +14,13 @@ export default api;
 const SENSITIVE_CONFIG_KEYS = ["mailUser", "mailPassword"];
 
 /**
+ * Config keys that can never be created, updated, or deleted through this API, even by an
+ * admin. `mockMode` is only ever written by scripts/mockSeed.js (which calls configService
+ * directly, bypassing this router entirely) so it can never be toggled on in production.
+ */
+const RESERVED_CONFIG_KEYS = ["mockMode"];
+
+/**
  * Redacts a config row before it's sent to the client. `mailPassword` is never
  * returned in full (even to an admin) since it's encrypted at rest and only meant
  * to be overwritten, not read back.
@@ -98,6 +105,10 @@ api.post("/", requireAdmin, async (req, res) => {
     }
     const { key, value } = body;
 
+    if (RESERVED_CONFIG_KEYS.includes(key)) {
+      return res.status(403).json(ErrorManager.returnError("forbidden"));
+    }
+
     const existsResult = await config.checkConfigExistence(key);
     if (!existsResult.success) {
       return res.status(existsResult.code).json(existsResult);
@@ -134,6 +145,10 @@ api.put("/", requireAdmin, async (req, res) => {
     }
     const { key, value } = body;
 
+    if (RESERVED_CONFIG_KEYS.includes(key)) {
+      return res.status(403).json(ErrorManager.returnError("forbidden"));
+    }
+
     const existsResult = await config.checkConfigExistence(key);
     if (!existsResult.success) {
       return res.status(existsResult.code).json(existsResult);
@@ -168,6 +183,10 @@ api.delete("/", requireAdmin, async (req, res) => {
       return res.status(400).json(ErrorManager.returnError("invalidParameters"));
     }
     const { key } = query;
+
+    if (RESERVED_CONFIG_KEYS.includes(key)) {
+      return res.status(403).json(ErrorManager.returnError("forbidden"));
+    }
 
     const existsResult = await config.checkConfigExistence(key);
     if (!existsResult.success) {

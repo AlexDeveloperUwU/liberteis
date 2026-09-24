@@ -15,7 +15,7 @@ clear_screen() {
 }
 
 usage() {
-  echo -e "${YELLOW}Usage: $0 [dev|prod] [outside|inside|stop|clean]${NC}"
+  echo -e "${YELLOW}Usage: $0 [dev|prod] [outside|inside|stop|clean|mock]${NC}"
   exit 1
 }
 
@@ -55,7 +55,7 @@ if [[ "$ENVIRONMENT" != "dev" && "$ENVIRONMENT" != "prod" ]]; then
   usage
 fi
 
-if [ -n "$DEV_MODE" ] && [[ "$DEV_MODE" != "outside" && "$DEV_MODE" != "inside" && "$DEV_MODE" != "stop" && "$DEV_MODE" != "clean" ]]; then
+if [ -n "$DEV_MODE" ] && [[ "$DEV_MODE" != "outside" && "$DEV_MODE" != "inside" && "$DEV_MODE" != "stop" && "$DEV_MODE" != "clean" && "$DEV_MODE" != "mock" ]]; then
   echo -e "${RED}Invalid dev mode: $DEV_MODE${NC}"
   usage
 fi
@@ -301,6 +301,43 @@ run_dev_inside() {
   grant_mysql_permissions
 }
 
+run_dev_mock() {
+  clear_screen
+  echo -e "${BLUE}Setting up mock database...${NC}"
+  set_mysql_host "local"
+  update_mysql_host_in_creds
+  docker compose --profile dev up --force-recreate -d mysql || {
+    echo -e "${RED}Error starting MySQL with Docker Compose${NC}"
+    exit 1
+  }
+  echo -e "${BLUE}Waiting for MySQL to become healthy...${NC}"
+  wait_for_mysql_healthy
+  echo -e "${GREEN}MySQL is healthy.${NC}"
+  export_env_variables
+
+  creds_file="./data/secrets/dbcreds.env"
+  mock_creds_file="./data/secrets/mockdbcreds.env"
+  sed "s/^MYSQL_DATABASE=.*/MYSQL_DATABASE=liberteis-mock-db/" "$creds_file" >"$mock_creds_file" || {
+    echo -e "${RED}Error creating mock database credentials file${NC}"
+    exit 1
+  }
+
+  echo -e "${BLUE}Dropping and re-generating the mock database...${NC}"
+  DOTENV_CONFIG_PATH="$mock_creds_file" node scripts/mockSeed.js || {
+    echo -e "${RED}Error seeding mock database${NC}"
+    exit 1
+  }
+  echo -e "${GREEN}Mock database ready. It never touches the real database (liberteis-db).${NC}"
+
+  echo -e "${BLUE}Starting the app against the mock database...${NC}"
+  export DOTENV_CONFIG_PATH="$mock_creds_file"
+  export MYSQL_DATABASE="liberteis-mock-db"
+  npm run dev || {
+    echo -e "${RED}Error running development environment against the mock database${NC}"
+    exit 1
+  }
+}
+
 initialize
 create_init_indicator
 
@@ -315,6 +352,7 @@ if [ "$ENVIRONMENT" == "dev" ]; then
     inside) run_dev_inside ;;
     stop) stop_and_remove_containers ;;
     clean) stop_remove_and_clean_volumes ;;
+    mock) run_dev_mock ;;
     esac
   else
     while true; do
@@ -322,7 +360,8 @@ if [ "$ENVIRONMENT" == "dev" ]; then
       echo "2) Inside container"
       echo "3) Stop and remove all containers"
       echo "4) Stop, remove all containers, and clean volumes"
-      read -p "Enter the corresponding number (1, 2, 3, or 4): " dev_choice
+      echo "5) Generate/reset mock database with sample data"
+      read -p "Enter the corresponding number (1, 2, 3, 4, or 5): " dev_choice
 
       case $dev_choice in
       1)
@@ -339,6 +378,10 @@ if [ "$ENVIRONMENT" == "dev" ]; then
         ;;
       4)
         stop_remove_and_clean_volumes
+        break
+        ;;
+      5)
+        run_dev_mock
         break
         ;;
       *)
