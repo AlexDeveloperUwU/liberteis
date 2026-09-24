@@ -328,6 +328,14 @@ run_dev_mock() {
     exit 1
   }
   echo -e "${GREEN}Mock database ready. It never touches the real database (liberteis-db).${NC}"
+
+  echo -e "${BLUE}Starting the app against the mock database...${NC}"
+  export DOTENV_CONFIG_PATH="$mock_creds_file"
+  export MYSQL_DATABASE="liberteis-mock-db"
+  npm run dev || {
+    echo -e "${RED}Error running development environment against the mock database${NC}"
+    exit 1
+  }
 }
 
 initialize

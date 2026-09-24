@@ -64,6 +64,15 @@ async function seed() {
   await dbc.dbCreateTables();
   console.log("Tables created.");
 
+  // dbCreateTables() always bootstraps the real admin account (email +
+  // password hash from data/secrets/adminaccount.key). That's production
+  // credential material and must not exist in a disposable mock database.
+  const realAdmin = await userService.getUserByEmail("admin@lolcat.host", true);
+  if (realAdmin.success) {
+    await dbc.dbDeleteData("users", realAdmin.data.id);
+    console.log("Removed the bootstrapped production admin account from the mock database.");
+  }
+
   await configService.setConfig("mockMode", "true");
 
   const managerUser = {
