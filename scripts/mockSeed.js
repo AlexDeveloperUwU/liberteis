@@ -59,9 +59,12 @@ async function seed() {
   const categoriesService = await import("../db/categoriesService.js");
   const eventsService = await import("../db/eventsService.js");
   const bookingsService = await import("../db/bookingsService.js");
+  const configService = await import("../db/configService.js");
 
   await dbc.dbCreateTables();
   console.log("Tables created.");
+
+  await configService.setConfig("mockMode", "true");
 
   const managerUser = {
     name: "Mock Manager",
