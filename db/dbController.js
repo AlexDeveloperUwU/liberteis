@@ -66,23 +66,6 @@ dbPool.on("error", (err) => {
 });
 
 /**
- * Handles connection errors and closes the application if a critical error occurs.
- * @param {Error} err - Connection error.
- * @param {Object} connection - Database connection.
- */
-dbPool.getConnection((err, connection) => {
-  if (err) {
-    if (err.code === "ECONNREFUSED") {
-      logger.error("Database connection refused. Verify that the MySQL server is running.");
-    } else {
-      logger.error(`Error connecting to the database: ${err.message}`);
-    }
-    process.exit(1);
-  }
-  if (connection) connection.release();
-});
-
-/**
  * Kysely instance configured to use the MySQL connection pool.
  */
 const db = new Kysely({
