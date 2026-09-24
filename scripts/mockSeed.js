@@ -78,12 +78,21 @@ async function seed() {
     type: "normalUser",
     createdBy: "System",
   };
+  const adminUser = {
+    name: "Mock Admin",
+    email: "admin@mock.local",
+    password: "MockPass123!",
+    type: "adminUser",
+    createdBy: "System",
+  };
 
   const managerResult = await userService.addUser(managerUser);
   if (!managerResult.success) throw new Error(`Failed to create manager user: ${managerResult.message}`);
   const normalResult = await userService.addUser(normalUser);
   if (!normalResult.success) throw new Error(`Failed to create normal user: ${normalResult.message}`);
-  console.log("Users created:", managerUser.id, normalUser.id);
+  const adminResult = await userService.addUser(adminUser);
+  if (!adminResult.success) throw new Error(`Failed to create admin user: ${adminResult.message}`);
+  console.log("Users created:", managerUser.id, normalUser.id, adminUser.id);
 
   const spaces = [
     { name: "Mock Library Hall", location: "Ground floor", info: "Main hall", createdBy: managerUser.id },
@@ -159,6 +168,7 @@ async function seed() {
   console.log("\nMock database seeded successfully.");
   console.log("Manager login: manager@mock.local / MockPass123!");
   console.log("Normal user login: user@mock.local / MockPass123!");
+  console.log("Admin login: admin@mock.local / MockPass123!");
 }
 
 try {
