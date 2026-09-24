@@ -355,7 +355,7 @@ export async function sendPasswordResetEmail(user, resetLink, expiryHours = 1) {
 }
 
 /**
- * Sends an "your account changed" notification, wired into the user lifecycle in
+ * Sends an account-change notification, wired into the user lifecycle in
  * `db/userService.js` (profile edits, password changes, and soft delete/restore).
  * @param {{email: string, name: string, lang?: string}} user - The recipient.
  * @param {("email"|"password"|"status"|"profile"|"deleted"|"reactivated")} reason - What changed.

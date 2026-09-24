@@ -81,7 +81,7 @@ api.put("/", requireAuth, async (req, res) => {
       delete userData.type;
     }
 
-    const currentUser = await users.getUser(id);
+    const currentUser = await users.getUser(id, true);
     if (currentUser.success && currentUser.data.createdBy === "System" && currentUser.data.name === "Administrador") {
       delete userData.name;
       delete userData.type;

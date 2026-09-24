@@ -86,7 +86,10 @@ export async function updateUser(id, user, notifyUser) {
   try {
     await dbc.dbUpdateData("users", id, sanitized);
     if (notifyUser) {
-      await mailer.sendAccountChangedEmail({ ...notifyUser, ...sanitized }, "profile");
+      const actuallyChanged = Object.entries(sanitized).some(([field, value]) => notifyUser[field] !== value);
+      if (actuallyChanged) {
+        await mailer.sendAccountChangedEmail({ ...notifyUser, ...sanitized }, "profile");
+      }
     }
     return ErrorManager.returnSuccess(200, "User updated successfully", { code: 200 });
   } catch (error) {
