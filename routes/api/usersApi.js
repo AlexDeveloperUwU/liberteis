@@ -37,6 +37,7 @@ api.post("/", requireAdmin, async (req, res) => {
     }
 
     userData.password = generatePass();
+    userData.createdBy = req.session.userId;
 
     logger.info(`Creating user with email: ${userData.email}`);
     const result = await users.addUser(userData);
