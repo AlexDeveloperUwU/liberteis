@@ -38,7 +38,9 @@ export async function addUser(user) {
 
   try {
     await dbc.dbSaveData("users", user);
-    await mailer.sendUserCreatedEmail(user, tempPassword);
+    if (user.createdBy !== "System") {
+      await mailer.sendUserCreatedEmail(user, tempPassword);
+    }
     return ErrorManager.returnSuccess(201, "User created successfully", { code: 201 });
   } catch (error) {
     if (error.message && error.message.includes("Duplicate entry") && error.message.includes("for key 'users.email'")) {
