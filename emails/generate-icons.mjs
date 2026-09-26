@@ -26,6 +26,15 @@ const BRAND_SIZE = 56;
 const ICONS = {
   key: { lucide: "key", color: "#2159a3" },
   clock: { lucide: "clock", color: "#2159a3" },
+  "user-plus": { lucide: "user-plus", color: "#2159a3" },
+  pencil: { lucide: "pencil", color: "#2159a3" },
+  info: { lucide: "info", color: "#2159a3" },
+  lock: { lucide: "lock", color: "#2159a3" },
+  "shield-alert": { lucide: "shield-alert", color: "#2159a3" },
+  "user-x": { lucide: "user-x", color: "#b3261e" },
+  "circle-alert": { lucide: "circle-alert", color: "#b3261e" },
+  "user-check": { lucide: "user-check", color: "#1e8e3e" },
+  "circle-check": { lucide: "circle-check", color: "#1e8e3e" },
 };
 
 /**

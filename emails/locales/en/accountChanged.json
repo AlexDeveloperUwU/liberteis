@@ -1,0 +1,8 @@
+{
+  "subject": "Your {{appName}} account was updated",
+  "title": "Your account was updated",
+  "body": "Hi {{name}},\n\nYour profile was just changed on {{appName}}. If this wasn't you, please contact an administrator.",
+  "infoLabel": "Changed by",
+  "infoValue": "{{changedBy}}",
+  "buttonLabel": "View my account"
+}

@@ -1,0 +1,8 @@
+{
+  "subject": "Welcome to {{appName}}",
+  "title": "Welcome to {{appName}}",
+  "body": "Hi {{name}},\n\nAn account was created for you on {{appName}}. Log in with your temporary password and change it as soon as possible.",
+  "infoLabel": "Temporary password",
+  "infoValue": "{{tempPassword}}",
+  "buttonLabel": "Log in"
+}

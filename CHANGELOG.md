@@ -5,6 +5,28 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] - 2026-09-26
+
+### Added
+
+- Account-change emails (profile edits, password changes, deactivation/reactivation) now
+  name the admin who made the change when it wasn't the user themselves.
+
+### Changed
+
+- All account emails (welcome, profile changed, password changed, deactivated,
+  reactivated) now use the shared HTML template system instead of plain text.
+- The email info-badge row is now hidden when it would just repeat the body text,
+  instead of always showing.
+- Removed the drop shadow from the email card.
+
+### Fixed
+
+- Account-change emails no longer show the raw English word "profile" instead of a
+  translated one.
+- Fixed a Galician gender-agreement error in the welcome email.
+- Fixed uneven margins around the event cover image in the booking preview.
+
 ## [2.10.0] - 2026-09-20
 
 ### Added

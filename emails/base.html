@@ -63,14 +63,7 @@
                   cellspacing="0"
                   border="0"
                   width="100%"
-                  style="
-                    background-color: #f5f5f2;
-                    border: 1.5px solid #e8e8e0;
-                    border-radius: 8px;
-                    box-shadow:
-                      0 20px 25px -5px rgba(0, 0, 0, 0.08),
-                      0 10px 10px -5px rgba(0, 0, 0, 0.04);
-                  ">
+                  style="background-color: #f5f5f2; border: 1.5px solid #e8e8e0; border-radius: 8px">
                   <tr>
                     <td style="padding: 16px 24px; border-bottom: 1.5px solid #e8e8e0">
                       <table role="presentation" cellpadding="0" cellspacing="0" border="0">
@@ -102,40 +95,7 @@
                         line-height: 1.6;
                         color: #343a40;
                       ">
-                      {{body_html}}
-                      <table
-                        role="presentation"
-                        cellpadding="0"
-                        cellspacing="0"
-                        border="0"
-                        width="100%"
-                        style="margin-top: 8px">
-                        <tr>
-                          <td width="40" valign="middle">
-                            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-                              <tr>
-                                <td
-                                  width="40"
-                                  height="40"
-                                  align="center"
-                                  valign="middle"
-                                  bgcolor="{{badge_bg}}"
-                                  style="border-radius: 999px; width: 40px; height: 40px">
-                                  <img src="cid:infoIcon" width="20" height="20" alt="" style="display: block" />
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                          <td
-                            valign="middle"
-                            style="padding-left: 14px; font-family: &quot;Lexend&quot;, Arial, sans-serif">
-                            <p style="margin: 0; font-size: 12px; color: #6c757d">{{info_label}}</p>
-                            <p style="margin: 2px 0 0; font-size: 16px; font-weight: 700; color: #212529">
-                              {{info_value}}
-                            </p>
-                          </td>
-                        </tr>
-                      </table>
+                      {{body_html}} {{info_section}}
                     </td>
                   </tr>
                   <tr>

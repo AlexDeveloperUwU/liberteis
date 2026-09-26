@@ -1,0 +1,8 @@
+{
+  "subject": "Bienvenido/a a {{appName}}",
+  "title": "Bienvenido/a a {{appName}}",
+  "body": "Hola {{name}},\n\nSe ha creado una cuenta para ti en {{appName}}. Inicia sesión con tu contraseña temporal y cámbiala lo antes posible.",
+  "infoLabel": "Contraseña temporal",
+  "infoValue": "{{tempPassword}}",
+  "buttonLabel": "Iniciar sesión"
+}

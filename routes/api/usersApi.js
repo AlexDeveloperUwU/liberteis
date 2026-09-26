@@ -91,7 +91,7 @@ api.put("/", requireAuth, async (req, res) => {
     let passwordResult;
     if (userData.password) {
       const invalidateOtherSessions = userData.invalidateOtherSessions !== false;
-      passwordResult = await users.updateUserPassword(id, userData.password, invalidateOtherSessions);
+      passwordResult = await users.updateUserPassword(id, userData.password, invalidateOtherSessions, req._reqUser);
 
       if (!passwordResult.success) {
         return res.status(passwordResult.code).json(passwordResult);
@@ -108,7 +108,12 @@ api.put("/", requireAuth, async (req, res) => {
     const userDataKeys = Object.keys(userData).filter((key) => key !== "password");
     if (userDataKeys.length > 0) {
       logger.info(`Updating user with ID: ${id}`);
-      updateResult = await users.updateUser(id, userData, currentUser.success ? currentUser.data : undefined);
+      updateResult = await users.updateUser(
+        id,
+        userData,
+        currentUser.success ? currentUser.data : undefined,
+        req._reqUser,
+      );
 
       if (!updateResult.success) {
         return res.status(updateResult.code).json(updateResult);
@@ -145,7 +150,7 @@ api.patch("/toggle", requireAdmin, async (req, res) => {
     }
     const { id } = query;
 
-    const result = await users.toggleUserStatus(id);
+    const result = await users.toggleUserStatus(id, req._reqUser);
     return res.status(result.code).json(result);
   } catch (error) {
     logger.error(`Error in /api/users/toggle [PATCH]: ${error.message}`);

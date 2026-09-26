@@ -1,0 +1,8 @@
+{
+  "subject": "Your {{appName}} account was reactivated",
+  "title": "Your account was reactivated",
+  "body": "Hi {{name}},\n\nYour account was reactivated on {{appName}} and you can log in again. If you believe this is a mistake, please contact an administrator.",
+  "infoLabel": "Changed by",
+  "infoValue": "{{changedBy}}",
+  "buttonLabel": "Log in"
+}

@@ -1,0 +1,8 @@
+{
+  "subject": "A túa conta de {{appName}} foi actualizada",
+  "title": "A túa conta foi actualizada",
+  "body": "Ola {{name}},\n\nO teu perfil acaba de cambiar en {{appName}}. Se non fuches ti, contacta cun administrador.",
+  "infoLabel": "Modificado por",
+  "infoValue": "{{changedBy}}",
+  "buttonLabel": "Ver a miña conta"
+}

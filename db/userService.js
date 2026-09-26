@@ -12,6 +12,17 @@ import ErrorManager from "../errors/errorManager.js";
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
 
 /**
+ * Returns the acting user's name for an account-change email, or `undefined` when they're
+ * editing their own account (a self-edit notification doesn't need to name the actor).
+ * @param {{id: string, name: string}} [actor] - The user making the change.
+ * @param {string} targetId - The ID of the account being changed.
+ * @returns {string|undefined}
+ */
+function changedByName(actor, targetId) {
+  return actor && actor.id !== targetId ? actor.name : undefined;
+}
+
+/**
  * Adds a user to the database.
  * @param {Object} user - Object representing the user.
  * @returns {Promise<Object>} Operation result.
@@ -60,9 +71,11 @@ export async function addUser(user) {
  * @param {{email: string, name: string, lang?: string}} [notifyUser] - The pre-fetched target
  *   user to notify by email; when omitted, no notification is sent (used by callers that already
  *   loaded the user, e.g. `routes/api/usersApi.js`, to avoid a second lookup here).
+ * @param {{id: string, name: string}} [actor] - The user making this change. When it's an admin
+ *   editing someone else, their name is included in the notification email; a self-edit stays quiet.
  * @returns {Promise<Object>} Operation result.
  */
-export async function updateUser(id, user, notifyUser) {
+export async function updateUser(id, user, notifyUser, actor) {
   if (!id || !user) {
     return ErrorManager.returnError("invalidParameters");
   }
@@ -90,7 +103,7 @@ export async function updateUser(id, user, notifyUser) {
     if (notifyUser) {
       const actuallyChanged = Object.entries(sanitized).some(([field, value]) => notifyUser[field] !== value);
       if (actuallyChanged) {
-        await mailer.sendAccountChangedEmail({ ...notifyUser, ...sanitized }, "profile");
+        await mailer.sendAccountChangedEmail({ ...notifyUser, ...sanitized }, "profile", changedByName(actor, id));
       }
     }
     return ErrorManager.returnSuccess(200, "User updated successfully", { code: 200 });
@@ -103,9 +116,10 @@ export async function updateUser(id, user, notifyUser) {
 /**
  * Enables / Disables a user in the database.
  * @param {string} id - User ID.
+ * @param {{id: string, name: string}} [actor] - The user making this change; see `updateUser`.
  * @returns {Promise<Object>} Operation result.
  */
-export async function toggleUserStatus(id) {
+export async function toggleUserStatus(id, actor) {
   if (!id) {
     return ErrorManager.returnError("invalidParameters");
   }
@@ -120,7 +134,7 @@ export async function toggleUserStatus(id) {
     const newStatus = { deleted: !user.deleted };
 
     await dbc.dbUpdateData("users", id, newStatus);
-    await mailer.sendAccountChangedEmail(user, newStatus.deleted ? "deleted" : "reactivated");
+    await mailer.sendAccountChangedEmail(user, newStatus.deleted ? "deleted" : "reactivated", changedByName(actor, id));
     return ErrorManager.returnSuccess(200, "User status updated successfully", { code: 200 });
   } catch (error) {
     logger.error(`Error toggling user status in the database: ${error.message}`);
@@ -155,9 +169,10 @@ export async function updateUserLastLogin(id) {
  * @param {string} pass - New user password.
  * @param {boolean} [invalidateOtherSessions=true] - Whether to bump the user's session version,
  *   logging out every other active session.
+ * @param {{id: string, name: string}} [actor] - The user making this change; see `updateUser`.
  * @returns {Promise<Object>} Operation result.
  */
-export async function updateUserPassword(id, pass, invalidateOtherSessions = true) {
+export async function updateUserPassword(id, pass, invalidateOtherSessions = true, actor) {
   if (!id || !pass) {
     return ErrorManager.returnError("invalidParameters");
   }
@@ -173,7 +188,7 @@ export async function updateUserPassword(id, pass, invalidateOtherSessions = tru
 
     await dbc.dbUpdateData("users", id, updateData);
     if (user) {
-      await mailer.sendAccountChangedEmail(user, "password");
+      await mailer.sendAccountChangedEmail(user, "password", changedByName(actor, id));
     }
     return ErrorManager.returnSuccess(200, "User password updated successfully", {
       sessionVersion: updateData.sessionVersion,

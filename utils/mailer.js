@@ -113,10 +113,8 @@ function escapeHtml(value) {
 }
 
 /**
- * Non-translatable presentation metadata for templates that have been
- * migrated to the HTML `emails/` template system. A template key present
- * here uses `emails/base.html` + `emails/locales/<lang>/<key>.json`; a key
- * absent here falls back to the legacy plain-text `templates` object below.
+ * Non-translatable presentation metadata for each mail template. A template
+ * key here renders through `emails/base.html` + `emails/locales/<lang>/<key>.json`.
  * `titleIcon`/`infoIcon` are Lucide icon names resolved via `ensureIcon()`
  * (see its own doc comment for why they're PNG attachments, not inline SVG).
  */
@@ -126,6 +124,36 @@ const TEMPLATE_META = {
     badgeBg: "#d4e2f5",
     titleIcon: "key",
     infoIcon: "clock",
+  },
+  userCreated: {
+    accent: "#2159a3",
+    badgeBg: "#d4e2f5",
+    titleIcon: "user-plus",
+    infoIcon: "key",
+  },
+  accountChanged: {
+    accent: "#2159a3",
+    badgeBg: "#d4e2f5",
+    titleIcon: "pencil",
+    infoIcon: "info",
+  },
+  accountPasswordChanged: {
+    accent: "#2159a3",
+    badgeBg: "#d4e2f5",
+    titleIcon: "lock",
+    infoIcon: "shield-alert",
+  },
+  accountDeleted: {
+    accent: "#b3261e",
+    badgeBg: "#f6d3d0",
+    titleIcon: "user-x",
+    infoIcon: "circle-alert",
+  },
+  accountReactivated: {
+    accent: "#1e8e3e",
+    badgeBg: "#d3f0db",
+    titleIcon: "user-check",
+    infoIcon: "circle-check",
   },
 };
 
@@ -166,85 +194,38 @@ function buildBodyHtml(text) {
 }
 
 /**
- * Email templates, keyed by template name then locale. Adding a new email is
- * a data change here, not a code change. Templates listed in `TEMPLATE_META`
- * above have moved to the HTML `emails/` system and are removed from here.
+ * Builds the optional "info badge" row (icon + label + value) shown below an
+ * email's body. Returns "" when there's nothing worth telling the reader,
+ * so the row simply doesn't render instead of repeating the body text.
+ * @param {string} badgeBg - The badge's background color.
+ * @param {string} infoLabel - The small label above the value.
+ * @param {string} infoValue - The bold value (already HTML-escaped).
+ * @returns {string} The row's HTML, or "" to hide it.
  */
-const templates = {
-  userCreated: {
-    en: {
-      subject: "Welcome to {{appName}}",
-      body: "Hi {{name}},\n\nAn account was created for you on {{appName}}. Your temporary password is: {{tempPassword}}\n\nPlease log in and change it as soon as possible.",
-    },
-    es: {
-      subject: "Bienvenido/a a {{appName}}",
-      body: "Hola {{name}},\n\nSe ha creado una cuenta para ti en {{appName}}. Tu contraseña temporal es: {{tempPassword}}\n\nInicia sesión y cámbiala lo antes posible.",
-    },
-    gl: {
-      subject: "Benvido/a a {{appName}}",
-      body: "Ola {{name}},\n\nCreouse unha conta para ti en {{appName}}. O teu contrasinal temporal é: {{tempPassword}}\n\nInicia sesión e cámbiao canto antes.",
-    },
-  },
-  accountChanged: {
-    en: {
-      subject: "Your {{appName}} account was updated",
-      body: "Hi {{name}},\n\nYour {{reason}} was just changed on {{appName}}. If this wasn't you, please contact an administrator.",
-    },
-    es: {
-      subject: "Tu cuenta de {{appName}} ha sido actualizada",
-      body: "Hola {{name}},\n\nTu {{reason}} se acaba de cambiar en {{appName}}. Si no fuiste tú, contacta con un administrador.",
-    },
-    gl: {
-      subject: "A túa conta de {{appName}} foi actualizada",
-      body: "Ola {{name}},\n\nO teu {{reason}} acaba de cambiar en {{appName}}. Se non fuches ti, contacta cun administrador.",
-    },
-  },
-  accountPasswordChanged: {
-    en: {
-      subject: "Your {{appName}} password was changed",
-      body: "Hi {{name}},\n\nYour password was just changed on {{appName}}. If this wasn't you, please contact an administrator immediately.",
-    },
-    es: {
-      subject: "Tu contraseña de {{appName}} ha sido cambiada",
-      body: "Hola {{name}},\n\nTu contraseña se acaba de cambiar en {{appName}}. Si no fuiste tú, contacta con un administrador de inmediato.",
-    },
-    gl: {
-      subject: "O teu contrasinal de {{appName}} foi cambiado",
-      body: "Ola {{name}},\n\nO teu contrasinal acaba de cambiar en {{appName}}. Se non fuches ti, contacta cun administrador inmediatamente.",
-    },
-  },
-  accountDeleted: {
-    en: {
-      subject: "Your {{appName}} account was deactivated",
-      body: "Hi {{name}},\n\nYour account was deactivated on {{appName}}. If you believe this is a mistake, please contact an administrator.",
-    },
-    es: {
-      subject: "Tu cuenta de {{appName}} ha sido desactivada",
-      body: "Hola {{name}},\n\nTu cuenta ha sido desactivada en {{appName}}. Si crees que se trata de un error, contacta con un administrador.",
-    },
-    gl: {
-      subject: "A túa conta de {{appName}} foi desactivada",
-      body: "Ola {{name}},\n\nA túa conta foi desactivada en {{appName}}. Se cres que se trata dun erro, contacta cun administrador.",
-    },
-  },
-  accountReactivated: {
-    en: {
-      subject: "Your {{appName}} account was reactivated",
-      body: "Hi {{name}},\n\nYour account was reactivated on {{appName}} and you can log in again. If you believe this is a mistake, please contact an administrator.",
-    },
-    es: {
-      subject: "Tu cuenta de {{appName}} ha sido reactivada",
-      body: "Hola {{name}},\n\nTu cuenta ha sido reactivada en {{appName}} y ya puedes iniciar sesión de nuevo. Si crees que se trata de un error, contacta con un administrador.",
-    },
-    gl: {
-      subject: "A túa conta de {{appName}} foi reactivada",
-      body: "Ola {{name}},\n\nA túa conta foi reactivada en {{appName}} e xa podes iniciar sesión de novo. Se cres que se trata dun erro, contacta cun administrador.",
-    },
-  },
-};
+function buildInfoSection(badgeBg, infoLabel, infoValue) {
+  if (!infoValue.trim()) return "";
+
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 8px">
+    <tr>
+      <td width="40" valign="middle">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td width="40" height="40" align="center" valign="middle" bgcolor="${badgeBg}" style="border-radius: 999px; width: 40px; height: 40px">
+              <img src="cid:infoIcon" width="20" height="20" alt="" style="display: block" />
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td valign="middle" style="padding-left: 14px; font-family: &quot;Lexend&quot;, Arial, sans-serif">
+        <p style="margin: 0; font-size: 12px; color: #6c757d">${infoLabel}</p>
+        <p style="margin: 2px 0 0; font-size: 16px; font-weight: 700; color: #212529">${infoValue}</p>
+      </td>
+    </tr>
+  </table>`;
+}
 
 /**
- * Maps a `sendAccountChangedEmail` reason to the `templates` key holding its dedicated copy.
+ * Maps a `sendAccountChangedEmail` reason to the `TEMPLATE_META` key holding its dedicated copy.
  * `"email"`/`"status"`/`"profile"` share the generic `accountChanged` wording (rendered with
  * `{{reason}}`); the other reasons get their own subject/body with no `{{reason}}` token.
  */
@@ -271,17 +252,17 @@ async function sendHtmlTemplatedMail(templateKey, settings, user, data) {
 
   const subject = render(locale.subject, mergedData);
   const text = render(locale.body, mergedData);
-  const buttonUrl = data.actionUrl || settings.domain;
+  const buttonUrl = data.actionUrl || `${settings.domain}/auth/login`;
+  const infoValue = escapeHtml(render(locale.infoValue, mergedData));
+  const infoSection = buildInfoSection(meta.badgeBg, locale.infoLabel, infoValue);
 
   const html = render(loadBaseTemplate(), {
     product_name: escapeHtml(settings.appName),
     preview_text: escapeHtml(subject),
     accent_color: meta.accent,
-    badge_bg: meta.badgeBg,
     title: render(locale.title, escapedData),
     body_html: buildBodyHtml(render(locale.body, mergedData)),
-    info_label: locale.infoLabel,
-    info_value: escapeHtml(render(locale.infoValue, mergedData)),
+    info_section: infoSection,
     button_url: escapeHtml(buttonUrl),
     button_label: locale.buttonLabel,
   });
@@ -289,43 +270,28 @@ async function sendHtmlTemplatedMail(templateKey, settings, user, data) {
   const attachments = [
     { filename: "brand-icon.png", path: await ensureBrandIcon(), cid: "brandIcon" },
     { filename: "title-icon.png", path: await ensureIcon(meta.titleIcon), cid: "titleIcon" },
-    { filename: "info-icon.png", path: await ensureIcon(meta.infoIcon), cid: "infoIcon" },
+    ...(infoSection ? [{ filename: "info-icon.png", path: await ensureIcon(meta.infoIcon), cid: "infoIcon" }] : []),
   ];
 
   return sendMail({ to: user.email, subject, text, html, attachments });
 }
 
 /**
- * Renders and sends one of the templates above to a user, in their stored
- * locale (falling back to "gl"). Never throws — see `sendMail`. Templates
- * listed in `TEMPLATE_META` use the HTML `emails/` system; the rest use the
- * legacy plain-text `templates` object.
- * @param {string} templateKey - One of the keys in `TEMPLATE_META` or `templates`.
+ * Renders and sends one of the templates in `TEMPLATE_META` to a user, in
+ * their stored locale (falling back to "gl"). Never throws — see `sendMail`.
+ * @param {string} templateKey - One of the keys in `TEMPLATE_META`.
  * @param {{email: string, name: string, lang?: string}} user - The recipient.
  * @param {object} [data] - Extra values available to the template as `{{tokens}}`.
  * @returns {Promise<boolean>} Whether the email was actually sent.
  */
 export async function sendTemplatedMail(templateKey, user, data = {}) {
-  const settings = await getMailSettings();
-
-  if (TEMPLATE_META[templateKey]) {
-    return sendHtmlTemplatedMail(templateKey, settings, user, data);
-  }
-
-  const localeTemplates = templates[templateKey];
-  if (!localeTemplates) {
+  if (!TEMPLATE_META[templateKey]) {
     logger.error(`Unknown mail template: ${templateKey}`);
     return false;
   }
 
-  const tpl = localeTemplates[user.lang] || localeTemplates.gl;
-  const mergedData = { name: user.name, appName: settings.appName, ...data };
-
-  return sendMail({
-    to: user.email,
-    subject: render(tpl.subject, mergedData),
-    text: render(tpl.body, mergedData),
-  });
+  const settings = await getMailSettings();
+  return sendHtmlTemplatedMail(templateKey, settings, user, data);
 }
 
 /**
@@ -358,12 +324,14 @@ export async function sendPasswordResetEmail(user, resetLink, expiryHours = 1) {
  * Sends an account-change notification, wired into the user lifecycle in
  * `db/userService.js` (profile edits, password changes, and soft delete/restore).
  * @param {{email: string, name: string, lang?: string}} user - The recipient.
- * @param {("email"|"password"|"status"|"profile"|"deleted"|"reactivated")} reason - What changed.
- *   `"deleted"`/`"reactivated"`/`"password"` use dedicated copy; the rest render the generic
- *   "your {{reason}} was changed" wording.
+ * @param {("password"|"profile"|"deleted"|"reactivated")} reason - What changed. `"password"`,
+ *   `"deleted"` and `"reactivated"` use dedicated copy; anything else falls back to the generic
+ *   "your profile was changed" wording.
+ * @param {string} [changedBy] - Display name of the admin who made the change, when it wasn't
+ *   the user themselves. Shown in the info badge; omitted, the badge is hidden.
  * @returns {Promise<boolean>} Whether the email was actually sent.
  */
-export async function sendAccountChangedEmail(user, reason) {
+export async function sendAccountChangedEmail(user, reason, changedBy) {
   const templateKey = ACCOUNT_CHANGE_TEMPLATE_KEYS[reason] || "accountChanged";
-  return sendTemplatedMail(templateKey, user, { reason });
+  return sendTemplatedMail(templateKey, user, { reason, changedBy });
 }

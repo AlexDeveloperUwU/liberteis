@@ -1,0 +1,8 @@
+{
+  "subject": "Tu cuenta de {{appName}} ha sido reactivada",
+  "title": "Tu cuenta ha sido reactivada",
+  "body": "Hola {{name}},\n\nTu cuenta ha sido reactivada en {{appName}} y ya puedes iniciar sesión de nuevo. Si crees que se trata de un error, contacta con un administrador.",
+  "infoLabel": "Modificado por",
+  "infoValue": "{{changedBy}}",
+  "buttonLabel": "Iniciar sesión"
+}

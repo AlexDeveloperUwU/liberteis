@@ -1,0 +1,8 @@
+{
+  "subject": "A túa conta de {{appName}} foi desactivada",
+  "title": "A túa conta foi desactivada",
+  "body": "Ola {{name}},\n\nA túa conta foi desactivada en {{appName}}. Se cres que se trata dun erro, contacta cun administrador.",
+  "infoLabel": "Modificado por",
+  "infoValue": "{{changedBy}}",
+  "buttonLabel": "Contactar"
+}
