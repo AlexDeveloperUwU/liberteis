@@ -11,7 +11,7 @@
               :label="t('pages.dash.bookingForm.form.labels.eventTitle')"
               :value="selectedEventName || t('pages.dash.bookingForm.form.placeholders.noEvent')" />
 
-            <div class="my-3">
+            <div>
               <div
                 role="button"
                 tabindex="0"
