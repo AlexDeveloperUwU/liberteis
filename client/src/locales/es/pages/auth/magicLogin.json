@@ -1,0 +1,8 @@
+{
+  "title": "Iniciando sesión",
+  "expired": "Este enlace de acceso ha caducado. Solicita uno nuevo.",
+  "invalid": "Este enlace de acceso no es válido o ya se ha usado. Solicita uno nuevo.",
+  "requestNewLink": "Solicitar un nuevo enlace",
+  "successTitle": "Inicio de sesión exitoso",
+  "successMessage": "Has iniciado sesión correctamente."
+}

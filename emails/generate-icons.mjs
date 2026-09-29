@@ -25,6 +25,7 @@ const BRAND_SIZE = 56;
 /** Icons available to `ensureIcon`: name -> { lucide icon name, stroke color }. */
 const ICONS = {
   key: { lucide: "key", color: "#2159a3" },
+  mail: { lucide: "mail", color: "#2159a3" },
   clock: { lucide: "clock", color: "#2159a3" },
   "user-plus": { lucide: "user-plus", color: "#2159a3" },
   pencil: { lucide: "pencil", color: "#2159a3" },

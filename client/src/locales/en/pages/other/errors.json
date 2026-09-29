@@ -39,5 +39,8 @@
   "tooManyRequests": "Too many attempts. Please try again later.",
   "resetTokenInvalid": "This password reset link is invalid.",
   "resetTokenExpired": "This password reset link has expired.",
-  "passwordResetError": "Error resetting the password."
+  "passwordResetError": "Error resetting the password.",
+  "magicLinkInvalid": "This login link is invalid.",
+  "magicLinkExpired": "This login link has expired.",
+  "magicLinkError": "Error sending the login link."
 }

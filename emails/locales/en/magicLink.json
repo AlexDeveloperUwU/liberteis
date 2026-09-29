@@ -1,0 +1,8 @@
+{
+  "subject": "Your {{appName}} login link",
+  "title": "Log in to your account",
+  "body": "Hi {{name}},\n\nUse the button below to log in. The link works only once. If you didn't request it, you can ignore this email.",
+  "infoLabel": "Link expires in",
+  "infoValue": "{{expiryMinutes}} minutes",
+  "buttonLabel": "Log in"
+}

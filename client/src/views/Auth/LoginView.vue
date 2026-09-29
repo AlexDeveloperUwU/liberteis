@@ -6,7 +6,17 @@
           {{ t("pages.auth.login.title") }}
         </h1>
 
-        <form @submit.prevent="handleLogin" class="space-y-6">
+        <div v-if="!method" class="space-y-3">
+          <p class="text-sm text-text-body">{{ t("pages.auth.login.chooseMethod") }}</p>
+          <DsButton variant="neutral" icon="lock" full-width @click="method = 'password'">
+            {{ t("pages.auth.login.methodPassword") }}
+          </DsButton>
+          <DsButton variant="neutral" icon="mail" full-width @click="method = 'magicLink'">
+            {{ t("pages.auth.login.methodMagicLink") }}
+          </DsButton>
+        </div>
+
+        <form v-else-if="method === 'password'" @submit.prevent="handleLogin" class="space-y-6">
           <TextField
             v-model="credentials.email"
             type="email"
@@ -31,7 +41,6 @@
             class="block text-sm text-primary-600 hover:text-primary-700 transition-colors">
             {{ t("pages.auth.login.forgotPassword") }}
           </router-link>
-
           <DsButton
             type="submit"
             full-width
@@ -39,7 +48,55 @@
             :disabled="loading || !isEmailValid || !credentials.password">
             {{ t("pages.auth.login.submit") }}
           </DsButton>
+
+          <button
+            type="button"
+            class="block w-full text-sm text-center text-primary-600 hover:text-primary-700"
+            @click="resetMethod">
+            {{ t("pages.auth.login.changeMethod") }}
+          </button>
         </form>
+
+        <template v-else>
+          <template v-if="!magicLinkSent">
+            <p class="text-sm text-text-body mb-6">{{ t("pages.auth.login.magicLinkDescription") }}</p>
+            <form @submit.prevent="handleMagicLink" class="space-y-6">
+              <TextField
+                v-model="credentials.email"
+                type="email"
+                :label="t('pages.auth.login.email')"
+                icon="mail"
+                :error="emailError"
+                :valid="isEmailValid"
+                @update:model-value="touchedEmail = true"
+                required />
+
+              <DsButton
+                type="submit"
+                full-width
+                :state="loading ? 'processing' : 'default'"
+                :disabled="loading || !isEmailValid">
+                {{ t("pages.auth.login.magicLinkSubmit") }}
+              </DsButton>
+
+              <button
+                type="button"
+                class="block w-full text-sm text-center text-primary-600 hover:text-primary-700"
+                @click="resetMethod">
+                {{ t("pages.auth.login.changeMethod") }}
+              </button>
+            </form>
+          </template>
+          <template v-else>
+            <p class="text-sm text-text-body mb-6">{{ t("pages.auth.login.magicLinkSent") }}</p>
+            <button
+              type="button"
+              class="block w-full text-sm text-center text-primary-600 hover:text-primary-700"
+              @click="resetMethod">
+              {{ t("pages.auth.login.changeMethod") }}
+            </button>
+          </template>
+        </template>
 
         <div v-if="mockMode" class="mt-6 pt-6 border-t border-background-300 space-y-3">
           <p class="text-sm text-text-600">{{ t("pages.auth.login.mockLoginLabel") }}</p>
@@ -66,13 +123,14 @@ import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/authStore";
 import { useConfigStore } from "@/stores/configStore";
 import { useToast } from "@/composables/useToast";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import DsCard from "@/components/core/DsCard.vue";
 import TextField from "@/components/forms/TextField.vue";
 import DsButton from "@/components/core/DsButton.vue";
 
 const { t } = useI18n();
 const router = useRouter();
+const route = useRoute();
 const authStore = useAuthStore();
 const configStore = useConfigStore();
 const toast = useToast();
@@ -81,6 +139,8 @@ const credentials = ref({
   password: "",
 });
 const loading = ref(false);
+const method = ref(["password", "magicLink"].includes(route.query.method) ? route.query.method : null);
+const magicLinkSent = ref(false);
 const submitted = ref(false);
 const touchedEmail = ref(false);
 const touchedPassword = ref(false);
@@ -124,6 +184,23 @@ const handleLogin = async () => {
     }
   } catch {
     toast.error(t("pages.auth.login.errorMessage"), t("pages.auth.login.errorTitle"));
+  } finally {
+    loading.value = false;
+  }
+};
+
+const resetMethod = () => {
+  method.value = null;
+  magicLinkSent.value = false;
+};
+
+const handleMagicLink = async () => {
+  submitted.value = true;
+  if (!isEmailValid.value) return;
+  loading.value = true;
+  try {
+    await authStore.requestMagicLink(credentials.value.email);
+    magicLinkSent.value = true;
   } finally {
     loading.value = false;
   }

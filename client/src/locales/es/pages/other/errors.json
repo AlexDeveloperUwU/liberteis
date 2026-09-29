@@ -39,5 +39,8 @@
   "tooManyRequests": "Demasiados intentos. Por favor, inténtalo de nuevo más tarde.",
   "resetTokenInvalid": "Este enlace de restablecimiento de contraseña no es válido.",
   "resetTokenExpired": "Este enlace de restablecimiento de contraseña ha caducado.",
-  "passwordResetError": "Error al restablecer la contraseña."
+  "passwordResetError": "Error al restablecer la contraseña.",
+  "magicLinkInvalid": "Este enlace de acceso no es válido.",
+  "magicLinkExpired": "Este enlace de acceso ha caducado.",
+  "magicLinkError": "Error al enviar el enlace de acceso."
 }

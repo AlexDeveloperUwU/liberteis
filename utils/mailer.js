@@ -125,6 +125,12 @@ const TEMPLATE_META = {
     titleIcon: "key",
     infoIcon: "clock",
   },
+  magicLink: {
+    accent: "#2159a3",
+    badgeBg: "#d4e2f5",
+    titleIcon: "mail",
+    infoIcon: "clock",
+  },
   userCreated: {
     accent: "#2159a3",
     badgeBg: "#d4e2f5",
@@ -318,6 +324,18 @@ export async function sendUserCreatedEmail(user, tempPassword) {
  */
 export async function sendPasswordResetEmail(user, resetLink, expiryHours = 1) {
   return sendTemplatedMail("passwordReset", user, { actionUrl: resetLink, expiryHours });
+}
+
+/**
+ * Sends a passwordless login email with a single-use magic link. Called from
+ * `requestMagicLink` in `db/userService.js`.
+ * @param {{email: string, name: string, lang?: string}} user - The recipient.
+ * @param {string} loginLink - The magic-link URL, including the token.
+ * @param {number} [expiryMinutes] - Minutes until the link expires, shown in the email.
+ * @returns {Promise<boolean>} Whether the email was actually sent.
+ */
+export async function sendMagicLinkEmail(user, loginLink, expiryMinutes = 15) {
+  return sendTemplatedMail("magicLink", user, { actionUrl: loginLink, expiryMinutes });
 }
 
 /**

@@ -18,7 +18,16 @@ const envConfig = dotenv.config({
  * Tables created by `dbCreateTables()` below. The generic helpers use this
  * to reject any table name that isn't one of the app's own tables.
  */
-const VALID_TABLES = new Set(["config", "users", "passwordresets", "spaces", "categories", "events", "bookings"]);
+const VALID_TABLES = new Set([
+  "config",
+  "users",
+  "passwordresets",
+  "magiclinks",
+  "spaces",
+  "categories",
+  "events",
+  "bookings",
+]);
 
 function assertValidTable(table) {
   if (!VALID_TABLES.has(table)) {
@@ -115,6 +124,17 @@ export async function dbCreateTables() {
 
     await trx.schema
       .createTable("passwordresets")
+      .ifNotExists()
+      .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey())
+      .addColumn("userId", "varchar(50)", (col) => col.references("users.id").notNull())
+      .addColumn("tokenHash", "varchar(255)", (col) => col.notNull().unique())
+      .addColumn("expiresAt", "timestamp", (col) => col.notNull())
+      .addColumn("used", "boolean", (col) => col.defaultTo(false).notNull())
+      .addColumn("createdAt", "timestamp", (col) => col.defaultTo(sql`CURRENT_TIMESTAMP`))
+      .execute();
+
+    await trx.schema
+      .createTable("magiclinks")
       .ifNotExists()
       .addColumn("id", "varchar(50)", (col) => col.notNull().primaryKey())
       .addColumn("userId", "varchar(50)", (col) => col.references("users.id").notNull())
@@ -404,6 +424,7 @@ export async function clearDb() {
     await trx.deleteFrom("categories").execute();
     await trx.deleteFrom("spaces").execute();
     await trx.deleteFrom("passwordresets").execute();
+    await trx.deleteFrom("magiclinks").execute();
     await trx.deleteFrom("users").execute();
     await trx.deleteFrom("config").execute();
   });

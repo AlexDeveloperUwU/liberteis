@@ -12,6 +12,11 @@ import ErrorManager from "../errors/errorManager.js";
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
 
 /**
+ * Magic-link login token lifetime, in milliseconds (15 minutes).
+ */
+const MAGIC_LINK_TTL_MS = 15 * 60 * 1000;
+
+/**
  * Returns the acting user's name for an account-change email, or `undefined` when they're
  * editing their own account (a self-edit notification doesn't need to name the actor).
  * @param {{id: string, name: string}} [actor] - The user making the change.
@@ -302,6 +307,98 @@ export async function resetPassword(token, newPassword) {
   } catch (error) {
     logger.error(`Error resetting password: ${error.message}`);
     return ErrorManager.returnError("passwordResetError");
+  }
+}
+
+/**
+ * Requests a magic login link for the given email: issues a single-use, time-limited token and
+ * emails a login link. Succeeds silently when the account isn't found (anti-enumeration); every
+ * attempt is logged for auditing.
+ * @param {string} email - The account's email.
+ * @returns {Promise<Object>} Operation result.
+ */
+export async function requestMagicLink(email) {
+  if (!email) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  try {
+    const userResult = await getUserByEmail(email);
+    if (!userResult.success) {
+      logger.warn(`Magic link requested for unknown or disabled account: ${email}`);
+      return userResult;
+    }
+    const user = userResult.data;
+
+    const token = ds.generateResetToken();
+    await dbc.dbSaveData("magiclinks", {
+      id: await id.generateId("magicLink"),
+      userId: user.id,
+      tokenHash: ds.hashToken(token),
+      expiresAt: new Date(Date.now() + MAGIC_LINK_TTL_MS),
+      used: false,
+    });
+
+    const domainResult = await configService.getConfig("domain");
+    const domain = domainResult.success ? domainResult.data.value : "";
+    await mailer.sendMagicLinkEmail(user, `${domain}/auth/magicLogin/${token}`, MAGIC_LINK_TTL_MS / (60 * 1000));
+
+    logger.info(`Magic link issued for user ${user.id}`);
+    return ErrorManager.returnSuccess(200, "Magic link requested", { code: 200 });
+  } catch (error) {
+    logger.error(`Error requesting magic link: ${error.message}`);
+    return ErrorManager.returnError("magicLinkError");
+  }
+}
+
+/**
+ * Consumes a magic-link token, marking it used. The claim is a conditional update, so two
+ * concurrent requests with the same token cannot both succeed. Every attempt is logged.
+ * @param {string} token - The raw token from the login link.
+ * @returns {Promise<Object>} Success with the user row, or `magicLinkInvalid`/`magicLinkExpired`.
+ */
+export async function consumeMagicLink(token) {
+  if (!token) {
+    return ErrorManager.returnError("invalidParameters");
+  }
+
+  try {
+    const tokenHash = ds.hashToken(token);
+    const record = (await dbc.dbGetWhere("magiclinks", { field: "tokenHash", operator: "=", value: tokenHash }))[0];
+
+    if (!record || record.used) {
+      logger.warn(`Magic link login failed: ${record ? `token ${record.id} already used` : "unknown token"}`);
+      return ErrorManager.returnError("magicLinkInvalid");
+    }
+    if (new Date(record.expiresAt) < new Date()) {
+      logger.warn(`Magic link login failed: token ${record.id} expired`);
+      return ErrorManager.returnError("magicLinkExpired");
+    }
+
+    const claim = await dbc.dbUpdateWhere(
+      "magiclinks",
+      [
+        { field: "tokenHash", operator: "=", value: tokenHash },
+        { field: "used", operator: "=", value: false },
+      ],
+      { used: true },
+    );
+    if (Number(claim[0].numUpdatedRows) !== 1) {
+      logger.warn(`Magic link login failed: token ${record.id} already used`);
+      return ErrorManager.returnError("magicLinkInvalid");
+    }
+
+    const userResult = await getUser(record.userId);
+    if (!userResult.success) {
+      logger.warn(`Magic link login failed: user ${record.userId} unavailable`);
+      return ErrorManager.returnError("magicLinkInvalid");
+    }
+
+    logger.info(`Magic link login succeeded for user ${record.userId}`);
+    return ErrorManager.returnSuccess(200, "Magic link is valid", userResult.data);
+  } catch (error) {
+    logger.error(`Error consuming magic link: ${error.message}`);
+    return ErrorManager.returnError("magicLinkError");
   }
 }
 

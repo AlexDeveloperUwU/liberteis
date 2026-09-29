@@ -17,6 +17,14 @@ export const forgotPasswordSchema = z.object({
   email: z.string().email(),
 });
 
+export const magicLinkRequestSchema = z.object({
+  email: z.string().email(),
+});
+
+export const magicLinkConsumeSchema = z.object({
+  token: z.string().min(1),
+});
+
 export const resetPasswordSchema = z.object({
   token: z.string().min(1),
   password: z.string().min(8),

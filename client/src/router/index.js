@@ -45,6 +45,13 @@ const routes = [
         meta: { allow: "any", layout: "auth" },
       },
       {
+        path: "magicLogin/:token",
+        name: "authMagicLogin",
+        component: () => import("../views/Auth/MagicLoginView.vue"),
+        meta: { allow: "any", layout: "auth" },
+        props: true,
+      },
+      {
         path: "resetPassword/:token",
         name: "authResetPassword",
         component: () => import("../views/Auth/ResetPasswordView.vue"),

@@ -27,6 +27,27 @@ export const useAuthStore = defineStore("auth", {
         return false;
       }
     },
+    async requestMagicLink(email) {
+      try {
+        const response = await axios.post("/api/auth/magicLink", { email });
+        return response.data;
+      } catch (error) {
+        return error.response?.data || { success: false };
+      }
+    },
+    async magicLogin(token) {
+      try {
+        const response = await axios.post("/api/auth/magicLogin", { token });
+        if (response.data.success) {
+          this.user = response.data.data.user;
+          this.userVerified = true;
+          localStorage.setItem("auth_user", JSON.stringify(this.user));
+        }
+        return response.data;
+      } catch (error) {
+        return error.response?.data || { success: false };
+      }
+    },
     async initSession() {
       try {
         const response = await axios.get("/api/auth/me");

@@ -39,5 +39,8 @@
   "tooManyRequests": "Demasiados intentos. Por favor, ténteo de novo máis tarde.",
   "resetTokenInvalid": "Esta ligazón de restablecemento de contrasinal non é válida.",
   "resetTokenExpired": "Esta ligazón de restablecemento de contrasinal caducou.",
-  "passwordResetError": "Erro ao restablecer o contrasinal."
+  "passwordResetError": "Erro ao restablecer o contrasinal.",
+  "magicLinkInvalid": "Esta ligazón de acceso non é válida.",
+  "magicLinkExpired": "Esta ligazón de acceso caducou.",
+  "magicLinkError": "Erro ao enviar a ligazón de acceso."
 }

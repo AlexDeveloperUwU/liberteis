@@ -1,5 +1,12 @@
 {
   "title": "Login",
+  "chooseMethod": "Choose how you want to log in",
+  "methodPassword": "Email and password",
+  "methodMagicLink": "Email me a login link",
+  "changeMethod": "Choose another method",
+  "magicLinkDescription": "Enter your email and we'll send you a link to log in without a password.",
+  "magicLinkSubmit": "Send login link",
+  "magicLinkSent": "If that email is registered, we've sent a login link to it. Check your inbox.",
   "email": "Email",
   "password": "Password",
   "submit": "Sign In",

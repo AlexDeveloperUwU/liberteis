@@ -8,6 +8,8 @@ import {
   forgotPasswordSchema,
   resetPasswordSchema,
   resetTokenParamSchema,
+  magicLinkRequestSchema,
+  magicLinkConsumeSchema,
   parseBody,
   parseQuery,
 } from "./schemas.js";
@@ -60,6 +62,29 @@ function createRateLimiter(windowMs, maxAttempts) {
 const loginRateLimiter = createRateLimiter(15 * 60 * 1000, 10);
 const forgotPasswordRateLimiter = createRateLimiter(15 * 60 * 1000, 5);
 const resetPasswordRateLimiter = createRateLimiter(15 * 60 * 1000, 10);
+const magicLinkRequestRateLimiter = createRateLimiter(15 * 60 * 1000, 5);
+const magicLoginRateLimiter = createRateLimiter(15 * 60 * 1000, 10);
+
+/**
+ * Starts an authenticated session for a user and builds the response payload shared by all login methods.
+ * @param {import('express').Request} req - Express request object.
+ * @param {object} user - The authenticated user row.
+ * @returns {Promise<{id: string, name: string, email: string, type: string, lang: string}>} The public user payload.
+ */
+async function startSession(req, user) {
+  await new Promise((resolve, reject) => {
+    req.session.regenerate((err) => (err ? reject(err) : resolve()));
+  });
+
+  req.session.userId = user.id;
+  req.session.sessionVersion = user.sessionVersion ?? 0;
+  const loginUpdate = await users.updateUserLastLogin(user.id);
+  if (!loginUpdate.success) {
+    logger.warn(`Failed to update last login time: ${loginUpdate.message}`);
+  }
+
+  return { id: user.id, name: user.name, email: user.email, type: user.type, lang: user.lang };
+}
 
 /**
  * @name POST /api/auth/login
@@ -92,24 +117,7 @@ api.post("/login", loginRateLimiter, async (req, res) => {
       return res.status(401).json(ErrorManager.returnError("invalidParameters"));
     }
 
-    await new Promise((resolve, reject) => {
-      req.session.regenerate((err) => (err ? reject(err) : resolve()));
-    });
-
-    req.session.userId = user.id;
-    req.session.sessionVersion = user.sessionVersion ?? 0;
-    const loginUpdate = await users.updateUserLastLogin(user.id);
-    if (!loginUpdate.success) {
-      logger.warn(`Failed to update last login time: ${loginUpdate.message}`);
-    }
-
-    const responseUser = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      type: user.type,
-      lang: user.lang,
-    };
+    const responseUser = await startSession(req, user);
 
     return res.status(200).json(ErrorManager.returnSuccess(200, "Login successful", { user: responseUser }));
   } catch (error) {
@@ -237,6 +245,64 @@ api.post("/resetPassword", resetPasswordRateLimiter, async (req, res) => {
     return res.status(result.code).json(result);
   } catch (error) {
     logger.error(`Error in POST /api/auth/resetPassword: ${error.message}`);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
+  }
+});
+
+/**
+ * @name POST /api/auth/magicLink
+ * @description Requests a magic login link for the given address. Always responds with a generic
+ * success message, regardless of whether the address is registered.
+ * @param {object} req - Express request object.
+ * @param {object} req.body - The request body.
+ * @param {string} req.body.email - The account's email.
+ * @param {object} res - Express response object.
+ */
+api.post("/magicLink", magicLinkRequestRateLimiter, async (req, res) => {
+  try {
+    const body = parseBody(magicLinkRequestSchema, req.body);
+    if (!body) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    await users.requestMagicLink(body.email);
+
+    return res
+      .status(200)
+      .json(ErrorManager.returnSuccess(200, "If that email is registered, a login link has been sent"));
+  } catch (error) {
+    logger.error(`Error in /api/auth/magicLink: ${error.message}`);
+    const errorResponse = ErrorManager.handleError(error);
+    return res.status(errorResponse.code).json(errorResponse);
+  }
+});
+
+/**
+ * @name POST /api/auth/magicLogin
+ * @description Logs in with a magic-link token. Consumed by POST (not GET) so email scanners that
+ * prefetch links can't burn the token.
+ * @param {object} req - Express request object.
+ * @param {object} req.body - The request body.
+ * @param {string} req.body.token - The raw token from the login link.
+ * @param {object} res - Express response object.
+ */
+api.post("/magicLogin", magicLoginRateLimiter, async (req, res) => {
+  try {
+    const body = parseBody(magicLinkConsumeSchema, req.body);
+    if (!body) {
+      return res.status(400).json(ErrorManager.returnError("invalidParameters"));
+    }
+
+    const result = await users.consumeMagicLink(body.token);
+    if (!result.success) {
+      return res.status(result.code).json(result);
+    }
+
+    const responseUser = await startSession(req, result.data);
+    return res.status(200).json(ErrorManager.returnSuccess(200, "Login successful", { user: responseUser }));
+  } catch (error) {
+    logger.error(`Error in POST /api/auth/magicLogin: ${error.message}`);
     const errorResponse = ErrorManager.handleError(error);
     return res.status(errorResponse.code).json(errorResponse);
   }

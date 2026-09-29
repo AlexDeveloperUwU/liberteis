@@ -1,5 +1,12 @@
 {
   "title": "Iniciar sesión",
+  "chooseMethod": "Elige cómo quieres iniciar sesión",
+  "methodPassword": "Correo y contraseña",
+  "methodMagicLink": "Envíame un enlace de acceso",
+  "changeMethod": "Elegir otro método",
+  "magicLinkDescription": "Introduce tu correo y te enviaremos un enlace para acceder sin contraseña.",
+  "magicLinkSubmit": "Enviar enlace de acceso",
+  "magicLinkSent": "Si ese correo está registrado, le hemos enviado un enlace de acceso. Revisa tu bandeja de entrada.",
   "email": "Correo electrónico",
   "password": "Contraseña",
   "submit": "Entrar",

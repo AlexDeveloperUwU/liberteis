@@ -162,5 +162,17 @@
   "passwordResetError": {
     "code": 500,
     "message": "pages.other.errors.passwordResetError"
+  },
+  "magicLinkInvalid": {
+    "code": 400,
+    "message": "pages.other.errors.magicLinkInvalid"
+  },
+  "magicLinkExpired": {
+    "code": 400,
+    "message": "pages.other.errors.magicLinkExpired"
+  },
+  "magicLinkError": {
+    "code": 500,
+    "message": "pages.other.errors.magicLinkError"
   }
 }

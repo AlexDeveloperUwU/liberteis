@@ -1,5 +1,12 @@
 {
   "title": "Iniciar sesión",
+  "chooseMethod": "Escolle como queres iniciar sesión",
+  "methodPassword": "Correo e contrasinal",
+  "methodMagicLink": "Envíame unha ligazón de acceso",
+  "changeMethod": "Escoller outro método",
+  "magicLinkDescription": "Introduce o teu correo e enviarémosche unha ligazón para acceder sen contrasinal.",
+  "magicLinkSubmit": "Enviar ligazón de acceso",
+  "magicLinkSent": "Se ese correo está rexistrado, enviámoslle unha ligazón de acceso. Revisa a túa caixa de entrada.",
   "email": "Correo electrónico",
   "password": "Contrasinal",
   "submit": "Entrar",

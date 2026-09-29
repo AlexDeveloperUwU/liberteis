@@ -5,6 +5,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.0] - 2026-09-29
+
+### Added
+
+- Passwordless magic-link login: users can request a single-use login link by email from the
+  login page. Links expire after 15 minutes, invalid or expired links show an error page with an
+  option to request a new one, and every request and login attempt is logged.
+
+### Changed
+
+- The login page now starts with a choice of login method (email and password, or email link)
+  and shows the matching form.
+
 ## [2.11.0] - 2026-09-26
 
 ### Added

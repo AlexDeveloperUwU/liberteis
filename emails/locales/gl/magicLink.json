@@ -1,0 +1,8 @@
+{
+  "subject": "A túa ligazón de acceso a {{appName}}",
+  "title": "Accede á túa conta",
+  "body": "Ola {{name}},\n\nUsa o botón de abaixo para iniciar sesión. A ligazón só funciona unha vez. Se non a solicitaches, podes ignorar este correo.",
+  "infoLabel": "A ligazón caduca en",
+  "infoValue": "{{expiryMinutes}} minutos",
+  "buttonLabel": "Iniciar sesión"
+}
