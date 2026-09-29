@@ -10,10 +10,14 @@
 import mysql from "mysql2/promise";
 import path from "path";
 import dotenv from "dotenv";
+import sharp from "sharp";
+import fs from "fs";
 
 const __dirname = path.resolve();
 
 const MOCK_DB_NAME = "liberteis-mock-db";
+const MOCK_TEMPLATE_PATH = path.join(__dirname, "scripts", "mock-assets", "mock-template.png");
+const UPLOADS_DIR = path.join(__dirname, "data", "uploads");
 
 const mockEnvPath = process.env.DOTENV_CONFIG_PATH || path.resolve(__dirname, "./data/secrets/mockdbcreds.env");
 const mockEnv = dotenv.config({ path: mockEnvPath }).parsed;
@@ -43,6 +47,68 @@ async function recreateMockDatabase() {
   } finally {
     await rootConnection.end();
   }
+}
+
+function escapeXml(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+}
+
+function wrapText(text, maxChars) {
+  const words = text.split(" ");
+  const lines = [];
+  let current = "";
+  for (const word of words) {
+    const next = current ? `${current} ${word}` : word;
+    if (next.length > maxChars && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = next;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+/**
+ * Composites an event's title/info onto the shared mock-template.png cover
+ * art and writes the result to data/uploads/, mirroring the real upload
+ * pipeline in utils/fileUpload.js.
+ * @param {string} title - Event title.
+ * @param {string} info - Event description.
+ * @returns {Promise<string>} The event's coverUrl.
+ */
+async function renderEventCover(title, info) {
+  const titleLines = wrapText(title, 16);
+  const infoLines = wrapText(info, 32).slice(0, 2);
+
+  const titleTspans = titleLines
+    .map((line, i) => `<tspan x="40" dy="${i === 0 ? 0 : 48}">${escapeXml(line)}</tspan>`)
+    .join("");
+  const infoStartY = 560 + titleLines.length * 48 + 36;
+  const infoTspans = infoLines
+    .map((line, i) => `<tspan x="40" dy="${i === 0 ? 0 : 28}">${escapeXml(line)}</tspan>`)
+    .join("");
+
+  const overlay = `
+    <svg width="540" height="960" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#000000" flood-opacity="0.45"/>
+        </filter>
+      </defs>
+      <text x="40" y="560" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#ffffff" filter="url(#shadow)">${titleTspans}</text>
+      <text x="40" y="${infoStartY}" font-family="Arial, sans-serif" font-size="23" fill="#f0f3fa" filter="url(#shadow)">${infoTspans}</text>
+    </svg>
+  `;
+
+  const filename = `mock-${Date.now()}-${Math.round(Math.random() * 1e9)}.avif`;
+  await sharp(MOCK_TEMPLATE_PATH)
+    .composite([{ input: Buffer.from(overlay) }])
+    .avif({ quality: 75, effort: 1 })
+    .toFile(path.join(UPLOADS_DIR, filename));
+
+  return `/uploads/${filename}`;
 }
 
 function isoInDays(days, hour = 10) {
@@ -168,7 +234,9 @@ async function seed() {
       createdBy: managerUser.id,
     },
   ];
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
   for (const event of events) {
+    event.coverUrl = await renderEventCover(event.title, event.info);
     const result = await eventsService.addEvent(event);
     if (!result.success) throw new Error(`Failed to create event "${event.title}": ${result.message}`);
   }
