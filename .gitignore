@@ -5,7 +5,7 @@ data
 check.js
 repomix-output.xml
 
-# Generated from emails/generate-icons.mjs (npm run email:icons); not hand-authored
+# Generated at runtime by emails/generate-icons.mjs; not hand-authored
 emails/assets/
 
 # Logs

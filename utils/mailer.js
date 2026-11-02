@@ -115,7 +115,7 @@ function escapeHtml(value) {
 /**
  * Non-translatable presentation metadata for each mail template. A template
  * key here renders through `emails/base.html` + `emails/locales/<lang>/<key>.json`.
- * `titleIcon`/`infoIcon` are Lucide icon names resolved via `ensureIcon()`
+ * `titleIcon`/`infoIcon` are any Lucide icon names, drawn in `accent` via `ensureIcon()`
  * (see its own doc comment for why they're PNG attachments, not inline SVG).
  */
 const TEMPLATE_META = {
@@ -275,8 +275,10 @@ async function sendHtmlTemplatedMail(templateKey, settings, user, data) {
 
   const attachments = [
     { filename: "brand-icon.png", path: await ensureBrandIcon(), cid: "brandIcon" },
-    { filename: "title-icon.png", path: await ensureIcon(meta.titleIcon), cid: "titleIcon" },
-    ...(infoSection ? [{ filename: "info-icon.png", path: await ensureIcon(meta.infoIcon), cid: "infoIcon" }] : []),
+    { filename: "title-icon.png", path: await ensureIcon(meta.titleIcon, meta.accent), cid: "titleIcon" },
+    ...(infoSection
+      ? [{ filename: "info-icon.png", path: await ensureIcon(meta.infoIcon, meta.accent), cid: "infoIcon" }]
+      : []),
   ];
 
   return sendMail({ to: user.email, subject, text, html, attachments });

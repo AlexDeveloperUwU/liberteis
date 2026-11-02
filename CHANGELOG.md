@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.1] - 2026-11-02
+
+### Changed
+
+- Email icons are now fully dynamic: `ensureIcon(name, color)` resolves any Lucide icon directly
+  from `lucide-static`, so new templates can use any `titleIcon`/`infoIcon` without registering it
+  in `emails/generate-icons.mjs` (the hardcoded `ICONS` map is gone). The color comes from the
+  template's `accent` (default `#2159a3`) and is part of the cached PNG filename
+  (`<icon>-<hex>.png`), so the same icon in different colors never collides. Unknown icon names
+  or invalid colors now throw a descriptive error.
+
+### Removed
+
+- The `npm run email:icons` script; icons are generated at runtime on first send.
+
 ## [2.12.0] - 2026-09-29
 
 ### Added
