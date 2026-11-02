@@ -250,7 +250,7 @@ import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { Search, ImageIcon, Clock, CheckCircle2, XCircle, UploadCloud, ClipboardList } from "@lucide/vue";
-import axios from "axios";
+import http from "@/utils/http";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
 import PageHeader from "@/components/data/PageHeader.vue";
@@ -608,13 +608,13 @@ const handleSubmit = async () => {
 
     let response;
     if (isEditMode.value) {
-      response = await axios.put(`/api/events?id=${eventId.value}`, formDataUpload, {
+      response = await http.put(`/api/events?id=${eventId.value}`, formDataUpload, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
     } else {
-      response = await axios.post("/api/events", formDataUpload, {
+      response = await http.post("/api/events", formDataUpload, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -658,7 +658,7 @@ const loadCreatorData = async (creatorId) => {
   isLoadingCreator.value = true;
   creatorError.value = false;
   try {
-    const response = await axios.get(`/api/users?id=${creatorId}`);
+    const response = await http.get(`/api/users?id=${creatorId}`);
     if (response.status === 200 && response.data.data) {
       creatorData.value = response.data.data;
     } else {

@@ -2,36 +2,28 @@ import "./assets/main.css";
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import axios from "axios";
+import { setUnauthorizedHandler } from "./utils/http";
 import App from "./App.vue";
 import router from "./router";
 import { createI18nInstance } from "./i18n";
 import { useMainStore } from "./stores/mainStore";
 import { useAuthStore } from "./stores/authStore";
 
-axios.defaults.withCredentials = true;
+setUnauthorizedHandler((error) => {
+  const url = error.config?.url || "";
+  const isAuthEndpoint = url.includes("/api/auth/login") || url.includes("/api/auth/logout");
+  const wasLoggedIn = Boolean(localStorage.getItem("auth_user"));
 
-axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const status = error.response?.status;
-    const url = error.config?.url || "";
-    const isAuthEndpoint = url.includes("/api/auth/login") || url.includes("/api/auth/logout");
-    const wasLoggedIn = Boolean(localStorage.getItem("auth_user"));
-
-    if (status === 401 && !isAuthEndpoint && wasLoggedIn) {
-      const authStore = useAuthStore();
-      authStore.user = null;
-      authStore.userVerified = false;
-      localStorage.removeItem("auth_user");
-      if (window.location.pathname !== "/") {
-        window.location.href = "/";
-      }
+  if (!isAuthEndpoint && wasLoggedIn) {
+    const authStore = useAuthStore();
+    authStore.user = null;
+    authStore.userVerified = false;
+    localStorage.removeItem("auth_user");
+    if (window.location.pathname !== "/") {
+      window.location.href = "/";
     }
-
-    return Promise.reject(error);
-  },
-);
+  }
+});
 
 const initApp = async () => {
   try {

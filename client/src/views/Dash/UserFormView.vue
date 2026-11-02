@@ -217,8 +217,17 @@
 import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
-import { User, Shield, ShieldCheck, ClipboardList, CheckCircle, Loader2, Languages, Info as InfoIcon } from "@lucide/vue";
-import axios from "axios";
+import {
+  User,
+  Shield,
+  ShieldCheck,
+  ClipboardList,
+  CheckCircle,
+  Loader2,
+  Languages,
+  Info as InfoIcon,
+} from "@lucide/vue";
+import http from "@/utils/http";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
 import { isValidEmail, validateName, validateEmail, validateType, validatePassword } from "@/utils/validators";
@@ -492,7 +501,7 @@ const validateForm = async () => {
 
 const checkEmailAvailability = async (email) => {
   try {
-    const response = await axios.get(`/api/users/emailCheck?email=${email}`);
+    const response = await http.get(`/api/users/emailCheck?email=${email}`);
     return !response.data.data.exists;
   } catch (error) {
     console.error("Error checking email:", error);
@@ -532,7 +541,7 @@ const handleSubmit = async () => {
         userUpdate.type = initialUserData.value.type;
       }
 
-      const response = await axios.put(`/api/users?id=${userId.value}`, userUpdate);
+      const response = await http.put(`/api/users?id=${userId.value}`, userUpdate);
 
       if (response.status === 200) {
         formSubmitted.value = true;
@@ -548,7 +557,7 @@ const handleSubmit = async () => {
       formData.createdBy = authStore.userId;
       const { language, ...userCreate } = formData;
       userCreate.lang = language;
-      const response = await axios.post("/api/users", userCreate);
+      const response = await http.post("/api/users", userCreate);
 
       if (response.status === 201) {
         formSubmitted.value = true;
@@ -593,7 +602,7 @@ const loadCreatorData = async (creatorId) => {
   creatorError.value = false;
 
   try {
-    const response = await axios.get(`/api/users?id=${creatorId}`);
+    const response = await http.get(`/api/users?id=${creatorId}`);
     if (response.status === 200 && response.data.data) {
       creatorData.value = response.data.data;
     } else {

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import axios from "axios";
+import http from "@/utils/http";
 
 export const useConfigStore = defineStore("config", () => {
   const configs = ref({});
@@ -12,7 +12,7 @@ export const useConfigStore = defineStore("config", () => {
     if (loadPromise) return loadPromise;
     loadPromise = (async () => {
       try {
-        const response = await axios.get("/api/config/");
+        const response = await http.get("/api/config/");
         if (response.data.success) {
           const configData = response.data.data;
           configData.forEach((configItem) => {
@@ -36,7 +36,7 @@ export const useConfigStore = defineStore("config", () => {
   };
 
   const updateConfig = async (key, value) => {
-    const response = await axios.put("/api/config", { key, value });
+    const response = await http.put("/api/config", { key, value });
     if (response.data.success) {
       configs.value[key] = { ...configs.value[key], id: key, value };
     }

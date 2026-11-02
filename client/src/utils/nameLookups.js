@@ -1,4 +1,4 @@
-import axios from "axios";
+import http from "@/utils/http";
 
 /**
  * Fetches all users once and fills an id -> name map, so views can resolve
@@ -9,7 +9,7 @@ import axios from "axios";
  */
 export const loadUsersIntoMap = async (usersMap) => {
   try {
-    const response = await axios.get("/api/users");
+    const response = await http.get("/api/users");
     if (!response.data.success || !Array.isArray(response.data.data)) {
       return false;
     }
@@ -34,7 +34,7 @@ export const loadUsersIntoMap = async (usersMap) => {
 export const fetchUserNameIntoMap = async (usersMap, userId) => {
   if (!userId || usersMap[userId] !== undefined) return;
   try {
-    const response = await axios.get(`/api/users?id=${userId}`);
+    const response = await http.get(`/api/users?id=${userId}`);
     if (response.data.data && response.data.data.name) {
       usersMap[userId] = response.data.data.name;
     }
@@ -51,7 +51,7 @@ export const fetchUserNameIntoMap = async (usersMap, userId) => {
  */
 export const loadSpacesIntoMap = async (spacesMap) => {
   try {
-    const response = await axios.get("/api/spaces");
+    const response = await http.get("/api/spaces");
     if (response.data.success && Array.isArray(response.data.data)) {
       for (const space of response.data.data) {
         if (space && space.id && !spacesMap[space.id]) {

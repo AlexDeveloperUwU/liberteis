@@ -344,7 +344,7 @@ import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { Calendar, Search, ImageIcon, Clock, CheckCircle2, XCircle, ClipboardList } from "@lucide/vue";
-import axios from "axios";
+import http from "@/utils/http";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
 import { toMySQLDateTime } from "@/utils/dateUtils";
@@ -495,7 +495,7 @@ onMounted(async () => {
   }
 
   try {
-    const spacesResponse = await axios.get("/api/spaces");
+    const spacesResponse = await http.get("/api/spaces");
     if (spacesResponse.data.success) {
       allSpaces.value = spacesResponse.data.data;
       availableSpaces.value = spacesResponse.data.data;
@@ -552,7 +552,7 @@ const updateSelectedEventInfo = async () => {
 
   if (event.category) {
     try {
-      const categoryResponse = await axios.get(`/api/categories?id=${event.category}`);
+      const categoryResponse = await http.get(`/api/categories?id=${event.category}`);
       if (categoryResponse.data.success) {
         selectedEventCategoryInfo.value = categoryResponse.data.data;
         await loadSpacesForCategory(selectedEventCategoryInfo.value);
@@ -776,9 +776,9 @@ const handleSubmit = async () => {
 
     let response;
     if (isEditMode.value) {
-      response = await axios.put(`/api/bookings?id=${bookingId.value}&scope=${updateScope.value}`, bookingData);
+      response = await http.put(`/api/bookings?id=${bookingId.value}&scope=${updateScope.value}`, bookingData);
     } else {
-      response = await axios.post("/api/bookings", bookingData);
+      response = await http.post("/api/bookings", bookingData);
     }
 
     if ((isEditMode.value && response.status === 200) || (!isEditMode.value && response.status === 201)) {
@@ -823,7 +823,7 @@ const loadBookerData = async (bookerId) => {
   isLoadingBooker.value = true;
   bookerError.value = false;
   try {
-    const response = await axios.get(`/api/users?id=${bookerId}`);
+    const response = await http.get(`/api/users?id=${bookerId}`);
     if (response.status === 200 && response.data.data) {
       bookerData.value = response.data.data;
     } else {

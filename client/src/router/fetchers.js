@@ -1,4 +1,4 @@
-import axios from "axios";
+import http from "@/utils/http";
 
 /**
  * Maps a booking row enriched by GET /api/bookings/dashboard (eventTitle, spaceName,
@@ -59,7 +59,7 @@ export const loadDashboardHomeData = async (to) => {
   try {
     const { startMonth, endMonth } = getDashboardMonthWindow();
 
-    const response = await axios.get(`/api/bookings/dashboard?startMonth=${startMonth}&endMonth=${endMonth}`);
+    const response = await http.get(`/api/bookings/dashboard?startMonth=${startMonth}&endMonth=${endMonth}`);
 
     const data = response.data.success ? response.data.data || {} : null;
     const metricsRaw = data?.metrics || {};
@@ -92,8 +92,8 @@ export const loadDashboardHomeData = async (to) => {
 export const loadUsersData = async (to) => {
   try {
     const [metricsResult, usersResult] = await Promise.allSettled([
-      axios.get("/api/users/count"),
-      axios.get("/api/users"),
+      http.get("/api/users/count"),
+      http.get("/api/users"),
     ]);
 
     const metrics =
@@ -141,7 +141,7 @@ export const loadUsersData = async (to) => {
 export const loadUserEditData = async (to) => {
   try {
     const userId = to.params.id;
-    const userResponse = await axios.get(`/api/users?id=${userId}&includeInactive=true`);
+    const userResponse = await http.get(`/api/users?id=${userId}&includeInactive=true`);
 
     to.meta.initialData = {
       user: userResponse.data.success ? userResponse.data.data : null,
@@ -173,7 +173,7 @@ export const loadUserConfigData = async (to) => {
       return;
     }
 
-    const userResponse = await axios.get(`/api/users?id=${userId}`);
+    const userResponse = await http.get(`/api/users?id=${userId}`);
 
     to.meta.initialData = {
       user: userResponse.data.success ? userResponse.data.data : null,
@@ -193,8 +193,8 @@ export const loadUserConfigData = async (to) => {
 export const loadSpacesData = async (to) => {
   try {
     const [metricsResult, spacesResult] = await Promise.allSettled([
-      axios.get("/api/spaces/count"),
-      axios.get("/api/spaces"),
+      http.get("/api/spaces/count"),
+      http.get("/api/spaces"),
     ]);
 
     const metrics =
@@ -242,7 +242,7 @@ export const loadSpacesData = async (to) => {
 export const loadSpaceEditData = async (to) => {
   try {
     const spaceId = to.params.id;
-    const spaceResponse = await axios.get(`/api/spaces?id=${spaceId}&includeInactive=true`);
+    const spaceResponse = await http.get(`/api/spaces?id=${spaceId}&includeInactive=true`);
 
     to.meta.initialData = {
       space: spaceResponse.data.success ? spaceResponse.data.data : null,
@@ -262,9 +262,9 @@ export const loadSpaceEditData = async (to) => {
 export const loadCategoriesData = async (to) => {
   try {
     const [metricsResult, categoriesResult, spacesResult] = await Promise.allSettled([
-      axios.get("/api/categories/count"),
-      axios.get("/api/categories"),
-      axios.get("/api/spaces"),
+      http.get("/api/categories/count"),
+      http.get("/api/categories"),
+      http.get("/api/spaces"),
     ]);
 
     const metrics =
@@ -326,8 +326,8 @@ export const loadCategoryEditData = async (to) => {
   try {
     const categoryId = to.params.id;
     const [categoryResponse, spacesResponse] = await Promise.allSettled([
-      axios.get(`/api/categories?id=${categoryId}&includeInactive=true`),
-      axios.get("/api/spaces"),
+      http.get(`/api/categories?id=${categoryId}&includeInactive=true`),
+      http.get("/api/spaces"),
     ]);
 
     const category =
@@ -375,9 +375,9 @@ export const loadCategoryEditData = async (to) => {
 export const loadEventsData = async (to) => {
   try {
     const [metricsResult, eventsResult, categoriesResult] = await Promise.allSettled([
-      axios.get("/api/events/count"),
-      axios.get("/api/events"),
-      axios.get("/api/categories"),
+      http.get("/api/events/count"),
+      http.get("/api/events"),
+      http.get("/api/categories"),
     ]);
 
     const metrics =
@@ -442,7 +442,7 @@ export const loadEventsData = async (to) => {
 
 export const loadEventCreateData = async (to) => {
   try {
-    const categoriesResponse = await axios.get("/api/categories");
+    const categoriesResponse = await http.get("/api/categories");
 
     let categories = categoriesResponse.data.success ? categoriesResponse.data.data : [];
 
@@ -470,8 +470,8 @@ export const loadEventEditData = async (to) => {
   try {
     const eventId = to.params.id;
     const [eventResponse, categoriesResponse] = await Promise.allSettled([
-      axios.get(`/api/events?id=${eventId}&includeInactive=true`),
-      axios.get("/api/categories"),
+      http.get(`/api/events?id=${eventId}&includeInactive=true`),
+      http.get("/api/categories"),
     ]);
 
     const event =
@@ -524,10 +524,10 @@ export const loadEventEditData = async (to) => {
 export const loadBookingsData = async (to) => {
   try {
     const [metricsResult, bookingsResult, eventsResult, spacesResult] = await Promise.allSettled([
-      axios.get("/api/bookings/count"),
-      axios.get("/api/bookings"),
-      axios.get("/api/events"),
-      axios.get("/api/spaces"),
+      http.get("/api/bookings/count"),
+      http.get("/api/bookings"),
+      http.get("/api/events"),
+      http.get("/api/spaces"),
     ]);
 
     const metrics =
@@ -590,7 +590,7 @@ export const loadBookingsData = async (to) => {
 
 export const loadBookingCreateData = async (to) => {
   try {
-    const eventsResponse = await axios.get("/api/events");
+    const eventsResponse = await http.get("/api/events");
 
     const events = eventsResponse.data.success ? eventsResponse.data.data : [];
 
@@ -613,8 +613,8 @@ export const loadBookingEditData = async (to) => {
   try {
     const bookingId = to.params.id;
     const [bookingResponse, eventsResponse] = await Promise.allSettled([
-      axios.get(`/api/bookings?id=${bookingId}&includeInactive=true`),
-      axios.get("/api/events"),
+      http.get(`/api/bookings?id=${bookingId}&includeInactive=true`),
+      http.get("/api/events"),
     ]);
 
     const booking =
@@ -727,7 +727,7 @@ export const loadScreenData = async (to) => {
     const startDate = now.toISOString();
     const endDate = nextWeek.toISOString();
 
-    const response = await axios.get(`/api/bookings/dashboard?startDate=${startDate}&endDate=${endDate}`);
+    const response = await http.get(`/api/bookings/dashboard?startDate=${startDate}&endDate=${endDate}`);
 
     if (!response.data.success) {
       throw new Error(response.data.message || "Error al obtener reservas");
@@ -756,7 +756,7 @@ export const loadScreenData = async (to) => {
 
 export const loadCategoryCreateData = async (to) => {
   try {
-    const spacesResponse = await axios.get("/api/spaces");
+    const spacesResponse = await http.get("/api/spaces");
     to.meta.initialData = {
       spaces: spacesResponse.data.success ? spacesResponse.data.data : [],
       error: !spacesResponse.data.success,

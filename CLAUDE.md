@@ -43,7 +43,7 @@ Infra: `docker-compose.yml` defines a MySQL 9.3 service plus `dev`/`prod` profil
 **Frontend** (`client/src/`):
 
 - `stores/` — Pinia stores (`authStore`, `configStore`, `mainStore`, `modalStore`, `toastStore`) hold session/user, app config, and UI state.
-- `router/fetchers.js` — API call wrappers (axios) used by views/stores instead of calling axios directly.
+- `router/fetchers.js` — API call wrappers used by views/stores. All HTTP goes through `utils/http.js`, a small fetch-based client with an axios-like API (`http.get/post/put/patch/delete`, `error.response`); a 401 handler registered in `main.js` clears the local session.
 - `utils/permissions.js` — role hierarchy (`normalUser` < `managerUser` < `adminUser`) and `hasPermission(userType, requiredType)`; mirror this hierarchy when adding backend authorization checks.
 - `views/` — routed pages grouped by area (`Auth`, `Dash`, `Info`, `Others`).
 - `locales/{en,es,gl}/{pages,components}/...json` — i18n message trees, loaded and namespaced by `i18n.js` via `import.meta.glob`. Keep new locale files in sync across all three languages — gl (Galician) is the default UI language.
