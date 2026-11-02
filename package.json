@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "nvm": "nvm use 24",
-    "start": "nodemon index.js",
+    "start": "node --watch index.js",
     "format": "prettier --write .",
     "dev": "concurrently \"npm run dev --prefix client\" \"npm start\"",
     "prod": "node index.js",
@@ -41,18 +41,11 @@
   "devDependencies": {
     "@types/node": "^24.19.2",
     "concurrently": "^10.0.6",
-    "nodemon": "^3.1.11",
     "prettier": "^3.6.2"
   },
   "prettier": {
     "bracketSameLine": true,
     "printWidth": 120
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "client/**",
-      "data/**"
-    ]
   },
   "overrides": {
     "mysql2": "$mysql2"

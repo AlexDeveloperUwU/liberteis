@@ -13,8 +13,8 @@ serves the built client from `views/` and mounts the API under `/api`.
 
 Run from the repo root unless noted.
 
-- `npm run dev` — runs client (Vite, port 3001) and server (`nodemon index.js`) concurrently. Primary way to develop.
-- `npm start` — server only, via nodemon.
+- `npm run dev` — runs client (Vite, port 3001) and server (`node --watch index.js`) concurrently. Primary way to develop.
+- `npm start` — server only, via `node --watch` (auto-restarts when imported server files change).
 - `npm run prod` — server only, plain `node index.js`.
 - `npm run format` — Prettier write (config lives in `package.json`: `bracketSameLine: true`, `printWidth: 120`).
 
