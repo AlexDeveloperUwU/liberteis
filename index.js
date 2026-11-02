@@ -1,7 +1,6 @@
 import e from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import bodyParser from "body-parser";
 import helmet from "helmet";
 import * as logs from "./utils/logger.js";
 import session from "express-session";
@@ -84,8 +83,8 @@ async function main() {
   app.use(helmet.originAgentCluster());
   app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
   app.use(logs.httpLogger);
-  app.use(bodyParser.json({ limit: "15mb" }));
-  app.use(bodyParser.urlencoded({ extended: true, limit: "15mb" }));
+  app.use(e.json({ limit: "15mb" }));
+  app.use(e.urlencoded({ extended: true, limit: "15mb" }));
 
   app.use("/", e.static(path.join(__dirname, "views")));
   app.use("/uploads", e.static(path.join(__dirname, "data", "uploads")));
