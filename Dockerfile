@@ -35,7 +35,7 @@ COPY --from=build-client /app/client/dist /app/views
 # Copia el archivo de credenciales al contenedor
 COPY ./data/secrets/dbcreds.env /app/secrets/dbcreds.env
 
-# Establece la variable de entorno para que dotenv pueda cargarla
+# Establece la variable de entorno para que la app cargue las credenciales (process.loadEnvFile)
 ENV DOTENV_CONFIG_PATH=/app/secrets/dbcreds.env
 
 # Establece un valor por defecto para el puerto
