@@ -4,11 +4,12 @@
  * Email clients (Gmail, Outlook, ...) don't render inline <svg> and Gmail strips
  * `data:` image URIs, so icons ship as real PNG attachments instead. Icon SVGs are pulled
  * straight from lucide-static (the same icon set the frontend uses via lucide-vue-next),
- * not hand-copied, so they can't drift from the real icon. Add an entry to ICONS below to
- * make a new one available to `ensureIcon`.
+ * not hand-copied, so they can't drift from the real icon. Any Lucide icon name works with
+ * `ensureIcon` — there is no registration step.
  *
- * Run directly (`node emails/generate-icons.mjs` / `npm run email:icons`) to force-regenerate
- * every icon, bypassing the cache — e.g. after bumping lucide-static or changing a color.
+ * Run directly (`node emails/generate-icons.mjs` / `npm run email:icons`) to clear every
+ * cached icon (they're regenerated lazily on next use) and rebuild the brand icon — e.g.
+ * after bumping lucide-static.
  */
 import fs from "fs";
 import path from "path";
@@ -21,22 +22,11 @@ const ASSETS_DIR = path.join(__dirname, "assets");
 const ICON_SIZE = 64;
 const BRAND_SOURCE = path.join(__dirname, "..", "client", "src", "assets", "img", "icon.png");
 const BRAND_SIZE = 56;
+const ICON_NAME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const HEX_COLOR_RE = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
 
-/** Icons available to `ensureIcon`: name -> { lucide icon name, stroke color }. */
-const ICONS = {
-  key: { lucide: "key", color: "#2159a3" },
-  mail: { lucide: "mail", color: "#2159a3" },
-  clock: { lucide: "clock", color: "#2159a3" },
-  "user-plus": { lucide: "user-plus", color: "#2159a3" },
-  pencil: { lucide: "pencil", color: "#2159a3" },
-  info: { lucide: "info", color: "#2159a3" },
-  lock: { lucide: "lock", color: "#2159a3" },
-  "shield-alert": { lucide: "shield-alert", color: "#2159a3" },
-  "user-x": { lucide: "user-x", color: "#b3261e" },
-  "circle-alert": { lucide: "circle-alert", color: "#b3261e" },
-  "user-check": { lucide: "user-check", color: "#1e8e3e" },
-  "circle-check": { lucide: "circle-check", color: "#1e8e3e" },
-};
+/** Stroke color used when a template doesn't specify one. */
+const DEFAULT_COLOR = "#2159a3";
 
 /**
  * Writes `outPath` via a temp file + rename so a concurrent read of a half-written file
@@ -52,17 +42,30 @@ async function writeAtomic(outPath, build) {
 }
 
 /**
- * Returns the path to `name`'s PNG (a key in `ICONS`), generating and caching it on disk
- * the first time it's requested.
- * @param {string} name
+ * Returns the path to the PNG for Lucide icon `name` drawn in `color`, generating and caching
+ * it on disk the first time that name/color pair is requested. The color is part of the
+ * filename, so the same icon in different colors never collides.
+ * @param {string} name Lucide icon name (kebab-case), e.g. "circle-check".
+ * @param {string} [color] Hex stroke color (`#rgb` or `#rrggbb`).
  * @returns {Promise<string>}
+ * @throws {Error} If `name` isn't a Lucide icon or `color` isn't a hex color.
  */
-export async function ensureIcon(name) {
-  const outPath = path.join(ASSETS_DIR, `${name}.png`);
+export async function ensureIcon(name, color = DEFAULT_COLOR) {
+  if (typeof name !== "string" || !ICON_NAME_RE.test(name)) {
+    throw new Error(`Invalid Lucide icon name: ${JSON.stringify(name)} (expected kebab-case, e.g. "circle-check")`);
+  }
+  if (typeof color !== "string" || !HEX_COLOR_RE.test(color)) {
+    throw new Error(`Invalid icon color for "${name}": ${JSON.stringify(color)} (expected hex like "#2159a3")`);
+  }
+
+  const outPath = path.join(ASSETS_DIR, `${name}-${color.slice(1).toLowerCase()}.png`);
   if (fs.existsSync(outPath)) return outPath;
 
-  const { lucide, color } = ICONS[name];
-  const svg = fs.readFileSync(path.join(LUCIDE_ICONS_DIR, `${lucide}.svg`), "utf8").replaceAll("currentColor", color);
+  const svgPath = path.join(LUCIDE_ICONS_DIR, `${name}.svg`);
+  if (!fs.existsSync(svgPath)) {
+    throw new Error(`Unknown Lucide icon "${name}": no ${name}.svg in lucide-static (see https://lucide.dev/icons)`);
+  }
+  const svg = fs.readFileSync(svgPath, "utf8").replaceAll("currentColor", color);
   await writeAtomic(outPath, (tmpPath) => sharp(Buffer.from(svg)).resize(ICON_SIZE, ICON_SIZE).png().toFile(tmpPath));
   return outPath;
 }
@@ -86,12 +89,10 @@ export async function ensureBrandIcon() {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  for (const name of Object.keys(ICONS)) {
-    fs.rmSync(path.join(ASSETS_DIR, `${name}.png`), { force: true });
-    await ensureIcon(name);
-    console.log(`generated ${name}.png`);
+  for (const file of fs.existsSync(ASSETS_DIR) ? fs.readdirSync(ASSETS_DIR) : []) {
+    if (file.endsWith(".png")) fs.rmSync(path.join(ASSETS_DIR, file), { force: true });
   }
-  fs.rmSync(path.join(ASSETS_DIR, "brand-icon.png"), { force: true });
+  console.log("cleared cached icons (regenerated on next use)");
   await ensureBrandIcon();
   console.log("generated brand-icon.png");
 }
