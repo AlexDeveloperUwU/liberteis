@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build-client
+FROM node:24-alpine AS build-client
 
 # Establece el directorio de trabajo para la construcción del cliente
 WORKDIR /app/client
@@ -10,7 +10,7 @@ COPY client ./
 RUN npm install && npm run build
 
 # Etapa final
-FROM node:22-alpine
+FROM node:24-alpine
 
 # Establece el directorio de trabajo
 WORKDIR /app

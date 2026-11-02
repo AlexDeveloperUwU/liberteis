@@ -243,6 +243,16 @@ export async function dbCreateTables() {
       await trx.insertInto("config").values({ id: "mailFromAddress", value: "" }).execute();
     }
 
+    // Explicit mail switch. Existing installs that already have SMTP fully configured keep sending mail.
+    if (!configRows.some((row) => row.id === "mailEnabled")) {
+      const valueOf = (id) => configRows.find((row) => row.id === id)?.value;
+      const alreadyConfigured = Boolean(valueOf("mailHostPort") && valueOf("mailUser") && valueOf("mailPassword"));
+      await trx
+        .insertInto("config")
+        .values({ id: "mailEnabled", value: alreadyConfigured ? "true" : "false" })
+        .execute();
+    }
+
     await createAdminUser();
   });
 }

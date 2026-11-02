@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen w-full p-6 flex items-center justify-center">
+  <div class="min-h-[calc(100vh-3.5rem)] w-full p-6 flex items-center justify-center">
     <div class="max-w-6xl w-full">
       <div class="text-center mb-12">
         <h2 class="text-4xl font-bold text-text-950 mb-4 k2d">
