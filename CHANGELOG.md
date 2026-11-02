@@ -14,8 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   in `emails/generate-icons.mjs` (the hardcoded `ICONS` map is gone). The color comes from the
   template's `accent` (default `#2159a3`) and is part of the cached PNG filename
   (`<icon>-<hex>.png`), so the same icon in different colors never collides. Unknown icon names
-  or invalid colors now throw a descriptive error. `npm run email:icons` now clears the icon
-  cache (icons regenerate lazily) and rebuilds the brand icon.
+  or invalid colors now throw a descriptive error.
+
+### Removed
+
+- The `npm run email:icons` script; icons are generated at runtime on first send.
 
 ## [2.12.0] - 2026-09-29
 

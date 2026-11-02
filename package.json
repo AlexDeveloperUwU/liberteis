@@ -8,7 +8,6 @@
     "nvm": "nvm use 22",
     "start": "nodemon index.js",
     "format": "prettier --write .",
-    "email:icons": "node emails/generate-icons.mjs",
     "dev": "concurrently \"npm run dev --prefix client\" \"npm start\"",
     "prod": "node index.js",
     "mock": "node scripts/mockSeed.js"

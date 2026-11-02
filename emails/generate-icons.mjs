@@ -7,9 +7,8 @@
  * not hand-copied, so they can't drift from the real icon. Any Lucide icon name works with
  * `ensureIcon` — there is no registration step.
  *
- * Run directly (`node emails/generate-icons.mjs` / `npm run email:icons`) to clear every
- * cached icon (they're regenerated lazily on next use) and rebuild the brand icon — e.g.
- * after bumping lucide-static.
+ * Everything happens at runtime on first send; there is no script to run. To force
+ * regeneration (e.g. after bumping lucide-static), delete the PNGs in emails/assets/.
  */
 import fs from "fs";
 import path from "path";
@@ -86,13 +85,4 @@ export async function ensureBrandIcon() {
       .toFile(tmpPath),
   );
   return outPath;
-}
-
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  for (const file of fs.existsSync(ASSETS_DIR) ? fs.readdirSync(ASSETS_DIR) : []) {
-    if (file.endsWith(".png")) fs.rmSync(path.join(ASSETS_DIR, file), { force: true });
-  }
-  console.log("cleared cached icons (regenerated on next use)");
-  await ensureBrandIcon();
-  console.log("generated brand-icon.png");
 }
