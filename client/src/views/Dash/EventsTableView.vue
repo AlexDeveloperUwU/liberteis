@@ -67,7 +67,7 @@
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import axios from "axios";
+import http from "@/utils/http";
 import { useModal } from "@/composables/useModal";
 import { useToast } from "@/composables/useToast";
 import PageHeader from "@/components/data/PageHeader.vue";
@@ -241,7 +241,7 @@ const loadEvents = async () => {
   try {
     isLoading.value = true;
 
-    const response = await axios.get("/api/events", {
+    const response = await http.get("/api/events", {
       params: {
         status: eventFilter.value,
       },
@@ -253,7 +253,7 @@ const loadEvents = async () => {
       metrics.value = response.data.metrics;
     } else {
       try {
-        const metricsResponse = await axios.get("/api/events/count");
+        const metricsResponse = await http.get("/api/events/count");
         if (metricsResponse.data && metricsResponse.data.success) {
           metrics.value = metricsResponse.data.data;
         }
@@ -284,7 +284,7 @@ const loadCategoriesInfo = async () => {
   for (const categoryId of categoryIds) {
     requestedCategories.add(categoryId);
     try {
-      const response = await axios.get(`/api/categories`, {
+      const response = await http.get(`/api/categories`, {
         params: { id: categoryId, includeInactive: true },
       });
       if (response.data.success && response.data.data) {
@@ -305,7 +305,7 @@ const getCategoryName = (categoryId) => {
 
   if (!requestedCategories.has(categoryId)) {
     requestedCategories.add(categoryId);
-    axios
+    http
       .get(`/api/categories`, {
         params: { id: categoryId, includeInactive: true },
       })
@@ -357,7 +357,7 @@ const getCreatedByName = (createdById) => {
 
 const loadUsers = async () => {
   try {
-    const response = await axios.get("/api/users", { params: { status: "active" } });
+    const response = await http.get("/api/users", { params: { status: "active" } });
     if (response.data.success) {
       allUsers.value = response.data.data;
     }
@@ -368,7 +368,7 @@ const loadUsers = async () => {
 
 const refreshMetrics = async () => {
   try {
-    const metricsResponse = await axios.get("/api/events/count");
+    const metricsResponse = await http.get("/api/events/count");
     if (metricsResponse.data && metricsResponse.data.success) {
       metrics.value = metricsResponse.data.data;
     }
@@ -399,7 +399,7 @@ const handleEventStatusToggle = async (event) => {
           type: isDeactivating ? "danger" : "secondary",
           onClick: async () => {
             try {
-              const response = await axios.patch(`/api/events/toggle`, null, {
+              const response = await http.patch(`/api/events/toggle`, null, {
                 params: { id: event.id },
               });
 

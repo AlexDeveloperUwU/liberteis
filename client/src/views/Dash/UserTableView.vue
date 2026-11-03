@@ -64,7 +64,7 @@
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import axios from "axios";
+import http from "@/utils/http";
 import { useModal } from "@/composables/useModal";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
@@ -241,7 +241,7 @@ const paginatedUsers = computed(() => {
 const loadUsers = async () => {
   try {
     isLoading.value = true;
-    const response = await axios.get("/api/users", {
+    const response = await http.get("/api/users", {
       params: {
         status: userFilter.value,
       },
@@ -309,7 +309,7 @@ const handleUserStatusToggle = async (user) => {
           type: isDeactivating ? "danger" : "secondary",
           onClick: async (modalId) => {
             try {
-              const response = await axios.patch(`/api/users/toggle`, null, {
+              const response = await http.patch(`/api/users/toggle`, null, {
                 params: { id: user.id },
               });
 

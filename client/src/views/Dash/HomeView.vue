@@ -201,7 +201,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useConfigStore } from "@/stores/configStore";
 import { useRoute } from "vue-router";
 import { useModalStore } from "@/stores/modalStore";
-import axios from "axios";
+import http from "@/utils/http";
 import { useRouter } from "vue-router";
 import { useModal } from "@/composables/useModal";
 import { useToast } from "@/composables/useToast";
@@ -527,7 +527,7 @@ const showEventDetailsModal = (event) => {
 
 const performDeactivate = async (id, scope, modalId, title) => {
   try {
-    const response = await axios.patch(`/api/bookings/toggle`, null, {
+    const response = await http.patch(`/api/bookings/toggle`, null, {
       params: { id: id, scope: scope },
     });
     if (response.data.success) {
@@ -625,7 +625,7 @@ const loadBookings = async (forceRefresh = false) => {
     ) {
       bookings = preloadedBookings;
     } else {
-      const response = await axios.get(`/api/bookings/dashboard?startMonth=${startMonthStr}&endMonth=${endMonthStr}`);
+      const response = await http.get(`/api/bookings/dashboard?startMonth=${startMonthStr}&endMonth=${endMonthStr}`);
       if (response.data.success) {
         const data = response.data.data;
         bookings = data.bookings || [];

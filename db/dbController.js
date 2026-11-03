@@ -1,15 +1,18 @@
 import { Kysely, MysqlDialect, sql } from "kysely";
 import mysql from "mysql2";
 import path from "path";
-import dotenv from "dotenv";
 import { logger } from "../utils/logger.js";
 import fs from "fs/promises";
+import { readFileSync } from "fs";
+import { parseEnv } from "util";
 
 const __dirname = path.resolve();
 
-const envConfig = dotenv.config({
-  path: process.env.DOTENV_CONFIG_PATH || path.resolve(__dirname, "./data/secrets/dbcreds.env"),
-}).parsed;
+const envPath = process.env.DOTENV_CONFIG_PATH || path.resolve(__dirname, "./data/secrets/dbcreds.env");
+// Values from the file (used for the DB pool). Also exported into process.env without overriding variables that are
+// already set, which is what index.js (session store) relies on.
+const envConfig = parseEnv(readFileSync(envPath, "utf8"));
+process.loadEnvFile(envPath);
 
 /**
  * MySQL database connection configuration.
@@ -241,6 +244,16 @@ export async function dbCreateTables() {
     }
     if (!hasMailFromAddress) {
       await trx.insertInto("config").values({ id: "mailFromAddress", value: "" }).execute();
+    }
+
+    // Explicit mail switch. Existing installs that already have SMTP fully configured keep sending mail.
+    if (!configRows.some((row) => row.id === "mailEnabled")) {
+      const valueOf = (id) => configRows.find((row) => row.id === id)?.value;
+      const alreadyConfigured = Boolean(valueOf("mailHostPort") && valueOf("mailUser") && valueOf("mailPassword"));
+      await trx
+        .insertInto("config")
+        .values({ id: "mailEnabled", value: alreadyConfigured ? "true" : "false" })
+        .execute();
     }
 
     await createAdminUser();

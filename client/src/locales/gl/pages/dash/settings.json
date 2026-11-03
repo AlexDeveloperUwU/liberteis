@@ -20,7 +20,8 @@
       "mailSecure": "Conexión segura (TLS)",
       "mailUser": "Usuario SMTP",
       "mailPassword": "Contrasinal SMTP",
-      "mailFromAddress": "Enderezo de envío"
+      "mailFromAddress": "Enderezo de envío",
+      "mailEnabled": "Activar correo electrónico"
     },
     "placeholders": {
       "appName": "Nome da aplicación",
@@ -31,7 +32,8 @@
       "mailSecure": "Só para o porto 465 (TLS implícito). Déixao desactivado para o porto 587 — STARTTLS negóciase automaticamente.",
       "mailUser": "Usuario SMTP",
       "mailPassword": "••••••••",
-      "mailFromAddress": "no-reply\\@exemplo.com"
+      "mailFromAddress": "no-reply\\@exemplo.com",
+      "mailEnabled": "Permite enviar correos (restablecemento de contrasinal, enlaces de acceso, avisos)."
     },
     "hints": {
       "favicon": "URL da icona que se mostra na pestana do navegador. Déixao baleiro para usar a icona por defecto.",

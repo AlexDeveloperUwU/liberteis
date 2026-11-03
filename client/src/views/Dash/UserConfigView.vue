@@ -229,7 +229,7 @@ import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { User, ClipboardList, CheckCircle, Loader2, Info as InfoIcon, Settings, ShieldCheck } from "@lucide/vue";
-import axios from "axios";
+import http from "@/utils/http";
 import { useToast } from "@/composables/useToast";
 import { isValidEmail, validateName, validateEmail, validatePassword } from "@/utils/validators";
 import { useAuthStore } from "@/stores/authStore";
@@ -272,7 +272,7 @@ const loadUserData = async () => {
         throw new Error("Usuario no autenticado o ID no disponible");
       }
 
-      const response = await axios.get(`/api/users?id=${authStore.userId}`);
+      const response = await http.get(`/api/users?id=${authStore.userId}`);
 
       if (response.data.success) {
         userData.value = response.data.data;
@@ -559,7 +559,7 @@ const checkEmailAvailability = async (email) => {
   if (email === userData.value.email) return true;
 
   try {
-    const response = await axios.get(`/api/users/emailCheck?email=${email}`);
+    const response = await http.get(`/api/users/emailCheck?email=${email}`);
     return !response.data.data.exists;
   } catch (error) {
     console.error("Error checking email:", error);

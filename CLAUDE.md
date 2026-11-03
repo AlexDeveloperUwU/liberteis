@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project overview
 
 LiberTeis is an event/booking management app for the IES de Teis library. Backend is an Express 5 API
-(ESM, Node 22) backed by MySQL via Kysely; frontend is a separate Vue 3 SPA in `client/` (Vite, Pinia,
+(ESM, Node 24) backed by MySQL via Kysely; frontend is a separate Vue 3 SPA in `client/` (Vite, Pinia,
 Tailwind 4, vue-i18n). The two are developed and built independently but deployed as one server: Express
 serves the built client from `views/` and mounts the API under `/api`.
 
@@ -13,11 +13,10 @@ serves the built client from `views/` and mounts the API under `/api`.
 
 Run from the repo root unless noted.
 
-- `npm run dev` — runs client (Vite, port 3001) and server (`nodemon index.js`) concurrently. Primary way to develop.
-- `npm start` — server only, via nodemon.
+- `npm run dev` — runs client (Vite, port 3001) and server (`node --watch index.js`) concurrently. Primary way to develop.
+- `npm start` — server only, via `node --watch` (auto-restarts when imported server files change).
 - `npm run prod` — server only, plain `node index.js`.
 - `npm run format` — Prettier write (config lives in `package.json`: `bracketSameLine: true`, `printWidth: 120`).
-- `node check.js` — validates that Vue components' i18n keys exist in all three locale files (`en`, `es`, `gl`) and reports unused/missing keys.
 
 Client (`client/`):
 
@@ -44,14 +43,14 @@ Infra: `docker-compose.yml` defines a MySQL 9.3 service plus `dev`/`prod` profil
 **Frontend** (`client/src/`):
 
 - `stores/` — Pinia stores (`authStore`, `configStore`, `mainStore`, `modalStore`, `toastStore`) hold session/user, app config, and UI state.
-- `router/fetchers.js` — API call wrappers (axios) used by views/stores instead of calling axios directly.
+- `router/fetchers.js` — API call wrappers used by views/stores. All HTTP goes through `utils/http.js`, a small fetch-based client with an axios-like API (`http.get/post/put/patch/delete`, `error.response`); a 401 handler registered in `main.js` clears the local session.
 - `utils/permissions.js` — role hierarchy (`normalUser` < `managerUser` < `adminUser`) and `hasPermission(userType, requiredType)`; mirror this hierarchy when adding backend authorization checks.
 - `views/` — routed pages grouped by area (`Auth`, `Dash`, `Info`, `Others`).
-- `locales/{en,es,gl}/{pages,components}/...json` — i18n message trees, loaded and namespaced by `i18n.js` via `import.meta.glob`. Keep new locale files in sync across all three languages (`node check.js` from repo root verifies this) — gl (Galician) is the default UI language.
+- `locales/{en,es,gl}/{pages,components}/...json` — i18n message trees, loaded and namespaced by `i18n.js` via `import.meta.glob`. Keep new locale files in sync across all three languages — gl (Galician) is the default UI language.
 
 **Cross-cutting conventions**:
 
 - API responses are always `{success, code, message, data}` (see `errorManager.js`); route handlers follow the pattern `try { ...call service...; return res.status(result.code).json(result) } catch (error) { return res.status(errorResponse.code).json(ErrorManager.handleError(error)) }`.
-- Auth is session-based (`express-session` + `express-mysql-session`), not JWT-based, despite `jsonwebtoken` being a dependency — check current usage before assuming JWT flows.
+- Auth is session-based (`express-session` + `express-mysql-session`), not JWT-based.
 - Booking `groupId` links recurring bookings created together; update/toggle endpoints take a `scope` query param (`single` vs `group`) to act on one booking or the whole series.
 - Route path segments (both `/api/*` and the frontend router) are camelCase, never hyphenated — e.g. `/emailCheck`, `users/edit/:id`.

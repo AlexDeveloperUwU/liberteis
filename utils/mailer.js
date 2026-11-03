@@ -14,7 +14,7 @@ const EMAILS_DIR = path.join(__dirname, "..", "emails");
  * Reads the current mail configuration from the config table.
  * Called fresh on every send so an admin changing settings takes effect
  * immediately, with no restart.
- * @returns {Promise<{hostPort: string, secure: boolean, user: string, password: string, fromAddress: string, appName: string, domain: string}>}
+ * @returns {Promise<{enabled: boolean, hostPort: string, secure: boolean, user: string, password: string, fromAddress: string, appName: string, domain: string}>}
  */
 async function getMailSettings() {
   const result = await configService.getConfigs();
@@ -32,6 +32,7 @@ async function getMailSettings() {
   }
 
   return {
+    enabled: byId.mailEnabled === "true",
     hostPort: byId.mailHostPort || "",
     secure: byId.mailSecure === "true",
     user: byId.mailUser || "",
@@ -58,7 +59,7 @@ export async function sendMail({ to, subject, text, html, attachments }) {
   try {
     const settings = await getMailSettings();
 
-    if (!settings.hostPort || !settings.user || !settings.password) {
+    if (!settings.enabled || !settings.hostPort || !settings.user || !settings.password) {
       logger.info(`Mailer not configured, skipping email to ${to}`);
       return false;
     }

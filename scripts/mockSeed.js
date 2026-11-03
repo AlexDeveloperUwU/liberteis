@@ -9,7 +9,7 @@
  */
 import mysql from "mysql2/promise";
 import path from "path";
-import dotenv from "dotenv";
+import { parseEnv } from "util";
 import sharp from "sharp";
 import fs from "fs";
 
@@ -20,7 +20,13 @@ const MOCK_TEMPLATE_PATH = path.join(__dirname, "scripts", "mock-assets", "mock-
 const UPLOADS_DIR = path.join(__dirname, "data", "uploads");
 
 const mockEnvPath = process.env.DOTENV_CONFIG_PATH || path.resolve(__dirname, "./data/secrets/mockdbcreds.env");
-const mockEnv = dotenv.config({ path: mockEnvPath }).parsed;
+let mockEnv;
+try {
+  mockEnv = parseEnv(fs.readFileSync(mockEnvPath, "utf8"));
+  process.loadEnvFile(mockEnvPath);
+} catch {
+  mockEnv = undefined;
+}
 
 if (!mockEnv || mockEnv.MYSQL_DATABASE !== MOCK_DB_NAME) {
   console.error(

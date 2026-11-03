@@ -138,7 +138,7 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-import axios from "axios";
+import http from "@/utils/http";
 import { Clock, MapPin, Tag, CalendarDays, User } from "@lucide/vue";
 import { mapBookingToEvent } from "@/router/fetchers";
 
@@ -234,7 +234,7 @@ const loadEvents = async () => {
     nextWeek.setDate(now.getDate() + 7);
     const startDate = now.toISOString();
     const endDate = nextWeek.toISOString();
-    const response = await axios.get(`/api/bookings/dashboard?startDate=${startDate}&endDate=${endDate}`);
+    const response = await http.get(`/api/bookings/dashboard?startDate=${startDate}&endDate=${endDate}`);
     if (response.data.success) {
       const bookings = response.data.data.bookings || [];
       const calendarEvents = bookings.map((booking) => ({

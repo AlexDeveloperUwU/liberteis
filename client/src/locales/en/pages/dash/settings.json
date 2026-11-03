@@ -20,7 +20,8 @@
       "mailSecure": "Secure connection (TLS)",
       "mailUser": "SMTP username",
       "mailPassword": "SMTP password",
-      "mailFromAddress": "From address"
+      "mailFromAddress": "From address",
+      "mailEnabled": "Enable e-mail"
     },
     "placeholders": {
       "appName": "Application name",
@@ -31,7 +32,8 @@
       "mailSecure": "Only for port 465 (implicit TLS). Leave off for port 587 — STARTTLS is negotiated automatically.",
       "mailUser": "SMTP username",
       "mailPassword": "••••••••",
-      "mailFromAddress": "no-reply\\@example.com"
+      "mailFromAddress": "no-reply\\@example.com",
+      "mailEnabled": "Allow sending e-mails (password resets, magic links, notifications)."
     },
     "hints": {
       "favicon": "URL of the icon shown in the browser tab. Leave blank to use the default icon.",

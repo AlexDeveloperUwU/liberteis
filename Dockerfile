@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build-client
+FROM node:24-alpine AS build-client
 
 # Establece el directorio de trabajo para la construcción del cliente
 WORKDIR /app/client
@@ -10,7 +10,7 @@ COPY client ./
 RUN npm install && npm run build
 
 # Etapa final
-FROM node:22-alpine
+FROM node:24-alpine
 
 # Establece el directorio de trabajo
 WORKDIR /app
@@ -35,7 +35,7 @@ COPY --from=build-client /app/client/dist /app/views
 # Copia el archivo de credenciales al contenedor
 COPY ./data/secrets/dbcreds.env /app/secrets/dbcreds.env
 
-# Establece la variable de entorno para que dotenv pueda cargarla
+# Establece la variable de entorno para que la app cargue las credenciales (process.loadEnvFile)
 ENV DOTENV_CONFIG_PATH=/app/secrets/dbcreds.env
 
 # Establece un valor por defecto para el puerto

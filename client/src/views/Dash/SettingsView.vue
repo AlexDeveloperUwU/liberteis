@@ -28,18 +28,30 @@
               " />
             <InfoRow
               icon="mail"
-              :label="t('pages.dash.settings.form.labels.mailHostPort')"
-              :value="formData.mailHostPort || t('pages.dash.settings.common.disabled')" />
-            <InfoRow
-              icon="mail"
-              :label="t('pages.dash.settings.form.labels.mailUser')"
-              :value="formData.mailUser || t('pages.dash.settings.common.disabled')" />
-            <InfoRow
-              icon="shield-check"
-              :label="t('pages.dash.settings.form.labels.mailSecure')"
+              :label="t('pages.dash.settings.form.labels.mailEnabled')"
               :value="
-                formData.mailSecure ? t('pages.dash.settings.common.enabled') : t('pages.dash.settings.common.disabled')
+                formData.mailEnabled
+                  ? t('pages.dash.settings.common.enabled')
+                  : t('pages.dash.settings.common.disabled')
               " />
+            <template v-if="formData.mailEnabled">
+              <InfoRow
+                icon="mail"
+                :label="t('pages.dash.settings.form.labels.mailHostPort')"
+                :value="formData.mailHostPort || t('pages.dash.settings.common.disabled')" />
+              <InfoRow
+                icon="mail"
+                :label="t('pages.dash.settings.form.labels.mailUser')"
+                :value="formData.mailUser || t('pages.dash.settings.common.disabled')" />
+              <InfoRow
+                icon="shield-check"
+                :label="t('pages.dash.settings.form.labels.mailSecure')"
+                :value="
+                  formData.mailSecure
+                    ? t('pages.dash.settings.common.enabled')
+                    : t('pages.dash.settings.common.disabled')
+                " />
+            </template>
           </div>
         </DsCard>
       </div>
@@ -109,52 +121,72 @@
                 {{ t("pages.dash.settings.form.sections.mail") }}
               </h3>
 
-              <TextField
-                v-model="formData.mailHostPort"
-                :label="t('pages.dash.settings.form.labels.mailHostPort')"
-                :placeholder="t('pages.dash.settings.form.placeholders.mailHostPort')" />
-              <TextField
-                v-model="formData.mailUser"
-                autocomplete="off"
-                :label="t('pages.dash.settings.form.labels.mailUser')"
-                :placeholder="t('pages.dash.settings.form.placeholders.mailUser')" />
-
-              <div>
-                <TextField
-                  v-model="formData.mailPassword"
-                  type="password"
-                  autocomplete="new-password"
-                  :label="t('pages.dash.settings.form.labels.mailPassword')"
-                  :placeholder="t('pages.dash.settings.form.placeholders.mailPassword')" />
-                <p class="mt-1.5 text-xs text-text-600">
-                  {{ t("pages.dash.settings.form.hints.mailPassword") }}
-                  {{
-                    mailPasswordConfigured
-                      ? t("pages.dash.settings.form.hints.mailPasswordSet")
-                      : t("pages.dash.settings.form.hints.mailPasswordUnset")
-                  }}
-                </p>
-              </div>
-
-              <TextField
-                v-model="formData.mailFromAddress"
-                type="email"
-                :label="t('pages.dash.settings.form.labels.mailFromAddress')"
-                :placeholder="t('pages.dash.settings.form.placeholders.mailFromAddress')" />
-
               <div
                 class="flex items-center justify-between p-3 bg-background-100 rounded-lg border border-background-200">
                 <div class="flex items-center">
-                  <ShieldCheck class="w-5 h-5 text-primary-600 mr-3" />
+                  <Mail class="w-5 h-5 text-primary-600 mr-3" />
                   <div>
                     <p class="text-text-800 font-medium text-sm">
-                      {{ t("pages.dash.settings.form.labels.mailSecure") }}
+                      {{ t("pages.dash.settings.form.labels.mailEnabled") }}
                     </p>
-                    <p class="text-xs text-text-600">{{ t("pages.dash.settings.form.placeholders.mailSecure") }}</p>
+                    <p class="text-xs text-text-600">{{ t("pages.dash.settings.form.placeholders.mailEnabled") }}</p>
                   </div>
                 </div>
-                <DsToggle v-model="formData.mailSecure" :aria-label="t('pages.dash.settings.form.labels.mailSecure')" />
+                <DsToggle
+                  v-model="formData.mailEnabled"
+                  :aria-label="t('pages.dash.settings.form.labels.mailEnabled')" />
               </div>
+
+              <template v-if="formData.mailEnabled">
+                <TextField
+                  v-model="formData.mailHostPort"
+                  :label="t('pages.dash.settings.form.labels.mailHostPort')"
+                  :placeholder="t('pages.dash.settings.form.placeholders.mailHostPort')" />
+                <TextField
+                  v-model="formData.mailUser"
+                  autocomplete="off"
+                  :label="t('pages.dash.settings.form.labels.mailUser')"
+                  :placeholder="t('pages.dash.settings.form.placeholders.mailUser')" />
+
+                <div>
+                  <TextField
+                    v-model="formData.mailPassword"
+                    type="password"
+                    autocomplete="new-password"
+                    :label="t('pages.dash.settings.form.labels.mailPassword')"
+                    :placeholder="t('pages.dash.settings.form.placeholders.mailPassword')" />
+                  <p class="mt-1.5 text-xs text-text-600">
+                    {{ t("pages.dash.settings.form.hints.mailPassword") }}
+                    {{
+                      mailPasswordConfigured
+                        ? t("pages.dash.settings.form.hints.mailPasswordSet")
+                        : t("pages.dash.settings.form.hints.mailPasswordUnset")
+                    }}
+                  </p>
+                </div>
+
+                <TextField
+                  v-model="formData.mailFromAddress"
+                  type="email"
+                  :label="t('pages.dash.settings.form.labels.mailFromAddress')"
+                  :placeholder="t('pages.dash.settings.form.placeholders.mailFromAddress')" />
+
+                <div
+                  class="flex items-center justify-between p-3 bg-background-100 rounded-lg border border-background-200">
+                  <div class="flex items-center">
+                    <ShieldCheck class="w-5 h-5 text-primary-600 mr-3" />
+                    <div>
+                      <p class="text-text-800 font-medium text-sm">
+                        {{ t("pages.dash.settings.form.labels.mailSecure") }}
+                      </p>
+                      <p class="text-xs text-text-600">{{ t("pages.dash.settings.form.placeholders.mailSecure") }}</p>
+                    </div>
+                  </div>
+                  <DsToggle
+                    v-model="formData.mailSecure"
+                    :aria-label="t('pages.dash.settings.form.labels.mailSecure')" />
+                </div>
+              </template>
             </div>
           </div>
 
@@ -207,6 +239,7 @@ const formData = reactive({
   domain: "",
   enableWeekends: false,
   favicon: "",
+  mailEnabled: false,
   mailHostPort: "",
   mailSecure: false,
   mailUser: "",
@@ -219,6 +252,7 @@ const initialFormData = reactive({
   domain: "",
   enableWeekends: false,
   favicon: "",
+  mailEnabled: false,
   mailHostPort: "",
   mailSecure: false,
   mailUser: "",
@@ -235,6 +269,7 @@ const loadSettings = () => {
   formData.domain = configStore.getConfigValue("domain", "http://localhost:3000");
   formData.enableWeekends = configStore.getConfigValue("enableWeekends", "true") === "true";
   formData.favicon = configStore.getConfigValue("favicon", "");
+  formData.mailEnabled = configStore.getConfigValue("mailEnabled", "false") === "true";
   formData.mailHostPort = configStore.getConfigValue("mailHostPort", "");
   formData.mailSecure = configStore.getConfigValue("mailSecure", "false") === "true";
   formData.mailUser = configStore.getConfigValue("mailUser", "");
@@ -246,6 +281,7 @@ const loadSettings = () => {
   initialFormData.domain = formData.domain;
   initialFormData.enableWeekends = formData.enableWeekends;
   initialFormData.favicon = formData.favicon;
+  initialFormData.mailEnabled = formData.mailEnabled;
   initialFormData.mailHostPort = formData.mailHostPort;
   initialFormData.mailSecure = formData.mailSecure;
   initialFormData.mailUser = formData.mailUser;
@@ -265,6 +301,7 @@ const formChanged = computed(() => {
     formData.domain !== initialFormData.domain ||
     formData.enableWeekends !== initialFormData.enableWeekends ||
     formData.favicon !== initialFormData.favicon ||
+    formData.mailEnabled !== initialFormData.mailEnabled ||
     formData.mailHostPort !== initialFormData.mailHostPort ||
     formData.mailSecure !== initialFormData.mailSecure ||
     formData.mailUser !== initialFormData.mailUser ||
@@ -274,7 +311,8 @@ const formChanged = computed(() => {
 });
 
 const isFormValid = computed(() => {
-  return Boolean(formData.appName) && Boolean(formData.domain);
+  const mailValid = !formData.mailEnabled || (Boolean(formData.mailHostPort) && Boolean(formData.mailUser));
+  return Boolean(formData.appName) && Boolean(formData.domain) && mailValid;
 });
 
 const resetForm = () => {
@@ -282,6 +320,7 @@ const resetForm = () => {
   formData.domain = initialFormData.domain;
   formData.enableWeekends = initialFormData.enableWeekends;
   formData.favicon = initialFormData.favicon;
+  formData.mailEnabled = initialFormData.mailEnabled;
   formData.mailHostPort = initialFormData.mailHostPort;
   formData.mailSecure = initialFormData.mailSecure;
   formData.mailUser = initialFormData.mailUser;
@@ -310,6 +349,9 @@ const handleSubmit = async () => {
     }
     if (formData.favicon !== initialFormData.favicon) {
       updates.push(configStore.updateConfig("favicon", formData.favicon));
+    }
+    if (formData.mailEnabled !== initialFormData.mailEnabled) {
+      updates.push(configStore.updateConfig("mailEnabled", formData.mailEnabled ? "true" : "false"));
     }
     if (formData.mailHostPort !== initialFormData.mailHostPort) {
       updates.push(configStore.updateConfig("mailHostPort", formData.mailHostPort));

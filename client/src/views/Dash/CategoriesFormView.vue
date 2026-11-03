@@ -158,7 +158,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue";
 import { Bookmark, ClipboardList, MapPin, Check, ChevronDown } from "@lucide/vue";
-import axios from "axios";
+import http from "@/utils/http";
 import { useToast } from "@/composables/useToast";
 import { useAuthStore } from "@/stores/authStore";
 import PageHeader from "@/components/data/PageHeader.vue";
@@ -329,7 +329,7 @@ const handleSubmit = async () => {
     if (isEditMode.value) {
       const categoryUpdate = { ...formData };
 
-      const response = await axios.put(`/api/categories?id=${categoryId.value}`, categoryUpdate);
+      const response = await http.put(`/api/categories?id=${categoryId.value}`, categoryUpdate);
 
       if (response.status === 200) {
         formSubmitted.value = true;
@@ -344,7 +344,7 @@ const handleSubmit = async () => {
         createdBy: authStore.userId,
       };
 
-      const response = await axios.post("/api/categories", categoryData);
+      const response = await http.post("/api/categories", categoryData);
 
       if (response.status === 201) {
         formSubmitted.value = true;
@@ -384,7 +384,7 @@ const loadCreatorData = async (creatorId) => {
   creatorError.value = false;
 
   try {
-    const response = await axios.get(`/api/users?id=${creatorId}`);
+    const response = await http.get(`/api/users?id=${creatorId}`);
     if (response.status === 200 && response.data.data) {
       creatorData.value = response.data.data;
     } else {

@@ -63,7 +63,7 @@
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import axios from "axios";
+import http from "@/utils/http";
 import { useModal } from "@/composables/useModal";
 import { useToast } from "@/composables/useToast";
 import PageHeader from "@/components/data/PageHeader.vue";
@@ -229,7 +229,7 @@ const loadSpaces = async () => {
   try {
     isLoading.value = true;
 
-    const response = await axios.get("/api/spaces", {
+    const response = await http.get("/api/spaces", {
       params: {
         status: spaceFilter.value,
       },
@@ -241,7 +241,7 @@ const loadSpaces = async () => {
       metrics.value = response.data.metrics;
     } else {
       try {
-        const metricsResponse = await axios.get("/api/spaces/count");
+        const metricsResponse = await http.get("/api/spaces/count");
         if (metricsResponse.data && metricsResponse.data.success) {
           metrics.value = metricsResponse.data.data;
         }
@@ -261,7 +261,7 @@ const loadSpaces = async () => {
 
 const loadUsers = async () => {
   try {
-    const response = await axios.get("/api/users", { params: { status: "active" } });
+    const response = await http.get("/api/users", { params: { status: "active" } });
     if (response.data.success) {
       allUsers.value = response.data.data;
     }
@@ -301,7 +301,7 @@ const getCreatedByName = (createdById) => {
 
 const refreshMetrics = async () => {
   try {
-    const metricsResponse = await axios.get("/api/spaces/count");
+    const metricsResponse = await http.get("/api/spaces/count");
     if (metricsResponse.data && metricsResponse.data.success) {
       metrics.value = metricsResponse.data.data;
     }
@@ -332,7 +332,7 @@ const handleSpaceStatusToggle = async (space) => {
           type: isDeactivating ? "danger" : "secondary",
           onClick: async () => {
             try {
-              const response = await axios.patch(`/api/spaces/toggle`, null, {
+              const response = await http.patch(`/api/spaces/toggle`, null, {
                 params: { id: space.id },
               });
 

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import http from "@/utils/http";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -14,7 +14,7 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async login(email, password) {
       try {
-        const response = await axios.post("/api/auth/login", { email, password });
+        const response = await http.post("/api/auth/login", { email, password });
         if (response.data.success) {
           this.user = response.data.data.user;
           this.userVerified = true;
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore("auth", {
     },
     async requestMagicLink(email) {
       try {
-        const response = await axios.post("/api/auth/magicLink", { email });
+        const response = await http.post("/api/auth/magicLink", { email });
         return response.data;
       } catch (error) {
         return error.response?.data || { success: false };
@@ -37,7 +37,7 @@ export const useAuthStore = defineStore("auth", {
     },
     async magicLogin(token) {
       try {
-        const response = await axios.post("/api/auth/magicLogin", { token });
+        const response = await http.post("/api/auth/magicLogin", { token });
         if (response.data.success) {
           this.user = response.data.data.user;
           this.userVerified = true;
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore("auth", {
     },
     async initSession() {
       try {
-        const response = await axios.get("/api/auth/me");
+        const response = await http.get("/api/auth/me");
         this.user = response.data.data.user;
         this.userVerified = true;
         localStorage.setItem("auth_user", JSON.stringify(this.user));
@@ -65,7 +65,7 @@ export const useAuthStore = defineStore("auth", {
       }
     },
     async logout() {
-      await axios.post("/api/auth/logout");
+      await http.post("/api/auth/logout");
       this.user = null;
       this.userVerified = false;
       localStorage.removeItem("auth_user");
@@ -76,7 +76,7 @@ export const useAuthStore = defineStore("auth", {
       if (this.userVerified) return true;
 
       try {
-        const response = await axios.get(`/api/users?id=${this.userId}`);
+        const response = await http.get(`/api/users?id=${this.userId}`);
         if (!response.data.success || !response.data.data) {
           await this.logout();
           return false;
@@ -94,7 +94,7 @@ export const useAuthStore = defineStore("auth", {
     },
     async requestPasswordReset(email) {
       try {
-        const response = await axios.post("/api/auth/forgotPassword", { email });
+        const response = await http.post("/api/auth/forgotPassword", { email });
         return response.data;
       } catch (error) {
         return error.response?.data || { success: false };
@@ -102,7 +102,7 @@ export const useAuthStore = defineStore("auth", {
     },
     async validateResetToken(token) {
       try {
-        const response = await axios.get(`/api/auth/resetPassword/${token}`);
+        const response = await http.get(`/api/auth/resetPassword/${token}`);
         return response.data;
       } catch (error) {
         return error.response?.data || { success: false };
@@ -110,7 +110,7 @@ export const useAuthStore = defineStore("auth", {
     },
     async resetPassword(token, newPassword) {
       try {
-        const response = await axios.post("/api/auth/resetPassword", { token, password: newPassword });
+        const response = await http.post("/api/auth/resetPassword", { token, password: newPassword });
         return response.data;
       } catch (error) {
         return error.response?.data || { success: false };
@@ -120,7 +120,7 @@ export const useAuthStore = defineStore("auth", {
       if (!this.isAuthenticated || !this.userId) return false;
 
       try {
-        const response = await axios.put(`/api/users?id=${this.userId}`, userData);
+        const response = await http.put(`/api/users?id=${this.userId}`, userData);
 
         if (response.data.success) {
           const safeFields = { ...userData };

@@ -79,7 +79,7 @@
 import { useI18n } from "vue-i18n";
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import axios from "axios";
+import http from "@/utils/http";
 import { useModal } from "@/composables/useModal";
 import { useToast } from "@/composables/useToast";
 import PageHeader from "@/components/data/PageHeader.vue";
@@ -241,7 +241,7 @@ const loadCategories = async () => {
   try {
     isLoading.value = true;
 
-    const response = await axios.get("/api/categories", {
+    const response = await http.get("/api/categories", {
       params: {
         status: categoryFilter.value,
       },
@@ -253,7 +253,7 @@ const loadCategories = async () => {
       metrics.value = response.data.metrics;
     } else {
       try {
-        const metricsResponse = await axios.get("/api/categories/count");
+        const metricsResponse = await http.get("/api/categories/count");
         if (metricsResponse.data && metricsResponse.data.success) {
           metrics.value = metricsResponse.data.data;
         }
@@ -288,7 +288,7 @@ const loadSpaceInfo = async () => {
   for (const spaceId of spaceIds) {
     requestedSpaces.add(spaceId);
     try {
-      const response = await axios.get(`/api/spaces`, {
+      const response = await http.get(`/api/spaces`, {
         params: { id: spaceId, includeInactive: true },
       });
       if (response.data.success && response.data.data) {
@@ -306,7 +306,7 @@ const getSpaceName = (spaceId) => {
   }
   if (!requestedSpaces.has(spaceId)) {
     requestedSpaces.add(spaceId);
-    axios
+    http
       .get(`/api/spaces`, {
         params: { id: spaceId, includeInactive: true },
       })
@@ -358,7 +358,7 @@ const getCreatedByName = (createdById) => {
 
 const loadUsers = async () => {
   try {
-    const response = await axios.get("/api/users", { params: { status: "active" } });
+    const response = await http.get("/api/users", { params: { status: "active" } });
     if (response.data.success) {
       allUsers.value = response.data.data;
     }
@@ -369,7 +369,7 @@ const loadUsers = async () => {
 
 const refreshMetrics = async () => {
   try {
-    const metricsResponse = await axios.get("/api/categories/count");
+    const metricsResponse = await http.get("/api/categories/count");
     if (metricsResponse.data && metricsResponse.data.success) {
       metrics.value = metricsResponse.data.data;
     }
@@ -404,7 +404,7 @@ const handleCategoryStatusToggle = async (category) => {
           type: isDeactivating ? "danger" : "secondary",
           onClick: async () => {
             try {
-              const response = await axios.patch(`/api/categories/toggle`, null, {
+              const response = await http.patch(`/api/categories/toggle`, null, {
                 params: { id: category.id },
               });
 
