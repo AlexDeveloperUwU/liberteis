@@ -19,8 +19,8 @@ setUnauthorizedHandler((error) => {
     authStore.user = null;
     authStore.userVerified = false;
     localStorage.removeItem("auth_user");
-    if (window.location.pathname !== "/") {
-      window.location.href = "/";
+    if (window.location.pathname !== "/error/401") {
+      window.location.href = "/error/401";
     }
   }
 });
@@ -38,6 +38,13 @@ const initApp = async () => {
     const i18n = await createI18nInstance(mainStore);
 
     mainStore.applyTheme();
+
+    app.config.errorHandler = (error, instance, info) => {
+      console.error("Unhandled app error:", error, info);
+      if (router.currentRoute.value.name !== "error") {
+        router.replace({ name: "error", params: { code: "500" } });
+      }
+    };
 
     app.use(router);
     app.use(i18n);

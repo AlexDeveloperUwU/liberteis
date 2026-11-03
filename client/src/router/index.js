@@ -221,6 +221,21 @@ const routes = [
       },
     ],
   },
+
+  {
+    path: "/error/:code(\\d{3})",
+    name: "error",
+    component: () => import("../views/Others/ErrorView.vue"),
+    props: true,
+    meta: { allow: "any", layout: "default" },
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "notFound",
+    component: () => import("../views/Others/ErrorView.vue"),
+    props: { code: "404" },
+    meta: { allow: "any", layout: "default" },
+  },
 ];
 
 const router = createRouter({
@@ -228,40 +243,49 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to) => {
   const authStore = useAuthStore();
   const requiredPermission = to.meta.allow;
 
   if (authStore.isAuthenticated) {
     const userExists = await authStore.verifyUserExists();
     if (!userExists) {
-      return next({
+      return {
         name: "authLogin",
         query: { message: "Tu sesión ha expirado porque el usuario ya no existe" },
-      });
+      };
     }
   }
 
   if (authStore.isAuthenticated && (to.path === "/" || to.path.startsWith("/auth"))) {
-    return next({ name: "dashHome" });
+    return { name: "dashHome" };
   }
 
   if (!requiredPermission || requiredPermission === "any") {
-    return next();
+    return true;
   }
 
   if (!authStore.isAuthenticated) {
-    return next({
+    return {
       name: "authLogin",
       query: { redirect: to.fullPath },
-    });
+    };
   }
 
   if (!hasPermission(authStore.userType, requiredPermission)) {
-    return next({ name: "index" });
+    return { name: "error", params: { code: "403" } };
   }
 
-  next();
+  return true;
+});
+
+// Unexpected navigation failures (lazy chunk fails to load, a guard or beforeEnter throws) land on the 500 screen.
+// Expected loader failures are handled inline by each view through `initialData.error`.
+router.onError((error) => {
+  console.error("Navigation error:", error);
+  if (router.currentRoute.value.name !== "error") {
+    router.replace({ name: "error", params: { code: "500" } });
+  }
 });
 
 export default router;

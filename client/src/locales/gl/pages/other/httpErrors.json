@@ -1,0 +1,28 @@
+{
+  "401": {
+    "title": "Sesión non iniciada",
+    "description": "A túa sesión caducou ou aínda non iniciaches sesión. Accede para continuar."
+  },
+  "403": {
+    "title": "Acceso denegado",
+    "description": "Non tes permisos para ver esta páxina."
+  },
+  "404": {
+    "title": "Páxina non atopada",
+    "description": "A páxina que buscas non existe ou foi movida."
+  },
+  "500": {
+    "title": "Erro do servidor",
+    "description": "Algo foi mal da nosa parte. Téntao de novo máis tarde."
+  },
+  "503": {
+    "title": "Servizo non dispoñible",
+    "description": "O servizo non está dispoñible temporalmente. Téntao de novo en uns minutos."
+  },
+  "actions": {
+    "login": "Iniciar sesión",
+    "retry": "Reintentar",
+    "back": "Volver",
+    "home": "Ir ao inicio"
+  }
+}

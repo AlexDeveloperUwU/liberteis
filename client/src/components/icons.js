@@ -5,6 +5,9 @@
 // which would pull the entire icon set into the bundle and defeat tree-shaking.
 // ponytail: fixed list, extend it when a view needs an icon not here yet.
 import {
+  SearchX,
+  ServerCrash,
+  Construction,
   Home,
   Users,
   Settings,
@@ -132,6 +135,9 @@ const REGISTRY = {
   timer: Timer,
   "app-window": AppWindow,
   globe: Globe,
+  "search-x": SearchX,
+  "server-crash": ServerCrash,
+  construction: Construction,
 };
 
 /** Resolve a kebab-case Lucide icon name to its component, or null if unknown/absent. */
