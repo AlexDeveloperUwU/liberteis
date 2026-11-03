@@ -71,7 +71,7 @@ const selectUserType = (type) => {
 
   setTimeout(() => {
     if (type === "student") {
-      router.push("/info/planning");
+      router.push({ name: "infoScreen" });
     } else if (type === "teacher") {
       router.push("/dash/");
     }

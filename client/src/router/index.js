@@ -228,40 +228,40 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to) => {
   const authStore = useAuthStore();
   const requiredPermission = to.meta.allow;
 
   if (authStore.isAuthenticated) {
     const userExists = await authStore.verifyUserExists();
     if (!userExists) {
-      return next({
+      return {
         name: "authLogin",
         query: { message: "Tu sesión ha expirado porque el usuario ya no existe" },
-      });
+      };
     }
   }
 
   if (authStore.isAuthenticated && (to.path === "/" || to.path.startsWith("/auth"))) {
-    return next({ name: "dashHome" });
+    return { name: "dashHome" };
   }
 
   if (!requiredPermission || requiredPermission === "any") {
-    return next();
+    return true;
   }
 
   if (!authStore.isAuthenticated) {
-    return next({
+    return {
       name: "authLogin",
       query: { redirect: to.fullPath },
-    });
+    };
   }
 
   if (!hasPermission(authStore.userType, requiredPermission)) {
-    return next({ name: "index" });
+    return { name: "index" };
   }
 
-  next();
+  return true;
 });
 
 export default router;
