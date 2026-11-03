@@ -279,4 +279,13 @@ router.beforeEach(async (to) => {
   return true;
 });
 
+// Unexpected navigation failures (lazy chunk fails to load, a guard or beforeEnter throws) land on the 500 screen.
+// Expected loader failures are handled inline by each view through `initialData.error`.
+router.onError((error) => {
+  console.error("Navigation error:", error);
+  if (router.currentRoute.value.name !== "error") {
+    router.replace({ name: "error", params: { code: "500" } });
+  }
+});
+
 export default router;

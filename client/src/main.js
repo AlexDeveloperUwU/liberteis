@@ -39,6 +39,13 @@ const initApp = async () => {
 
     mainStore.applyTheme();
 
+    app.config.errorHandler = (error, instance, info) => {
+      console.error("Unhandled app error:", error, info);
+      if (router.currentRoute.value.name !== "error") {
+        router.replace({ name: "error", params: { code: "500" } });
+      }
+    };
+
     app.use(router);
     app.use(i18n);
     app.mount("#app");
