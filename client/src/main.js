@@ -19,8 +19,8 @@ setUnauthorizedHandler((error) => {
     authStore.user = null;
     authStore.userVerified = false;
     localStorage.removeItem("auth_user");
-    if (window.location.pathname !== "/") {
-      window.location.href = "/";
+    if (window.location.pathname !== "/error/401") {
+      window.location.href = "/error/401";
     }
   }
 });

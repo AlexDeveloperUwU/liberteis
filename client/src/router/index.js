@@ -221,6 +221,21 @@ const routes = [
       },
     ],
   },
+
+  {
+    path: "/error/:code(\\d{3})",
+    name: "error",
+    component: () => import("../views/Others/ErrorView.vue"),
+    props: true,
+    meta: { allow: "any", layout: "default" },
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "notFound",
+    component: () => import("../views/Others/ErrorView.vue"),
+    props: { code: "404" },
+    meta: { allow: "any", layout: "default" },
+  },
 ];
 
 const router = createRouter({
@@ -258,7 +273,7 @@ router.beforeEach(async (to) => {
   }
 
   if (!hasPermission(authStore.userType, requiredPermission)) {
-    return { name: "index" };
+    return { name: "error", params: { code: "403" } };
   }
 
   return true;

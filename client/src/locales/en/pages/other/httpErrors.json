@@ -1,0 +1,28 @@
+{
+  "401": {
+    "title": "Not signed in",
+    "description": "Your session expired or you haven't signed in yet. Sign in to continue."
+  },
+  "403": {
+    "title": "Access denied",
+    "description": "You don't have permission to view this page."
+  },
+  "404": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved."
+  },
+  "500": {
+    "title": "Server error",
+    "description": "Something went wrong on our end. Please try again later."
+  },
+  "503": {
+    "title": "Service unavailable",
+    "description": "The service is temporarily unavailable. Please try again in a few minutes."
+  },
+  "actions": {
+    "login": "Sign in",
+    "retry": "Try again",
+    "back": "Go back",
+    "home": "Go to start"
+  }
+}

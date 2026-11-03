@@ -1,0 +1,28 @@
+{
+  "401": {
+    "title": "Sesión no iniciada",
+    "description": "Tu sesión ha caducado o aún no has iniciado sesión. Accede para continuar."
+  },
+  "403": {
+    "title": "Acceso denegado",
+    "description": "No tienes permisos para ver esta página."
+  },
+  "404": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o ha sido movida."
+  },
+  "500": {
+    "title": "Error del servidor",
+    "description": "Algo ha fallado por nuestra parte. Inténtalo de nuevo más tarde."
+  },
+  "503": {
+    "title": "Servicio no disponible",
+    "description": "El servicio no está disponible temporalmente. Inténtalo de nuevo en unos minutos."
+  },
+  "actions": {
+    "login": "Iniciar sesión",
+    "retry": "Reintentar",
+    "back": "Volver",
+    "home": "Ir al inicio"
+  }
+}
